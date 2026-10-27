@@ -1,0 +1,367 @@
+{
+  "_status": "RASCUNHO v0.1 para desenvolvimento. Campos entre colchetes ou com valor null dependem de decisão do autor, do contador ou do advogado.",
+  "product": {
+    "id": "manual-pi-network",
+    "slug": "manual-pi-network",
+    "brand": "isar.pi",
+    "title": "Manual Pi Network",
+    "subtitle": "Do primeiro clique ao uso consciente: Pi, dinheiro, tecnologia e Brasil",
+    "tagline": "Guia independente, com fatos separados de promessas.",
+    "edition": "1.0",
+    "edition_status": "rascunho",
+    "reference_date": "2026-10",
+    "language": "pt-BR",
+    "pages_pdf": 100,
+    "words": 30374,
+    "chapters_count": 23,
+    "parts_count": 6,
+    "formats": [
+      "pdf",
+      "epub"
+    ],
+    "audience": [
+      "Quem acabou de chegar à Pi Network",
+      "Quem quer vender, receber ou declarar cripto no Brasil",
+      "Quem quer entender o cenário mundial do dinheiro",
+      "Quem quer criar um negócio com ou sem Pi"
+    ],
+    "promise": "Aprender a navegar o ecossistema da Pi com segurança e realismo, separando fato, plano anunciado, análise e hipótese.",
+    "does_not_promise": [
+      "lucro",
+      "valorização da Pi",
+      "aprovação de KYC",
+      "acesso privilegiado",
+      "prazo ou preço futuro",
+      "recomendação de compra, venda ou manutenção de ativos"
+    ],
+    "labels": {
+      "F": "Fato confirmado",
+      "O": "Declaração oficial ou plano anunciado",
+      "A": "Análise ou interpretação",
+      "H": "Hipótese ou cenário"
+    },
+    "mandatory_notices": [
+      "Material educativo e independente. Não é material oficial da Pi Network, não é afiliado à Pi Core Team e não é recomendação de investimento.",
+      "Criptoativos podem perder valor, ter liquidez limitada, enfrentar restrições regulatórias ou ser alvo de fraudes. Não invista dinheiro que você não pode perder.",
+      "Regras, telas, taxas e listagens mudam. Confirme nas fontes oficiais antes de agir."
+    ],
+    "chapters": [
+      {
+        "number": 1,
+        "title": "O que é a Pi Network: o que ela diz ser, quem está por trás e o que ela não é",
+        "part": "Parte I — Começando com a Pi",
+        "words": 1229,
+        "update_frequency": "semestral"
+      },
+      {
+        "number": 2,
+        "title": "Como funciona a mineração pelo aplicativo: a fórmula oficial em linguagem simples",
+        "part": "Parte I — Começando com a Pi",
+        "words": 1275,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 3,
+        "title": "KYC, Mainnet e saldo migrável: o que é oficial e o que é boato",
+        "part": "Parte I — Começando com a Pi",
+        "words": 1210,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 4,
+        "title": "Carteira Pi: criação, recuperação e segurança",
+        "part": "Parte I — Começando com a Pi",
+        "words": 1163,
+        "update_frequency": "semestral"
+      },
+      {
+        "number": 5,
+        "title": "Enviar e receber Pi com segurança",
+        "part": "Parte I — Começando com a Pi",
+        "words": 1114,
+        "update_frequency": "cada edição"
+      },
+      {
+        "number": 6,
+        "title": "Geopolítica do dinheiro",
+        "part": "Parte II — O mundo do dinheiro",
+        "words": 1077,
+        "update_frequency": "semestral"
+      },
+      {
+        "number": 7,
+        "title": "EUA, China e BRICS: disputas, sanções e a corrida dos pagamentos",
+        "part": "Parte II — O mundo do dinheiro",
+        "words": 1414,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 8,
+        "title": "Bitcoin, stablecoins e CBDCs: três tipos de dinheiro digital",
+        "part": "Parte II — O mundo do dinheiro",
+        "words": 1537,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 9,
+        "title": "Soberania financeira: autocustódia, controle de capitais e regulação",
+        "part": "Parte II — O mundo do dinheiro",
+        "words": 1414,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 10,
+        "title": "Pi Network: o que existe, o que foi anunciado e o que é hipótese",
+        "part": "Parte III — A Pi nesse cenário",
+        "words": 1383,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 11,
+        "title": "Pi e o sistema financeiro tradicional: as pontes, os obstáculos e a concorrência",
+        "part": "Parte III — A Pi nesse cenário",
+        "words": 1284,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 12,
+        "title": "Utilidade, aplicativos e pagamentos: o que dá para fazer com a Pi hoje",
+        "part": "Parte III — A Pi nesse cenário",
+        "words": 1024,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 13,
+        "title": "Corretoras, preço e conversão para reais",
+        "part": "Parte III — A Pi nesse cenário",
+        "words": 1274,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 14,
+        "title": "Brasil: real, PIX, Drex, regulação e a disputa entre EUA e China",
+        "part": "Parte IV — Brasil",
+        "words": 1600,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 15,
+        "title": "Tributos e registros: o que o leitor precisa guardar e declarar",
+        "part": "Parte IV — Brasil",
+        "words": 1204,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 16,
+        "title": "Nós e desenvolvedores: como a rede funciona por dentro, em linguagem simples",
+        "part": "Parte V — Avançado e ação",
+        "words": 1306,
+        "update_frequency": "semestral"
+      },
+      {
+        "number": 17,
+        "title": "Negócios e monetização na era da IA: consumidor, produtor e empreendedor",
+        "part": "Parte V — Avançado e ação",
+        "words": 1706,
+        "update_frequency": "cada edição (partes jurídicas semestral)"
+      },
+      {
+        "number": 18,
+        "title": "Golpes e resposta a incidentes: o que fazer antes, durante e depois",
+        "part": "Parte V — Avançado e ação",
+        "words": 1462,
+        "update_frequency": "semestral"
+      },
+      {
+        "number": 19,
+        "title": "IA e dinheiro: agentes que pagam, golpes que enganam e verificação que protege",
+        "part": "Parte VI — Tecnologia e futuro",
+        "words": 1344,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 20,
+        "title": "Tokenização e novos trilhos: quando ativos comuns viram tokens",
+        "part": "Parte VI — Tecnologia e futuro",
+        "words": 1216,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 21,
+        "title": "Identidade digital e prova de humanidade: provar que você é uma pessoa real",
+        "part": "Parte VI — Tecnologia e futuro",
+        "words": 1387,
+        "update_frequency": "trimestral"
+      },
+      {
+        "number": 22,
+        "title": "Cenários 2030–2040: como pensar o futuro do dinheiro, da tecnologia e da Pi",
+        "part": "Parte VI — Tecnologia e futuro",
+        "words": 1412,
+        "update_frequency": "semestral"
+      },
+      {
+        "number": 23,
+        "title": "Plano de 30 dias, glossário, fontes e como manter este manual atualizado",
+        "part": "Fechamento — Plano, glossário e fontes",
+        "words": 1339,
+        "update_frequency": "cada edição"
+      }
+    ],
+    "bonuses": [
+      {
+        "id": "planilha-registro",
+        "title": "Planilha de registro de operações",
+        "file_name": "isar-pi_registro-de-operacoes.xlsx"
+      },
+      {
+        "id": "kit-anti-golpe",
+        "title": "Kit imprimível: folha anti-golpe e checklists",
+        "file_name": "isar-pi_kit-anti-golpe-e-checklists.pdf"
+      },
+      {
+        "id": "painel-sinais",
+        "title": "Painel de sinais trimestral (atualização)",
+        "file_name": null,
+        "note": "Entregue a cada trimestre aos compradores com direito a atualizações. A versão inicial está na aba Painel de sinais da planilha."
+      }
+    ],
+    "files": [
+      {
+        "file_name": "Manual-Pi-Network_v0.1-RASCUNHO.pdf",
+        "kind": "ebook_pdf",
+        "description": "E-book em PDF (rascunho v0.1, com marca d'água). A versão final terá o nome Manual-Pi-Network_Edicao-1.0.pdf",
+        "size_bytes": 563990,
+        "sha256": "4294a5f940ba0efe4e3c85a65f41021121a0c0404563d86f0a8499b5acd593d5"
+      },
+      {
+        "file_name": "Manual-Pi-Network_v0.1-RASCUNHO.epub",
+        "kind": "ebook_epub",
+        "description": "E-book em EPUB para leitura no celular (rascunho v0.1)",
+        "size_bytes": 151299,
+        "sha256": "87b336ca0c0de8d9017698daf80ff2edce77bd2838d8e9c5ce102b1340e89f1e"
+      },
+      {
+        "file_name": "isar-pi_registro-de-operacoes.xlsx",
+        "kind": "bonus_spreadsheet",
+        "description": "Planilha de registro de operações (4 abas)",
+        "size_bytes": 26356,
+        "sha256": "8ce64178956bedc0e7d5e16d028b5aadb364a2e464752ccaba7b9d7b4fa54940"
+      },
+      {
+        "file_name": "isar-pi_kit-anti-golpe-e-checklists.pdf",
+        "kind": "bonus_printable",
+        "description": "Kit imprimível: folha anti-golpe e checklists (2 páginas)",
+        "size_bytes": 7068,
+        "sha256": "76acf0c7d7722e62bfd83be64280c91d930e655f76e5f6be5f80db1166e5bc9e"
+      }
+    ]
+  },
+  "pricing": {
+    "currency_reference": "BRL",
+    "note": "Preço de referência sempre em reais. Preço em Pi é calculado no checkout a partir de uma cotação com fonte e horário, travada por alguns minutos.",
+    "offers": [
+      {
+        "id": "manual",
+        "name": "Manual (PDF + EPUB + bônus)",
+        "price_brl": null,
+        "includes_updates": false
+      },
+      {
+        "id": "manual-atualizacoes-12m",
+        "name": "Manual + atualizações trimestrais por 12 meses",
+        "price_brl": null,
+        "includes_updates": true,
+        "updates_months": 12
+      }
+    ],
+    "payment_methods": [
+      {
+        "id": "pix",
+        "enabled": true,
+        "provider": "[a escolher]"
+      },
+      {
+        "id": "card",
+        "enabled": true,
+        "provider": "[a escolher]"
+      },
+      {
+        "id": "pi",
+        "enabled": false,
+        "phase": 2,
+        "note": "Via Pi SDK (U2A) em aplicativo registrado na Mainnet, só dentro do Pi Browser. Depende de conferência dos Termos de desenvolvedor e do tratamento fiscal."
+      }
+    ]
+  },
+  "policies": {
+    "refund": {
+      "right_of_withdrawal_days": 7,
+      "note": "Direito de arrependimento em compras fora do estabelecimento (CDC, art. 49), a confirmar com advogado. Reembolso em reais por PIX ou estorno de cartão. Reembolso de compra paga em Pi: manual, a definir.",
+      "refund_in_pi_automatic": false
+    },
+    "updates": {
+      "frequency": "trimestral",
+      "radar_chapters": [
+        2,
+        3,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        19,
+        20,
+        21
+      ],
+      "delivery": "e-mail com link assinado e área do comprador"
+    },
+    "delivery": {
+      "signed_link_hours": 24,
+      "max_downloads": 5,
+      "per_buyer_stamp": true,
+      "stamp_script": "stamp_buyer.py"
+    },
+    "support_email": "[a definir]",
+    "legal_pages": [
+      "termos-de-uso",
+      "politica-de-privacidade",
+      "politica-de-reembolso",
+      "aviso-legal-e-independencia",
+      "contato"
+    ]
+  },
+  "seo": {
+    "title": "Manual Pi Network | Guia independente em português, com fatos e fontes",
+    "description": "Guia independente em português sobre a Pi Network, dinheiro digital, golpes, impostos e o cenário mundial. Cada afirmação é marcada como fato, plano anunciado, análise ou hipótese.",
+    "keywords": [
+      "Pi Network",
+      "manual Pi",
+      "KYC Pi",
+      "carteira Pi",
+      "golpes cripto",
+      "imposto cripto Brasil",
+      "stablecoins",
+      "PIX"
+    ],
+    "avoid_terms": [
+      "única saída",
+      "ganhe com Pi",
+      "Pi vai valer",
+      "renda garantida"
+    ]
+  },
+  "open_decisions": [
+    "Preço, ofertas e período de atualizações",
+    "Gateway de PIX e cartão",
+    "Texto final de termos, privacidade, reembolso e aviso legal (advogado)",
+    "Emissão de nota fiscal de produto digital e enquadramento do negócio (contador)",
+    "Tratamento fiscal de receber em Pi (contador)",
+    "Leitura dos Termos de desenvolvedor da Pi e critérios de listagem Mainnet para vender no Pi Browser",
+    "Posicionamento final: cripto com segurança e realismo"
+  ]
+}
