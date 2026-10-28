@@ -131,11 +131,27 @@
     }
   };
 
-  // --- Waitlist Form ---
-  function initWaitlistForm() {
-    const form    = document.getElementById('waitlist-form');
-    const success = document.getElementById('form-success');
+  // --- Lead Unlock Form (Desbloqueio Imediato do Ebook #1) ---
+  function initLeadUnlockForm() {
+    const form        = document.getElementById('waitlist-form');
+    const unlockedBox = document.getElementById('unlocked-lead-card');
+    const nameEl      = document.getElementById('lead-unlocked-name');
+    const emailEl     = document.getElementById('lead-unlocked-email');
     if (!form) return;
+
+    // Verificar se o visitante já desbloqueou anteriormente
+    try {
+      const savedLead = localStorage.getItem('isar_lead_user');
+      if (savedLead) {
+        const lead = JSON.parse(savedLead);
+        if (lead && lead.unlocked) {
+          form.style.display = 'none';
+          if (unlockedBox) unlockedBox.style.display = 'block';
+          if (nameEl) nameEl.textContent = lead.name || 'Pioneiro';
+          if (emailEl) emailEl.textContent = lead.email || '';
+        }
+      }
+    } catch (_) {}
 
     function showError(id, show) {
       const el = document.getElementById(id);
@@ -177,32 +193,46 @@
 
       if (!valid) return;
 
-      // Submit (HTML static — save to localStorage for now, swap action= for real service)
-      const data = {
+      const leadData = {
         name:      nameInput.value.trim(),
         email:     emailInput.value.trim(),
+        unlocked:  true,
         timestamp: new Date().toISOString(),
-        source:    'waitlist-form'
+        source:    'ebook-manual-pi'
       };
 
-      // Save locally (will be replaced by real form action when service is chosen)
       try {
-        const existing = JSON.parse(localStorage.getItem('isar_leads') || '[]');
-        existing.push(data);
-        localStorage.setItem('isar_leads', JSON.stringify(existing));
+        localStorage.setItem('isar_lead_user', JSON.stringify(leadData));
+        const leads = JSON.parse(localStorage.getItem('isar_leads') || '[]');
+        leads.push(leadData);
+        localStorage.setItem('isar_leads', JSON.stringify(leads));
       } catch (_) {}
 
-      // Show success
+      // Trocar formulário pela caixa de download desbloqueado imediatamente
       form.style.display = 'none';
-      if (success) success.style.display = 'block';
+      if (unlockedBox) unlockedBox.style.display = 'block';
+      if (nameEl) nameEl.textContent = leadData.name;
+      if (emailEl) emailEl.textContent = leadData.email;
 
-      // Redirect to thank you page after 1.5s
+      if (window.showToast) {
+        window.showToast('Manual liberado com sucesso! Baixe nos botões abaixo.', '🎉');
+      }
+
+      if (window.calculateAndUpdateReputation) {
+        window.calculateAndUpdateReputation();
+      }
+
+      // Scroll suave para a caixa de download
       setTimeout(function () {
-        window.location.href = 'obrigado.html';
-      }, 1500);
+        if (unlockedBox) {
+          const navH = document.getElementById('navbar') ? document.getElementById('navbar').offsetHeight : 80;
+          const top = unlockedBox.getBoundingClientRect().top + window.scrollY - navH - 16;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      }, 200);
     });
 
-    // Clear errors on input
+    // Resetar erro ao digitar
     ['waitlist-name', 'waitlist-email', 'consent-lgpd'].forEach(function (id) {
       const el = document.getElementById(id);
       if (el) {
@@ -217,6 +247,26 @@
       }
     });
   }
+
+  // Permitir trocar o e-mail cadastrado
+  window.resetLeadRegistration = function () {
+    try {
+      localStorage.removeItem('isar_lead_user');
+    } catch (_) {}
+
+    const form = document.getElementById('waitlist-form');
+    const unlockedBox = document.getElementById('unlocked-lead-card');
+    if (form) form.style.display = 'block';
+    if (unlockedBox) unlockedBox.style.display = 'none';
+
+    if (window.showToast) {
+      window.showToast('Você pode cadastrar outro e-mail agora.', 'ℹ️');
+    }
+    if (window.calculateAndUpdateReputation) {
+      window.calculateAndUpdateReputation();
+    }
+  };
+
 
   // --- Cookie Banner ---
   function initCookieBanner() {
@@ -497,6 +547,9 @@
     } catch (_) {}
 
     updateChecklistUI();
+    if (window.calculateAndUpdateReputation) {
+      window.calculateAndUpdateReputation();
+    }
   };
 
   function updateChecklistUI() {
@@ -526,7 +579,132 @@
 
     if (bar) bar.style.width = pct + '%';
     if (text) text.textContent = pct + '% Concluído (' + completed + ' de ' + total + ')';
+
+    const repChecklist = document.getElementById('rep-checklist-pts');
+    if (repChecklist) repChecklist.textContent = '+' + (completed * 10) + ' / 80 pts';
   }
+
+  // ============================================================
+  // SISTEMA DE REPUTAÇÃO ISAR.PI (CÁLCULO & PERSISTÊNCIA)
+  // ============================================================
+  window.recordEbookDownload = function (format) {
+    try {
+      localStorage.setItem('isar_rep_downloaded', '1');
+    } catch (_) {}
+
+    if (window.showToast) {
+      window.showToast('Download do ' + format.toUpperCase() + ' iniciado (+20 pts de Reputação)!', '📥');
+    }
+    window.calculateAndUpdateReputation();
+  };
+
+  window.handleReserveEbook2 = function () {
+    try {
+      localStorage.setItem('isar_rep_ebook2_reserved', '1');
+    } catch (_) {}
+
+    const btn = document.getElementById('btn-reserve-ebook2');
+    const icon = document.getElementById('btn-reserve-icon');
+    const text = document.getElementById('btn-reserve-text');
+    if (btn) btn.classList.add('reserved');
+    if (icon) icon.textContent = '✓';
+    if (text) text.textContent = 'Reserva Confirmada (+30 pts)';
+
+    if (window.showToast) {
+      window.showToast('Reserva confirmada! Você receberá o Ebook #2 em primeira mão (+30 pts)!', '🚀');
+    }
+    window.calculateAndUpdateReputation();
+  };
+
+  window.calculateAndUpdateReputation = function () {
+    let score = 0;
+
+    // 1. Login Pi (+50 pts)
+    const isLogged = !!localStorage.getItem('isar_pi_user');
+    if (isLogged) score += 50;
+
+    const taskLogin = document.getElementById('rep-task-login');
+    if (taskLogin) taskLogin.classList.toggle('done', isLogged);
+
+    // 2. Download do Manual (+20 pts)
+    const hasDownloaded = !!localStorage.getItem('isar_rep_downloaded');
+    if (hasDownloaded) score += 20;
+
+    const taskDownload = document.getElementById('rep-task-download');
+    if (taskDownload) taskDownload.classList.toggle('done', hasDownloaded);
+
+    // 3. Checklist Mainnet (10 pts por etapa, até +80 pts)
+    let checkState = {};
+    try {
+      checkState = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '{}');
+    } catch (_) {}
+
+    let completedChecklist = 0;
+    for (let i = 1; i <= 8; i++) {
+      if (checkState[i]) completedChecklist++;
+    }
+    const checkPts = completedChecklist * 10;
+    score += checkPts;
+
+    const taskChecklist = document.getElementById('rep-task-checklist');
+    if (taskChecklist) taskChecklist.classList.toggle('done', completedChecklist >= 4);
+
+    // 4. Reserva do Ebook #2 (+30 pts)
+    const hasReservedEbook2 = !!localStorage.getItem('isar_rep_ebook2_reserved');
+    if (hasReservedEbook2) score += 30;
+
+    const taskEbook2 = document.getElementById('rep-task-ebook2');
+    if (taskEbook2) taskEbook2.classList.toggle('done', hasReservedEbook2);
+
+    const btnReserve = document.getElementById('btn-reserve-ebook2');
+    const iconReserve = document.getElementById('btn-reserve-icon');
+    const textReserve = document.getElementById('btn-reserve-text');
+    if (btnReserve && hasReservedEbook2) {
+      btnReserve.classList.add('reserved');
+      if (iconReserve) iconReserve.textContent = '✓';
+      if (textReserve) textReserve.textContent = 'Reserva Confirmada (+30 pts)';
+    }
+
+    // 5. Cadastro de Lead E-mail (+20 pts bônus)
+    const hasLead = !!localStorage.getItem('isar_lead_user');
+    if (hasLead) score += 20;
+
+    // Atualizar UI de Reputação
+    const scoreEl = document.getElementById('rep-score-val');
+    if (scoreEl) scoreEl.textContent = score;
+
+    let levelIcon = '🥉';
+    let levelName = 'Pioneiro Iniciante';
+    let nextText  = 'Próximo nível: 60 pts';
+    let progressPct = Math.min(100, Math.round((score / 60) * 100));
+
+    if (score >= 180) {
+      levelIcon = '💎';
+      levelName = 'Embaixador isar.pi';
+      nextText  = 'Nível Máximo Alcançado!';
+      progressPct = 100;
+    } else if (score >= 120) {
+      levelIcon = '🥇';
+      levelName = 'Guardião da Rede';
+      nextText  = 'Próximo nível: 180 pts (Embaixador)';
+      progressPct = Math.min(100, Math.round(((score - 120) / 60) * 100));
+    } else if (score >= 60) {
+      levelIcon = '🥈';
+      levelName = 'Pioneiro Autenticado';
+      nextText  = 'Próximo nível: 120 pts (Guardião)';
+      progressPct = Math.min(100, Math.round(((score - 60) / 60) * 100));
+    }
+
+    const levelIconEl = document.getElementById('rep-level-icon');
+    const levelTextEl = document.getElementById('rep-level-text');
+    const nextTextEl  = document.getElementById('rep-next-level-text');
+    const progBarEl   = document.getElementById('rep-progress-bar');
+
+    if (levelIconEl) levelIconEl.textContent = levelIcon;
+    if (levelTextEl) levelTextEl.textContent = levelName;
+    if (nextTextEl)  nextTextEl.textContent = nextText;
+    if (progBarEl)   progBarEl.style.width = progressPct + '%';
+  };
 
   // Fechar modal ao clicar fora ou apertar ESC
   function initModalListeners() {
@@ -563,14 +741,16 @@
     initMobileMenu();
     initScrollReveal();
     initSmoothScroll();
-    initWaitlistForm();
+    initLeadUnlockForm();
     initCookieBanner();
     initActiveNav();
     initPiSdk();
     initModalListeners();
     checkStoredSession();
     updateChecklistUI();
+    window.calculateAndUpdateReputation();
   });
 
 })();
+
 

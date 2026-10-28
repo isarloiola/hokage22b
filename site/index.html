@@ -76,7 +76,7 @@
           <button type="button" class="btn btn-secondary btn-sm nav-pi-btn" id="nav-pi-login" aria-label="Acessar com Pi Network">
             <span class="pi-sym">π</span> <span id="nav-pi-text">Entrar com Pi</span>
           </button>
-          <a href="#lista-espera" class="btn btn-primary btn-sm navbar__cta" id="nav-cta">Lista de espera</a>
+          <a href="#lista-espera" class="btn btn-primary btn-sm navbar__cta" id="nav-cta">📖 Ebook Grátis</a>
         </div>
         <button class="navbar__toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
           <span></span><span></span><span></span>
@@ -98,7 +98,7 @@
     <button type="button" class="btn btn-secondary mobile-link" id="mobile-pi-login" style="margin-top:10px;width:80%">
       <span class="pi-sym">π</span> <span id="mobile-pi-text">Entrar com Pi</span>
     </button>
-    <a href="#lista-espera" class="btn btn-primary mobile-link" style="width:80%">Lista de espera</a>
+    <a href="#lista-espera" class="btn btn-primary mobile-link" style="width:80%">📖 Baixar Ebook Grátis</a>
   </div>
 
   <!-- ============================================================
@@ -112,7 +112,7 @@
         <div class="hero__content">
           <div class="hero__eyebrow">
             <span class="dot" aria-hidden="true"></span>
-            Em breve — Entre na lista de espera
+            🎁 2 Ebooks Gratuitos no Ecossistema isar.pi
           </div>
           <h1 class="hero__title" id="hero-title">
             Pi Network sem<br /><span class="gradient-text">mistério nem hype.</span>
@@ -123,10 +123,10 @@
           </p>
           <div class="hero__ctas">
             <a href="#lista-espera" class="btn btn-primary" id="hero-cta-primary">
-              <span>✉</span> Quero ser avisado
+              <span>📖</span> Baixar Ebook Gratuito
             </a>
-            <a href="#produto" class="btn btn-outline" id="hero-cta-secondary">
-              Ver o manual
+            <a href="#membros" class="btn btn-outline" id="hero-cta-secondary">
+              ⚡ Área de Membros Web3
             </a>
           </div>
           <div class="hero__stats" role="list" aria-label="Estatísticas do manual">
@@ -573,43 +573,117 @@
           </button>
         </div>
 
-        <!-- DOWNLOADS DOS ARQUIVOS -->
-        <h3 style="font-size:1.4rem;color:var(--white);margin-bottom:20px;display:flex;align-items:center;gap:10px">
-          <span>📥</span> Seus Arquivos Disponíveis para Download
-        </h3>
-        <div class="downloads-grid">
-          <!-- CARD PDF -->
-          <div class="download-card">
-            <div>
-              <span class="download-tag pdf">Formato PDF Oficial</span>
-              <h3>Manual Pi Network — Edição Completa</h3>
-              <p>Diagramação clássica de 100 páginas, 23 capítulos, notas de rodapé, tabelas de impostos brasileiros e gráficos de segurança.</p>
-              <div class="download-meta">
-                <span>📦 Tamanho: 563 KB</span>
-                <span>📑 100 páginas</span>
-                <span>🏷️ v0.1 Rascunho</span>
-              </div>
+        <!-- ============================================================
+             SISTEMA DE REPUTAÇÃO DO PIONEIRO (ISAR.PI)
+        ============================================================ -->
+        <div class="reputation-box">
+          <div class="reputation-top">
+            <div class="reputation-title-group">
+              <h3><span style="color:var(--amber)">🛡️</span> Sistema de Reputação do Pioneiro — <span class="gradient-text">isar.pi</span></h3>
+              <p>Sua pontuação de autenticidade, participação e prova de humanidade no ecossistema.</p>
             </div>
-            <a href="downloads/Manual-Pi-Network.pdf" download="Manual-Pi-Network.pdf" class="btn-download btn-download-pdf" id="btn-download-pdf">
-              <span>⬇️</span> Baixar Manual em PDF
-            </a>
+            <div class="reputation-badge-score">
+              <div class="reputation-score-num" id="rep-score-val">0</div>
+              <div class="reputation-score-label">Pontos de Reputação</div>
+            </div>
           </div>
 
-          <!-- CARD EPUB -->
-          <div class="download-card">
+          <div class="reputation-level-bar-container">
+            <div class="reputation-level-info">
+              <span class="reputation-level-name">
+                <span id="rep-level-icon">🥉</span> Nível Atual: <strong id="rep-level-text" style="color:var(--amber-light);margin-left:4px">Pioneiro Iniciante</strong>
+              </span>
+              <span style="color:var(--gray-light)" id="rep-next-level-text">Próximo nível: 50 pts</span>
+            </div>
+            <div class="reputation-progress-track">
+              <div class="reputation-progress-fill" id="rep-progress-bar" style="width: 10%"></div>
+            </div>
+          </div>
+
+          <div class="reputation-tasks-grid">
+            <div class="reputation-task-item" id="rep-task-login">
+              <span class="reputation-task-label">⚡ Autenticação com Pi Network</span>
+              <span class="reputation-task-pts">+50 pts</span>
+            </div>
+            <div class="reputation-task-item" id="rep-task-download">
+              <span class="reputation-task-label">📥 Download do Manual Pi</span>
+              <span class="reputation-task-pts">+20 pts</span>
+            </div>
+            <div class="reputation-task-item" id="rep-task-checklist">
+              <span class="reputation-task-label">🛡️ Checklist Mainnet</span>
+              <span class="reputation-task-pts" id="rep-checklist-pts">+0 / 80 pts</span>
+            </div>
+            <div class="reputation-task-item" id="rep-task-ebook2">
+              <span class="reputation-task-label">🚀 Reserva Ebook #2 (IA &amp; Robôs)</span>
+              <span class="reputation-task-pts">+30 pts</span>
+            </div>
+          </div>
+
+          <div class="reputation-why-box">
+            <strong style="color:var(--amber-light)">🤖 Por que a Reputação isar.pi é importante?</strong><br />
+            Na era da Inteligência Artificial e dos robôs, provar que você é uma pessoa real é a chave da confiança digital. No futuro do ecossistema <strong>isar.pi</strong>, sua reputação garantirá acesso prioritário gratuito aos novos ebooks, utilidades exclusivas da comunidade e participação em votações sem risco de contas falsas.
+          </div>
+        </div>
+
+        <!-- ============================================================
+             CATÁLOGO DOS 2 EBOOKS GRATUITOS
+        ============================================================ -->
+        <h3 style="font-size:1.45rem;color:var(--white);margin-bottom:24px;display:flex;align-items:center;gap:10px">
+          <span>📚</span> Catálogo de Ebooks Gratuitos — Ecossistema isar.pi
+        </h3>
+
+        <div class="ebooks-duo-grid">
+          <!-- EBOOK 1: MANUAL PI NETWORK -->
+          <div class="ebook-card-full">
             <div>
-              <span class="download-tag epub">Formato EPUB (E-reader)</span>
-              <h3>Manual Pi Network — Versão Ebook</h3>
-              <p>Ideal para leitura confortável em leitores digitais como Kindle, Kobo, Apple Books e aplicativos de celular com ajuste de fonte e tema escuro.</p>
-              <div class="download-meta">
-                <span>📦 Tamanho: 151 KB</span>
-                <span>📱 Texto fluido</span>
-                <span>🏷️ v0.1 Rascunho</span>
+              <div class="ebook-number-tag">Ebook Gratuito #1</div>
+              <span class="ebook-status-badge available">✓ Disponível Agora (Grátis)</span>
+              <h3>Manual Pi Network: Fatos e Fontes</h3>
+              <p>O guia de referência independente de 100 páginas e 23 capítulos. Entenda Blockchain, KYC, segurança de carteira, declaração de impostos no Brasil (IR, PIX, Drex) e o panorama do dinheiro digital com realismo.</p>
+              
+              <div class="ebook-tags-row">
+                <span class="ebook-tag-chip">📄 100 páginas</span>
+                <span class="ebook-tag-chip">🪙 Pi Network</span>
+                <span class="ebook-tag-chip">🇧🇷 Impostos &amp; Brasil</span>
+                <span class="ebook-tag-chip">🔒 Segurança</span>
               </div>
             </div>
-            <a href="downloads/Manual-Pi-Network.epub" download="Manual-Pi-Network.epub" class="btn-download btn-download-epub" id="btn-download-epub">
-              <span>⬇️</span> Baixar Manual em EPUB
-            </a>
+
+            <div class="ebook-actions-group">
+              <div class="ebook-download-btns">
+                <a href="downloads/Manual-Pi-Network.pdf" download="Manual-Pi-Network.pdf" class="btn-download btn-download-pdf" onclick="recordEbookDownload('pdf')">
+                  <span>⬇️</span> Baixar PDF (563 KB)
+                </a>
+                <a href="downloads/Manual-Pi-Network.epub" download="Manual-Pi-Network.epub" class="btn-download btn-download-epub" onclick="recordEbookDownload('epub')">
+                  <span>⬇️</span> Baixar EPUB (151 KB)
+                </a>
+              </div>
+              <span style="font-size:0.8rem;color:var(--gray-light);text-align:center">✓ Libera +20 pontos no Sistema de Reputação</span>
+            </div>
+          </div>
+
+          <!-- EBOOK 2: O DIA QUE O MUNDO PEDIU PRA PROVAR QUEM VOCÊ ERA -->
+          <div class="ebook-card-full" style="border-color:rgba(245,158,11,0.4)">
+            <div>
+              <div class="ebook-number-tag" style="color:var(--amber-light)">Ebook Gratuito #2 — Em Breve</div>
+              <span class="ebook-status-badge upcoming">🚀 Em Produção / Prévia VIP</span>
+              <h3>O dia que o mundo pediu pra provar quem você era</h3>
+              <p>Uma história hipotética instigante sobre o avanço da Inteligência Artificial, robôs autônomos, falsificações em massa (deepfakes) e a corrida mundial por segurança e autenticação. Como você provará que é um ser humano no futuro digital sem vender sua alma?</p>
+
+              <div class="ebook-tags-row">
+                <span class="ebook-tag-chip" style="border-color:var(--amber);color:var(--amber-light)">🤖 Inteligência Artificial</span>
+                <span class="ebook-tag-chip">🪪 Prova de Humanidade</span>
+                <span class="ebook-tag-chip">🔐 Autenticação Web3</span>
+                <span class="ebook-tag-chip">⚡ Ficção Hipotética</span>
+              </div>
+            </div>
+
+            <div class="ebook-actions-group">
+              <button type="button" class="btn-reserve-ebook2" id="btn-reserve-ebook2" onclick="handleReserveEbook2()">
+                <span id="btn-reserve-icon">🔔</span> <span id="btn-reserve-text">Reservar Acesso Antecipado (+30 pts Reputação)</span>
+              </button>
+              <span style="font-size:0.8rem;color:var(--gray-light);text-align:center">Você receberá o exemplar em primeira mão assim que for finalizado.</span>
+            </div>
           </div>
         </div>
 
@@ -787,16 +861,17 @@
   </section>
 
   <!-- ============================================================
-       CAPTURA DE EMAIL — LISTA DE ESPERA
+       LIBERAÇÃO DO EBOOK #1 — CAPTURA DE EMAIL
   ============================================================ -->
   <section class="section email-capture" id="lista-espera" aria-labelledby="waitlist-title">
-    <div class="container">
+    <div class="container" id="ebook-gratis">
       <div class="email-capture__box">
-        <div class="section-label">Lista de espera</div>
-        <h2 id="waitlist-title">Seja avisado no <span class="gradient-text">lançamento</span></h2>
-        <p style="margin-top:12px;font-size:1rem;color:var(--gray-light)">O Manual Pi Network está em produção final. Cadastre seu e-mail e seja o primeiro a saber quando estiver disponível — com condições especiais para quem entrou cedo.</p>
+        <div class="section-label">Ebook Gratuito #1</div>
+        <h2 id="waitlist-title">Baixe o <span class="gradient-text">Manual Pi Network</span> Gratuitamente</h2>
+        <p style="margin-top:12px;font-size:1rem;color:var(--gray-light)">Cadastre seu e-mail para desbloquear na hora o download completo (PDF e EPUB) e receba novidades, avisos de atualização e ofertas exclusivas por e-mail (cancele a qualquer momento).</p>
 
-        <form class="email-capture__form" id="waitlist-form" novalidate aria-label="Formulário de lista de espera">
+        <!-- FORMULÁRIO DE CAPTURA (SOME APÓS SUBMETER) -->
+        <form class="email-capture__form" id="waitlist-form" novalidate aria-label="Formulário de liberação do manual">
           <div class="form-group">
             <label for="waitlist-name">Seu nome <span aria-hidden="true" style="color:var(--amber)">*</span></label>
             <input type="text" id="waitlist-name" name="name" placeholder="Como posso te chamar?" autocomplete="given-name" required aria-required="true" />
@@ -811,25 +886,47 @@
           <div class="form-consent">
             <input type="checkbox" id="consent-lgpd" name="consent" required aria-required="true" />
             <label for="consent-lgpd">
-              Concordo em receber comunicações por e-mail sobre o lançamento do Manual Pi Network e novidades do canal <strong>@hokage22b</strong>.
-              Sei que posso cancelar a qualquer momento. Meus dados serão usados apenas para esta finalidade, conforme a
+              Quero receber o Manual Pi Network gratuitamente e concordo em receber avisos de atualização, novidades sobre o Ebook #2 e ofertas do canal <strong>@hokage22b</strong>.
+              Sei que posso cancelar a qualquer momento com 1 clique. Conforme a
               <a href="legal/politica-de-privacidade.html" target="_blank">Política de Privacidade</a>
-              e a LGPD (Lei nº 13.709/2018). <span aria-hidden="true" style="color:var(--amber)">*</span>
+              e a LGPD. <span aria-hidden="true" style="color:var(--amber)">*</span>
             </label>
           </div>
           <div class="form-error-msg" id="consent-error" role="alert">É necessário concordar para continuar.</div>
 
           <button type="submit" class="btn btn-primary btn-submit form-submit" id="waitlist-submit">
-            ✉ Entrar na lista de espera
+            🔓 Desbloquear e Baixar o Manual Agora
           </button>
 
           <div class="form-security" aria-label="Segurança do formulário">
-            <span aria-hidden="true">🔒</span> Sem spam. Sem venda de dados. Cancelamento a qualquer momento.
+            <span aria-hidden="true">🔒</span> Sem spam. Seus dados estão protegidos. Cancelamento a qualquer momento.
           </div>
         </form>
 
-        <div class="form-success" id="form-success" role="alert" aria-live="polite">
-          ✅ Pronto! Você está na lista. Te avisarei assim que o manual estiver disponível.
+        <!-- BOX DESBLOQUEADO (SUBSTITUI A LISTA DE ESPERA QUANDO PREENCHIDA) -->
+        <div class="unlocked-lead-card" id="unlocked-lead-card" style="display:none">
+          <div class="unlocked-lead-badge">✓ ACESSO LIBERADO</div>
+          <h3 style="font-size:1.7rem;color:var(--white);margin-bottom:10px">Parabéns, <span id="lead-unlocked-name">Pioneiro</span>!</h3>
+          <p style="font-size:1rem;color:var(--white-soft);max-width:580px;margin:0 auto">
+            Seu acesso ao <strong>Manual Pi Network</strong> foi liberado com sucesso para o e-mail <strong id="lead-unlocked-email" style="color:var(--amber-light)">seu@email.com</strong>. Escolha o formato abaixo para baixar agora:
+          </p>
+
+          <div class="unlocked-download-row">
+            <a href="downloads/Manual-Pi-Network.pdf" download="Manual-Pi-Network.pdf" class="btn-download btn-download-pdf" onclick="recordEbookDownload('pdf')">
+              <span>📄</span> Baixar PDF (563 KB)
+            </a>
+            <a href="downloads/Manual-Pi-Network.epub" download="Manual-Pi-Network.epub" class="btn-download btn-download-epub" onclick="recordEbookDownload('epub')">
+              <span>📱</span> Baixar EPUB (151 KB)
+            </a>
+          </div>
+
+          <div class="unlocked-lead-tip">
+            <strong style="color:var(--amber-light)">🚀 Próximo Passo na Web3:</strong> Faça login com sua conta Pi na <strong>Área de Membros</strong> acima para reservar o Ebook #2 <em>("O dia que o mundo pediu pra provar quem você era")</em> e acumular pontos no <strong>Sistema de Reputação isar.pi</strong>!
+          </div>
+
+          <div>
+            <button type="button" class="btn-switch-email" onclick="resetLeadRegistration()">Cadastrar outro e-mail</button>
+          </div>
         </div>
       </div>
     </div>
