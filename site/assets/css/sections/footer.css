@@ -1,0 +1,233 @@
+/* ============================================================
+   isar.pi — Section: Footer, Legal, Thank You & Reveals
+   ============================================================ */
+
+/* --- Footer --- */
+.footer {
+  border-top: 1px solid var(--border-glass);
+  padding: 64px 0 32px;
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.footer__logo {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.footer__brand p {
+  font-size: 0.85rem;
+  max-width: 260px;
+  margin-bottom: 20px;
+}
+
+.footer__socials {
+  display: flex;
+  gap: 12px;
+}
+
+.footer__social {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all var(--transition);
+  color: var(--gray-light) !important;
+}
+
+.footer__social:hover {
+  background: rgba(109, 40, 217, 0.2);
+  border-color: var(--violet-light);
+  color: var(--white) !important;
+  transform: translateY(-2px);
+}
+
+.footer__col h4 {
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--amber);
+  margin-bottom: 16px;
+}
+
+.footer__links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer__links a {
+  font-size: 0.88rem;
+  color: var(--gray-light);
+}
+
+.footer__links a:hover {
+  color: var(--white);
+}
+
+.footer__disclaimer {
+  font-size: 0.75rem;
+  color: var(--gray);
+  margin-top: 16px;
+  line-height: 1.6;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 20px;
+}
+
+.footer__bottom {
+  border-top: 1px solid var(--border-glass);
+  padding-top: 24px;
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer__legal {
+  font-size: 0.8rem;
+  color: var(--gray);
+}
+
+.footer__pi-ref {
+  font-size: 0.8rem;
+  color: var(--amber);
+  font-family: var(--font-head);
+  font-weight: 600;
+}
+
+/* --- Legal Pages --- */
+.legal-page {
+  padding: 120px 0 80px;
+}
+
+.legal-page h1 {
+  margin-bottom: 8px;
+}
+
+.legal-page__meta {
+  color: var(--gray);
+  font-size: 0.85rem;
+  margin-bottom: 48px;
+}
+
+.legal-content {
+  max-width: 760px;
+}
+
+.legal-content h2 {
+  font-size: 1.3rem;
+  color: var(--amber);
+  margin: 40px 0 14px;
+}
+
+.legal-content h3 {
+  font-size: 1.05rem;
+  color: var(--white-soft);
+  margin: 24px 0 10px;
+}
+
+.legal-content p {
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+  color: var(--gray-light);
+}
+
+.legal-content ul {
+  padding-left: 20px;
+  margin-bottom: 14px;
+}
+
+.legal-content li {
+  font-size: 0.95rem;
+  color: var(--gray-light);
+  margin-bottom: 6px;
+}
+
+.legal-content a {
+  color: var(--violet-light);
+}
+
+.legal-notice {
+  padding: 16px 20px;
+  background: rgba(245, 158, 11, 0.07);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  color: var(--amber-light);
+  margin-bottom: 32px;
+}
+
+/* --- Thank You Page --- */
+.thankyou {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 24px;
+}
+
+.thankyou__box {
+  max-width: 520px;
+}
+
+.thankyou__icon {
+  font-size: 5rem;
+  margin-bottom: 24px;
+  line-height: 1;
+  display: block;
+}
+
+.thankyou__box h1 {
+  margin-bottom: 16px;
+}
+
+.thankyou__box p {
+  font-size: 1.05rem;
+  margin-bottom: 32px;
+}
+
+.thankyou__steps {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 32px 0;
+}
+
+/* --- Scroll Animations (Reveal) --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }

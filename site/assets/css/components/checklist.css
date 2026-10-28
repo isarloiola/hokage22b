@@ -1,0 +1,83 @@
+/* ============================================================
+   isar.pi — Component: Checklist Mainnet & KYC
+   ============================================================ */
+
+.checklist-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 40px;
+}
+
+.checklist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.checklist-progress-bar-container {
+  width: 100%;
+  height: 10px;
+  background: rgba(13, 1, 24, 0.7);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.checklist-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet), var(--amber), var(--success));
+  width: 0%;
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+.checklist-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.checklist-item {
+  background: rgba(13, 1, 24, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.checklist-item:hover {
+  background: rgba(109, 40, 217, 0.15);
+  border-color: rgba(109, 40, 217, 0.3);
+}
+
+.checklist-item.checked {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.checklist-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--amber);
+  cursor: pointer;
+}
+
+.checklist-item-title {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.checklist-item.checked .checklist-item-title {
+  color: #6ee7b7;
+  text-decoration: line-through;
+}

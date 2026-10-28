@@ -1,0 +1,41 @@
+/* ============================================================
+   isar.pi by hokage22b — Design System Tokens
+   Dark mode: Roxo profundo + Âmbar/Dourado
+   ============================================================ */
+
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap');
+
+/* --- Tokens & Design Variables --- */
+:root {
+  --bg-base:       #0d0118;
+  --bg-card:       rgba(26, 5, 51, 0.7);
+  --bg-glass:      rgba(109, 40, 217, 0.08);
+  --border-glass:  rgba(109, 40, 217, 0.25);
+  --violet:        #6d28d9;
+  --violet-light:  #8b5cf6;
+  --violet-glow:   rgba(109, 40, 217, 0.4);
+  --amber:         #f59e0b;
+  --amber-light:   #fbbf24;
+  --amber-glow:    rgba(245, 158, 11, 0.35);
+  --white:         #f8f4ff;
+  --white-soft:    #c4b5fd;
+  --gray:          #7c6fa0;
+  --gray-light:    #a89cc0;
+  --success:       #10b981;
+  --danger:        #ef4444;
+
+  --font-head:   'Outfit', sans-serif;
+  --font-body:   'Inter', sans-serif;
+
+  --radius-sm:  8px;
+  --radius-md:  16px;
+  --radius-lg:  24px;
+  --radius-xl:  32px;
+
+  --shadow-glow-v: 0 0 40px rgba(109, 40, 217, 0.3);
+  --shadow-glow-a: 0 0 40px rgba(245, 158, 11, 0.3);
+  --shadow-card:   0 8px 32px rgba(0, 0, 0, 0.5);
+
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

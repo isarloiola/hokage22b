@@ -1,0 +1,138 @@
+/* ============================================================
+   isar.pi — Section: Pi Referral (Convite & Mineração)
+   ============================================================ */
+
+.pi-referral {
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.12) 0%, rgba(26, 5, 51, 0.8) 100%);
+  border-top: 1px solid var(--border-glass);
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.pi-referral__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.pi-referral__icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  line-height: 1;
+  display: block;
+}
+
+.pi-referral__code-box {
+  margin: 24px 0;
+  padding: 20px 24px;
+  background: rgba(109, 40, 217, 0.15);
+  border: 1px solid rgba(109, 40, 217, 0.4);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pi-referral__code-label {
+  font-size: 0.78rem;
+  color: var(--gray-light);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: var(--font-head);
+  font-weight: 600;
+}
+
+.pi-referral__code {
+  font-family: var(--font-head);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--amber);
+  letter-spacing: 0.05em;
+}
+
+.pi-referral__copy-btn {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--amber);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-family: var(--font-head);
+  font-weight: 600;
+  transition: all var(--transition);
+  margin-left: auto;
+}
+
+.pi-referral__copy-btn:hover {
+  background: rgba(245, 158, 11, 0.25);
+}
+
+.pi-referral__disclaimer {
+  font-size: 0.8rem;
+  color: var(--gray);
+  line-height: 1.6;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--border-glass);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-top: 20px;
+}
+
+.pi-referral__visual {
+  text-align: center;
+}
+
+.pi-referral__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pi-referral__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  text-align: left;
+  transition: border-color var(--transition);
+}
+
+.pi-referral__step:hover {
+  border-color: rgba(109, 40, 217, 0.5);
+}
+
+.pi-referral__step-num {
+  min-width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--violet), var(--violet-light));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.pi-referral__step h4 {
+  font-size: 0.9rem;
+  color: var(--white);
+  margin-bottom: 2px;
+}
+
+.pi-referral__step p {
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.pi-referral__ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}

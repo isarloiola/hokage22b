@@ -1,0 +1,120 @@
+/* ============================================================
+   isar.pi — Section: Blockchain & Web3 Education
+   ============================================================ */
+
+/* --- Blockchain Section --- */
+.blockchain__intro {
+  max-width: 680px;
+  margin: 0 auto 56px;
+}
+
+.blockchain__steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  position: relative;
+}
+
+.blockchain__steps::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--border-glass), transparent);
+  pointer-events: none;
+}
+
+.blockchain__step {
+  padding: 32px 28px;
+  position: relative;
+  text-align: center;
+}
+
+.blockchain__step-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0 auto 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.blockchain__step-num--1 { background: rgba(109, 40, 217, 0.2); border: 2px solid var(--violet-light); color: var(--violet-light); }
+.blockchain__step-num--2 { background: rgba(245, 158, 11, 0.2);  border: 2px solid var(--amber);        color: var(--amber); }
+.blockchain__step-num--3 { background: rgba(16, 185, 129, 0.2);  border: 2px solid var(--success);      color: #6ee7b7; }
+
+.blockchain__step h3 {
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.blockchain__step p {
+  font-size: 0.88rem;
+}
+
+.blockchain__labels {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 48px;
+  flex-wrap: wrap;
+}
+
+.blockchain__label-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--gray-light);
+}
+
+/* --- Web3 Section --- */
+.web3 {
+  background: rgba(109, 40, 217, 0.04);
+}
+
+.web3__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.web3__card {
+  padding: 28px;
+}
+
+.web3__card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 16px;
+}
+
+.web3__card-icon--1 { background: rgba(109, 40, 217, 0.15); }
+.web3__card-icon--2 { background: rgba(245, 158, 11, 0.15); }
+.web3__card-icon--3 { background: rgba(16, 185, 129, 0.15); }
+.web3__card-icon--4 { background: rgba(239, 68, 68, 0.15); }
+.web3__card-icon--5 { background: rgba(59, 130, 246, 0.15); }
+.web3__card-icon--6 { background: rgba(168, 85, 247, 0.15); }
+
+.web3__card h3 {
+  color: var(--white);
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+}
+
+.web3__card p {
+  font-size: 0.88rem;
+}

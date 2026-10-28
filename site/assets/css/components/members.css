@@ -1,0 +1,140 @@
+/* ============================================================
+   isar.pi — Component: Área de Membros & Dashboard VIP
+   ============================================================ */
+
+.members-area {
+  position: relative;
+  background: radial-gradient(circle at 50% 50%, rgba(26, 5, 51, 0.6), var(--bg-base) 80%);
+}
+
+.members-locked-box {
+  background: linear-gradient(135deg, rgba(26, 5, 51, 0.85), rgba(13, 1, 24, 0.95));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  padding: 56px 32px;
+  max-width: 840px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
+.members-locked-icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  display: inline-block;
+  filter: drop-shadow(0 0 20px var(--amber-glow));
+}
+
+.members-benefits-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 32px 0 36px;
+  text-align: left;
+}
+
+.members-benefit-item {
+  background: rgba(109, 40, 217, 0.1);
+  border: 1px solid rgba(109, 40, 217, 0.2);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.members-benefit-item h4 {
+  font-size: 1rem;
+  color: var(--amber-light);
+  margin-bottom: 6px;
+}
+
+.members-benefit-item p {
+  font-size: 0.85rem;
+  color: var(--gray-light);
+  line-height: 1.4;
+}
+
+.btn-members-connect {
+  font-size: 1.1rem;
+  padding: 16px 36px;
+}
+
+/* Logged in Dashboard */
+.members-dashboard {
+  display: none;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.members-dashboard.active {
+  display: block;
+}
+
+.members-header-bar {
+  background: linear-gradient(135deg, rgba(40, 10, 75, 0.9), rgba(26, 5, 51, 0.8));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+  gap: 20px;
+  box-shadow: var(--shadow-glow-v);
+}
+
+.members-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.members-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--amber), var(--violet));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: #fff;
+  font-weight: 900;
+  box-shadow: 0 0 20px var(--amber-glow);
+}
+
+.members-user-info h3 {
+  font-size: 1.35rem;
+  color: var(--white);
+  margin: 0 0 4px;
+}
+
+.members-user-badge {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--success);
+  color: #6ee7b7;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.members-logout-btn {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.members-logout-btn:hover {
+  background: var(--danger);
+  color: #fff;
+}

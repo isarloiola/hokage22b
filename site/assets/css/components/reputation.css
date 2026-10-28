@@ -1,0 +1,167 @@
+/* ============================================================
+   isar.pi — Component: Sistema de Reputação do Pioneiro
+   ============================================================ */
+
+.reputation-box {
+  background: linear-gradient(135deg, rgba(40, 10, 75, 0.95), rgba(18, 2, 38, 0.95));
+  border: 2px solid var(--amber);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  margin-bottom: 40px;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(245, 158, 11, 0.2);
+  overflow: hidden;
+}
+
+.reputation-box::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.2), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.reputation-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.reputation-title-group h3 {
+  font-size: 1.45rem;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.reputation-title-group p {
+  font-size: 0.92rem;
+  color: var(--gray-light);
+}
+
+.reputation-badge-score {
+  background: rgba(13, 1, 24, 0.85);
+  border: 1px solid var(--amber);
+  border-radius: var(--radius-md);
+  padding: 12px 24px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+}
+
+.reputation-score-num {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--amber-light);
+  line-height: 1;
+  font-family: var(--font-head);
+}
+
+.reputation-score-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--white-soft);
+  margin-top: 4px;
+}
+
+.reputation-level-bar-container {
+  margin-bottom: 28px;
+}
+
+.reputation-level-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.reputation-level-name {
+  color: #6ee7b7;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reputation-progress-track {
+  width: 100%;
+  height: 12px;
+  background: rgba(13, 1, 24, 0.8);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reputation-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet), var(--amber), #10b981);
+  width: 10%;
+  border-radius: 20px;
+  transition: width 0.5s ease;
+}
+
+.reputation-tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.reputation-task-item {
+  background: rgba(13, 1, 24, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  transition: all var(--transition);
+}
+
+.reputation-task-item.done {
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.reputation-task-label {
+  font-size: 0.85rem;
+  color: var(--white);
+  line-height: 1.3;
+}
+
+.reputation-task-pts {
+  font-weight: 800;
+  font-size: 0.8rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.reputation-task-item.done .reputation-task-pts {
+  background: #10b981;
+  color: #064e3b;
+}
+
+.reputation-task-item:not(.done) .reputation-task-pts {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--amber-light);
+}
+
+.reputation-why-box {
+  background: rgba(13, 1, 24, 0.5);
+  border-left: 3px solid var(--violet-light);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 18px;
+  font-size: 0.88rem;
+  color: var(--white-soft);
+  line-height: 1.5;
+}

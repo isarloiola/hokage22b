@@ -1,0 +1,187 @@
+/* ============================================================
+   isar.pi — Component: Forms & Lead Capture
+   ============================================================ */
+
+.email-capture {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.06) 0%, rgba(109, 40, 217, 0.08) 100%);
+}
+
+.email-capture__box {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px;
+  border-radius: var(--radius-xl);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+
+.email-capture__form {
+  margin-top: 32px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--white-soft);
+  margin-bottom: 6px;
+  font-family: var(--font-head);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"] {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: var(--violet-light);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.2);
+}
+
+.form-group input::placeholder {
+  color: var(--gray);
+}
+
+.form-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.form-consent input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: var(--violet);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.form-consent label {
+  font-size: 0.82rem;
+  color: var(--gray-light);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.form-consent label a {
+  color: var(--violet-light);
+  text-decoration: underline;
+}
+
+.form-submit {
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
+  font-size: 1.05rem;
+  padding: 16px 32px;
+}
+
+.form-security {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--gray);
+}
+
+.form-success {
+  display: none;
+  padding: 24px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-md);
+  text-align: center;
+  margin-top: 24px;
+  color: var(--success);
+  font-family: var(--font-head);
+  font-weight: 600;
+}
+
+.form-error-msg {
+  display: none;
+  font-size: 0.82rem;
+  color: var(--danger);
+  margin-top: 6px;
+  text-align: left;
+}
+
+/* --- Box Desbloqueado Instantâneo (Pós-Lead) --- */
+.unlocked-lead-card {
+  background: linear-gradient(135deg, rgba(26, 5, 51, 0.95), rgba(13, 1, 24, 0.98));
+  border: 2px solid var(--success);
+  border-radius: var(--radius-xl);
+  padding: 44px 32px;
+  text-align: center;
+  box-shadow: 0 16px 48px rgba(16, 185, 129, 0.2);
+  position: relative;
+}
+
+.unlocked-lead-badge {
+  background: #10b981;
+  color: #064e3b;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 6px 16px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.unlocked-download-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 600px;
+  margin: 28px auto 24px;
+}
+
+.unlocked-lead-tip {
+  background: rgba(109, 40, 217, 0.12);
+  border: 1px dashed var(--amber);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  font-size: 0.92rem;
+  color: var(--white-soft);
+  max-width: 650px;
+  margin: 0 auto 20px;
+  text-align: left;
+}
+
+.btn-switch-email {
+  background: none;
+  border: none;
+  color: var(--gray-light);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.btn-switch-email:hover {
+  color: var(--amber-light);
+}

@@ -1,0 +1,170 @@
+/* ============================================================
+   isar.pi — Component: Modals (Pi Network & Demo Auth)
+   ============================================================ */
+
+.pi-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 1, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.pi-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pi-modal {
+  background: linear-gradient(135deg, rgba(26, 5, 51, 0.98), rgba(13, 1, 24, 0.98));
+  border: 2px solid var(--violet);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  max-height: 90dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 50px rgba(109, 40, 217, 0.5);
+  transform: scale(0.95);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pi-modal-overlay.active .pi-modal {
+  transform: scale(1);
+}
+
+.pi-modal-close {
+  position: absolute;
+  top: 18px; right: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: 50%;
+  width: 36px; height: 36px;
+  color: var(--white);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition);
+}
+
+.pi-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.pi-modal-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--amber), var(--violet));
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #fff;
+  box-shadow: 0 0 30px var(--amber-glow);
+}
+
+.pi-modal h3 {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+
+.pi-modal p {
+  font-size: 0.95rem;
+  color: var(--gray-light);
+  margin-bottom: 24px;
+}
+
+.env-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.env-badge.pi-detected {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid var(--success);
+  color: #6ee7b7;
+}
+
+.env-badge.regular-detected {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid var(--amber);
+  color: var(--amber-light);
+}
+
+.btn-pi-auth {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.demo-login-box {
+  background: rgba(13, 1, 24, 0.6);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-top: 18px;
+  text-align: left;
+}
+
+.demo-login-box h5 {
+  font-size: 0.88rem;
+  color: var(--amber-light);
+  margin-bottom: 8px;
+}
+
+.demo-login-box p {
+  font-size: 0.82rem;
+  color: var(--gray-light);
+  margin-bottom: 12px;
+}
+
+.demo-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.demo-input-group input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--white);
+  font-size: 1rem;
+}
+
+.demo-input-group input:focus {
+  outline: none;
+  border-color: var(--amber);
+}

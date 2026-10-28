@@ -1,0 +1,42 @@
+/* ============================================================
+   isar.pi — Component: Cookie Banner (LGPD)
+   ============================================================ */
+
+.cookie-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  max-width: 640px;
+  margin: 0 auto;
+  z-index: 200;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cookie-banner.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.cookie-banner__text {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--gray-light);
+  min-width: 200px;
+}
+
+.cookie-banner__text a {
+  color: var(--violet-light);
+}
+
+.cookie-banner__btns {
+  display: flex;
+  gap: 10px;
+}

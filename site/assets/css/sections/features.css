@@ -1,0 +1,232 @@
+/* ============================================================
+   isar.pi — Section: Features (Problema, Conteúdo, Produto, Audiência)
+   ============================================================ */
+
+/* --- Problem Section --- */
+.problem {
+  background: rgba(109, 40, 217, 0.04);
+}
+
+.problem__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.problem__card {
+  padding: 28px;
+}
+
+.problem__icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.problem__card h3 {
+  color: var(--white);
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+.problem__card p {
+  font-size: 0.92rem;
+}
+
+/* --- Learn Section --- */
+.learn__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.learn__item {
+  padding: 28px;
+  text-align: center;
+}
+
+.learn__num {
+  font-family: var(--font-head);
+  font-size: 3rem;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(109, 40, 217, 0.4);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.learn__item h3 {
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.learn__item p {
+  font-size: 0.88rem;
+}
+
+/* --- Product Section --- */
+.product__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.product__book img {
+  width: 100%;
+  max-width: 320px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6), var(--shadow-glow-v);
+}
+
+.product__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.product__tag-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.product__tag {
+  font-size: 0.8rem;
+  padding: 5px 14px;
+  border-radius: 100px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  color: var(--white-soft);
+  font-family: var(--font-head);
+  font-weight: 500;
+}
+
+.product__parts {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.product__part {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition);
+}
+
+.product__part:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.product__part-icon {
+  font-size: 1.3rem;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+.product__part-info h4 {
+  font-size: 0.9rem;
+  color: var(--white);
+  margin-bottom: 2px;
+}
+
+.product__part-info p {
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.product__bonuses {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product__bonus {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: var(--white-soft);
+}
+
+.product__bonus::before {
+  content: '✦';
+  color: var(--amber);
+  font-size: 0.7rem;
+  min-width: 16px;
+}
+
+.product__cta-box {
+  padding: 24px;
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.product__waitlist-label {
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+
+.product__waitlist-title {
+  font-size: 1.3rem;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.product__waitlist-sub {
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+
+/* --- Audience Section --- */
+.audience {
+  background: rgba(109, 40, 217, 0.04);
+}
+
+.audience__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.audience__card {
+  padding: 32px;
+}
+
+.audience__icon {
+  font-size: 2.2rem;
+  margin-bottom: 16px;
+}
+
+.audience__card h3 {
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.audience__card p {
+  font-size: 0.9rem;
+}
+
+.audience__chapters {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--amber);
+  font-family: var(--font-head);
+  font-weight: 600;
+}

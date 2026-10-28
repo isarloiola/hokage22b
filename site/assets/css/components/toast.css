@@ -1,0 +1,31 @@
+/* ============================================================
+   isar.pi — Component: Toast Notifications
+   ============================================================ */
+
+.toast-box {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: rgba(26, 5, 51, 0.95);
+  border: 1px solid var(--amber);
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  color: var(--white);
+  font-size: 0.92rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  z-index: 1100;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.toast-box.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
