@@ -39,6 +39,9 @@
   }
   </script>
 
+  <!-- Pi Network JavaScript SDK -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>π</text></svg>" />
 </head>
@@ -64,10 +67,17 @@
           <li><a href="#produto">O Manual</a></li>
           <li><a href="#blockchain">Blockchain</a></li>
           <li><a href="#web3">Web3</a></li>
+          <li><a href="#pi-browser">Pi Browser</a></li>
+          <li><a href="#membros">Área de Membros</a></li>
           <li><a href="#youtube">YouTube</a></li>
           <li><a href="#pi-convite">Minerar Pi</a></li>
         </ul>
-        <a href="#lista-espera" class="btn btn-primary btn-sm navbar__cta" id="nav-cta">Lista de espera</a>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button type="button" class="btn btn-secondary btn-sm nav-pi-btn" id="nav-pi-login" aria-label="Acessar com Pi Network">
+            <span class="pi-sym">π</span> <span id="nav-pi-text">Entrar com Pi</span>
+          </button>
+          <a href="#lista-espera" class="btn btn-primary btn-sm navbar__cta" id="nav-cta">Lista de espera</a>
+        </div>
         <button class="navbar__toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
           <span></span><span></span><span></span>
         </button>
@@ -81,9 +91,14 @@
     <a href="#produto" class="mobile-link">O Manual</a>
     <a href="#blockchain" class="mobile-link">Blockchain</a>
     <a href="#web3" class="mobile-link">Web3</a>
+    <a href="#pi-browser" class="mobile-link">Pi Browser</a>
+    <a href="#membros" class="mobile-link">Área de Membros</a>
     <a href="#youtube" class="mobile-link">YouTube</a>
     <a href="#pi-convite" class="mobile-link">Minerar Pi</a>
-    <a href="#lista-espera" class="btn btn-primary mobile-link">Lista de espera</a>
+    <button type="button" class="btn btn-secondary mobile-link" id="mobile-pi-login" style="margin-top:10px;width:80%">
+      <span class="pi-sym">π</span> <span id="mobile-pi-text">Entrar com Pi</span>
+    </button>
+    <a href="#lista-espera" class="btn btn-primary mobile-link" style="width:80%">Lista de espera</a>
   </div>
 
   <!-- ============================================================
@@ -406,6 +421,254 @@
   </section>
 
   <!-- ============================================================
+       GUIA PI BROWSER & RESPOSTA KYC
+  ============================================================ -->
+  <section class="section pi-browser-guide" id="pi-browser" aria-labelledby="pi-browser-title">
+    <div class="container text-center">
+      <div class="section-label">Ecossistema Web3 Pi</div>
+      <h2 class="section-title" id="pi-browser-title">Como Baixar e Utilizar o <span class="gradient-text">Pi Browser</span></h2>
+      <p class="section-subtitle">O navegador descentralizado que conecta você à carteira, utilidades e aplicativos Web3 da Pi Network.</p>
+
+      <!-- ALERTA KYC DESTACADO -->
+      <div class="pi-kyc-alert reveal">
+        <div class="pi-kyc-header">
+          <span class="pi-kyc-badge">✓ FATO CONFIRMADO</span>
+          <h3 class="pi-kyc-title">Precisa ter KYC para usar o Pi Browser? <span class="pi-kyc-verdict">NÃO!</span></h3>
+        </div>
+        <p style="font-size:1.05rem;color:var(--white-soft);text-align:left;line-height:1.6">
+          <strong>Qualquer pessoa pode baixar e usar o Pi Browser hoje mesmo, sem nenhum KYC.</strong> O Pi Browser é uma ferramenta aberta e gratuita de navegação Web3. Veja abaixo exatamente o que você já pode fazer sem KYC e em que momento o KYC passa a ser exigido:
+        </p>
+
+        <div class="pi-kyc-grid">
+          <div class="pi-kyc-col no-kyc">
+            <h4><span style="color:#10b981">🟢</span> O que você faz SEM KYC (Livre agora):</h4>
+            <ul>
+              <li><span>✅</span> <strong>Baixar e instalar</strong> o Pi Browser na Google Play ou App Store</li>
+              <li><span>✅</span> <strong>Criar sua Pi Wallet</strong> e testar transações na Pi Testnet</li>
+              <li><span>✅</span> <strong>Navegar em dApps Web3</strong> (como este site, ecossistema e fóruns)</li>
+              <li><span>✅</span> <strong>Fazer login seguro</strong> com sua conta de Pioneiro em aplicativos</li>
+              <li><span>✅</span> <strong>Acessar o Pi Chat</strong>, Brainstorm e utilidades da comunidade</li>
+            </ul>
+          </div>
+          <div class="pi-kyc-col with-kyc">
+            <h4><span style="color:var(--amber)">🟡</span> Para que o KYC é REALMENTE exigido:</h4>
+            <ul>
+              <li><span>🔒</span> <strong>Migrar o saldo minerado</strong> no app Pi para a Blockchain Mainnet oficial</li>
+              <li><span>🔒</span> <strong>Enviar ou receber Pi reais</strong> entre carteiras na Mainnet</li>
+              <li><span>🔒</span> <strong>Comprar produtos no mundo real</strong> usando saldo real migrado da Mainnet</li>
+              <li><span>🔒</span> <strong>Garantir a regra:</strong> 1 pessoa humana = 1 conta (combate a bots)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASSO A PASSO ILUSTRADO -->
+      <div class="pi-steps-grid">
+        <div class="glass-card pi-step-card reveal">
+          <div>
+            <div class="pi-step-num">1</div>
+            <h3>Baixe o Pi Browser</h3>
+            <p>Disponível gratuitamente para Android e iOS. É o aplicativo oficial seguro da Pi Core Team para navegação Web3.</p>
+          </div>
+          <div class="store-badges">
+            <a href="https://play.google.com/store/apps/details?id=pi.browser" target="_blank" rel="noopener noreferrer" class="store-btn">
+              <span>🤖</span> Google Play (Android)
+            </a>
+            <a href="https://apps.apple.com/app/pi-browser/id1569780856" target="_blank" rel="noopener noreferrer" class="store-btn">
+              <span>🍎</span> App Store (iPhone)
+            </a>
+          </div>
+        </div>
+
+        <div class="glass-card pi-step-card reveal reveal-delay-1">
+          <div>
+            <div class="pi-step-num">2</div>
+            <h3>Login sem senha</h3>
+            <p>Abra seu aplicativo de mineração <strong>Pi Network</strong>, toque no menu <strong>☰</strong> > <strong>Pi Browser</strong> e clique no botão roxo <strong>"Sign In to Pi Browser"</strong>. A conexão é instantânea.</p>
+          </div>
+          <span style="font-size:0.82rem;color:var(--amber-light);margin-top:auto">✓ Sem necessidade de digitar senhas</span>
+        </div>
+
+        <div class="glass-card pi-step-card reveal reveal-delay-2">
+          <div>
+            <div class="pi-step-num">3</div>
+            <h3>Crie a Pi Wallet</h3>
+            <p>No Pi Browser, abra <strong>wallet.pi</strong>. Crie sua carteira e <strong>anote as 24 palavras em um papel</strong>. Nunca compartilhe sua frase com ninguém nem digite em sites suspeitos.</p>
+          </div>
+          <span style="font-size:0.82rem;color:var(--danger);margin-top:auto">⚠️ Atenção: A Core Team nunca pede suas 24 palavras</span>
+        </div>
+
+        <div class="glass-card pi-step-card reveal reveal-delay-3">
+          <div>
+            <div class="pi-step-num">4</div>
+            <h3>Acesse este site na Web3</h3>
+            <p>Cole o endereço deste site na barra do Pi Browser para testar o login Web3 nativo e a Área de Membros:</p>
+            <div class="pi-browser-url-box">
+              <span class="pi-browser-url-text" id="site-url-box">isarloiola.github.io/hokage22b</span>
+              <button type="button" class="btn-copy-mini" onclick="copySiteUrl()" aria-label="Copiar link do site">Copiar</button>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" onclick="openPiLoginModal()" style="margin-top:14px;width:100%">
+            ⚡ Testar Login com Pi
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ÁREA DE MEMBROS / PAINEL DO PIONEIRO
+  ============================================================ -->
+  <section class="section members-area" id="membros" aria-labelledby="members-title">
+    <div class="container">
+      <div class="text-center" style="margin-bottom:36px">
+        <div class="section-label">Acesso Exclusivo</div>
+        <h2 class="section-title" id="members-title">Área de Membros &amp; <span class="gradient-text">Pioneiros</span></h2>
+        <p class="section-subtitle">Baixe os exemplares completos do Manual Pi Network, acompanhe seu checklist de migração e acesse materiais VIP.</p>
+      </div>
+
+      <!-- ESTADO 1: BLOQUEADO (Usuário deslogado) -->
+      <div class="members-locked-box" id="members-locked-view">
+        <div class="members-locked-icon" aria-hidden="true">🔐</div>
+        <h3 style="font-size:1.8rem;color:var(--white);margin-bottom:12px">Área Protegida com Autenticação Pi</h3>
+        <p style="font-size:1.05rem;color:var(--gray-light);max-width:600px;margin:0 auto">
+          Conecte-se com sua conta Pi Network ou acesse em modo teste para liberar o download do Manual em PDF e EPUB, checklist interativo e novidades exclusivas.
+        </p>
+
+        <div class="members-benefits-list">
+          <div class="members-benefit-item">
+            <h4>📄 Manual Completo em PDF</h4>
+            <p>100 páginas, 23 capítulos com diagramas, tabelas e fontes verificadas.</p>
+          </div>
+          <div class="members-benefit-item">
+            <h4>📱 Edição Digital EPUB</h4>
+            <p>Formato responsivo para ler no Kindle, celular ou tablet em qualquer lugar.</p>
+          </div>
+          <div class="members-benefit-item">
+            <h4>🛡️ Checklist Mainnet &amp; KYC</h4>
+            <p>Guia interativo para não cometer erros na migração do seu saldo.</p>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="openPiLoginModal()" style="font-size:1.1rem;padding:16px 36px">
+          <span class="pi-sym" style="font-weight:900;margin-right:6px">π</span> Conectar com Pi Network para Acessar
+        </button>
+      </div>
+
+      <!-- ESTADO 2: DASHBOARD DO PIONEIRO (Usuário logado) -->
+      <div class="members-dashboard" id="members-dashboard-view">
+        <div class="members-header-bar">
+          <div class="members-user-profile">
+            <div class="members-avatar">π</div>
+            <div class="members-user-info">
+              <h3>Olá, <span id="member-display-name">@Pioneiro</span>!</h3>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <span class="members-user-badge">✓ Membro Autenticado Pi</span>
+                <span style="font-size:0.82rem;color:var(--gray-light)" id="member-auth-type">Sessão Web3 Ativa</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="members-logout-btn" onclick="logoutPiUser()">
+            🚪 Sair / Desconectar
+          </button>
+        </div>
+
+        <!-- DOWNLOADS DOS ARQUIVOS -->
+        <h3 style="font-size:1.4rem;color:var(--white);margin-bottom:20px;display:flex;align-items:center;gap:10px">
+          <span>📥</span> Seus Arquivos Disponíveis para Download
+        </h3>
+        <div class="downloads-grid">
+          <!-- CARD PDF -->
+          <div class="download-card">
+            <div>
+              <span class="download-tag pdf">Formato PDF Oficial</span>
+              <h3>Manual Pi Network — Edição Completa</h3>
+              <p>Diagramação clássica de 100 páginas, 23 capítulos, notas de rodapé, tabelas de impostos brasileiros e gráficos de segurança.</p>
+              <div class="download-meta">
+                <span>📦 Tamanho: 563 KB</span>
+                <span>📑 100 páginas</span>
+                <span>🏷️ v0.1 Rascunho</span>
+              </div>
+            </div>
+            <a href="downloads/Manual-Pi-Network.pdf" download="Manual-Pi-Network.pdf" class="btn-download btn-download-pdf" id="btn-download-pdf">
+              <span>⬇️</span> Baixar Manual em PDF
+            </a>
+          </div>
+
+          <!-- CARD EPUB -->
+          <div class="download-card">
+            <div>
+              <span class="download-tag epub">Formato EPUB (E-reader)</span>
+              <h3>Manual Pi Network — Versão Ebook</h3>
+              <p>Ideal para leitura confortável em leitores digitais como Kindle, Kobo, Apple Books e aplicativos de celular com ajuste de fonte e tema escuro.</p>
+              <div class="download-meta">
+                <span>📦 Tamanho: 151 KB</span>
+                <span>📱 Texto fluido</span>
+                <span>🏷️ v0.1 Rascunho</span>
+              </div>
+            </div>
+            <a href="downloads/Manual-Pi-Network.epub" download="Manual-Pi-Network.epub" class="btn-download btn-download-epub" id="btn-download-epub">
+              <span>⬇️</span> Baixar Manual em EPUB
+            </a>
+          </div>
+        </div>
+
+        <!-- CHECKLIST INTERATIVO DE MIGRAÇÃO MAINNET -->
+        <div class="checklist-box">
+          <div class="checklist-header">
+            <div>
+              <h3 style="font-size:1.3rem;color:var(--white);margin-bottom:4px">Checklist do Pioneiro para a Mainnet</h3>
+              <p style="font-size:0.9rem;color:var(--gray-light)">Marque as etapas que você já concluiu para acompanhar seu progresso de segurança.</p>
+            </div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--amber)" id="checklist-progress-text">
+              0% Concluído
+            </div>
+          </div>
+
+          <div class="checklist-progress-bar-container">
+            <div class="checklist-progress-bar" id="checklist-progress-bar"></div>
+          </div>
+
+          <div class="checklist-items">
+            <label class="checklist-item" id="item-chk-1">
+              <input type="checkbox" onchange="toggleChecklistItem(1)" id="chk-1" />
+              <span class="checklist-item-title">1. Baixar o aplicativo Pi Browser oficial</span>
+            </label>
+            <label class="checklist-item" id="item-chk-2">
+              <input type="checkbox" onchange="toggleChecklistItem(2)" id="chk-2" />
+              <span class="checklist-item-title">2. Criar a Pi Wallet e salvar 24 palavras no papel</span>
+            </label>
+            <label class="checklist-item" id="item-chk-3">
+              <input type="checkbox" onchange="toggleChecklistItem(3)" id="chk-3" />
+              <span class="checklist-item-title">3. Confirmar sua carteira no Checklist Mainnet</span>
+            </label>
+            <label class="checklist-item" id="item-chk-4">
+              <input type="checkbox" onchange="toggleChecklistItem(4)" id="chk-4" />
+              <span class="checklist-item-title">4. Configurar taxa de bloqueio (Lockup) consciente</span>
+            </label>
+            <label class="checklist-item" id="item-chk-5">
+              <input type="checkbox" onchange="toggleChecklistItem(5)" id="chk-5" />
+              <span class="checklist-item-title">5. Enviar documentação para o KYC quando disponível</span>
+            </label>
+            <label class="checklist-item" id="item-chk-6">
+              <input type="checkbox" onchange="toggleChecklistItem(6)" id="chk-6" />
+              <span class="checklist-item-title">6. Aguardar aprovação do KYC (resultado no app)</span>
+            </label>
+            <label class="checklist-item" id="item-chk-7">
+              <input type="checkbox" onchange="toggleChecklistItem(7)" id="chk-7" />
+              <span class="checklist-item-title">7. Assinar termo de reconhecimento de tokens</span>
+            </label>
+            <label class="checklist-item" id="item-chk-8">
+              <input type="checkbox" onchange="toggleChecklistItem(8)" id="chk-8" />
+              <span class="checklist-item-title">8. Migração automática do saldo para a Mainnet</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        YOUTUBE
   ============================================================ -->
   <section class="section" id="youtube" aria-labelledby="youtube-title">
@@ -647,6 +910,44 @@
       <button class="btn btn-primary btn-sm" id="cookie-accept" aria-label="Aceitar cookies e fechar aviso">Entendi</button>
       <a href="legal/politica-de-privacidade.html" class="btn btn-outline btn-sm" id="cookie-learn-more">Saiba mais</a>
     </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL DE LOGIN PI NETWORK
+  ============================================================ -->
+  <div class="pi-modal-overlay" id="pi-login-modal" role="dialog" aria-modal="true" aria-labelledby="modal-pi-title">
+    <div class="pi-modal">
+      <button type="button" class="pi-modal-close" onclick="closePiLoginModal()" aria-label="Fechar modal">✕</button>
+      <div class="pi-modal-logo">π</div>
+      <h3 id="modal-pi-title">Autenticação Pi Network</h3>
+      <p>Acesse a Área de Membros usando seu perfil de Pioneiro na Web3.</p>
+
+      <!-- INDICADOR DE AMBIENTE -->
+      <div class="env-badge" id="env-badge">
+        <span id="env-badge-dot">●</span> <span id="env-badge-text">Detectando navegador...</span>
+      </div>
+
+      <!-- BOTÃO NATIVO DO PI SDK -->
+      <button type="button" class="btn btn-primary btn-pi-auth" id="btn-pi-authenticate" onclick="handlePiNativeAuth()">
+        <span class="pi-sym">π</span> Entrar com Pi Network
+      </button>
+
+      <!-- INFORMAÇÕES E MODO TESTE / DEMO -->
+      <div class="demo-login-box" id="demo-box">
+        <h5>💡 Testando fora do Pi Browser?</h5>
+        <p>Para login nativo sem senha, abra este link dentro do app <strong>Pi Browser</strong>. Se preferir testar agora no computador ou navegador padrão, use o modo de teste:</p>
+        <div class="demo-input-group">
+          <input type="text" id="demo-username-input" placeholder="Seu @usuário (ex: hokage22b)" maxlength="30" />
+          <button type="button" class="btn btn-secondary btn-sm" onclick="handleDemoLogin()">Entrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST FEEDBACK -->
+  <div class="toast-box" id="toast-msg" role="status" aria-live="polite">
+    <span id="toast-icon">ℹ️</span>
+    <span id="toast-text">Notificação</span>
   </div>
 
   <script src="assets/js/main.js"></script>

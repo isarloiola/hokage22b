@@ -261,6 +261,301 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
+  // ============================================================
+  // TOAST FEEDBACK
+  // ============================================================
+  window.showToast = function (message, icon) {
+    const toast = document.getElementById('toast-msg');
+    const toastText = document.getElementById('toast-text');
+    const toastIcon = document.getElementById('toast-icon');
+    if (!toast) return;
+
+    if (toastText) toastText.textContent = message;
+    if (toastIcon) toastIcon.textContent = icon || 'ℹ️';
+
+    toast.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(function () {
+      toast.classList.remove('show');
+    }, 3500);
+  };
+
+  // ============================================================
+  // COPIAR URL DO SITE PARA O PI BROWSER
+  // ============================================================
+  window.copySiteUrl = function () {
+    const url = 'https://isarloiola.github.io/hokage22b/';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () {
+        window.showToast('Link copiado! Cole na barra do Pi Browser.', '📋');
+      });
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      window.showToast('Link copiado! Cole na barra do Pi Browser.', '📋');
+    }
+  };
+
+  // ============================================================
+  // DETECÇÃO DO PI BROWSER & SDK
+  // ============================================================
+  function isPiBrowser() {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    return /PiBrowser|PiNetwork/i.test(ua) || (window.Pi && window.isPiBrowser);
+  }
+
+  function initPiSdk() {
+    if (window.Pi) {
+      try {
+        window.Pi.init({ version: '2.0', sandbox: false });
+      } catch (err) {
+        console.warn('Pi.init info:', err);
+      }
+    }
+  }
+
+  // ============================================================
+  // MODAL DE LOGIN PI NETWORK
+  // ============================================================
+  window.openPiLoginModal = function () {
+    const modal = document.getElementById('pi-login-modal');
+    const envBadge = document.getElementById('env-badge');
+    const envText = document.getElementById('env-badge-text');
+    const envDot = document.getElementById('env-badge-dot');
+    if (!modal) return;
+
+    const inPi = isPiBrowser();
+    if (envBadge && envText) {
+      if (inPi) {
+        envBadge.className = 'env-badge pi-detected';
+        envDot.textContent = '🟢';
+        envText.textContent = 'Pi Browser Web3 detectado';
+      } else {
+        envBadge.className = 'env-badge regular-detected';
+        envDot.textContent = '🟡';
+        envText.textContent = 'Navegador convencional (teste disponível)';
+      }
+    }
+
+    modal.classList.add('active');
+  };
+
+  window.closePiLoginModal = function () {
+    const modal = document.getElementById('pi-login-modal');
+    if (modal) modal.classList.remove('active');
+  };
+
+  // Autenticação nativa com o SDK oficial da Pi Network
+  window.handlePiNativeAuth = function () {
+    const inPi = isPiBrowser();
+    if (window.Pi && inPi) {
+      const scopes = ['username', 'payments', 'wallet_address'];
+      function onIncompletePaymentFound(payment) {
+        console.log('Pagamento incompleto:', payment);
+      }
+      window.Pi.authenticate(scopes, onIncompletePaymentFound)
+        .then(function (auth) {
+          const username = auth && auth.user ? auth.user.username : 'Pioneiro';
+          loginSuccess({
+            username: username,
+            uid: auth && auth.user ? auth.user.uid : null,
+            authType: 'Nativo Pi Web3'
+          });
+        })
+        .catch(function (err) {
+          console.error('Erro na autenticação Pi:', err);
+          window.showToast('Falha na autenticação Pi. Use o modo de teste.', '⚠️');
+        });
+    } else {
+      window.showToast('Para login automático, abra no Pi Browser ou use o modo teste abaixo!', '💡');
+      const input = document.getElementById('demo-username-input');
+      if (input) input.focus();
+    }
+  };
+
+  // Login de Demonstração / Teste para computadores e navegadores normais
+  window.handleDemoLogin = function () {
+    const input = document.getElementById('demo-username-input');
+    let username = input && input.value.trim() ? input.value.trim() : 'hokage22b_pioneer';
+    if (!username.startsWith('@')) username = '@' + username;
+
+    loginSuccess({
+      username: username,
+      uid: 'demo-' + Date.now(),
+      authType: 'Modo Teste / Demonstração'
+    });
+  };
+
+  function loginSuccess(user) {
+    try {
+      localStorage.setItem('isar_pi_user', JSON.stringify(user));
+    } catch (_) {}
+
+    updateUserInterface(user);
+    window.closePiLoginModal();
+    window.showToast('Login realizado com sucesso! Bem-vindo(a), ' + user.username, '🎉');
+
+    // Scroll suave para a Área de Membros
+    setTimeout(function () {
+      const target = document.getElementById('membros');
+      if (target) {
+        const navH = document.getElementById('navbar') ? document.getElementById('navbar').offsetHeight : 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - navH - 8;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    }, 400);
+  }
+
+  window.logoutPiUser = function () {
+    try {
+      localStorage.removeItem('isar_pi_user');
+    } catch (_) {}
+
+    updateUserInterface(null);
+    window.showToast('Você saiu da Área de Membros.', '👋');
+  };
+
+  function updateUserInterface(user) {
+    const navBtn = document.getElementById('nav-pi-login');
+    const navText = document.getElementById('nav-pi-text');
+    const mobileBtn = document.getElementById('mobile-pi-login');
+    const mobileText = document.getElementById('mobile-pi-text');
+
+    const lockedView = document.getElementById('members-locked-view');
+    const dashView = document.getElementById('members-dashboard-view');
+    const displayName = document.getElementById('member-display-name');
+    const authType = document.getElementById('member-auth-type');
+
+    if (user) {
+      if (navBtn) {
+        navBtn.classList.add('logged-in');
+        navBtn.onclick = function () {
+          const target = document.getElementById('membros');
+          if (target) {
+            const navH = document.getElementById('navbar') ? document.getElementById('navbar').offsetHeight : 80;
+            window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - navH - 8, behavior: 'smooth' });
+          }
+        };
+      }
+      if (navText) navText.textContent = user.username;
+      if (mobileText) mobileText.textContent = user.username + ' (Membro)';
+
+      if (lockedView) lockedView.style.display = 'none';
+      if (dashView) dashView.classList.add('active');
+      if (displayName) displayName.textContent = user.username;
+      if (authType) authType.textContent = user.authType || 'Sessão Web3 Ativa';
+    } else {
+      if (navBtn) {
+        navBtn.classList.remove('logged-in');
+        navBtn.onclick = window.openPiLoginModal;
+      }
+      if (navText) navText.textContent = 'Entrar com Pi';
+      if (mobileText) mobileText.textContent = 'Entrar com Pi';
+
+      if (lockedView) lockedView.style.display = 'block';
+      if (dashView) dashView.classList.remove('active');
+    }
+  }
+
+  function checkStoredSession() {
+    try {
+      const saved = localStorage.getItem('isar_pi_user');
+      if (saved) {
+        const user = JSON.parse(saved);
+        updateUserInterface(user);
+      } else {
+        updateUserInterface(null);
+      }
+    } catch (_) {
+      updateUserInterface(null);
+    }
+  }
+
+  // ============================================================
+  // CHECKLIST DO PIONEIRO (PERSISTÊNCIA & PROGRESSO)
+  // ============================================================
+  const CHECKLIST_KEY = 'isar_pi_checklist_items';
+
+  window.toggleChecklistItem = function (id) {
+    let state = {};
+    try {
+      state = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '{}');
+    } catch (_) {}
+
+    const chk = document.getElementById('chk-' + id);
+    if (!chk) return;
+
+    state[id] = chk.checked;
+    try {
+      localStorage.setItem(CHECKLIST_KEY, JSON.stringify(state));
+    } catch (_) {}
+
+    updateChecklistUI();
+  };
+
+  function updateChecklistUI() {
+    let state = {};
+    try {
+      state = JSON.parse(localStorage.getItem(CHECKLIST_KEY) || '{}');
+    } catch (_) {}
+
+    const total = 8;
+    let completed = 0;
+
+    for (let i = 1; i <= total; i++) {
+      const chk = document.getElementById('chk-' + i);
+      const item = document.getElementById('item-chk-' + i);
+      if (chk) {
+        chk.checked = !!state[i];
+        if (chk.checked) completed++;
+      }
+      if (item) {
+        item.classList.toggle('checked', !!state[i]);
+      }
+    }
+
+    const pct = Math.round((completed / total) * 100);
+    const bar = document.getElementById('checklist-progress-bar');
+    const text = document.getElementById('checklist-progress-text');
+
+    if (bar) bar.style.width = pct + '%';
+    if (text) text.textContent = pct + '% Concluído (' + completed + ' de ' + total + ')';
+  }
+
+  // Fechar modal ao clicar fora ou apertar ESC
+  function initModalListeners() {
+    const modal = document.getElementById('pi-login-modal');
+    if (modal) {
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) window.closePiLoginModal();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') window.closePiLoginModal();
+      });
+    }
+
+    const navBtn = document.getElementById('nav-pi-login');
+    if (navBtn && !localStorage.getItem('isar_pi_user')) {
+      navBtn.onclick = window.openPiLoginModal;
+    }
+
+    const mobileBtn = document.getElementById('mobile-pi-login');
+    if (mobileBtn) {
+      mobileBtn.onclick = function () {
+        const menu = document.getElementById('mobile-menu');
+        if (menu) menu.classList.remove('open');
+        document.body.style.overflow = '';
+        window.openPiLoginModal();
+      };
+    }
+  }
+
   // --- Init all ---
   document.addEventListener('DOMContentLoaded', function () {
     initParticles();
@@ -271,6 +566,11 @@
     initWaitlistForm();
     initCookieBanner();
     initActiveNav();
+    initPiSdk();
+    initModalListeners();
+    checkStoredSession();
+    updateChecklistUI();
   });
 
 })();
+
