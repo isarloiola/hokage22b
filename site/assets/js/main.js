@@ -94,12 +94,20 @@
   function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
       anchor.addEventListener('click', function (e) {
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          e.preventDefault();
-          const navH = document.getElementById('navbar') ? document.getElementById('navbar').offsetHeight : 80;
-          const top = target.getBoundingClientRect().top + window.scrollY - navH - 8;
-          window.scrollTo({ top: top, behavior: 'smooth' });
+        const href = this.getAttribute('href');
+        if (!href || href === '#' || href.length <= 1) return;
+        try {
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            setTimeout(function () {
+              const navH = document.getElementById('navbar') ? document.getElementById('navbar').offsetHeight : 70;
+              const top = target.getBoundingClientRect().top + window.scrollY - navH - 8;
+              window.scrollTo({ top: top, behavior: 'smooth' });
+            }, 10);
+          }
+        } catch (err) {
+          // Fallback seguro caso seja um seletor especial
         }
       });
     });
@@ -494,6 +502,20 @@
         };
       }
       if (navText) navText.textContent = user.username;
+
+      if (mobileBtn) {
+        mobileBtn.classList.add('logged-in');
+        mobileBtn.onclick = function () {
+          const menu = document.getElementById('mobile-menu');
+          if (menu) menu.classList.remove('open');
+          document.body.style.overflow = '';
+          const target = document.getElementById('membros');
+          if (target) {
+            const navH = document.getElementById('navbar') ? document.getElementById('navbar').offsetHeight : 70;
+            window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - navH - 8, behavior: 'smooth' });
+          }
+        };
+      }
       if (mobileText) mobileText.textContent = user.username + ' (Membro)';
 
       if (lockedView) lockedView.style.display = 'none';
@@ -506,6 +528,16 @@
         navBtn.onclick = window.openPiLoginModal;
       }
       if (navText) navText.textContent = 'Entrar com Pi';
+
+      if (mobileBtn) {
+        mobileBtn.classList.remove('logged-in');
+        mobileBtn.onclick = function () {
+          const menu = document.getElementById('mobile-menu');
+          if (menu) menu.classList.remove('open');
+          document.body.style.overflow = '';
+          window.openPiLoginModal();
+        };
+      }
       if (mobileText) mobileText.textContent = 'Entrar com Pi';
 
       if (lockedView) lockedView.style.display = 'block';

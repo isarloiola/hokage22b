@@ -72,33 +72,46 @@
           <li><a href="#youtube">YouTube</a></li>
           <li><a href="#pi-convite">Minerar Pi</a></li>
         </ul>
-        <div style="display:flex;align-items:center;gap:10px">
+        <div class="navbar__actions" id="navbar-actions">
           <button type="button" class="btn btn-secondary btn-sm nav-pi-btn" id="nav-pi-login" aria-label="Acessar com Pi Network">
             <span class="pi-sym">π</span> <span id="nav-pi-text">Entrar com Pi</span>
           </button>
           <a href="#lista-espera" class="btn btn-primary btn-sm navbar__cta" id="nav-cta">📖 Ebook Grátis</a>
         </div>
-        <button class="navbar__toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+        <button class="navbar__toggle" id="nav-toggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="mobile-menu" type="button">
           <span></span><span></span><span></span>
         </button>
       </div>
     </div>
   </nav>
 
-  <!-- Mobile Menu -->
+  <!-- Mobile Menu Drawer (Header Fixo com Botão X 100% Visível) -->
   <div class="navbar__mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu mobile">
-    <button class="navbar__mobile-close" id="mobile-close" aria-label="Fechar menu">✕</button>
-    <a href="#produto" class="mobile-link">O Manual</a>
-    <a href="#blockchain" class="mobile-link">Blockchain</a>
-    <a href="#web3" class="mobile-link">Web3</a>
-    <a href="#pi-browser" class="mobile-link">Pi Browser</a>
-    <a href="#membros" class="mobile-link">Área de Membros</a>
-    <a href="#youtube" class="mobile-link">YouTube</a>
-    <a href="#pi-convite" class="mobile-link">Minerar Pi</a>
-    <button type="button" class="btn btn-secondary mobile-link" id="mobile-pi-login" style="margin-top:10px;width:80%">
-      <span class="pi-sym">π</span> <span id="mobile-pi-text">Entrar com Pi</span>
-    </button>
-    <a href="#lista-espera" class="btn btn-primary mobile-link" style="width:80%">📖 Baixar Ebook Grátis</a>
+    <div class="navbar__mobile-header">
+      <a href="#inicio" class="navbar__logo mobile-link" aria-label="isar.pi — início">
+        <span class="pi-sym">π</span>
+        <div>
+          <div>isar.pi</div>
+          <div class="brand-sub">by hokage22b</div>
+        </div>
+      </a>
+      <button class="navbar__mobile-close" id="mobile-close" aria-label="Fechar menu" type="button">✕</button>
+    </div>
+    <div class="navbar__mobile-body">
+      <a href="#produto" class="mobile-link">O Manual</a>
+      <a href="#blockchain" class="mobile-link">Blockchain</a>
+      <a href="#web3" class="mobile-link">Web3</a>
+      <a href="#pi-browser" class="mobile-link">Pi Browser</a>
+      <a href="#membros" class="mobile-link">Área de Membros</a>
+      <a href="#youtube" class="mobile-link">YouTube</a>
+      <a href="#pi-convite" class="mobile-link">Minerar Pi</a>
+      <div class="navbar__mobile-actions">
+        <button type="button" class="btn btn-secondary mobile-link" id="mobile-pi-login">
+          <span class="pi-sym">π</span> <span id="mobile-pi-text">Entrar com Pi</span>
+        </button>
+        <a href="#lista-espera" class="btn btn-primary mobile-link">📖 Baixar Ebook Grátis</a>
+      </div>
+    </div>
   </div>
 
   <!-- ============================================================
@@ -550,7 +563,7 @@
           </div>
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="openPiLoginModal()" style="font-size:1.1rem;padding:16px 36px">
+        <button type="button" class="btn btn-primary btn-members-connect" onclick="openPiLoginModal()">
           <span class="pi-sym" style="font-weight:900;margin-right:6px">π</span> Conectar com Pi Network para Acessar
         </button>
       </div>
