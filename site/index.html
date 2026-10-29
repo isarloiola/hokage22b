@@ -137,6 +137,9 @@
     <div class="container">
       <div class="hero__grid">
         <div class="hero__content">
+          <div class="hero-onboarding-trigger" onclick="window.IsarOnboarding && window.IsarOnboarding.open()" role="button" tabindex="0">
+            <span>🧭</span> Novo por aqui? Faça o teste de 30s e saiba por onde começar →
+          </div>
           <div class="hero__eyebrow">
             <span class="dot" aria-hidden="true"></span>
             🎁 2 Ebooks Gratuitos no Ecossistema isar.pi
@@ -155,6 +158,9 @@
             <a href="#membros" class="btn btn-outline" id="hero-cta-secondary">
               ⚡ Área de Membros Web3
             </a>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="window.IsarOnboarding && window.IsarOnboarding.handleAlreadyMember()" style="border-radius:var(--radius-sm)">
+              Já sou membro →
+            </button>
           </div>
           <div class="hero__stats" role="list" aria-label="Estatísticas do manual">
             <div role="listitem">
@@ -948,20 +954,57 @@
         </div>
 
         <!-- ============================================================
-             ABA 5: COMUNIDADE VIP WHATSAPP
+             ABA 5: COMUNIDADE WHATSAPP & CLUBE PI BUSINESS PRO
         ============================================================ -->
         <div class="member-tab-pane" id="tab-community" role="tabpanel">
-          <div class="vip-whatsapp-banner">
-            <div>
-              <span style="background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#fff">Comunidade Fechada</span>
-              <h3 style="color:#fff;font-size:1.6rem;margin:10px 0 8px">Grupo VIP de Pioneiros @hokage22b</h3>
-              <p style="color:#d1fae5;font-size:0.95rem;max-width:540px;line-height:1.5;margin:0">
-                Participe do nosso grupo oficial no WhatsApp. Tire dúvidas sobre KYC, receba avisos de novos vídeos em primeira mão e discuta sobre dApps e oportunidades de negócios no ecossistema Pi.
+          <div style="text-align:left;max-width:860px;margin-bottom:20px">
+            <h3 style="color:var(--white);font-size:1.4rem;margin-bottom:6px">🌐 Escolha o seu nível de conexão na comunidade</h3>
+            <p style="color:var(--gray-light);font-size:0.95rem;line-height:1.6">
+              Participe do grupo aberto gratuito para acompanhar novidades ou acerte parcerias no Clube Pi PRO exclusivo para criadores e negócios.
+            </p>
+          </div>
+
+          <div class="community-tiers-grid">
+            <!-- GRUPO 1: COMUNIDADE GERAL (GRÁTIS) -->
+            <div class="community-tier-card community-tier-card--free">
+              <span class="community-tier-badge community-tier-badge--free">🟢 Aberto a Todos</span>
+              <div class="community-tier-title">Comunidade Geral de Pioneiros</div>
+              <div class="community-tier-price">100% Gratuito</div>
+              <p style="font-size:0.88rem;color:var(--gray-light);line-height:1.5">
+                O ponto de encontro para todos os pioneiros tirarem dúvidas básicas, celebrarem aprovações de KYC e receberem avisos dos novos vídeos do canal @hokage22b.
               </p>
+              <ul class="community-tier-features">
+                <li><span>✓</span> <strong>Dúvidas de KYC &amp; Mainnet:</strong> Ajuda mútua entre pioneiros.</li>
+                <li><span>✓</span> <strong>Avisos de Vídeos:</strong> Notificações em primeira mão.</li>
+                <li><span>✓</span> <strong>Sem custo algum:</strong> Basta clicar e entrar.</li>
+              </ul>
+              <div style="margin-top:auto">
+                <a href="https://chat.whatsapp.com/invite/hokage22b" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="width:100%;text-align:center;justify-content:center">
+                  <span>💬</span> Entrar no Grupo Gratuito
+                </a>
+              </div>
             </div>
-            <a href="https://chat.whatsapp.com/invite/hokage22b" target="_blank" rel="noopener noreferrer" class="vip-whatsapp-btn">
-              <span>💬</span> Entrar no Grupo WhatsApp
-            </a>
+
+            <!-- GRUPO 2: CLUBE PI BUSINESS & NETWORKING PRO (ASSINATURA PI) -->
+            <div class="community-tier-card community-tier-card--pro">
+              <span class="community-tier-badge community-tier-badge--pro">⭐ Exclusivo para Negócios</span>
+              <div class="community-tier-title">Clube Pi Business PRO</div>
+              <div class="community-tier-price">1 π <span style="font-size:0.9rem;font-weight:400;color:var(--gray-light)">/ mês (ou 3.14 π / ano)</span></div>
+              <p style="font-size:0.88rem;color:var(--gray-light);line-height:1.5">
+                Para criadores de conteúdo, comerciantes, autônomos e pioneiros avançados que querem fechar negócios reais, aceitar Pi em produtos e fazer networking qualificado.
+              </p>
+              <ul class="community-tier-features">
+                <li><span>⭐</span> <strong>Networking P2P:</strong> Conexão com pioneiros que compram e vendem com Pi.</li>
+                <li><span>⭐</span> <strong>Acesso Antecipado:</strong> Capítulos do Ebook #2 antes do lançamento.</li>
+                <li><span>⭐</span> <strong>Consultoria de dApps:</strong> Estratégias de monetização e integração do Pi SDK.</li>
+                <li><span>⭐</span> <strong>Filtro Anti-Spam:</strong> Apenas pioneiros sérios e comprometidos com a Web3.</li>
+              </ul>
+              <div style="margin-top:auto">
+                <button type="button" class="btn btn-primary" onclick="window.openPiProModal()" style="width:100%;text-align:center;justify-content:center">
+                  <span>🪙</span> Assinar Clube PRO com Pi (1 π)
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1325,6 +1368,103 @@
     </div>
   </div>
 
+  <!-- MODAL DE ASSINATURA CLUBE PI PRO -->
+  <div class="pi-modal-overlay" id="modal-pi-pro" role="dialog" aria-modal="true" aria-labelledby="modal-pro-title">
+    <div class="pi-modal" style="max-width:540px">
+      <button type="button" class="pi-modal-close" onclick="closePiProModal()" aria-label="Fechar modal">✕</button>
+      <div class="pi-modal-logo">⭐</div>
+      <h3 id="modal-pro-title">Assinatura Clube Pi Business PRO</h3>
+      <p>Contribuição simbólica de <strong>1 π</strong> para apoiar a infraestrutura e conectar pioneiros sérios para negócios Web3.</p>
+
+      <div class="donation-key-box" style="margin:18px 0;text-align:left">
+        <div class="donation-key-label">Carteira Oficial de Destino</div>
+        <div class="donation-key-val" id="pro-wallet-address" style="font-size:0.85rem">GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR</div>
+        <div class="donation-key-label" style="margin-top:10px">Memo de Identificação</div>
+        <div class="donation-key-val" id="pro-wallet-memo">#PI-PRO-ISAR</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button type="button" class="btn btn-secondary" onclick="copyProPaymentDetails()">
+          <span>📋</span> Copiar Carteira e Memo
+        </button>
+        <button type="button" class="btn btn-primary" onclick="confirmProSubscription()">
+          <span>✅</span> Já enviei 1 π (Confirmar e Entrar no Grupo VIP)
+        </button>
+      </div>
+
+      <p style="font-size:0.78rem;color:var(--gray);margin-top:14px;text-align:center">
+        Após a confirmação, seu perfil receberá o selo PRO e você será redirecionado para o link exclusivo do WhatsApp.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL DE ONBOARDING INTERATIVO / BOAS-VINDAS (CRO)
+  ============================================================ -->
+  <div class="onboarding-overlay" id="onboarding-modal" role="dialog" aria-modal="true" aria-labelledby="onboarding-heading">
+    <div class="onboarding-card">
+      <button type="button" class="onboarding-close" onclick="window.IsarOnboarding && window.IsarOnboarding.close(true)" aria-label="Fechar introdução">✕</button>
+      
+      <div class="onboarding-calm-badge">
+        <span>🛡️</span> Calma! Ninguém vai te vender nada aqui.
+      </div>
+
+      <h3 class="onboarding-title" id="onboarding-heading">
+        Bem-vindo ao <span class="gradient-text">isar.pi</span>
+      </h3>
+      <p class="onboarding-desc">
+        Conteúdo 100% gratuito e educativo. Não vendemos cursos nem prometemos lucros fáceis. Para te guiar exatamente ao que você precisa em 30 segundos, qual é o seu momento?
+      </p>
+
+      <!-- OPÇÕES DO QUIZ DE 1 CLIQUE -->
+      <div class="onboarding-options" role="radiogroup" aria-label="Seu nível no ecossistema Pi">
+        <button type="button" class="onboarding-option-btn" data-type="beginner" role="radio" aria-checked="false">
+          <span class="onboarding-option-icon">🌱</span>
+          <div class="onboarding-option-text">
+            <strong>Estou começando do zero</strong>
+            <span>Não sei o que é Pi Network, Pi Coin ou Blockchain e quero entender de forma simples.</span>
+          </div>
+        </button>
+
+        <button type="button" class="onboarding-option-btn" data-type="intermediate" role="radio" aria-checked="false">
+          <span class="onboarding-option-icon">⚡</span>
+          <div class="onboarding-option-text">
+            <strong>Já minero no aplicativo</strong>
+            <span>Clico no raio todo dia, mas estou perdido com KYC, carteira e migração da Mainnet.</span>
+          </div>
+        </button>
+
+        <button type="button" class="onboarding-option-btn" data-type="advanced" role="radio" aria-checked="false">
+          <span class="onboarding-option-icon">💼</span>
+          <div class="onboarding-option-text">
+            <strong>Criador, comerciante ou investidor</strong>
+            <span>Quero entender como lucrar com Pi, aceitar em produtos e fazer negócios Web3.</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- PAINEL DE RESULTADO E RECOMENDAÇÃO -->
+      <div class="onboarding-result" id="onboarding-result-box">
+        <h4 id="onboarding-res-badge">🧭 Rota Recomendada</h4>
+        <strong id="onboarding-res-title" style="color:var(--white);display:block;margin-bottom:6px">Título da Recomendação</strong>
+        <p id="onboarding-res-text">Texto dinâmico da recomendação...</p>
+        <button type="button" class="btn btn-primary onboarding-btn-primary" id="onboarding-res-btn">
+          Acessar Recomendação
+        </button>
+      </div>
+
+      <!-- RODAPÉ DE NAVEGAÇÃO ALTERNATIVA -->
+      <div class="onboarding-links-row">
+        <button type="button" class="onboarding-link-member" onclick="window.IsarOnboarding && window.IsarOnboarding.handleAlreadyMember()">
+          ⚡ Já sou membro (Ir para Área VIP)
+        </button>
+        <button type="button" class="onboarding-link-skip" onclick="window.IsarOnboarding && window.IsarOnboarding.close(true)">
+          Explorar a página sozinho →
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST FEEDBACK -->
   <div class="toast-box" id="toast-msg" role="status" aria-live="polite">
     <span id="toast-icon">ℹ️</span>
@@ -1343,6 +1483,7 @@
   <script src="assets/js/modules/lead.js"></script>
   <script src="assets/js/modules/reputation.js"></script>
   <script src="assets/js/modules/tools.js"></script>
+  <script src="assets/js/modules/onboarding.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>

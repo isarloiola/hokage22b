@@ -49,6 +49,11 @@
     if (window.IsarTools) {
       window.IsarTools.init();
     }
+
+    // 7. Interactive Onboarding & Conversion Flow
+    if (window.IsarOnboarding) {
+      window.IsarOnboarding.init();
+    }
   });
 
 })();

@@ -1,0 +1,273 @@
+/* ============================================================
+   isar.pi — Component: Interactive Onboarding & Welcome Diagnostic
+   Arquitetura de Alta Conversão para Novos Visitantes
+   ============================================================ */
+
+.onboarding-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(8, 2, 16, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.onboarding-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.onboarding-card {
+  background: linear-gradient(135deg, rgba(26, 5, 51, 0.98), rgba(13, 1, 24, 0.98));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px;
+  max-width: 620px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(245, 158, 11, 0.15);
+  animation: cardPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 92dvh;
+  overflow-y: auto;
+}
+
+@keyframes cardPop {
+  0% { transform: scale(0.92) translateY(12px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.onboarding-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--gray-light);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all var(--transition);
+}
+
+.onboarding-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* Anti-Objeção / Calma Badge */
+.onboarding-calm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.onboarding-title {
+  font-size: clamp(1.4rem, 3.2vw, 1.85rem);
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+
+.onboarding-desc {
+  font-size: 0.95rem;
+  color: var(--gray-light);
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+/* Opções de Resposta do Quiz */
+.onboarding-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.onboarding-option-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  color: inherit;
+  font-family: inherit;
+}
+
+.onboarding-option-btn:hover {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.4);
+  transform: translateX(4px);
+}
+
+.onboarding-option-btn.selected {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: var(--amber);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.25);
+}
+
+.onboarding-option-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.onboarding-option-text strong {
+  display: block;
+  font-size: 0.98rem;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.onboarding-option-text span {
+  font-size: 0.82rem;
+  color: var(--gray-light);
+  line-height: 1.4;
+  display: block;
+}
+
+/* Painel de Recomendação (Resultado) */
+.onboarding-result {
+  display: none;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 22px;
+  animation: fadeIn 0.25s ease;
+}
+
+.onboarding-result.active {
+  display: block;
+}
+
+.onboarding-result h4 {
+  font-size: 1.1rem;
+  color: var(--amber-light);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.onboarding-result p {
+  font-size: 0.9rem;
+  color: var(--gray-light);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+/* Ações Finais */
+.onboarding-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.onboarding-btn-primary {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.onboarding-links-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.onboarding-link-member {
+  color: var(--amber-light);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.onboarding-link-member:hover {
+  color: #fff;
+}
+
+.onboarding-link-skip {
+  color: var(--gray);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.onboarding-link-skip:hover {
+  color: var(--gray-light);
+}
+
+/* Banner de Gatilho no Topo do Hero */
+.hero-onboarding-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--amber-light);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.hero-onboarding-trigger:hover {
+  background: rgba(245, 158, 11, 0.22);
+  transform: translateY(-2px);
+  border-color: var(--amber);
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .onboarding-card {
+    padding: 28px 20px;
+  }
+  .onboarding-links-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}

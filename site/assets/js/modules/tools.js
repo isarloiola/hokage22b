@@ -124,6 +124,58 @@
     listEl.innerHTML = html;
   }
 
+  // --- 4. Modal do Clube Pi PRO ---
+  window.openPiProModal = function () {
+    const modal = document.getElementById('modal-pi-pro');
+    if (modal) modal.classList.add('active');
+  };
+
+  window.closePiProModal = function () {
+    const modal = document.getElementById('modal-pi-pro');
+    if (modal) modal.classList.remove('active');
+  };
+
+  window.copyProPaymentDetails = function () {
+    const wallet = 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR';
+    const memo = '#PI-PRO-ISAR';
+    const text = 'Carteira: ' + wallet + '\nMemo: ' + memo;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function () {
+        if (window.showToast) window.showToast('Carteira e Memo copiados com sucesso! Abra sua Pi Wallet.', '📋');
+      });
+    }
+  };
+
+  window.confirmProSubscription = function () {
+    let username = 'Pioneiro PRO';
+    try {
+      const user = JSON.parse(localStorage.getItem('isar_pi_user') || 'null');
+      if (user && user.username) username = user.username;
+    } catch (_) {}
+
+    // Grava no Supabase doações se configurado
+    if (window.IsarDB && window.IsarDB.getClient) {
+      const db = window.IsarDB.getClient();
+      if (db) {
+        db.from('doacoes').insert([{
+          donor_identifier: username,
+          currency: 'PI',
+          amount: 1.0,
+          status: 'confirmacao_solicitada'
+        }]).then(function () {});
+      }
+    }
+
+    if (window.showToast) {
+      window.showToast('Assinatura registrada! Abrindo o grupo VIP...', '🎉');
+    }
+    window.closePiProModal();
+
+    setTimeout(function () {
+      window.open('https://chat.whatsapp.com/invite/hokage22b-pro', '_blank');
+    }, 600);
+  };
+
   window.IsarTools = {
     init: function () {
       initMemberTabs();
@@ -133,3 +185,4 @@
   };
 
 })();
+
