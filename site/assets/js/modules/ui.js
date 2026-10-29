@@ -251,7 +251,7 @@
   // --- Copy Pi Wallet Address ---
   window.copyPiWallet = function () {
     const el = document.getElementById('donation-pi-key');
-    const key = el ? el.textContent.trim() : 'GDQ6YISARHOKAGE22BCOMMUNITYPIWALLETADDRESS777';
+    const key = el ? el.textContent.trim() : 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR';
     const btn = document.getElementById('btn-copy-pi');
 
     function success() {

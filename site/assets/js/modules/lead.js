@@ -127,6 +127,11 @@
       // Sincronizar com Google Sheets em segundo plano
       sendLeadToGoogleSheets(leadData);
 
+      // Sincronizar com Supabase se configurado
+      if (window.IsarDB && window.IsarDB.saveLead) {
+        window.IsarDB.saveLead(leadData);
+      }
+
       // Trocar formulário pela caixa de download desbloqueado imediatamente
       form.style.display = 'none';
       if (unlockedBox) unlockedBox.style.display = 'block';

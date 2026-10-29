@@ -51,3 +51,4 @@ E no seu `site/index.html`, adicione a CDN do Supabase antes dos scripts:
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/modules/db.js"></script>
 ```
+

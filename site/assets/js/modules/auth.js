@@ -110,6 +110,11 @@
       window.calculateAndUpdateReputation();
     }
 
+    // Sincronizar perfil no banco de dados Supabase (se configurado)
+    if (window.IsarDB && window.IsarDB.syncPioneerProfile) {
+      window.IsarDB.syncPioneerProfile(user);
+    }
+
     // Scroll suave para a Área de Membros
     setTimeout(function () {
       const target = document.getElementById('membros');

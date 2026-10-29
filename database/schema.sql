@@ -81,3 +81,4 @@ CREATE POLICY "Permitir registro de apoio voluntário"
     FOR INSERT
     TO anon, authenticated
     WITH CHECK (true);
+
