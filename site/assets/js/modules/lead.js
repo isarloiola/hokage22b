@@ -6,8 +6,8 @@
   'use strict';
 
   // Configuração do Google Sheets (Google Apps Script Web App)
-  // Cole sua URL abaixo ou defina window.ISAR_GOOGLE_SHEETS_URL
-  const GOOGLE_SHEETS_URL = window.ISAR_GOOGLE_SHEETS_URL || '';
+  // URL ativa para captura de leads e reservas
+  const GOOGLE_SHEETS_URL = window.ISAR_GOOGLE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbznz-l1_Y5VKkBiPuRDT-1CJ-kII1Ll1sZ5P_Lpq7Ezb-ZjXVa8vFVNf1batKL_jlIDzA/exec';
 
   function sendLeadToGoogleSheets(leadData) {
     const url = window.ISAR_GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL;
