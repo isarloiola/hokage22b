@@ -7,6 +7,11 @@
   'use strict';
 
   document.addEventListener('DOMContentLoaded', function () {
+    // 0. Internationalization (i18n)
+    if (window.IsarI18n) {
+      window.IsarI18n.init();
+    }
+
     // 1. UI & Visuals
     if (window.IsarUI) {
       window.IsarUI.initParticles();

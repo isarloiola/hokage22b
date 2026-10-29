@@ -219,6 +219,64 @@
     }
   };
 
+  // --- Copy PIX Key ---
+  window.copyPixKey = function () {
+    const el = document.getElementById('donation-pix-key');
+    const key = el ? el.textContent.trim() : 'isarloiola@gmail.com';
+    const btn = document.getElementById('btn-copy-pix');
+
+    function success() {
+      if (btn) btn.textContent = '✅ Chave Pix Copiada!';
+      if (window.showToast) window.showToast('Chave Pix copiada! Abra o app do seu banco.', '💰');
+      setTimeout(function () {
+        if (btn) btn.textContent = '📋 Copiar Chave PIX';
+      }, 3000);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(key).then(success);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = key;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      success();
+    }
+  };
+
+  // --- Copy Pi Wallet Address ---
+  window.copyPiWallet = function () {
+    const el = document.getElementById('donation-pi-key');
+    const key = el ? el.textContent.trim() : 'GDQ6YISARHOKAGE22BCOMMUNITYPIWALLETADDRESS777';
+    const btn = document.getElementById('btn-copy-pi');
+
+    function success() {
+      if (btn) btn.textContent = '✅ Carteira Pi Copiada!';
+      if (window.showToast) window.showToast('Endereço Pi copiado! Cole na sua Pi Wallet.', 'π');
+      setTimeout(function () {
+        if (btn) btn.textContent = '📋 Copiar Carteira Pi';
+      }, 3000);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(key).then(success);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = key;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      success();
+    }
+  };
+
   // Exportar inicializadores do módulo
   window.IsarUI = {
     initParticles,

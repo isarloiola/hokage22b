@@ -18,6 +18,7 @@
 @import url('./components/reputation.css');
 @import url('./components/ebooks.css');
 @import url('./components/members.css');
+@import url('./components/donation.css');
 
 /* --- 3. Sections --- */
 @import url('./sections/hero.css');

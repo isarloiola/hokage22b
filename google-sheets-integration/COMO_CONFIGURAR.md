@@ -63,3 +63,4 @@ Assim que o primeiro visitante preencher o formulário ou clicar em reservar o E
 ## 🔒 Segurança e Privacidade
 - Os visitantes só conseguem enviar dados novos para a planilha; eles **não conseguem ler** os outros e-mails da planilha.
 - O site continua funcionando e liberando o download instantaneamente mesmo se a internet do visitante estiver lenta (envio assíncrono em segundo plano).
+

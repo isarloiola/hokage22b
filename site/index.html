@@ -64,19 +64,25 @@
           </div>
         </a>
         <ul class="navbar__links" role="list">
-          <li><a href="#produto">O Manual</a></li>
-          <li><a href="#blockchain">Blockchain</a></li>
-          <li><a href="#web3">Web3</a></li>
-          <li><a href="#pi-browser">Pi Browser</a></li>
-          <li><a href="#membros">Área de Membros</a></li>
-          <li><a href="#youtube">YouTube</a></li>
-          <li><a href="#pi-convite">Minerar Pi</a></li>
+          <li><a href="#produto" data-i18n="nav.manual">O Manual</a></li>
+          <li><a href="#blockchain" data-i18n="nav.blockchain">Blockchain</a></li>
+          <li><a href="#web3" data-i18n="nav.web3">Web3</a></li>
+          <li><a href="#pi-browser" data-i18n="nav.pibrowser">Pi Browser</a></li>
+          <li><a href="#membros" data-i18n="nav.members">Área de Membros</a></li>
+          <li><a href="#youtube" data-i18n="nav.youtube">YouTube</a></li>
+          <li><a href="#pi-convite" data-i18n="nav.mine">Minerar Pi</a></li>
+          <li><a href="#doacao" data-i18n="nav.donate">Apoiar</a></li>
         </ul>
         <div class="navbar__actions" id="navbar-actions">
+          <div class="lang-switcher" aria-label="Idioma">
+            <button class="lang-btn active" data-lang="pt" type="button" title="Português">PT</button>
+            <button class="lang-btn" data-lang="en" type="button" title="English">EN</button>
+            <button class="lang-btn" data-lang="es" type="button" title="Español">ES</button>
+          </div>
           <button type="button" class="btn btn-secondary btn-sm nav-pi-btn" id="nav-pi-login" aria-label="Acessar com Pi Network">
-            <span class="pi-sym">π</span> <span id="nav-pi-text">Entrar com Pi</span>
+            <span class="pi-sym">π</span> <span id="nav-pi-text" data-i18n="nav.login">Entrar com Pi</span>
           </button>
-          <a href="#lista-espera" class="btn btn-primary btn-sm navbar__cta" id="nav-cta">📖 Ebook Grátis</a>
+          <a href="#lista-espera" class="btn btn-primary btn-sm navbar__cta" id="nav-cta" data-i18n="nav.free_ebook">📖 Ebook Grátis</a>
         </div>
         <button class="navbar__toggle" id="nav-toggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="mobile-menu" type="button">
           <span></span><span></span><span></span>
@@ -98,18 +104,26 @@
       <button class="navbar__mobile-close" id="mobile-close" aria-label="Fechar menu" type="button">✕</button>
     </div>
     <div class="navbar__mobile-body">
-      <a href="#produto" class="mobile-link">O Manual</a>
-      <a href="#blockchain" class="mobile-link">Blockchain</a>
-      <a href="#web3" class="mobile-link">Web3</a>
-      <a href="#pi-browser" class="mobile-link">Pi Browser</a>
-      <a href="#membros" class="mobile-link">Área de Membros</a>
-      <a href="#youtube" class="mobile-link">YouTube</a>
-      <a href="#pi-convite" class="mobile-link">Minerar Pi</a>
+      <div style="display:flex;justify-content:center;margin-bottom:12px;">
+        <div class="lang-switcher" aria-label="Idioma">
+          <button class="lang-btn active" data-lang="pt" type="button">PT</button>
+          <button class="lang-btn" data-lang="en" type="button">EN</button>
+          <button class="lang-btn" data-lang="es" type="button">ES</button>
+        </div>
+      </div>
+      <a href="#produto" class="mobile-link" data-i18n="nav.manual">O Manual</a>
+      <a href="#blockchain" class="mobile-link" data-i18n="nav.blockchain">Blockchain</a>
+      <a href="#web3" class="mobile-link" data-i18n="nav.web3">Web3</a>
+      <a href="#pi-browser" class="mobile-link" data-i18n="nav.pibrowser">Pi Browser</a>
+      <a href="#membros" class="mobile-link" data-i18n="nav.members">Área de Membros</a>
+      <a href="#youtube" class="mobile-link" data-i18n="nav.youtube">YouTube</a>
+      <a href="#pi-convite" class="mobile-link" data-i18n="nav.mine">Minerar Pi</a>
+      <a href="#doacao" class="mobile-link" data-i18n="nav.donate">Apoiar o Projeto</a>
       <div class="navbar__mobile-actions">
         <button type="button" class="btn btn-secondary mobile-link" id="mobile-pi-login">
-          <span class="pi-sym">π</span> <span id="mobile-pi-text">Entrar com Pi</span>
+          <span class="pi-sym">π</span> <span id="mobile-pi-text" data-i18n="nav.login">Entrar com Pi</span>
         </button>
-        <a href="#lista-espera" class="btn btn-primary mobile-link">📖 Baixar Ebook Grátis</a>
+        <a href="#lista-espera" class="btn btn-primary mobile-link" data-i18n="nav.free_ebook">📖 Baixar Ebook Grátis</a>
       </div>
     </div>
   </div>
@@ -874,6 +888,63 @@
   </section>
 
   <!-- ============================================================
+       DOAÇÕES E APOIO À COMUNIDADE (PIX & PI)
+  ============================================================ -->
+  <section class="section donation-section" id="doacao" aria-labelledby="donation-title">
+    <div class="container">
+      <div class="donation-header reveal">
+        <div class="section-label" data-i18n="donation.badge">Contribua com a Comunidade</div>
+        <h2 id="donation-title" data-i18n="donation.title">Apoie a Criação de Conteúdo Independente</h2>
+        <p data-i18n="donation.desc">O projeto isar.pi é 100% mantido por esforço independente. Suas doações em Reais (PIX) ou em Pi ajudam a manter os servidores ativos, produzir novos vídeos e manter os livros gratuitos para todos os pioneiros.</p>
+      </div>
+
+      <div class="donation-grid">
+        <!-- CARD PIX -->
+        <div class="donation-card donation-card--pix reveal">
+          <div class="donation-card__badge" data-i18n="donation.pix_badge">Chave Pix (Reais)</div>
+          <div class="donation-card__title">
+            <span>🇧🇷</span> <span data-i18n="donation.pix_title">Doe via PIX</span>
+          </div>
+          <p class="donation-card__desc" data-i18n="donation.pix_desc">
+            Qualquer valor — de R$ 2 a R$ 20 — faz uma enorme diferença para mantermos a pesquisa, gravação e atualizações em dia.
+          </p>
+          <div class="donation-key-box">
+            <div class="donation-key-label" data-i18n="donation.pix_label">Chave PIX (E-mail)</div>
+            <div class="donation-key-val" id="donation-pix-key">isarloiola@gmail.com</div>
+          </div>
+          <div class="donation-card__footer">
+            <button type="button" class="donation-btn-copy donation-btn-copy--pix" id="btn-copy-pix" onclick="copyPixKey()">
+              <span data-i18n="donation.pix_btn">📋 Copiar Chave PIX</span>
+            </button>
+            <div class="donation-note" data-i18n="donation.pix_note">Envio instantâneo pelo app do seu banco</div>
+          </div>
+        </div>
+
+        <!-- CARD PI NETWORK -->
+        <div class="donation-card donation-card--pi reveal reveal-delay-1">
+          <div class="donation-card__badge" data-i18n="donation.pi_badge">Cripto Nativa Web3</div>
+          <div class="donation-card__title">
+            <span>🪙</span> <span data-i18n="donation.pi_title">Doe Pi Network (π)</span>
+          </div>
+          <p class="donation-card__desc" data-i18n="donation.pi_desc">
+            Transfira Pi diretamente da sua carteira para apoiar o ecossistema e fortalecer o projeto dos pioneiros no Brasil.
+          </p>
+          <div class="donation-key-box">
+            <div class="donation-key-label" data-i18n="donation.pi_label">Endereço da Carteira Pi (Chave Pública)</div>
+            <div class="donation-key-val" id="donation-pi-key">GDQ6YISARHOKAGE22BCOMMUNITYPIWALLETADDRESS777</div>
+          </div>
+          <div class="donation-card__footer">
+            <button type="button" class="donation-btn-copy donation-btn-copy--pi" id="btn-copy-pi" onclick="copyPiWallet()">
+              <span data-i18n="donation.pi_btn">📋 Copiar Carteira Pi</span>
+            </button>
+            <div class="donation-note" data-i18n="donation.pi_note">Transfira pelo Pi Browser ou Pi Wallet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        LIBERAÇÃO DO EBOOK #1 — CAPTURA DE EMAIL
   ============================================================ -->
   <section class="section email-capture" id="lista-espera" aria-labelledby="waitlist-title">
@@ -969,6 +1040,7 @@
             <li><a href="#blockchain">O que é Blockchain</a></li>
             <li><a href="#web3">O que é Web3</a></li>
             <li><a href="#youtube">Canal YouTube</a></li>
+            <li><a href="#doacao">Apoiar o projeto (Pix &amp; Pi)</a></li>
             <li><a href="#lista-espera">Lista de espera</a></li>
           </ul>
         </div>
@@ -1061,6 +1133,8 @@
   </div>
 
   <!-- Modular Scripts -->
+  <script src="assets/js/modules/i18n.js"></script>
+  <script src="assets/js/modules/db.js"></script>
   <script src="assets/js/modules/ui.js"></script>
   <script src="assets/js/modules/auth.js"></script>
   <script src="assets/js/modules/checklist.js"></script>

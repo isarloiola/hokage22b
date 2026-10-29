@@ -1,0 +1,187 @@
+/* ============================================================
+   isar.pi — Component: Donation & Community Support (Pix / Pi)
+   ============================================================ */
+
+.donation-section {
+  padding: 80px 0;
+  position: relative;
+  background: linear-gradient(180deg, rgba(13, 17, 23, 0.4) 0%, rgba(20, 24, 33, 0.8) 100%);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.donation-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 48px auto;
+}
+
+.donation-header h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  margin-top: 10px;
+  line-height: 1.25;
+}
+
+.donation-header p {
+  color: var(--gray-light);
+  font-size: 1.05rem;
+  margin-top: 14px;
+  line-height: 1.6;
+}
+
+.donation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.donation-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.donation-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.1);
+}
+
+.donation-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  width: fit-content;
+  margin-bottom: 16px;
+}
+
+.donation-card--pix .donation-card__badge {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.donation-card--pi .donation-card__badge {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.donation-card__title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.donation-card__desc {
+  font-size: 0.92rem;
+  color: var(--gray-light);
+  line-height: 1.55;
+  margin-bottom: 22px;
+}
+
+.donation-key-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.donation-key-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.donation-key-val {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.95rem;
+  color: #f3f4f6;
+  word-break: break-all;
+  user-select: all;
+  font-weight: 600;
+}
+
+.donation-card__footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.donation-btn-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.donation-btn-copy--pix {
+  background: #10b981;
+  color: #064e3b;
+}
+
+.donation-btn-copy--pix:hover {
+  background: #059669;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.donation-btn-copy--pi {
+  background: var(--primary-color);
+  color: #111827;
+}
+
+.donation-btn-copy--pi:hover {
+  background: var(--amber);
+  color: #000;
+  transform: translateY(-2px);
+}
+
+.donation-note {
+  font-size: 0.78rem;
+  color: var(--gray);
+  text-align: center;
+  margin-top: 6px;
+}
+
+@media (max-width: 640px) {
+  .donation-section {
+    padding: 56px 0;
+  }
+  .donation-card {
+    padding: 24px 20px;
+  }
+}
