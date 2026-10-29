@@ -245,3 +245,4 @@ p  { font-size: 1rem; color: var(--gray-light); }
 .badge-o  { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
 .badge-a  { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
 .badge-h  { background: rgba(168,85,247,0.15); color: var(--violet-light); border: 1px solid rgba(168,85,247,0.3); }
+

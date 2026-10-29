@@ -5,6 +5,49 @@
 (function () {
   'use strict';
 
+  // Configuração do Google Sheets (Google Apps Script Web App)
+  // Cole sua URL abaixo ou defina window.ISAR_GOOGLE_SHEETS_URL
+  const GOOGLE_SHEETS_URL = window.ISAR_GOOGLE_SHEETS_URL || '';
+
+  function sendLeadToGoogleSheets(leadData) {
+    const url = window.ISAR_GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL;
+    if (!url || url.indexOf('http') !== 0) {
+      console.log('ℹ️ Google Sheets URL não configurada. Lead salvo localmente.');
+      return;
+    }
+
+    // Coleta dados adicionais para enriquecer o lead na planilha
+    let piUsername = 'Não conectado';
+    try {
+      const piUser = JSON.parse(localStorage.getItem('isar_pi_user') || 'null');
+      if (piUser && piUser.username) piUsername = piUser.username;
+    } catch (_) {}
+
+    const repScoreEl = document.getElementById('rep-score-val');
+    const repScore = repScoreEl ? repScoreEl.textContent : '0';
+
+    const payload = {
+      name: leadData.name,
+      email: leadData.email,
+      source: leadData.source || 'ebook-manual-pi',
+      timestamp: leadData.timestamp || new Date().toISOString(),
+      pi_user: piUsername,
+      reputation: repScore
+    };
+
+    // Envio assíncrono com mode: 'no-cors' para evitar bloqueios de CORS do Google Apps Script
+    fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(payload)
+    }).catch(function (err) {
+      console.warn('Erro ao sincronizar com Google Sheets:', err);
+    });
+  }
+
   function initLeadUnlockForm() {
     const form        = document.getElementById('waitlist-form');
     const unlockedBox = document.getElementById('unlocked-lead-card');
@@ -81,6 +124,9 @@
         localStorage.setItem('isar_leads', JSON.stringify(leads));
       } catch (_) {}
 
+      // Sincronizar com Google Sheets em segundo plano
+      sendLeadToGoogleSheets(leadData);
+
       // Trocar formulário pela caixa de download desbloqueado imediatamente
       form.style.display = 'none';
       if (unlockedBox) unlockedBox.style.display = 'block';
@@ -141,7 +187,9 @@
   };
 
   window.IsarLead = {
-    initLeadUnlockForm
+    initLeadUnlockForm,
+    sendLeadToGoogleSheets
   };
 
 })();
+

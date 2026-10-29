@@ -33,6 +33,19 @@
     if (window.showToast) {
       window.showToast('Reserva confirmada! Você receberá o Ebook #2 em primeira mão (+30 pts)!', '🚀');
     }
+
+    try {
+      const savedLead = JSON.parse(localStorage.getItem('isar_lead_user') || 'null');
+      if (savedLead && window.IsarLead && window.IsarLead.sendLeadToGoogleSheets) {
+        window.IsarLead.sendLeadToGoogleSheets({
+          name: savedLead.name,
+          email: savedLead.email,
+          source: 'reserva-ebook-2',
+          timestamp: new Date().toISOString()
+        });
+      }
+    } catch (_) {}
+
     window.calculateAndUpdateReputation();
   };
 
@@ -131,3 +144,4 @@
   };
 
 })();
+
