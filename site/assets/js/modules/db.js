@@ -6,9 +6,9 @@
 (function () {
   'use strict';
 
-  // Configuração do Supabase (Insira sua URL e Anon Key quando criar o projeto)
-  const SUPABASE_URL = window.ISAR_SUPABASE_URL || '';
-  const SUPABASE_ANON_KEY = window.ISAR_SUPABASE_ANON_KEY || '';
+  // Configuração do Supabase (Produção Ativa)
+  const SUPABASE_URL = window.ISAR_SUPABASE_URL || 'https://yhzoehwkuxteihsnagcj.supabase.co';
+  const SUPABASE_ANON_KEY = window.ISAR_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inloem9laHdrdXh0ZWloc25hZ2NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNzg2OTgsImV4cCI6MjEwODg1NDY5OH0.0ym3I-8oyG3ot_J6ofoVl7pu1m7WyIORLiStQynHG5c';
 
   let client = null;
 
