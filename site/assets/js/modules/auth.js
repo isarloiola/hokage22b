@@ -110,8 +110,31 @@
       window.calculateAndUpdateReputation();
     }
 
-    // Sincronizar perfil no banco de dados Supabase (se configurado)
-    if (window.IsarDB && window.IsarDB.syncPioneerProfile) {
+    // Recuperar e sincronizar perfil completo salvo no Supabase (restaura checklist e reputação)
+    if (window.IsarDB && window.IsarDB.getPioneerProfile && user.uid) {
+      window.IsarDB.getPioneerProfile(user.uid).then(function (profile) {
+        if (profile) {
+          if (profile.checklist_state && Object.keys(profile.checklist_state).length > 0) {
+            try { localStorage.setItem('isar_pi_checklist_items', JSON.stringify(profile.checklist_state)); } catch (_) {}
+          }
+          if (profile.ebook_downloaded) {
+            try { localStorage.setItem('isar_rep_downloaded', '1'); } catch (_) {}
+          }
+          if (profile.ebook2_reserved) {
+            try { localStorage.setItem('isar_rep_ebook2_reserved', '1'); } catch (_) {}
+          }
+          if (window.IsarChecklist && window.IsarChecklist.updateChecklistUI) {
+            window.IsarChecklist.updateChecklistUI();
+          }
+          if (window.calculateAndUpdateReputation) {
+            window.calculateAndUpdateReputation();
+          }
+        } else if (window.IsarDB && window.IsarDB.syncPioneerProfile) {
+          // Novo pioneiro: salva o primeiro registro na nuvem
+          window.IsarDB.syncPioneerProfile(user);
+        }
+      });
+    } else if (window.IsarDB && window.IsarDB.syncPioneerProfile) {
       window.IsarDB.syncPioneerProfile(user);
     }
 

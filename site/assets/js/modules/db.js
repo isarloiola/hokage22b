@@ -78,10 +78,52 @@
     }
   }
 
+  // Busca o ranking dos melhores pioneiros
+  async function getLeaderboard(limit) {
+    const db = getClient();
+    if (!db) return [];
+    limit = limit || 10;
+
+    try {
+      const { data, error } = await db
+        .from('pioneiros')
+        .select('username, reputation_score, level_name')
+        .order('reputation_score', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.warn('Supabase: Erro ao carregar leaderboard:', err.message);
+      return [];
+    }
+  }
+
+  // Busca o perfil salvo do pioneiro na nuvem
+  async function getPioneerProfile(uid) {
+    const db = getClient();
+    if (!db || !uid) return null;
+
+    try {
+      const { data, error } = await db
+        .from('pioneiros')
+        .select('*')
+        .eq('uid', uid)
+        .single();
+
+      if (error) return null;
+      return data;
+    } catch (err) {
+      return null;
+    }
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
     saveLead: saveLead,
+    getLeaderboard: getLeaderboard,
+    getPioneerProfile: getPioneerProfile,
     isConfigured: function () {
       return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
     }

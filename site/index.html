@@ -653,116 +653,315 @@
         </div>
 
         <!-- ============================================================
-             CATÁLOGO DOS 2 EBOOKS GRATUITOS
+             NAVEGAÇÃO DE ABAS VIP (COMUNIDADE & FERRAMENTAS)
         ============================================================ -->
-        <h3 style="font-size:1.45rem;color:var(--white);margin-bottom:24px;display:flex;align-items:center;gap:10px">
-          <span>📚</span> Catálogo de Ebooks Gratuitos — Ecossistema isar.pi
-        </h3>
+        <div class="member-nav-tabs" role="tablist">
+          <button class="member-tab-btn active" data-tab="tab-ebooks" type="button" role="tab">
+            <span>📚</span> Ebooks &amp; Checklist
+          </button>
+          <button class="member-tab-btn" data-tab="tab-tools" type="button" role="tab">
+            <span>🧰</span> Calculadora &amp; Blockchain
+          </button>
+          <button class="member-tab-btn" data-tab="tab-creators" type="button" role="tab">
+            <span>💡</span> Criadores &amp; Negócios Web3
+          </button>
+          <button class="member-tab-btn" data-tab="tab-ranking" type="button" role="tab">
+            <span>🏆</span> Ranking de Reputação
+          </button>
+          <button class="member-tab-btn" data-tab="tab-community" type="button" role="tab">
+            <span>💬</span> Grupo VIP WhatsApp
+          </button>
+        </div>
 
-        <div class="ebooks-duo-grid">
-          <!-- EBOOK 1: MANUAL PI NETWORK -->
-          <div class="ebook-card-full">
-            <div>
-              <div class="ebook-number-tag">Ebook Gratuito #1</div>
-              <span class="ebook-status-badge available">✓ Disponível Agora (Grátis)</span>
-              <h3>Manual Pi Network: Fatos e Fontes</h3>
-              <p>O guia de referência independente de 100 páginas e 23 capítulos. Entenda Blockchain, KYC, segurança de carteira, declaração de impostos no Brasil (IR, PIX, Drex) e o panorama do dinheiro digital com realismo.</p>
-              
-              <div class="ebook-tags-row">
-                <span class="ebook-tag-chip">📄 100 páginas</span>
-                <span class="ebook-tag-chip">🪙 Pi Network</span>
-                <span class="ebook-tag-chip">🇧🇷 Impostos &amp; Brasil</span>
-                <span class="ebook-tag-chip">🔒 Segurança</span>
+        <!-- ============================================================
+             ABA 1: EBOOKS E CHECKLIST
+        ============================================================ -->
+        <div class="member-tab-pane active" id="tab-ebooks" role="tabpanel">
+          <h3 style="font-size:1.45rem;color:var(--white);margin-bottom:24px;display:flex;align-items:center;gap:10px">
+            <span>📚</span> Catálogo de Ebooks Gratuitos — Ecossistema isar.pi
+          </h3>
+
+          <div class="ebooks-duo-grid">
+            <!-- EBOOK 1: MANUAL PI NETWORK -->
+            <div class="ebook-card-full">
+              <div>
+                <div class="ebook-number-tag">Ebook Gratuito #1</div>
+                <span class="ebook-status-badge available">✓ Disponível Agora (Grátis)</span>
+                <h3>Manual Pi Network: Fatos e Fontes</h3>
+                <p>O guia de referência independente de 100 páginas e 23 capítulos. Entenda Blockchain, KYC, segurança de carteira, declaração de impostos no Brasil (IR, PIX, Drex) e o panorama do dinheiro digital com realismo.</p>
+                
+                <div class="ebook-tags-row">
+                  <span class="ebook-tag-chip">📄 100 páginas</span>
+                  <span class="ebook-tag-chip">🪙 Pi Network</span>
+                  <span class="ebook-tag-chip">🇧🇷 Impostos &amp; Brasil</span>
+                  <span class="ebook-tag-chip">🔒 Segurança</span>
+                </div>
+              </div>
+
+              <div class="ebook-actions-group">
+                <div class="ebook-download-btns">
+                  <a href="downloads/Manual-Pi-Network.pdf" download="Manual-Pi-Network.pdf" class="btn-download btn-download-pdf" onclick="recordEbookDownload('pdf')">
+                    <span>⬇️</span> Baixar PDF (563 KB)
+                  </a>
+                  <a href="downloads/Manual-Pi-Network.epub" download="Manual-Pi-Network.epub" class="btn-download btn-download-epub" onclick="recordEbookDownload('epub')">
+                    <span>⬇️</span> Baixar EPUB (151 KB)
+                  </a>
+                </div>
+                <span style="font-size:0.8rem;color:var(--gray-light);text-align:center">✓ Libera +20 pontos no Sistema de Reputação</span>
               </div>
             </div>
 
-            <div class="ebook-actions-group">
-              <div class="ebook-download-btns">
-                <a href="downloads/Manual-Pi-Network.pdf" download="Manual-Pi-Network.pdf" class="btn-download btn-download-pdf" onclick="recordEbookDownload('pdf')">
-                  <span>⬇️</span> Baixar PDF (563 KB)
-                </a>
-                <a href="downloads/Manual-Pi-Network.epub" download="Manual-Pi-Network.epub" class="btn-download btn-download-epub" onclick="recordEbookDownload('epub')">
-                  <span>⬇️</span> Baixar EPUB (151 KB)
-                </a>
+            <!-- EBOOK 2: O DIA QUE O MUNDO PEDIU PRA PROVAR QUEM VOCÊ ERA -->
+            <div class="ebook-card-full" style="border-color:rgba(245,158,11,0.4)">
+              <div>
+                <div class="ebook-number-tag" style="color:var(--amber-light)">Ebook Gratuito #2 — Em Breve</div>
+                <span class="ebook-status-badge upcoming">🚀 Em Produção / Prévia VIP</span>
+                <h3>O dia que o mundo pediu pra provar quem você era</h3>
+                <p>Uma história hipotética instigante sobre o avanço da Inteligência Artificial, robôs autônomos, falsificações em massa (deepfakes) e a corrida mundial por segurança e autenticação. Como você provará que é um ser humano no futuro digital sem vender sua alma?</p>
+
+                <div class="ebook-tags-row">
+                  <span class="ebook-tag-chip" style="border-color:var(--amber);color:var(--amber-light)">🤖 Inteligência Artificial</span>
+                  <span class="ebook-tag-chip">🪪 Prova de Humanidade</span>
+                  <span class="ebook-tag-chip">🔐 Autenticação Web3</span>
+                  <span class="ebook-tag-chip">⚡ Ficção Hipotética</span>
+                </div>
               </div>
-              <span style="font-size:0.8rem;color:var(--gray-light);text-align:center">✓ Libera +20 pontos no Sistema de Reputação</span>
+
+              <div class="ebook-actions-group">
+                <button type="button" class="btn-reserve-ebook2" id="btn-reserve-ebook2" onclick="handleReserveEbook2()">
+                  <span id="btn-reserve-icon">🔔</span> <span id="btn-reserve-text">Reservar Acesso Antecipado (+30 pts Reputação)</span>
+                </button>
+                <span style="font-size:0.8rem;color:var(--gray-light);text-align:center">Você receberá o exemplar em primeira mão assim que for finalizado.</span>
+              </div>
             </div>
           </div>
 
-          <!-- EBOOK 2: O DIA QUE O MUNDO PEDIU PRA PROVAR QUEM VOCÊ ERA -->
-          <div class="ebook-card-full" style="border-color:rgba(245,158,11,0.4)">
-            <div>
-              <div class="ebook-number-tag" style="color:var(--amber-light)">Ebook Gratuito #2 — Em Breve</div>
-              <span class="ebook-status-badge upcoming">🚀 Em Produção / Prévia VIP</span>
-              <h3>O dia que o mundo pediu pra provar quem você era</h3>
-              <p>Uma história hipotética instigante sobre o avanço da Inteligência Artificial, robôs autônomos, falsificações em massa (deepfakes) e a corrida mundial por segurança e autenticação. Como você provará que é um ser humano no futuro digital sem vender sua alma?</p>
-
-              <div class="ebook-tags-row">
-                <span class="ebook-tag-chip" style="border-color:var(--amber);color:var(--amber-light)">🤖 Inteligência Artificial</span>
-                <span class="ebook-tag-chip">🪪 Prova de Humanidade</span>
-                <span class="ebook-tag-chip">🔐 Autenticação Web3</span>
-                <span class="ebook-tag-chip">⚡ Ficção Hipotética</span>
+          <!-- CHECKLIST INTERATIVO DE MIGRAÇÃO MAINNET -->
+          <div class="checklist-box">
+            <div class="checklist-header">
+              <div>
+                <h3 style="font-size:1.3rem;color:var(--white);margin-bottom:4px">Checklist do Pioneiro para a Mainnet</h3>
+                <p style="font-size:0.9rem;color:var(--gray-light)">Marque as etapas que você já concluiu para acompanhar seu progresso de segurança.</p>
+              </div>
+              <div style="font-size:1.1rem;font-weight:700;color:var(--amber)" id="checklist-progress-text">
+                0% Concluído
               </div>
             </div>
 
-            <div class="ebook-actions-group">
-              <button type="button" class="btn-reserve-ebook2" id="btn-reserve-ebook2" onclick="handleReserveEbook2()">
-                <span id="btn-reserve-icon">🔔</span> <span id="btn-reserve-text">Reservar Acesso Antecipado (+30 pts Reputação)</span>
-              </button>
-              <span style="font-size:0.8rem;color:var(--gray-light);text-align:center">Você receberá o exemplar em primeira mão assim que for finalizado.</span>
+            <div class="checklist-progress-bar-container">
+              <div class="checklist-progress-bar" id="checklist-progress-bar"></div>
+            </div>
+
+            <div class="checklist-items">
+              <label class="checklist-item" id="item-chk-1">
+                <input type="checkbox" onchange="toggleChecklistItem(1)" id="chk-1" />
+                <span class="checklist-item-title">1. Baixar o aplicativo Pi Browser oficial</span>
+              </label>
+              <label class="checklist-item" id="item-chk-2">
+                <input type="checkbox" onchange="toggleChecklistItem(2)" id="chk-2" />
+                <span class="checklist-item-title">2. Criar a Pi Wallet e salvar 24 palavras no papel</span>
+              </label>
+              <label class="checklist-item" id="item-chk-3">
+                <input type="checkbox" onchange="toggleChecklistItem(3)" id="chk-3" />
+                <span class="checklist-item-title">3. Confirmar sua carteira no Checklist Mainnet</span>
+              </label>
+              <label class="checklist-item" id="item-chk-4">
+                <input type="checkbox" onchange="toggleChecklistItem(4)" id="chk-4" />
+                <span class="checklist-item-title">4. Configurar taxa de bloqueio (Lockup) consciente</span>
+              </label>
+              <label class="checklist-item" id="item-chk-5">
+                <input type="checkbox" onchange="toggleChecklistItem(5)" id="chk-5" />
+                <span class="checklist-item-title">5. Enviar documentação para o KYC quando disponível</span>
+              </label>
+              <label class="checklist-item" id="item-chk-6">
+                <input type="checkbox" onchange="toggleChecklistItem(6)" id="chk-6" />
+                <span class="checklist-item-title">6. Aguardar aprovação do KYC (resultado no app)</span>
+              </label>
+              <label class="checklist-item" id="item-chk-7">
+                <input type="checkbox" onchange="toggleChecklistItem(7)" id="chk-7" />
+                <span class="checklist-item-title">7. Assinar termo de reconhecimento de tokens</span>
+              </label>
+              <label class="checklist-item" id="item-chk-8">
+                <input type="checkbox" onchange="toggleChecklistItem(8)" id="chk-8" />
+                <span class="checklist-item-title">8. Migração automática do saldo para a Mainnet</span>
+              </label>
             </div>
           </div>
         </div>
 
-        <!-- CHECKLIST INTERATIVO DE MIGRAÇÃO MAINNET -->
-        <div class="checklist-box">
-          <div class="checklist-header">
+        <!-- ============================================================
+             ABA 2: CALCULADORA & RASTREADOR BLOCKCHAIN
+        ============================================================ -->
+        <div class="member-tab-pane" id="tab-tools" role="tabpanel">
+          <div class="calc-card">
+            <h3 style="color:var(--white);font-size:1.4rem;margin-bottom:8px">🧮 Calculadora de Mineração Pi (Fórmula SCP)</h3>
+            <p style="color:var(--gray-light);font-size:0.95rem;margin-bottom:24px">Simule sua taxa de mineração por hora, dia e mês baseada no Whitepaper oficial (Círculo de Segurança + Lockup + Bônus de Convite).</p>
+
+            <div class="calc-grid">
+              <div class="calc-inputs">
+                <div class="calc-group">
+                  <label for="calc-security-circle">Membros no Círculo de Segurança (0 a 5)</label>
+                  <select id="calc-security-circle">
+                    <option value="5" selected>5 pessoas (100% de bônus — Máximo)</option>
+                    <option value="4">4 pessoas (80% de bônus)</option>
+                    <option value="3">3 pessoas (60% de bônus)</option>
+                    <option value="2">2 pessoas (40% de bônus)</option>
+                    <option value="1">1 pessoa (20% de bônus)</option>
+                    <option value="0">0 pessoas (Sem bônus)</option>
+                  </select>
+                </div>
+
+                <div class="calc-group">
+                  <label for="calc-lockup-pct">% de Saldo Bloqueado (Lockup)</label>
+                  <select id="calc-lockup-pct">
+                    <option value="1.0" selected>100% do saldo</option>
+                    <option value="0.9">90% do saldo</option>
+                    <option value="0.5">50% do saldo</option>
+                    <option value="0.25">25% do saldo</option>
+                  </select>
+                </div>
+
+                <div class="calc-group">
+                  <label for="calc-lockup-dur">Tempo de Bloqueio (Lockup Duration)</label>
+                  <select id="calc-lockup-dur">
+                    <option value="3.0" selected>3 Anos (Multiplicador Máximo)</option>
+                    <option value="1.0">1 Ano</option>
+                    <option value="0.5">6 Meses</option>
+                    <option value="0.1">2 Semanas</option>
+                  </select>
+                </div>
+
+                <div class="calc-group">
+                  <label for="calc-referrals">Pioneiros Ativos na Sua Equipe</label>
+                  <input type="number" id="calc-referrals" min="0" max="100" value="1" placeholder="Ex: 3" />
+                </div>
+              </div>
+
+              <div class="calc-results-box">
+                <div class="calc-result-item">
+                  <span>Taxa Estimada por Hora:</span>
+                  <strong id="calc-result-hourly">0.0236 π/h</strong>
+                </div>
+                <div class="calc-result-item">
+                  <span>Estimativa por Dia (24h):</span>
+                  <strong id="calc-result-daily">0.57 π/dia</strong>
+                </div>
+                <div class="calc-result-item">
+                  <span>Estimativa Mensal (30 dias):</span>
+                  <strong id="calc-result-monthly">17.0 π/mês</strong>
+                </div>
+                <p style="font-size:0.75rem;color:var(--gray);margin-top:8px">Nota: A taxa básica do sistema é reajustada dinamicamente pelo algoritmo da Core Team no 1º dia de cada mês.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- RASTREADOR DE BLOCKCHAIN -->
+          <div class="explorer-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+              <div>
+                <h3 style="color:var(--white);font-size:1.3rem;margin:0 0 4px">📡 Rastreador da Blockchain Pi Network</h3>
+                <p style="color:var(--gray-light);font-size:0.88rem;margin:0">Métricas em tempo real da rede descentralizada e nós validadores.</p>
+              </div>
+              <a href="https://minepi.com/blockexplorer" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                🔍 Abrir Block Explorer Oficial
+              </a>
+            </div>
+
+            <div class="explorer-stats">
+              <div class="explorer-stat-item">
+                <div>Consenso da Rede</div>
+                <strong>Stellar SCP (v19)</strong>
+              </div>
+              <div class="explorer-stat-item">
+                <div>Nós Ativos no Mundo</div>
+                <strong>+33.000 nós</strong>
+              </div>
+              <div class="explorer-stat-item">
+                <div>Fase da Mainnet</div>
+                <strong>Enclosed Network</strong>
+              </div>
+              <div class="explorer-stat-item">
+                <div>Status do Ledger</div>
+                <strong>🟢 100% Operacional</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             ABA 3: CRIADORES & NEGÓCIOS WEB3 (COMO LUCRAR COM PI)
+        ============================================================ -->
+        <div class="member-tab-pane" id="tab-creators" role="tabpanel">
+          <div style="text-align:left;max-width:860px;margin-bottom:24px">
+            <h3 style="color:var(--white);font-size:1.4rem;margin-bottom:6px">💡 Como Criadores e Empreendedores Podem Lucrar com Pi</h3>
+            <p style="color:var(--gray-light);font-size:0.95rem;line-height:1.6">
+              Com mais de 60 milhões de pioneiros no mundo procurando utilidade real para suas moedas, quem posicionar produtos, serviços e conteúdos na Web3 agora sairá na frente da economia digital.
+            </p>
+          </div>
+
+          <div class="creator-cards-grid">
+            <div class="creator-card">
+              <span class="creator-card-icon">🛍️</span>
+              <h4>1. Produtos Digitais &amp; Ebooks</h4>
+              <p>Venda cursos, PDFs, mentorias e templates cobrando frações de Pi diretamente pelo Pi Browser, sem intermediários de pagamento nem taxas abusivas de cartão de crédito.</p>
+            </div>
+
+            <div class="creator-card">
+              <span class="creator-card-icon">⚡</span>
+              <h4>2. Micropagamentos para Criadores</h4>
+              <p>Permita que seus seguidores apoiem seu canal no YouTube, leiam posts exclusivos ou acessem podcasts pagando 0.05 π por conteúdo (o modelo pay-per-view Web3).</p>
+            </div>
+
+            <div class="creator-card">
+              <span class="creator-card-icon">🌐</span>
+              <h4>3. Transforme seu Site em um dApp</h4>
+              <p>Com a biblioteca <code>pi-sdk.js</code>, qualquer site pode integrar login com Pi em minutos. Você pode validar usuários únicos sem precisar de formulários de senha.</p>
+            </div>
+
+            <div class="creator-card">
+              <span class="creator-card-icon">🤝</span>
+              <h4>4. Serviços &amp; Comércio Local</h4>
+              <p>Profissionais autônomos (designers, programadores, consultores) já podem aceitar Pi por serviços prestados entre pioneiros autenticados que completaram a Checklist.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             ABA 4: RANKING DE REPUTAÇÃO (LEADERBOARD AO VIVO)
+        ============================================================ -->
+        <div class="member-tab-pane" id="tab-ranking" role="tabpanel">
+          <div class="ranking-table-box">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+              <div>
+                <h3 style="color:var(--white);font-size:1.35rem;margin:0 0 4px">🏆 Ranking dos Guardiões da Rede</h3>
+                <p style="color:var(--gray-light);font-size:0.88rem;margin:0">Pioneiros com maior pontuação de reputação, checklist e prova de humanidade (sincronizado via Supabase).</p>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="window.IsarTools && window.IsarTools.loadLeaderboard()">
+                🔄 Atualizar
+              </button>
+            </div>
+
+            <div class="ranking-list" id="ranking-list-body">
+              <!-- Renderizado via JavaScript / Supabase -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             ABA 5: COMUNIDADE VIP WHATSAPP
+        ============================================================ -->
+        <div class="member-tab-pane" id="tab-community" role="tabpanel">
+          <div class="vip-whatsapp-banner">
             <div>
-              <h3 style="font-size:1.3rem;color:var(--white);margin-bottom:4px">Checklist do Pioneiro para a Mainnet</h3>
-              <p style="font-size:0.9rem;color:var(--gray-light)">Marque as etapas que você já concluiu para acompanhar seu progresso de segurança.</p>
+              <span style="background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#fff">Comunidade Fechada</span>
+              <h3 style="color:#fff;font-size:1.6rem;margin:10px 0 8px">Grupo VIP de Pioneiros @hokage22b</h3>
+              <p style="color:#d1fae5;font-size:0.95rem;max-width:540px;line-height:1.5;margin:0">
+                Participe do nosso grupo oficial no WhatsApp. Tire dúvidas sobre KYC, receba avisos de novos vídeos em primeira mão e discuta sobre dApps e oportunidades de negócios no ecossistema Pi.
+              </p>
             </div>
-            <div style="font-size:1.1rem;font-weight:700;color:var(--amber)" id="checklist-progress-text">
-              0% Concluído
-            </div>
-          </div>
-
-          <div class="checklist-progress-bar-container">
-            <div class="checklist-progress-bar" id="checklist-progress-bar"></div>
-          </div>
-
-          <div class="checklist-items">
-            <label class="checklist-item" id="item-chk-1">
-              <input type="checkbox" onchange="toggleChecklistItem(1)" id="chk-1" />
-              <span class="checklist-item-title">1. Baixar o aplicativo Pi Browser oficial</span>
-            </label>
-            <label class="checklist-item" id="item-chk-2">
-              <input type="checkbox" onchange="toggleChecklistItem(2)" id="chk-2" />
-              <span class="checklist-item-title">2. Criar a Pi Wallet e salvar 24 palavras no papel</span>
-            </label>
-            <label class="checklist-item" id="item-chk-3">
-              <input type="checkbox" onchange="toggleChecklistItem(3)" id="chk-3" />
-              <span class="checklist-item-title">3. Confirmar sua carteira no Checklist Mainnet</span>
-            </label>
-            <label class="checklist-item" id="item-chk-4">
-              <input type="checkbox" onchange="toggleChecklistItem(4)" id="chk-4" />
-              <span class="checklist-item-title">4. Configurar taxa de bloqueio (Lockup) consciente</span>
-            </label>
-            <label class="checklist-item" id="item-chk-5">
-              <input type="checkbox" onchange="toggleChecklistItem(5)" id="chk-5" />
-              <span class="checklist-item-title">5. Enviar documentação para o KYC quando disponível</span>
-            </label>
-            <label class="checklist-item" id="item-chk-6">
-              <input type="checkbox" onchange="toggleChecklistItem(6)" id="chk-6" />
-              <span class="checklist-item-title">6. Aguardar aprovação do KYC (resultado no app)</span>
-            </label>
-            <label class="checklist-item" id="item-chk-7">
-              <input type="checkbox" onchange="toggleChecklistItem(7)" id="chk-7" />
-              <span class="checklist-item-title">7. Assinar termo de reconhecimento de tokens</span>
-            </label>
-            <label class="checklist-item" id="item-chk-8">
-              <input type="checkbox" onchange="toggleChecklistItem(8)" id="chk-8" />
-              <span class="checklist-item-title">8. Migração automática do saldo para a Mainnet</span>
-            </label>
+            <a href="https://chat.whatsapp.com/invite/hokage22b" target="_blank" rel="noopener noreferrer" class="vip-whatsapp-btn">
+              <span>💬</span> Entrar no Grupo WhatsApp
+            </a>
           </div>
         </div>
       </div>
@@ -1143,6 +1342,7 @@
   <script src="assets/js/modules/checklist.js"></script>
   <script src="assets/js/modules/lead.js"></script>
   <script src="assets/js/modules/reputation.js"></script>
+  <script src="assets/js/modules/tools.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>

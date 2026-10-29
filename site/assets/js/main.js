@@ -44,6 +44,11 @@
     if (window.calculateAndUpdateReputation) {
       window.calculateAndUpdateReputation();
     }
+
+    // 6. Pioneer Tools, Tabs & Mining Calculator
+    if (window.IsarTools) {
+      window.IsarTools.init();
+    }
   });
 
 })();
