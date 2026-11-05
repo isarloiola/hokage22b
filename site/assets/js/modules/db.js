@@ -118,12 +118,57 @@
     }
   }
 
+  // Busca os anúncios ativos no mural
+  async function getAnuncios(category) {
+    const db = getClient();
+    if (!db) return [];
+
+    try {
+      let query = db
+        .from('anuncios')
+        .select('*')
+        .eq('status', 'ativo')
+        .order('created_at', { ascending: false });
+
+      if (category && category !== 'todos') {
+        query = query.eq('category', category);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.warn('Supabase: Erro ao carregar anúncios:', err.message);
+      return [];
+    }
+  }
+
+  // Cria um novo anúncio no mural
+  async function createAnuncio(adData) {
+    const db = getClient();
+    if (!db) return null;
+
+    try {
+      const { data, error } = await db
+        .from('anuncios')
+        .insert([adData]);
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.warn('Supabase: Erro ao criar anúncio:', err.message);
+      return null;
+    }
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
     saveLead: saveLead,
     getLeaderboard: getLeaderboard,
     getPioneerProfile: getPioneerProfile,
+    getAnuncios: getAnuncios,
+    createAnuncio: createAnuncio,
     isConfigured: function () {
       return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
     }

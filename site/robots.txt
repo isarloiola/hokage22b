@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /obrigado.html
 
-Sitemap: https://hokage22b.com.br/sitemap.xml
+Sitemap: https://hokage22b.com/sitemap.xml

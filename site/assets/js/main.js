@@ -54,6 +54,11 @@
     if (window.IsarOnboarding) {
       window.IsarOnboarding.init();
     }
+
+    // 8. Pioneer Ads Mural — Gazeta Web3
+    if (window.IsarMural) {
+      window.IsarMural.init();
+    }
   });
 
 })();

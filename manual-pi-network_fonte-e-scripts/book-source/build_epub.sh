@@ -6,7 +6,7 @@ mkdir -p work dist
 DRAFT="${DRAFT:-1}"
 OUTNAME="Manual-Pi-Network_Edicao-1.0.epub"
 EDLABEL="Edição 1.0"
-if [ "$DRAFT" = "1" ]; then OUTNAME="Manual-Pi-Network_v0.1-RASCUNHO.epub"; EDLABEL="Edição 1.0 (rascunho v0.1)"; fi
+if [ "$DRAFT" = "1" ]; then OUTNAME="Manual-Pi-Network_v0.1-RASCUNHO.epub"; EDLABEL="Edição 1.0 (rascunho v0.1)"; elif [ "${RC:-0}" = "1" ]; then OUTNAME="Manual-Pi-Network_Edicao-1.0-RC1.epub"; EDLABEL="Edição 1.0 (RC1)"; fi
 python3 - << PY
 import os, re
 here = os.getcwd()

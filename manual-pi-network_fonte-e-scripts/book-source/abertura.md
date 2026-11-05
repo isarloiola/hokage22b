@@ -9,8 +9,9 @@
 - **Independência:** marcas, nomes e serviços citados pertencem aos respectivos titulares. Não há parceria, patrocínio ou aprovação da Pi Core Team, de corretoras ou de reguladores. Este material não é afiliado à Pi Network.
 - **Data de referência:** outubro de 2026. Regras, telas, taxas, listagens e procedimentos mudam. Confirme sempre nas fontes oficiais antes de qualquer ação com identidade, carteira ou dinheiro.
 - **Privacidade e segurança:** o autor nunca pede passphrase, senha ou código. Nunca envie esses dados a ninguém.
-- **Suporte e reembolso:** [e-mail de suporte] · [política de reembolso e direito de arrependimento: a definir com advogado].
-- **Direitos:** [texto de direitos autorais e licença de uso: a definir com advogado].
+- **Distribuição:** este e-book é gratuito e é entregue por e-mail a quem se cadastra no site hokage22b.com. O e-mail informado é tratado conforme a LGPD, com consentimento claro; marketing e atualizações são opcionais e você pode cancelar ou pedir a exclusão dos seus dados a qualquer momento.
+- **Contato e privacidade:** contato@hokage22b.com · Acesse nossa política de privacidade e termos de uso em https://hokage22b.com/legal/politica-de-privacidade.html.
+- **Direitos:** © HOKAGE22B. Conteúdo educativo independente. Todos os direitos reservados.
 
 ### Para quem é este manual
 
@@ -38,6 +39,6 @@ Em cada capítulo você encontra também: **o que o capítulo não afirma**, **c
 
 1. **Planilha de registro de operações** (Excel), com as abas Como usar, Registro, Resumo e Painel de sinais.
 2. **Kit imprimível em PDF** (2 páginas): folha anti-golpe e checklists.
-3. **Painel de sinais trimestral:** versão de atualização para quem comprar a edição.
+3. **Painel de sinais trimestral:** atualização enviada por e-mail a quem optar por receber as revisões.
 
 </div>

@@ -5,10 +5,11 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 
 DRAFT = os.environ.get("DRAFT", "1") == "1"
+RC = os.environ.get("RC", "0") == "1"
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.environ.get("OUT_DIR", os.path.join(HERE, "dist"))
 os.makedirs(OUT, exist_ok=True)
-EDITION = "Edição 1.0" + (" (rascunho v0.1)" if DRAFT else "")
+EDITION = "Edição 1.0" + (" (rascunho v0.1)" if DRAFT else (" (RC1)" if RC else ""))
 TITLE = "Manual Pi Network"
 SUB = "Do primeiro clique ao uso consciente: Pi, dinheiro, tecnologia e Brasil"
 
@@ -63,6 +64,8 @@ def toc_html(pages):
 
 def doc(inner, toc):
     banner = ""
+    if RC and not DRAFT:
+        banner = '<div class="draft"><b>VERSÃO CANDIDATA À PUBLICAÇÃO (RC1).</b> Antes de publicar: preencher os campos entre colchetes desta página, concluir as revisões de contador e advogado e conferir os itens pendentes da Lista mestra.</div>'
     if DRAFT:
         banner = '<div class="draft"><b>RASCUNHO DE DESENVOLVIMENTO (v0.1).</b> Esta versão serve para testar diagramação, entrega e download. Não publicar nem vender: faltam verificação em fontes primárias e revisão de contador e advogado.</div>'
     front = pandoc(read(os.path.join(HERE, "abertura.md")))
@@ -74,7 +77,7 @@ def doc(inner, toc):
 </body></html>"""
 
 def cover_html():
-    flag = '<div style="margin-top:16mm;display:inline-block;border:1.5px solid #fff;padding:2.5mm 5mm;font-size:10pt;letter-spacing:2px;">RASCUNHO v0.1 · NÃO PUBLICAR</div>' if DRAFT else ""
+    flag = '<div style="margin-top:16mm;display:inline-block;border:1.5px solid #fff;padding:2.5mm 5mm;font-size:10pt;letter-spacing:2px;">RASCUNHO v0.1 · NÃO PUBLICAR</div>' if DRAFT else ('<div style="margin-top:16mm;display:inline-block;border:1.5px solid #fff;padding:2.5mm 5mm;font-size:10pt;letter-spacing:2px;">CANDIDATA À PUBLICAÇÃO · RC1</div>' if RC else "")
     return f"""<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
 <style>
 html,body{{margin:0;padding:0;}}
@@ -175,7 +178,7 @@ def main():
             wm = watermark_pdf(float(page.mediabox.width), float(page.mediabox.height))
             page.merge_page(wm)
     w.add_metadata({"/Title": f"{TITLE} - {EDITION}", "/Author": "isar.pi", "/Subject": SUB})
-    name = "Manual-Pi-Network_v0.1-RASCUNHO.pdf" if DRAFT else "Manual-Pi-Network_Edicao-1.0.pdf"
+    name = "Manual-Pi-Network_v0.1-RASCUNHO.pdf" if DRAFT else ("Manual-Pi-Network_Edicao-1.0-RC1.pdf" if RC else "Manual-Pi-Network_Edicao-1.0.pdf")
     outpdf = os.path.join(OUT, name)
     tmp = outpdf + ".tmp"
     with open(tmp, "wb") as f: w.write(f)

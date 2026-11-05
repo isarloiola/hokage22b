@@ -37,6 +37,22 @@ CREATE TABLE IF NOT EXISTS public.doacoes (
     created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- 4. TABELA DE ANÚNCIOS / MURAL DOS PIONEIROS
+CREATE TABLE IF NOT EXISTS public.anuncios (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    pioneer_name TEXT NOT NULL,
+    pioneer_username TEXT,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    link_url TEXT,
+    category TEXT DEFAULT 'geral',
+    plan_tier TEXT DEFAULT 'bronze',
+    price_pi NUMERIC(6, 3) DEFAULT 0.314,
+    price_brl NUMERIC(6, 2) DEFAULT 3.00,
+    status TEXT DEFAULT 'ativo',
+    created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
 -- ============================================================
 -- POLÍTICAS DE SEGURANÇA MÁXIMA (ROW LEVEL SECURITY - RLS)
 -- ============================================================
@@ -47,6 +63,7 @@ CREATE TABLE IF NOT EXISTS public.doacoes (
 ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.pioneiros ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.doacoes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.anuncios ENABLE ROW LEVEL SECURITY;
 
 -- Regra para LEADS: Qualquer visitante pode inserir seu próprio lead (INSERT)
 -- NENHUM visitante anônimo pode listar ou ler a tabela de leads (SELECT bloqueado para anon)
@@ -78,6 +95,19 @@ CREATE POLICY "Pioneiro pode modificar seu próprio score"
 -- Regra para DOAÇÕES: Registro anônimo permitido
 CREATE POLICY "Permitir registro de apoio voluntário"
     ON public.doacoes
+    FOR INSERT
+    TO anon, authenticated
+    WITH CHECK (true);
+
+-- Regras para ANÚNCIOS: Qualquer pessoa pode ler anúncios ativos e submeter novos
+CREATE POLICY "Permitir leitura pública de anúncios ativos"
+    ON public.anuncios
+    FOR SELECT
+    TO anon, authenticated
+    USING (status = 'ativo');
+
+CREATE POLICY "Permitir envio público de anúncio"
+    ON public.anuncios
     FOR INSERT
     TO anon, authenticated
     WITH CHECK (true);

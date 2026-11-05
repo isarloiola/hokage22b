@@ -3,1487 +3,909 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manual Pi Network | Guia independente em português, com fatos e fontes — isar.pi</title>
-  <meta name="description" content="Guia independente em português sobre Pi Network, dinheiro digital, blockchain e Web3. Cada afirmação é marcada como fato, plano anunciado, análise ou hipótese. Sem promessas — com realismo." />
-  <meta name="keywords" content="Pi Network, manual Pi, KYC Pi, carteira Pi, blockchain, web3, golpes cripto, imposto cripto Brasil, stablecoins, PIX, Drex" />
-  <meta name="author" content="hokage22b — isar.pi" />
+  <title>HOKAGE22B — O futuro não se espera. Constrói-se.</title>
+  
+  <meta name="description" content="Um espaço independente para explorar tecnologia, inteligência artificial, desenvolvimento de software, blockchain, Pi Network e economia digital." />
+  <meta name="author" content="Isar Loiola (@hokage22b)" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://hokage22b.com.br/" />
+  <link rel="canonical" href="https://hokage22b.com/" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Manual Pi Network | Guia independente — isar.pi by hokage22b" />
-  <meta property="og:description" content="100 páginas, 23 capítulos. Aprenda sobre Pi Network, blockchain e Web3 com fatos separados de promessas." />
-  <meta property="og:image" content="assets/img/og-image.png" />
-  <meta property="og:url" content="https://hokage22b.com.br/" />
+  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hokage22b.com/" />
+  <meta property="og:title" content="HOKAGE22B — O futuro não se espera. Constrói-se." />
+  <meta property="og:description" content="Portal editorial independente sobre tecnologia, inteligência artificial, economia digital, blockchain e Pi Network." />
+  <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png" />
+  <meta property="og:site_name" content="HOKAGE22B" />
   <meta property="og:locale" content="pt_BR" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@hokage22b" />
-  <meta name="twitter:title" content="Manual Pi Network — isar.pi by hokage22b" />
-  <meta name="twitter:description" content="Guia independente sobre Pi Network, blockchain e Web3 — fatos separados de promessas." />
-  <meta name="twitter:image" content="assets/img/og-image.png" />
+  <meta name="twitter:creator" content="@hokage22b" />
+  <meta name="twitter:title" content="HOKAGE22B — O futuro não se espera. Constrói-se." />
+  <meta name="twitter:description" content="Um espaço independente para explorar tecnologia, conhecimento e novas possibilidades na economia digital." />
+  <meta name="twitter:image" content="https://hokage22b.com/assets/img/og-image.png" />
 
-  <!-- Structured Data -->
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "Manual Pi Network",
-    "description": "Guia independente em português sobre Pi Network, dinheiro digital, blockchain, Web3, impostos e segurança. Material educativo e informativo.",
-    "brand": { "@type": "Brand", "name": "isar.pi" },
-    "author": { "@type": "Person", "name": "hokage22b", "sameAs": ["https://twitter.com/hokage22b", "https://instagram.com/hokage22b", "https://youtube.com/@hokage22b"] },
-    "inLanguage": "pt-BR",
-    "audience": { "@type": "Audience", "audienceType": "Leitores interessados em Pi Network, blockchain e Web3" }
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://hokage22b.com/#website",
+        "url": "https://hokage22b.com/",
+        "name": "HOKAGE22B",
+        "description": "Portal independente sobre tecnologia, inteligência artificial, blockchain e economia digital.",
+        "publisher": {
+          "@id": "https://hokage22b.com/#organization"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://hokage22b.com/#organization",
+        "name": "HOKAGE22B",
+        "url": "https://hokage22b.com/",
+        "founder": {
+          "@type": "Person",
+          "name": "Isar Loiola",
+          "sameAs": [
+            "https://youtube.com/@hokage22b",
+            "https://instagram.com/hokage22b",
+            "https://twitter.com/hokage22b"
+          ]
+        }
+      },
+      {
+        "@type": "Product",
+        "name": "Pi para seu negócio",
+        "description": "Guia prático para empreendedores avaliarem e explorarem as possibilidades comerciais da economia Pi.",
+        "image": "https://hokage22b.com/assets/img/ebook-cover.png",
+        "offers": {
+          "@type": "Offer",
+          "price": "29.90",
+          "priceCurrency": "BRL",
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    ]
   }
   </script>
-
-  <!-- Pi Network JavaScript SDK -->
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>π</text></svg>" />
 </head>
 <body>
 
-  <!-- Particles Background -->
-  <div class="particles-bg" id="particles-bg" aria-hidden="true"></div>
-
   <!-- ============================================================
-       NAVBAR
+       4.1. HEADER MINIMALISTA
   ============================================================ -->
-  <nav class="navbar" id="navbar" role="navigation" aria-label="Navegação principal">
-    <div class="container">
-      <div class="navbar__inner">
-        <a href="#inicio" class="navbar__logo" aria-label="isar.pi — página inicial">
-          <span class="pi-sym">π</span>
-          <div>
-            <div>isar.pi</div>
-            <div class="brand-sub">by hokage22b</div>
-          </div>
+  <header class="portal-header" id="portal-header">
+    <div class="portal-container">
+      <div class="portal-header__inner">
+        <a href="#hero" class="portal-brand" aria-label="HOKAGE22B Início">
+          <span>HOKAGE22B</span>
+          <span class="portal-brand__dot" aria-hidden="true"></span>
         </a>
-        <ul class="navbar__links" role="list">
-          <li><a href="#produto" data-i18n="nav.manual">O Manual</a></li>
-          <li><a href="#blockchain" data-i18n="nav.blockchain">Blockchain</a></li>
-          <li><a href="#web3" data-i18n="nav.web3">Web3</a></li>
-          <li><a href="#pi-browser" data-i18n="nav.pibrowser">Pi Browser</a></li>
-          <li><a href="#membros" data-i18n="nav.members">Área de Membros</a></li>
-          <li><a href="#youtube" data-i18n="nav.youtube">YouTube</a></li>
-          <li><a href="#pi-convite" data-i18n="nav.mine">Minerar Pi</a></li>
-          <li><a href="#doacao" data-i18n="nav.donate">Apoiar</a></li>
-        </ul>
-        <div class="navbar__actions" id="navbar-actions">
-          <div class="lang-switcher" aria-label="Idioma">
-            <button class="lang-btn active" data-lang="pt" type="button" title="Português">PT</button>
-            <button class="lang-btn" data-lang="en" type="button" title="English">EN</button>
-            <button class="lang-btn" data-lang="es" type="button" title="Español">ES</button>
-          </div>
-          <button type="button" class="btn btn-secondary btn-sm nav-pi-btn" id="nav-pi-login" aria-label="Acessar com Pi Network">
-            <span class="pi-sym">π</span> <span id="nav-pi-text" data-i18n="nav.login">Entrar com Pi</span>
-          </button>
-          <a href="#lista-espera" class="btn btn-primary btn-sm navbar__cta" id="nav-cta" data-i18n="nav.free_ebook">📖 Ebook Grátis</a>
-        </div>
-        <button class="navbar__toggle" id="nav-toggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="mobile-menu" type="button">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </nav>
 
-  <!-- Mobile Menu Drawer (Header Fixo com Botão X 100% Visível) -->
-  <div class="navbar__mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu mobile">
-    <div class="navbar__mobile-header">
-      <a href="#inicio" class="navbar__logo mobile-link" aria-label="isar.pi — início">
-        <span class="pi-sym">π</span>
-        <div>
-          <div>isar.pi</div>
-          <div class="brand-sub">by hokage22b</div>
-        </div>
-      </a>
-      <button class="navbar__mobile-close" id="mobile-close" aria-label="Fechar menu" type="button">✕</button>
-    </div>
-    <div class="navbar__mobile-body">
-      <div style="display:flex;justify-content:center;margin-bottom:12px;">
-        <div class="lang-switcher" aria-label="Idioma">
-          <button class="lang-btn active" data-lang="pt" type="button">PT</button>
-          <button class="lang-btn" data-lang="en" type="button">EN</button>
-          <button class="lang-btn" data-lang="es" type="button">ES</button>
+        <nav class="portal-nav-desktop" aria-label="Navegação Principal">
+          <li><a href="#hero">Início</a></li>
+          <li><a href="#comece-aqui">Comece Aqui</a></li>
+          <li><a href="#produtos">Produtos</a></li>
+          <li><a href="#universo">Universo Digital</a></li>
+          <li><a href="#conteudo">Conteúdo</a></li>
+          <li><a href="#comunidade">Comunidade</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+        </nav>
+
+        <div class="portal-header__actions">
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="HokagePortal.openModal('modal-manual-download')">
+            Acessar Manual
+          </button>
+          <button type="button" class="portal-burger" id="portal-burger-btn" aria-label="Abrir Menu" aria-expanded="false">
+            ☰
+          </button>
         </div>
       </div>
-      <a href="#produto" class="mobile-link" data-i18n="nav.manual">O Manual</a>
-      <a href="#blockchain" class="mobile-link" data-i18n="nav.blockchain">Blockchain</a>
-      <a href="#web3" class="mobile-link" data-i18n="nav.web3">Web3</a>
-      <a href="#pi-browser" class="mobile-link" data-i18n="nav.pibrowser">Pi Browser</a>
-      <a href="#membros" class="mobile-link" data-i18n="nav.members">Área de Membros</a>
-      <a href="#youtube" class="mobile-link" data-i18n="nav.youtube">YouTube</a>
-      <a href="#pi-convite" class="mobile-link" data-i18n="nav.mine">Minerar Pi</a>
-      <a href="#doacao" class="mobile-link" data-i18n="nav.donate">Apoiar o Projeto</a>
-      <div class="navbar__mobile-actions">
-        <button type="button" class="btn btn-secondary mobile-link" id="mobile-pi-login">
-          <span class="pi-sym">π</span> <span id="mobile-pi-text" data-i18n="nav.login">Entrar com Pi</span>
-        </button>
-        <a href="#lista-espera" class="btn btn-primary mobile-link" data-i18n="nav.free_ebook">📖 Baixar Ebook Grátis</a>
-      </div>
     </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="portal-drawer" id="portal-drawer" role="navigation" aria-label="Menu Mobile">
+    <div class="portal-drawer__nav">
+      <a href="#hero">Início</a>
+      <a href="#comece-aqui">Comece por Aqui</a>
+      <a href="#produtos">Produtos Digitais</a>
+      <a href="#universo">Universo Digital</a>
+      <a href="#conteudo">Conteúdo Recente</a>
+      <a href="#comunidade">Comunidade</a>
+      <a href="#parcerias">Parcerias &amp; Anúncios</a>
+      <a href="#sobre">Sobre o Projeto</a>
+      <a href="mural.html">Mural dos Pioneiros ↗</a>
+    </div>
+    <button type="button" class="portal-btn portal-btn--primary portal-btn--full" onclick="HokagePortal.openModal('modal-manual-download')">
+      Baixar Manual Gratuito
+    </button>
   </div>
 
-  <!-- ============================================================
-       HERO
-  ============================================================ -->
-  <section class="hero section" id="inicio" aria-labelledby="hero-title">
-    <div class="hero__glow-1" aria-hidden="true"></div>
-    <div class="hero__glow-2" aria-hidden="true"></div>
-    <div class="container">
-      <div class="hero__grid">
-        <div class="hero__content">
-          <div class="hero-onboarding-trigger" onclick="window.IsarOnboarding && window.IsarOnboarding.open()" role="button" tabindex="0">
-            <span>🧭</span> Novo por aqui? Faça o teste de 30s e saiba por onde começar →
+  <main>
+    <!-- ============================================================
+         4.2. HERO SECTION
+    ============================================================ -->
+    <section class="portal-hero" id="hero" aria-labelledby="hero-title">
+      <div class="portal-container">
+        <div class="portal-hero__inner">
+          <div class="portal-hero__badge">
+            <span class="portal-hero__badge-pulse" aria-hidden="true"></span>
+            <span>Tecnologia · Economia Digital · Blockchain · Pi Network</span>
           </div>
-          <div class="hero__eyebrow">
-            <span class="dot" aria-hidden="true"></span>
-            🎁 2 Ebooks Gratuitos no Ecossistema isar.pi
-          </div>
-          <h1 class="hero__title" id="hero-title">
-            Pi Network sem<br /><span class="gradient-text">mistério nem hype.</span>
+
+          <h1 class="portal-hero__title" id="hero-title">
+            O futuro não se espera.<br />Constrói-se.
           </h1>
-          <p class="hero__subtitle">
-            O primeiro guia independente em português que separa <strong style="color:var(--white)">fato</strong>,
-            plano anunciado, análise e hipótese — sobre Pi, blockchain, dinheiro digital e o cenário mundial.
+
+          <div class="portal-hero__subtitle">
+            Explore novas possibilidades.
+          </div>
+
+          <p class="portal-hero__desc">
+            Um espaço independente dedicado à tecnologia, economia digital, inovação e às ideias que podem transformar a maneira como vivemos, empreendemos e nos conectamos.
           </p>
-          <div class="hero__ctas">
-            <a href="#lista-espera" class="btn btn-primary" id="hero-cta-primary">
-              <span>📖</span> Baixar Ebook Gratuito
+
+          <div class="portal-hero__actions">
+            <a href="#conteudo" class="portal-btn portal-btn--primary">
+              Explorar conteúdos
             </a>
-            <a href="#membros" class="btn btn-outline" id="hero-cta-secondary">
-              ⚡ Área de Membros Web3
+            <a href="#sobre" class="portal-btn portal-btn--outline">
+              Conhecer o projeto
             </a>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="window.IsarOnboarding && window.IsarOnboarding.handleAlreadyMember()" style="border-radius:var(--radius-sm)">
-              Já sou membro →
+          </div>
+
+          <div class="portal-hero__meta">
+            <div class="portal-hero__meta-item">
+              <span>✦</span>
+              <span>Conteúdo <strong>100% Independente</strong></span>
+            </div>
+            <div class="portal-hero__meta-item">
+              <span>✦</span>
+              <span>Análise Séria <strong>Sem Promessas Falsas</strong></span>
+            </div>
+            <div class="portal-hero__meta-item">
+              <span>✦</span>
+              <span>Revisão Trimestral <strong>Outubro de 2026</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4.3. SEÇÃO COMECE POR AQUI (4 ACESSOS PRINCIPAIS)
+    ============================================================ -->
+    <section class="portal-section" id="comece-aqui" aria-labelledby="start-title">
+      <div class="portal-container">
+        <div class="section-heading-wrap">
+          <div class="section-tag">Primeiros Passos</div>
+          <h2 class="section-title" id="start-title">Comece por aqui</h2>
+          <p class="section-desc">
+            Seja você um novato no ecossistema descentralizado ou um empreendedor avaliando oportunidades, escolha por onde iniciar sua jornada.
+          </p>
+        </div>
+
+        <div class="portal-start-grid">
+          <!-- CARD 1: MANUAL PI NETWORK -->
+          <article class="start-card start-card--featured">
+            <div class="start-card__top">
+              <div class="start-card__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              </div>
+              <span class="start-card__badge start-card__badge--accent">Gratuito</span>
+            </div>
+            <h3 class="start-card__title">Comece com Pi Network</h3>
+            <p class="start-card__desc">
+              Aprenda desde os fundamentos até os conceitos mais avançados do ecossistema Pi com rigor técnico e linguagem clara.
+            </p>
+            <ul class="start-card__meta-list">
+              <li>✓ Para iniciantes e usuários avançados</li>
+              <li>✓ Acesso imediato sem cadastro obrigatório</li>
+              <li>✓ Atualizado trimestralmente (Outubro/2026)</li>
+            </ul>
+            <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="HokagePortal.openModal('modal-manual-download')">
+              Acessar manual →
             </button>
-          </div>
-          <div class="hero__stats" role="list" aria-label="Estatísticas do manual">
-            <div role="listitem">
-              <div class="hero__stat-num">100</div>
-              <div class="hero__stat-label">páginas</div>
-            </div>
-            <div role="listitem">
-              <div class="hero__stat-num">23</div>
-              <div class="hero__stat-label">capítulos</div>
-            </div>
-            <div role="listitem">
-              <div class="hero__stat-num">30k+</div>
-              <div class="hero__stat-label">palavras</div>
-            </div>
-            <div role="listitem">
-              <div class="hero__stat-num">3</div>
-              <div class="hero__stat-label">bônus inclusos</div>
-            </div>
-          </div>
-        </div>
-        <div class="hero__visual" aria-hidden="true">
-          <div class="hero__book-wrap">
-            <img src="assets/img/ebook-cover.png" alt="Capa do Manual Pi Network — e-book independente em português" width="280" />
-            <div class="hero__book-badge">PDF + EPUB<br />+ 3 Bônus</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+          </article>
 
-  <!-- ============================================================
-       PROBLEMA
-  ============================================================ -->
-  <section class="section problem" id="problema" aria-labelledby="problema-title">
-    <div class="container text-center">
-      <div class="section-label">O problema</div>
-      <h2 class="section-title" id="problema-title">Você ouviu falar em Pi Network.<br />Mas o que é <span class="text-amber">real</span>?</h2>
-      <p class="section-subtitle">A internet está cheia de hype, promessas e desinformação. Este manual resolve isso.</p>
-      <div class="problem__cards">
-        <div class="glass-card problem__card reveal">
-          <div class="problem__icon">🌐</div>
-          <h3>Desinformação em massa</h3>
-          <p>Posts virais misturam fatos com promessas sem fonte. Difícil saber no que confiar quando todos "garantem" preços futuros.</p>
-        </div>
-        <div class="glass-card problem__card reveal reveal-delay-1">
-          <div class="problem__icon">🔐</div>
-          <h3>Golpes e armadilhas</h3>
-          <p>Phishing, falsos suportes, grupos fraudulentos. Quem não sabe o básico é alvo fácil — e perde acesso à carteira para sempre.</p>
-        </div>
-        <div class="glass-card problem__card reveal reveal-delay-2">
-          <div class="problem__icon">🇧🇷</div>
-          <h3>A realidade brasileira ignora</h3>
-          <p>PIX, Drex, IR sobre cripto, declaração de bens — o cenário local é complexo e quase ninguém explica em português de verdade.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       O QUE VOCÊ VAI APRENDER
-  ============================================================ -->
-  <section class="section" id="aprender" aria-labelledby="aprender-title">
-    <div class="container text-center">
-      <div class="section-label">O conteúdo</div>
-      <h2 class="section-title" id="aprender-title">Seis grandes temas em <span class="gradient-text">um único manual</span></h2>
-      <p class="section-subtitle">Do básico ao avançado, da Pi ao cenário geopolítico do dinheiro.</p>
-      <div class="learn__grid">
-        <div class="glass-card learn__item reveal">
-          <div class="learn__num">01</div>
-          <h3>Pi Network</h3>
-          <p>O que é, como funciona, KYC, carteira, Mainnet e o que é oficial versus boato.</p>
-        </div>
-        <div class="glass-card learn__item reveal reveal-delay-1">
-          <div class="learn__num">02</div>
-          <h3>O Mundo do Dinheiro</h3>
-          <p>Bitcoin, stablecoins, CBDCs, BRICS, EUA, China — a disputa global dos pagamentos.</p>
-        </div>
-        <div class="glass-card learn__item reveal reveal-delay-2">
-          <div class="learn__num">03</div>
-          <h3>Pi no Cenário</h3>
-          <p>Pontes com o sistema financeiro, corretoras, preço, conversão para reais e utilidade real.</p>
-        </div>
-        <div class="glass-card learn__item reveal">
-          <div class="learn__num">04</div>
-          <h3>Brasil em Foco</h3>
-          <p>PIX, Drex, Receita Federal, como declarar cripto e as disputas geopolíticas que afetam você.</p>
-        </div>
-        <div class="glass-card learn__item reveal reveal-delay-1">
-          <div class="learn__num">05</div>
-          <h3>Segurança e Ação</h3>
-          <p>Golpes, checklist anti-fraude, nós, desenvolvimento, negócios e monetização com IA.</p>
-        </div>
-        <div class="glass-card learn__item reveal reveal-delay-2">
-          <div class="learn__num">06</div>
-          <h3>Tecnologia e Futuro</h3>
-          <p>IA e dinheiro, tokenização, identidade digital, prova de humanidade e cenários 2030–2040.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       O PRODUTO
-  ============================================================ -->
-  <section class="section" id="produto" aria-labelledby="produto-title">
-    <div class="container">
-      <div class="product__inner">
-        <div class="product__book reveal">
-          <img src="assets/img/ebook-cover.png" alt="Capa do e-book Manual Pi Network — PDF e EPUB independente em português" width="320" />
-        </div>
-        <div class="product__meta">
-          <div class="reveal">
-            <div class="section-label">O produto</div>
-            <h2 id="produto-title">Manual Pi Network</h2>
-            <p style="margin-top:10px;font-size:1.05rem;color:var(--white-soft)">Do primeiro clique ao uso consciente: Pi, dinheiro, tecnologia e Brasil</p>
-          </div>
-          <div class="product__tag-row reveal reveal-delay-1">
-            <span class="product__tag">📄 PDF</span>
-            <span class="product__tag">📱 EPUB</span>
-            <span class="product__tag">🇧🇷 pt-BR</span>
-            <span class="product__tag">⚡ Atualização trimestral</span>
-            <span class="product__tag">100 páginas</span>
-            <span class="product__tag">23 capítulos</span>
-          </div>
-          <div class="product__parts reveal reveal-delay-1">
-            <div class="product__part">
-              <div class="product__part-icon">🌱</div>
-              <div class="product__part-info">
-                <h4>Parte I — Começando com a Pi</h4>
-                <p>Capítulos 1–5: o essencial para quem está começando agora. Carteira, KYC, Mainnet, segurança básica.</p>
+          <!-- CARD 2: YOUTUBE -->
+          <article class="start-card">
+            <div class="start-card__top">
+              <div class="start-card__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
               </div>
+              <span class="start-card__badge">Vídeos Semanais</span>
             </div>
-            <div class="product__part">
-              <div class="product__part-icon">🌍</div>
-              <div class="product__part-info">
-                <h4>Partes II e III — O mundo do dinheiro + Pi nesse cenário</h4>
-                <p>Capítulos 6–13: geopolítica, Bitcoin, CBDCs, corretoras e o lugar da Pi nesse ecossistema.</p>
-              </div>
-            </div>
-            <div class="product__part">
-              <div class="product__part-icon">🇧🇷</div>
-              <div class="product__part-info">
-                <h4>Parte IV — Brasil</h4>
-                <p>Capítulos 14–15: PIX, Drex, IR sobre cripto e como declarar seus ativos na Receita.</p>
-              </div>
-            </div>
-            <div class="product__part">
-              <div class="product__part-icon">🚀</div>
-              <div class="product__part-info">
-                <h4>Partes V e VI — Avançado, tecnologia e futuro</h4>
-                <p>Capítulos 16–23: IA e dinheiro, tokenização, identidade digital e cenários 2030–2040.</p>
-              </div>
-            </div>
-          </div>
-          <div class="reveal reveal-delay-2">
-            <h3 style="margin-bottom:12px;color:var(--amber)">Bônus inclusos</h3>
-            <div class="product__bonuses">
-              <div class="product__bonus">Planilha de registro de operações (Excel) — 4 abas: Como usar, Registro, Resumo e Painel de sinais</div>
-              <div class="product__bonus">Kit imprimível anti-golpe e checklists (PDF, 2 páginas)</div>
-              <div class="product__bonus">Painel de sinais trimestral — atualização para quem comprar a edição</div>
-            </div>
-          </div>
-          <div class="product__cta-box reveal reveal-delay-3" id="lista-espera-produto">
-            <div class="product__waitlist-label">⏳ Em breve</div>
-            <h3 class="product__waitlist-title">Entre na lista de espera</h3>
-            <p class="product__waitlist-sub">Seja avisado no lançamento e receba condições especiais.</p>
-            <a href="#lista-espera" class="btn btn-primary" id="produto-cta">✉ Quero ser avisado</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       AUDIÊNCIA
-  ============================================================ -->
-  <section class="section audience" id="para-quem" aria-labelledby="audiencia-title">
-    <div class="container text-center">
-      <div class="section-label">Para quem é</div>
-      <h2 class="section-title" id="audiencia-title">Qual é a sua <span class="gradient-text">rota de leitura</span>?</h2>
-      <p class="section-subtitle">O manual tem rotas específicas para cada perfil. Encontre a sua.</p>
-      <div class="audience__grid">
-        <div class="glass-card audience__card reveal">
-          <div class="audience__icon">🌱</div>
-          <h3>Rota Rápida — Iniciante</h3>
-          <p>Você acabou de chegar à Pi e quer entender o básico com segurança, sem perder tempo com boatos.</p>
-          <div class="audience__chapters">Capítulos: 1, 2, 3, 4, 5, 18, 23</div>
-        </div>
-        <div class="glass-card audience__card reveal reveal-delay-1">
-          <div class="audience__icon">💸</div>
-          <h3>Rota Brasil e Dinheiro</h3>
-          <p>Você quer vender, receber ou declarar cripto no Brasil. IR, PIX, Drex e como não ter problema com a Receita.</p>
-          <div class="audience__chapters">Capítulos: 10, 11, 12, 13, 14, 15, 18</div>
-        </div>
-        <div class="glass-card audience__card reveal">
-          <div class="audience__icon">🌐</div>
-          <h3>Rota Panorama</h3>
-          <p>Você quer entender o cenário mundial do dinheiro — EUA, China, BRICS, CBDCs e o futuro da tecnologia.</p>
-          <div class="audience__chapters">Capítulos: 6, 7, 8, 9, 19, 20, 21, 22</div>
-        </div>
-        <div class="glass-card audience__card reveal reveal-delay-1">
-          <div class="audience__icon">💡</div>
-          <h3>Rota Empreendedor</h3>
-          <p>Você quer criar um negócio com ou sem Pi. Monetização, IA, aplicativos e como agir com segurança jurídica.</p>
-          <div class="audience__chapters">Capítulos: 12, 16, 17, 19, 22</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider container"></div>
-
-  <!-- ============================================================
-       EDUCAÇÃO: BLOCKCHAIN
-  ============================================================ -->
-  <section class="section" id="blockchain" aria-labelledby="blockchain-title">
-    <div class="container">
-      <div class="text-center blockchain__intro">
-        <div class="section-label">Educação gratuita</div>
-        <h2 class="section-title" id="blockchain-title">O que é <span class="gradient-text">Blockchain</span>?</h2>
-        <p>A tecnologia por trás do Bitcoin, da Pi Network e de grande parte da Web3 explicada de forma simples e honesta — sem jargão desnecessário.</p>
-      </div>
-      <div class="blockchain__steps">
-        <div class="blockchain__step glass-card reveal">
-          <div class="blockchain__step-num blockchain__step-num--1">1</div>
-          <h3>Um registro compartilhado</h3>
-          <p>Blockchain é um banco de dados distribuído entre milhares de computadores ao mesmo tempo. Nenhuma empresa ou governo controla sozinho — as regras estão no código.</p>
-        </div>
-        <div class="blockchain__step glass-card reveal reveal-delay-1">
-          <div class="blockchain__step-num blockchain__step-num--2">2</div>
-          <h3>Imutável e verificável</h3>
-          <p>Cada "bloco" de transações é encadeado ao anterior com criptografia. Alterar um registro passado exigiria refazer toda a cadeia — praticamente impossível na prática.</p>
-        </div>
-        <div class="blockchain__step glass-card reveal reveal-delay-2">
-          <div class="blockchain__step-num blockchain__step-num--3">3</div>
-          <h3>Confiança sem intermediário</h3>
-          <p>Você não precisa confiar em um banco. A rede valida as transações automaticamente. É isso que torna o dinheiro digital possível sem um banco central no meio.</p>
-        </div>
-      </div>
-      <div class="blockchain__labels reveal">
-        <div class="blockchain__label-item"><span class="badge badge-f">F</span> Fato confirmado</div>
-        <div class="blockchain__label-item"><span class="badge badge-o">O</span> Declaração oficial</div>
-        <div class="blockchain__label-item"><span class="badge badge-a">A</span> Análise</div>
-        <div class="blockchain__label-item"><span class="badge badge-h">H</span> Hipótese</div>
-        <span style="font-size:0.82rem;color:var(--gray)">— Sistema de etiquetas usado em todo o manual para você saber o que é fato e o que é especulação.</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       EDUCAÇÃO: WEB3
-  ============================================================ -->
-  <section class="section web3" id="web3" aria-labelledby="web3-title">
-    <div class="container text-center">
-      <div class="section-label">Educação gratuita</div>
-      <h2 class="section-title" id="web3-title">O que é <span class="gradient-text">Web3</span>?</h2>
-      <p class="section-subtitle">Além do Bitcoin — como a próxima versão da internet está sendo construída e o que muda para você.</p>
-      <div class="web3__grid">
-        <div class="glass-card web3__card reveal">
-          <div class="web3__card-icon web3__card-icon--1">⛓️</div>
-          <h3>DeFi — Finanças descentralizadas</h3>
-          <p>Empréstimos, câmbio e rendimento sem banco. Protocolos de código aberto que funcionam 24h, sem intermediário.</p>
-        </div>
-        <div class="glass-card web3__card reveal reveal-delay-1">
-          <div class="web3__card-icon web3__card-icon--2">🪙</div>
-          <h3>Tokenização de ativos</h3>
-          <p>Imóveis, obras de arte, empresas — qualquer ativo pode virar um token digital negociável. O capítulo 20 do manual explora isso.</p>
-        </div>
-        <div class="glass-card web3__card reveal reveal-delay-2">
-          <div class="web3__card-icon web3__card-icon--3">🪪</div>
-          <h3>Identidade digital</h3>
-          <p>Provar que você é uma pessoa real sem expor seus dados pessoais. A Pi Network usa exatamente esse conceito no KYC.</p>
-        </div>
-        <div class="glass-card web3__card reveal">
-          <div class="web3__card-icon web3__card-icon--4">🤖</div>
-          <h3>IA + Dinheiro digital</h3>
-          <p>Agentes de IA que pagam e recebem autonomamente, golpes sofisticados com deepfake e como se proteger.</p>
-        </div>
-        <div class="glass-card web3__card reveal reveal-delay-1">
-          <div class="web3__card-icon web3__card-icon--5">🏦</div>
-          <h3>CBDCs e Drex</h3>
-          <p>Moedas digitais de banco central — inclusive o Real Digital (Drex) do Banco Central do Brasil. O que muda e o que não muda.</p>
-        </div>
-        <div class="glass-card web3__card reveal reveal-delay-2">
-          <div class="web3__card-icon web3__card-icon--6">🔒</div>
-          <h3>Autocustódia e soberania</h3>
-          <p>Ser o único dono das suas chaves. O que significa "not your keys, not your coins" e por que isso importa.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       GUIA PI BROWSER & RESPOSTA KYC
-  ============================================================ -->
-  <section class="section pi-browser-guide" id="pi-browser" aria-labelledby="pi-browser-title">
-    <div class="container text-center">
-      <div class="section-label">Ecossistema Web3 Pi</div>
-      <h2 class="section-title" id="pi-browser-title">Como Baixar e Utilizar o <span class="gradient-text">Pi Browser</span></h2>
-      <p class="section-subtitle">O navegador descentralizado que conecta você à carteira, utilidades e aplicativos Web3 da Pi Network.</p>
-
-      <!-- ALERTA KYC DESTACADO -->
-      <div class="pi-kyc-alert reveal">
-        <div class="pi-kyc-header">
-          <span class="pi-kyc-badge">✓ FATO CONFIRMADO</span>
-          <h3 class="pi-kyc-title">Precisa ter KYC para usar o Pi Browser? <span class="pi-kyc-verdict">NÃO!</span></h3>
-        </div>
-        <p style="font-size:1.05rem;color:var(--white-soft);text-align:left;line-height:1.6">
-          <strong>Qualquer pessoa pode baixar e usar o Pi Browser hoje mesmo, sem nenhum KYC.</strong> O Pi Browser é uma ferramenta aberta e gratuita de navegação Web3. Veja abaixo exatamente o que você já pode fazer sem KYC e em que momento o KYC passa a ser exigido:
-        </p>
-
-        <div class="pi-kyc-grid">
-          <div class="pi-kyc-col no-kyc">
-            <h4><span style="color:#10b981">🟢</span> O que você faz SEM KYC (Livre agora):</h4>
-            <ul>
-              <li><span>✅</span> <strong>Baixar e instalar</strong> o Pi Browser na Google Play ou App Store</li>
-              <li><span>✅</span> <strong>Criar sua Pi Wallet</strong> e testar transações na Pi Testnet</li>
-              <li><span>✅</span> <strong>Navegar em dApps Web3</strong> (como este site, ecossistema e fóruns)</li>
-              <li><span>✅</span> <strong>Fazer login seguro</strong> com sua conta de Pioneiro em aplicativos</li>
-              <li><span>✅</span> <strong>Acessar o Pi Chat</strong>, Brainstorm e utilidades da comunidade</li>
+            <h3 class="start-card__title">Acompanhe no YouTube</h3>
+            <p class="start-card__desc">
+              Tutoriais, análises detalhadas, experiências práticas e debates sobre tecnologia, inovação e economia digital.
+            </p>
+            <ul class="start-card__meta-list">
+              <li>✓ Análises sem sensacionalismo</li>
+              <li>✓ Desmistificando a blockchain e KYC</li>
+              <li>✓ Canal oficial @hokage22b</li>
             </ul>
-          </div>
-          <div class="pi-kyc-col with-kyc">
-            <h4><span style="color:var(--amber)">🟡</span> Para que o KYC é REALMENTE exigido:</h4>
-            <ul>
-              <li><span>🔒</span> <strong>Migrar o saldo minerado</strong> no app Pi para a Blockchain Mainnet oficial</li>
-              <li><span>🔒</span> <strong>Enviar ou receber Pi reais</strong> entre carteiras na Mainnet</li>
-              <li><span>🔒</span> <strong>Comprar produtos no mundo real</strong> usando saldo real migrado da Mainnet</li>
-              <li><span>🔒</span> <strong>Garantir a regra:</strong> 1 pessoa humana = 1 conta (combate a bots)</li>
+            <a href="https://youtube.com/@hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm">
+              Assistir ao canal ↗
+            </a>
+          </article>
+
+          <!-- CARD 3: COMUNIDADE -->
+          <article class="start-card">
+            <div class="start-card__top">
+              <div class="start-card__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <span class="start-card__badge">Networking</span>
+            </div>
+            <h3 class="start-card__title">Conecte-se com pioneiros</h3>
+            <p class="start-card__desc">
+              Um espaço para conectar pessoas interessadas na Pi Network, trocar experiências reais e descobrir oportunidades no Brasil.
+            </p>
+            <ul class="start-card__meta-list">
+              <li>✓ Conexão direta entre pioneiros reais</li>
+              <li>✓ Troca de dicas sobre nós e segurança</li>
+              <li>✓ Grupo aberto e colaborativo</li>
             </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- PASSO A PASSO ILUSTRADO -->
-      <div class="pi-steps-grid">
-        <div class="glass-card pi-step-card reveal">
-          <div>
-            <div class="pi-step-num">1</div>
-            <h3>Baixe o Pi Browser</h3>
-            <p>Disponível gratuitamente para Android e iOS. É o aplicativo oficial seguro da Pi Core Team para navegação Web3.</p>
-          </div>
-          <div class="store-badges">
-            <a href="https://play.google.com/store/apps/details?id=pi.browser" target="_blank" rel="noopener noreferrer" class="store-btn">
-              <span>🤖</span> Google Play (Android)
+            <a href="https://chat.whatsapp.com/invite/hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm">
+              Entrar na comunidade ↗
             </a>
-            <a href="https://apps.apple.com/app/pi-browser/id1569780856" target="_blank" rel="noopener noreferrer" class="store-btn">
-              <span>🍎</span> App Store (iPhone)
+          </article>
+
+          <!-- CARD 4: PI PARA SEU NEGÓCIO -->
+          <article class="start-card start-card--product">
+            <div class="start-card__top">
+              <div class="start-card__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              </div>
+              <span class="start-card__badge start-card__badge--amber">E-book Comercial</span>
+            </div>
+            <h3 class="start-card__title">Pi para seu negócio</h3>
+            <p class="start-card__desc">
+              Descubra como empreendedores podem compreender e explorar as possibilidades comerciais do ecossistema Pi com segurança legal.
+            </p>
+            <ul class="start-card__meta-list">
+              <li>✓ Precificação e cálculo de margem</li>
+              <li>✓ Conformidade tributária e contábil</li>
+              <li>✓ R$ 29,90 (ou 3.14 π)</li>
+            </ul>
+            <a href="#produtos" class="portal-btn portal-btn--amber portal-btn--sm">
+              Conhecer o e-book →
             </a>
-          </div>
-        </div>
-
-        <div class="glass-card pi-step-card reveal reveal-delay-1">
-          <div>
-            <div class="pi-step-num">2</div>
-            <h3>Login sem senha</h3>
-            <p>Abra seu aplicativo de mineração <strong>Pi Network</strong>, toque no menu <strong>☰</strong> > <strong>Pi Browser</strong> e clique no botão roxo <strong>"Sign In to Pi Browser"</strong>. A conexão é instantânea.</p>
-          </div>
-          <span style="font-size:0.82rem;color:var(--amber-light);margin-top:auto">✓ Sem necessidade de digitar senhas</span>
-        </div>
-
-        <div class="glass-card pi-step-card reveal reveal-delay-2">
-          <div>
-            <div class="pi-step-num">3</div>
-            <h3>Crie a Pi Wallet</h3>
-            <p>No Pi Browser, abra <strong>wallet.pi</strong>. Crie sua carteira e <strong>anote as 24 palavras em um papel</strong>. Nunca compartilhe sua frase com ninguém nem digite em sites suspeitos.</p>
-          </div>
-          <span style="font-size:0.82rem;color:var(--danger);margin-top:auto">⚠️ Atenção: A Core Team nunca pede suas 24 palavras</span>
-        </div>
-
-        <div class="glass-card pi-step-card reveal reveal-delay-3">
-          <div>
-            <div class="pi-step-num">4</div>
-            <h3>Acesse este site na Web3</h3>
-            <p>Cole o endereço deste site na barra do Pi Browser para testar o login Web3 nativo e a Área de Membros:</p>
-            <div class="pi-browser-url-box">
-              <span class="pi-browser-url-text" id="site-url-box">isarloiola.github.io/hokage22b</span>
-              <button type="button" class="btn-copy-mini" onclick="copySiteUrl()" aria-label="Copiar link do site">Copiar</button>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary btn-sm" onclick="openPiLoginModal()" style="margin-top:14px;width:100%">
-            ⚡ Testar Login com Pi
-          </button>
+          </article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ============================================================
-       ÁREA DE MEMBROS / PAINEL DO PIONEIRO
-  ============================================================ -->
-  <section class="section members-area" id="membros" aria-labelledby="members-title">
-    <div class="container">
-      <div class="text-center" style="margin-bottom:36px">
-        <div class="section-label">Acesso Exclusivo</div>
-        <h2 class="section-title" id="members-title">Área de Membros &amp; <span class="gradient-text">Pioneiros</span></h2>
-        <p class="section-subtitle">Baixe os exemplares completos do Manual Pi Network, acompanhe seu checklist de migração e acesse materiais VIP.</p>
-      </div>
-
-      <!-- ESTADO 1: BLOQUEADO (Usuário deslogado) -->
-      <div class="members-locked-box" id="members-locked-view">
-        <div class="members-locked-icon" aria-hidden="true">🔐</div>
-        <h3 style="font-size:1.8rem;color:var(--white);margin-bottom:12px">Área Protegida com Autenticação Pi</h3>
-        <p style="font-size:1.05rem;color:var(--gray-light);max-width:600px;margin:0 auto">
-          Conecte-se com sua conta Pi Network ou acesse em modo teste para liberar o download do Manual em PDF e EPUB, checklist interativo e novidades exclusivas.
-        </p>
-
-        <div class="members-benefits-list">
-          <div class="members-benefit-item">
-            <h4>📄 Manual Completo em PDF</h4>
-            <p>100 páginas, 23 capítulos com diagramas, tabelas e fontes verificadas.</p>
-          </div>
-          <div class="members-benefit-item">
-            <h4>📱 Edição Digital EPUB</h4>
-            <p>Formato responsivo para ler no Kindle, celular ou tablet em qualquer lugar.</p>
-          </div>
-          <div class="members-benefit-item">
-            <h4>🛡️ Checklist Mainnet &amp; KYC</h4>
-            <p>Guia interativo para não cometer erros na migração do seu saldo.</p>
-          </div>
+    <!-- ============================================================
+         4.4. PRODUTOS DIGITAIS (VITRINE EDITORIAL)
+    ============================================================ -->
+    <section class="portal-section" id="produtos" aria-labelledby="products-title">
+      <div class="portal-container">
+        <div class="section-heading-wrap">
+          <div class="section-tag section-tag--amber">Ativo Comercial</div>
+          <h2 class="section-title" id="products-title">Produtos Digitais</h2>
+          <p class="section-desc">
+            Materiais práticos e aprofundados desenvolvidos para quem busca ir além do básico e transformar conhecimento em vantagem competitiva.
+          </p>
         </div>
 
-        <button type="button" class="btn btn-primary btn-members-connect" onclick="openPiLoginModal()">
-          <span class="pi-sym" style="font-weight:900;margin-right:6px">π</span> Conectar com Pi Network para Acessar
-        </button>
-      </div>
+        <!-- PRODUTO PRINCIPAL: PI PARA SEU NEGÓCIO -->
+        <div class="product-showcase">
+          <div class="product-cover-wrap">
+            <img src="assets/img/ebook-cover.png" alt="Capa do E-book Pi para seu Negócio — HOKAGE22B" class="product-cover-img" loading="lazy" />
+          </div>
 
-      <!-- ESTADO 2: DASHBOARD DO PIONEIRO (Usuário logado) -->
-      <div class="members-dashboard" id="members-dashboard-view">
-        <div class="members-header-bar">
-          <div class="members-user-profile">
-            <div class="members-avatar">π</div>
-            <div class="members-user-info">
-              <h3>Olá, <span id="member-display-name">@Pioneiro</span>!</h3>
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                <span class="members-user-badge">✓ Membro Autenticado Pi</span>
-                <span style="font-size:0.82rem;color:var(--gray-light)" id="member-auth-type">Sessão Web3 Ativa</span>
+          <div class="product-details">
+            <div class="product-headline">Pi para seu negócio</div>
+            <h3 class="product-title">O Guia Prático para Empreendedores e Comerciantes</h3>
+            <p class="product-desc">
+              Um guia objetivo e sem rodeios para lojistas, profissionais autônomos e empreendedores digitais que desejam compreender a economia descentralizada e avaliar a aceitação da Pi Network em seus negócios de forma estruturada e em conformidade legal.
+            </p>
+
+            <ul class="product-benefits">
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Modelos práticos de precificação:</strong> Estratégias para precificar produtos combinando moeda fiduciária (Real) e criptoativos.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Segurança jurídica e tributária:</strong> Diretrizes para emissão de notas fiscais, controle de caixa e declaração no Brasil.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Protocolos contra fraudes:</strong> Como receber pagamentos diretos com liquidação confirmada na blockchain sem intermediários duvidosos.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Modelos e avisos editáveis:</strong> Termos de compra e avisos ao consumidor prontos para imprimir e aplicar.</span>
+              </li>
+            </ul>
+
+            <div class="product-pricing-bar">
+              <div class="price-box">
+                <span class="price-label">Preço de Lançamento</span>
+                <span class="price-val">R$ 29,90</span>
+                <span class="price-sub">ou 3.14 π na comunidade</span>
               </div>
-            </div>
-          </div>
-          <button type="button" class="members-logout-btn" onclick="logoutPiUser()">
-            🚪 Sair / Desconectar
-          </button>
-        </div>
-
-        <!-- ============================================================
-             SISTEMA DE REPUTAÇÃO DO PIONEIRO (ISAR.PI)
-        ============================================================ -->
-        <div class="reputation-box">
-          <div class="reputation-top">
-            <div class="reputation-title-group">
-              <h3><span style="color:var(--amber)">🛡️</span> Sistema de Reputação do Pioneiro — <span class="gradient-text">isar.pi</span></h3>
-              <p>Sua pontuação de autenticidade, participação e prova de humanidade no ecossistema.</p>
-            </div>
-            <div class="reputation-badge-score">
-              <div class="reputation-score-num" id="rep-score-val">0</div>
-              <div class="reputation-score-label">Pontos de Reputação</div>
-            </div>
-          </div>
-
-          <div class="reputation-level-bar-container">
-            <div class="reputation-level-info">
-              <span class="reputation-level-name">
-                <span id="rep-level-icon">🥉</span> Nível Atual: <strong id="rep-level-text" style="color:var(--amber-light);margin-left:4px">Pioneiro Iniciante</strong>
-              </span>
-              <span style="color:var(--gray-light)" id="rep-next-level-text">Próximo nível: 50 pts</span>
-            </div>
-            <div class="reputation-progress-track">
-              <div class="reputation-progress-fill" id="rep-progress-bar" style="width: 10%"></div>
-            </div>
-          </div>
-
-          <div class="reputation-tasks-grid">
-            <div class="reputation-task-item" id="rep-task-login">
-              <span class="reputation-task-label">⚡ Autenticação com Pi Network</span>
-              <span class="reputation-task-pts">+50 pts</span>
-            </div>
-            <div class="reputation-task-item" id="rep-task-download">
-              <span class="reputation-task-label">📥 Download do Manual Pi</span>
-              <span class="reputation-task-pts">+20 pts</span>
-            </div>
-            <div class="reputation-task-item" id="rep-task-checklist">
-              <span class="reputation-task-label">🛡️ Checklist Mainnet</span>
-              <span class="reputation-task-pts" id="rep-checklist-pts">+0 / 80 pts</span>
-            </div>
-            <div class="reputation-task-item" id="rep-task-ebook2">
-              <span class="reputation-task-label">🚀 Reserva Ebook #2 (IA &amp; Robôs)</span>
-              <span class="reputation-task-pts">+30 pts</span>
-            </div>
-          </div>
-
-          <div class="reputation-why-box">
-            <strong style="color:var(--amber-light)">🤖 Por que a Reputação isar.pi é importante?</strong><br />
-            Na era da Inteligência Artificial e dos robôs, provar que você é uma pessoa real é a chave da confiança digital. No futuro do ecossistema <strong>isar.pi</strong>, sua reputação garantirá acesso prioritário gratuito aos novos ebooks, utilidades exclusivas da comunidade e participação em votações sem risco de contas falsas.
-          </div>
-        </div>
-
-        <!-- ============================================================
-             NAVEGAÇÃO DE ABAS VIP (COMUNIDADE & FERRAMENTAS)
-        ============================================================ -->
-        <div class="member-nav-tabs" role="tablist">
-          <button class="member-tab-btn active" data-tab="tab-ebooks" type="button" role="tab">
-            <span>📚</span> Ebooks &amp; Checklist
-          </button>
-          <button class="member-tab-btn" data-tab="tab-tools" type="button" role="tab">
-            <span>🧰</span> Calculadora &amp; Blockchain
-          </button>
-          <button class="member-tab-btn" data-tab="tab-creators" type="button" role="tab">
-            <span>💡</span> Criadores &amp; Negócios Web3
-          </button>
-          <button class="member-tab-btn" data-tab="tab-ranking" type="button" role="tab">
-            <span>🏆</span> Ranking de Reputação
-          </button>
-          <button class="member-tab-btn" data-tab="tab-community" type="button" role="tab">
-            <span>💬</span> Grupo VIP WhatsApp
-          </button>
-        </div>
-
-        <!-- ============================================================
-             ABA 1: EBOOKS E CHECKLIST
-        ============================================================ -->
-        <div class="member-tab-pane active" id="tab-ebooks" role="tabpanel">
-          <h3 style="font-size:1.45rem;color:var(--white);margin-bottom:24px;display:flex;align-items:center;gap:10px">
-            <span>📚</span> Catálogo de Ebooks Gratuitos — Ecossistema isar.pi
-          </h3>
-
-          <div class="ebooks-duo-grid">
-            <!-- EBOOK 1: MANUAL PI NETWORK -->
-            <div class="ebook-card-full">
-              <div>
-                <div class="ebook-number-tag">Ebook Gratuito #1</div>
-                <span class="ebook-status-badge available">✓ Disponível Agora (Grátis)</span>
-                <h3>Manual Pi Network: Fatos e Fontes</h3>
-                <p>O guia de referência independente de 100 páginas e 23 capítulos. Entenda Blockchain, KYC, segurança de carteira, declaração de impostos no Brasil (IR, PIX, Drex) e o panorama do dinheiro digital com realismo.</p>
-                
-                <div class="ebook-tags-row">
-                  <span class="ebook-tag-chip">📄 100 páginas</span>
-                  <span class="ebook-tag-chip">🪙 Pi Network</span>
-                  <span class="ebook-tag-chip">🇧🇷 Impostos &amp; Brasil</span>
-                  <span class="ebook-tag-chip">🔒 Segurança</span>
-                </div>
-              </div>
-
-              <div class="ebook-actions-group">
-                <div class="ebook-download-btns">
-                  <a href="downloads/Manual-Pi-Network.pdf" download="Manual-Pi-Network.pdf" class="btn-download btn-download-pdf" onclick="recordEbookDownload('pdf')">
-                    <span>⬇️</span> Baixar PDF (563 KB)
-                  </a>
-                  <a href="downloads/Manual-Pi-Network.epub" download="Manual-Pi-Network.epub" class="btn-download btn-download-epub" onclick="recordEbookDownload('epub')">
-                    <span>⬇️</span> Baixar EPUB (151 KB)
-                  </a>
-                </div>
-                <span style="font-size:0.8rem;color:var(--gray-light);text-align:center">✓ Libera +20 pontos no Sistema de Reputação</span>
-              </div>
-            </div>
-
-            <!-- EBOOK 2: O DIA QUE O MUNDO PEDIU PRA PROVAR QUEM VOCÊ ERA -->
-            <div class="ebook-card-full" style="border-color:rgba(245,158,11,0.4)">
-              <div>
-                <div class="ebook-number-tag" style="color:var(--amber-light)">Ebook Gratuito #2 — Em Breve</div>
-                <span class="ebook-status-badge upcoming">🚀 Em Produção / Prévia VIP</span>
-                <h3>O dia que o mundo pediu pra provar quem você era</h3>
-                <p>Uma história hipotética instigante sobre o avanço da Inteligência Artificial, robôs autônomos, falsificações em massa (deepfakes) e a corrida mundial por segurança e autenticação. Como você provará que é um ser humano no futuro digital sem vender sua alma?</p>
-
-                <div class="ebook-tags-row">
-                  <span class="ebook-tag-chip" style="border-color:var(--amber);color:var(--amber-light)">🤖 Inteligência Artificial</span>
-                  <span class="ebook-tag-chip">🪪 Prova de Humanidade</span>
-                  <span class="ebook-tag-chip">🔐 Autenticação Web3</span>
-                  <span class="ebook-tag-chip">⚡ Ficção Hipotética</span>
-                </div>
-              </div>
-
-              <div class="ebook-actions-group">
-                <button type="button" class="btn-reserve-ebook2" id="btn-reserve-ebook2" onclick="handleReserveEbook2()">
-                  <span id="btn-reserve-icon">🔔</span> <span id="btn-reserve-text">Reservar Acesso Antecipado (+30 pts Reputação)</span>
+              <div class="product-actions">
+                <a href="https://chk.eduzz.com/exemplo-ou-configuravel" id="product-checkout-btn" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--amber">
+                  Adquirir e-book agora →
+                </a>
+                <button type="button" class="portal-btn portal-btn--outline" onclick="HokagePortal.openModal('modal-pagamento-pi')">
+                  Pagar com Pi (3.14 π)
                 </button>
-                <span style="font-size:0.8rem;color:var(--gray-light);text-align:center">Você receberá o exemplar em primeira mão assim que for finalizado.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- CHECKLIST INTERATIVO DE MIGRAÇÃO MAINNET -->
-          <div class="checklist-box">
-            <div class="checklist-header">
-              <div>
-                <h3 style="font-size:1.3rem;color:var(--white);margin-bottom:4px">Checklist do Pioneiro para a Mainnet</h3>
-                <p style="font-size:0.9rem;color:var(--gray-light)">Marque as etapas que você já concluiu para acompanhar seu progresso de segurança.</p>
-              </div>
-              <div style="font-size:1.1rem;font-weight:700;color:var(--amber)" id="checklist-progress-text">
-                0% Concluído
               </div>
             </div>
 
-            <div class="checklist-progress-bar-container">
-              <div class="checklist-progress-bar" id="checklist-progress-bar"></div>
-            </div>
-
-            <div class="checklist-items">
-              <label class="checklist-item" id="item-chk-1">
-                <input type="checkbox" onchange="toggleChecklistItem(1)" id="chk-1" />
-                <span class="checklist-item-title">1. Baixar o aplicativo Pi Browser oficial</span>
-              </label>
-              <label class="checklist-item" id="item-chk-2">
-                <input type="checkbox" onchange="toggleChecklistItem(2)" id="chk-2" />
-                <span class="checklist-item-title">2. Criar a Pi Wallet e salvar 24 palavras no papel</span>
-              </label>
-              <label class="checklist-item" id="item-chk-3">
-                <input type="checkbox" onchange="toggleChecklistItem(3)" id="chk-3" />
-                <span class="checklist-item-title">3. Confirmar sua carteira no Checklist Mainnet</span>
-              </label>
-              <label class="checklist-item" id="item-chk-4">
-                <input type="checkbox" onchange="toggleChecklistItem(4)" id="chk-4" />
-                <span class="checklist-item-title">4. Configurar taxa de bloqueio (Lockup) consciente</span>
-              </label>
-              <label class="checklist-item" id="item-chk-5">
-                <input type="checkbox" onchange="toggleChecklistItem(5)" id="chk-5" />
-                <span class="checklist-item-title">5. Enviar documentação para o KYC quando disponível</span>
-              </label>
-              <label class="checklist-item" id="item-chk-6">
-                <input type="checkbox" onchange="toggleChecklistItem(6)" id="chk-6" />
-                <span class="checklist-item-title">6. Aguardar aprovação do KYC (resultado no app)</span>
-              </label>
-              <label class="checklist-item" id="item-chk-7">
-                <input type="checkbox" onchange="toggleChecklistItem(7)" id="chk-7" />
-                <span class="checklist-item-title">7. Assinar termo de reconhecimento de tokens</span>
-              </label>
-              <label class="checklist-item" id="item-chk-8">
-                <input type="checkbox" onchange="toggleChecklistItem(8)" id="chk-8" />
-                <span class="checklist-item-title">8. Migração automática do saldo para a Mainnet</span>
-              </label>
+            <div class="guarantee-note">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Garantia incondicional de 7 dias · Entrega digital imediata em PDF e EPUB</span>
             </div>
           </div>
         </div>
 
-        <!-- ============================================================
-             ABA 2: CALCULADORA & RASTREADOR BLOCKCHAIN
-        ============================================================ -->
-        <div class="member-tab-pane" id="tab-tools" role="tabpanel">
-          <div class="calc-card">
-            <h3 style="color:var(--white);font-size:1.4rem;margin-bottom:8px">🧮 Calculadora de Mineração Pi (Fórmula SCP)</h3>
-            <p style="color:var(--gray-light);font-size:0.95rem;margin-bottom:24px">Simule sua taxa de mineração por hora, dia e mês baseada no Whitepaper oficial (Círculo de Segurança + Lockup + Bônus de Convite).</p>
-
-            <div class="calc-grid">
-              <div class="calc-inputs">
-                <div class="calc-group">
-                  <label for="calc-security-circle">Membros no Círculo de Segurança (0 a 5)</label>
-                  <select id="calc-security-circle">
-                    <option value="5" selected>5 pessoas (100% de bônus — Máximo)</option>
-                    <option value="4">4 pessoas (80% de bônus)</option>
-                    <option value="3">3 pessoas (60% de bônus)</option>
-                    <option value="2">2 pessoas (40% de bônus)</option>
-                    <option value="1">1 pessoa (20% de bônus)</option>
-                    <option value="0">0 pessoas (Sem bônus)</option>
-                  </select>
-                </div>
-
-                <div class="calc-group">
-                  <label for="calc-lockup-pct">% de Saldo Bloqueado (Lockup)</label>
-                  <select id="calc-lockup-pct">
-                    <option value="1.0" selected>100% do saldo</option>
-                    <option value="0.9">90% do saldo</option>
-                    <option value="0.5">50% do saldo</option>
-                    <option value="0.25">25% do saldo</option>
-                  </select>
-                </div>
-
-                <div class="calc-group">
-                  <label for="calc-lockup-dur">Tempo de Bloqueio (Lockup Duration)</label>
-                  <select id="calc-lockup-dur">
-                    <option value="3.0" selected>3 Anos (Multiplicador Máximo)</option>
-                    <option value="1.0">1 Ano</option>
-                    <option value="0.5">6 Meses</option>
-                    <option value="0.1">2 Semanas</option>
-                  </select>
-                </div>
-
-                <div class="calc-group">
-                  <label for="calc-referrals">Pioneiros Ativos na Sua Equipe</label>
-                  <input type="number" id="calc-referrals" min="0" max="100" value="1" placeholder="Ex: 3" />
-                </div>
-              </div>
-
-              <div class="calc-results-box">
-                <div class="calc-result-item">
-                  <span>Taxa Estimada por Hora:</span>
-                  <strong id="calc-result-hourly">0.0236 π/h</strong>
-                </div>
-                <div class="calc-result-item">
-                  <span>Estimativa por Dia (24h):</span>
-                  <strong id="calc-result-daily">0.57 π/dia</strong>
-                </div>
-                <div class="calc-result-item">
-                  <span>Estimativa Mensal (30 dias):</span>
-                  <strong id="calc-result-monthly">17.0 π/mês</strong>
-                </div>
-                <p style="font-size:0.75rem;color:var(--gray);margin-top:8px">Nota: A taxa básica do sistema é reajustada dinamicamente pelo algoritmo da Core Team no 1º dia de cada mês.</p>
-              </div>
-            </div>
+        <!-- GRADE DE PRODUTOS FUTUROS (EM BREVE) -->
+        <h3 class="future-products-title">Em desenvolvimento no laboratório editorial</h3>
+        <div class="future-products-grid">
+          <div class="future-card">
+            <span class="future-card__badge">Em breve</span>
+            <h4 class="future-card__title">Manual Avançado Pi Network</h4>
+            <p class="future-card__desc">Arquitetura profunda da rede, operação de nós validadores, segurança criptográfica e desenvolvimento de dApps no ecossistema.</p>
           </div>
-
-          <!-- RASTREADOR DE BLOCKCHAIN -->
-          <div class="explorer-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-              <div>
-                <h3 style="color:var(--white);font-size:1.3rem;margin:0 0 4px">📡 Rastreador da Blockchain Pi Network</h3>
-                <p style="color:var(--gray-light);font-size:0.88rem;margin:0">Métricas em tempo real da rede descentralizada e nós validadores.</p>
-              </div>
-              <a href="https://minepi.com/blockexplorer" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-                🔍 Abrir Block Explorer Oficial
-              </a>
-            </div>
-
-            <div class="explorer-stats">
-              <div class="explorer-stat-item">
-                <div>Consenso da Rede</div>
-                <strong>Stellar SCP (v19)</strong>
-              </div>
-              <div class="explorer-stat-item">
-                <div>Nós Ativos no Mundo</div>
-                <strong>+33.000 nós</strong>
-              </div>
-              <div class="explorer-stat-item">
-                <div>Fase da Mainnet</div>
-                <strong>Enclosed Network</strong>
-              </div>
-              <div class="explorer-stat-item">
-                <div>Status do Ledger</div>
-                <strong>🟢 100% Operacional</strong>
-              </div>
-            </div>
+          <div class="future-card">
+            <span class="future-card__badge">Em breve</span>
+            <h4 class="future-card__title">Kit Pi Business</h4>
+            <p class="future-card__desc">Planilhas dinâmicas de precificação multimoeda, modelos de recibos de balcão e checklists fiscais prontos para uso comercial.</p>
+          </div>
+          <div class="future-card">
+            <span class="future-card__badge">Em breve</span>
+            <h4 class="future-card__title">Templates Comerciais</h4>
+            <p class="future-card__desc">Identidade visual e materiais de ponto de venda para negócios físicos e virtuais comunicarem aceitação de pagamentos descentralizados.</p>
+          </div>
+          <div class="future-card">
+            <span class="future-card__badge">Em breve</span>
+            <h4 class="future-card__title">Materiais Educativos</h4>
+            <p class="future-card__desc">Apostilas ilustradas e resumos executivos sobre inteligência artificial aplicada, Web3 e novas oportunidades da economia digital.</p>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- ============================================================
-             ABA 3: CRIADORES & NEGÓCIOS WEB3 (COMO LUCRAR COM PI)
-        ============================================================ -->
-        <div class="member-tab-pane" id="tab-creators" role="tabpanel">
-          <div style="text-align:left;max-width:860px;margin-bottom:24px">
-            <h3 style="color:var(--white);font-size:1.4rem;margin-bottom:6px">💡 Como Criadores e Empreendedores Podem Lucrar com Pi</h3>
-            <p style="color:var(--gray-light);font-size:0.95rem;line-height:1.6">
-              Com mais de 60 milhões de pioneiros no mundo procurando utilidade real para suas moedas, quem posicionar produtos, serviços e conteúdos na Web3 agora sairá na frente da economia digital.
+    <!-- ============================================================
+         4.5. EXPLORE O UNIVERSO DIGITAL (4 CATEGORIAS)
+    ============================================================ -->
+    <section class="portal-section" id="universo" aria-labelledby="universe-title">
+      <div class="portal-container">
+        <div class="section-heading-wrap">
+          <div class="section-tag">Território Editorial</div>
+          <h2 class="section-title" id="universe-title">Explore o Universo Digital</h2>
+          <p class="section-desc">
+            Quatro áreas de conhecimento e ação para acompanhar a revolução tecnológica e descobrir novas frentes de atuação profissional e comercial.
+          </p>
+        </div>
+
+        <div class="universe-grid">
+          <div class="universe-card">
+            <div class="universe-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <h3 class="universe-card__title">1. Negócios com Pi</h3>
+            <p class="universe-card__desc">
+              Comércio P2P, precificação inteligente, aceitação no varejo e análise das dinâmicas econômicas de transações na Mainnet.
             </p>
           </div>
 
-          <div class="creator-cards-grid">
-            <div class="creator-card">
-              <span class="creator-card-icon">🛍️</span>
-              <h4>1. Produtos Digitais &amp; Ebooks</h4>
-              <p>Venda cursos, PDFs, mentorias e templates cobrando frações de Pi diretamente pelo Pi Browser, sem intermediários de pagamento nem taxas abusivas de cartão de crédito.</p>
+          <div class="universe-card">
+            <div class="universe-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
             </div>
+            <h3 class="universe-card__title">2. Aplicações e Ferramentas</h3>
+            <p class="universe-card__desc">
+              Rastreadores on-chain, calculadoras de mineração, exploradores de blocos e ferramentas para desenvolvedores e pioneiros.
+            </p>
+          </div>
 
-            <div class="creator-card">
-              <span class="creator-card-icon">⚡</span>
-              <h4>2. Micropagamentos para Criadores</h4>
-              <p>Permita que seus seguidores apoiem seu canal no YouTube, leiam posts exclusivos ou acessem podcasts pagando 0.05 π por conteúdo (o modelo pay-per-view Web3).</p>
+          <div class="universe-card">
+            <div class="universe-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
+            <h3 class="universe-card__title">3. Conexões e Comunidade</h3>
+            <p class="universe-card__desc">
+              A Gazeta Web3 e o Mural de Classificados, conectando canais de YouTube, projetos de lojistas e mensagens de pioneiros em todo o país.
+            </p>
+          </div>
 
-            <div class="creator-card">
-              <span class="creator-card-icon">🌐</span>
-              <h4>3. Transforme seu Site em um dApp</h4>
-              <p>Com a biblioteca <code>pi-sdk.js</code>, qualquer site pode integrar login com Pi em minutos. Você pode validar usuários únicos sem precisar de formulários de senha.</p>
+          <div class="universe-card">
+            <div class="universe-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
             </div>
-
-            <div class="creator-card">
-              <span class="creator-card-icon">🤝</span>
-              <h4>4. Serviços &amp; Comércio Local</h4>
-              <p>Profissionais autônomos (designers, programadores, consultores) já podem aceitar Pi por serviços prestados entre pioneiros autenticados que completaram a Checklist.</p>
-            </div>
+            <h3 class="universe-card__title">4. Ideias e Inovação</h3>
+            <p class="universe-card__desc">
+              Debates sobre inteligência artificial autônoma, novas arquiteturas de dados, descentralização e soberania digital no século XXI.
+            </p>
           </div>
         </div>
 
-        <!-- ============================================================
-             ABA 4: RANKING DE REPUTAÇÃO (LEADERBOARD AO VIVO)
-        ============================================================ -->
-        <div class="member-tab-pane" id="tab-ranking" role="tabpanel">
-          <div class="ranking-table-box">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px">
-              <div>
-                <h3 style="color:var(--white);font-size:1.35rem;margin:0 0 4px">🏆 Ranking dos Guardiões da Rede</h3>
-                <p style="color:var(--gray-light);font-size:0.88rem;margin:0">Pioneiros com maior pontuação de reputação, checklist e prova de humanidade (sincronizado via Supabase).</p>
-              </div>
-              <button type="button" class="btn btn-secondary btn-sm" onclick="window.IsarTools && window.IsarTools.loadLeaderboard()">
-                🔄 Atualizar
+        <!-- Box de Chamada para o Diretório Comercial Futuro -->
+        <div class="directory-callout">
+          <div class="directory-callout__content">
+            <h3 class="directory-callout__title">Você aceita pagamentos em Pi ou oferece um serviço pioneiro?</h3>
+            <p class="directory-callout__desc">
+              Estamos mapeando estabelecimentos e criadores sérios para compor o futuro diretório comercial verificado da comunidade.
+            </p>
+          </div>
+          <div class="directory-callout__actions">
+            <a href="mural.html" class="portal-btn portal-btn--outline portal-btn--sm" style="margin-right:8px">
+              Ver Mural de Anúncios ↗
+            </a>
+            <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="HokagePortal.openModal('modal-proposta')">
+              Cadastrar Proposta
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4.6. CONTEÚDO RECENTE (SEÇÃO EDITORIAL REAL)
+    ============================================================ -->
+    <section class="portal-section" id="conteudo" aria-labelledby="content-title">
+      <div class="portal-container">
+        <div class="section-heading-wrap">
+          <div class="section-tag">Acervo Editorial</div>
+          <h2 class="section-title" id="content-title">Conteúdo Recente</h2>
+          <p class="section-desc">
+            Artigos, análises de dados e tutoriais aprofundados baseados no acervo do repositório e nas transmissões semanais do canal.
+          </p>
+        </div>
+
+        <div class="editorial-grid">
+          <!-- Artigo 1: Pi Network Realidade vs Hype -->
+          <article class="article-card">
+            <div class="article-category">Pi Network · Análise Crítica</div>
+            <h3 class="article-title">O que separa os fatos confirmados das promessas mirabolantes na Pi Network</h3>
+            <p class="article-excerpt">
+              Como aplicar as etiquetas [F] Fato, [O] Plano Oficial, [A] Análise e [H] Hipótese para filtrar ruídos, evitar golpes com passphrases e proteger seus criptoativos.
+            </p>
+            <div class="article-footer">
+              <span>Capítulo 17 do Manual</span>
+              <button type="button" class="article-link" onclick="HokagePortal.openModal('modal-manual-download')">
+                Ler no Manual →
+              </button>
+            </div>
+          </article>
+
+          <!-- Artigo 2: Empreendedorismo e Meios de Pagamento -->
+          <article class="article-card">
+            <div class="article-category">Empreendedorismo · Finanças</div>
+            <h3 class="article-title">Como pequenos negócios podem aceitar meios de pagamento digitais sem complicação</h3>
+            <p class="article-excerpt">
+              Um panorama prático sobre precificação com margem de segurança, fluxo de caixa e regras do Código de Defesa do Consumidor e da LGPD para quem transaciona em Web3.
+            </p>
+            <div class="article-footer">
+              <span>E-book Pi para Negócios</span>
+              <a href="#produtos" class="article-link">
+                Ver detalhes →
+              </a>
+            </div>
+          </article>
+
+          <!-- Artigo 3: Tecnologia, IA e Soberania -->
+          <article class="article-card">
+            <div class="article-category">Tecnologia · Inteligência Artificial</div>
+            <h3 class="article-title">Blockchain, IA e Soberania de Dados: As forças que redefinem a próxima década</h3>
+            <p class="article-excerpt">
+              Por que a convergência entre redes descentralizadas e modelos de inteligência artificial autônomos será a base da nova economia do conhecimento e do trabalho digital.
+            </p>
+            <div class="article-footer">
+              <span>Canal YouTube @hokage22b</span>
+              <a href="https://youtube.com/@hokage22b" target="_blank" rel="noopener noreferrer" class="article-link">
+                Assistir no canal ↗
+              </a>
+            </div>
+          </article>
+
+          <!-- Artigo 4: Economia Digital e Brasil -->
+          <article class="article-card">
+            <div class="article-category">Economia Digital · Regulação</div>
+            <h3 class="article-title">A Economia das Micro-Transações e o Marco Legal dos Criptoativos no Brasil</h3>
+            <p class="article-excerpt">
+              Como a Lei 14.478/2022 e as diretrizes do Banco Central (Drex e PIX) interagem com iniciativas de moedas comunitárias e pagamentos descentralizados.
+            </p>
+            <div class="article-footer">
+              <span>Capítulo 21 do Manual</span>
+              <button type="button" class="article-link" onclick="HokagePortal.openModal('modal-manual-download')">
+                Acessar capítulo →
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4.7. COMUNIDADE ("O FUTURO TAMBÉM É CONSTRUÍDO EM COMUNIDADE")
+    ============================================================ -->
+    <section class="portal-section" id="comunidade" aria-labelledby="community-title">
+      <div class="portal-container">
+        <div class="community-box">
+          <div class="section-tag">Rede de Pioneiros</div>
+          <h2 class="community-box__title" id="community-title">
+            O futuro também é construído em comunidade.
+          </h2>
+          <p class="community-box__desc">
+            Conhecimento ganha força quando compartilhado. Conecte-se a pessoas interessadas em tecnologia, Pi Network, inovação e novas oportunidades econômicas.
+          </p>
+
+          <div class="community-box__actions">
+            <a href="https://chat.whatsapp.com/invite/hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--primary">
+              Conhecer a comunidade no WhatsApp ↗
+            </a>
+            <button type="button" class="portal-btn portal-btn--outline" onclick="HokagePortal.openModal('modal-waitlist-comunidade')">
+              Entrar na Lista da Plataforma Própria
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4.8. NEWSLETTER ("CONTINUE CONECTADO")
+    ============================================================ -->
+    <section class="portal-section" id="newsletter" aria-labelledby="newsletter-title">
+      <div class="portal-container">
+        <div class="newsletter-card">
+          <div class="section-tag">Comunicação Direta</div>
+          <h2 class="section-title" id="newsletter-title">Continue conectado.</h2>
+          <p class="section-desc">
+            Receba novos conteúdos, atualizações trimestrais do manual, materiais educativos e oportunidades exclusivas sobre tecnologia e economia digital diretamente na sua caixa de entrada.
+          </p>
+
+          <form class="newsletter-form" id="newsletter-form" novalidate>
+            <div class="newsletter-inputs">
+              <input type="text" id="newsletter-name" name="name" class="newsletter-input" placeholder="Seu nome (opcional)" maxlength="60" />
+              <input type="email" id="newsletter-email" name="email" class="newsletter-input" required placeholder="Seu melhor e-mail *" maxlength="80" />
+              <button type="submit" class="portal-btn portal-btn--primary" id="newsletter-submit-btn">
+                Inscrever-se
               </button>
             </div>
 
-            <div class="ranking-list" id="ranking-list-body">
-              <!-- Renderizado via JavaScript / Supabase -->
-            </div>
-          </div>
-        </div>
-
-        <!-- ============================================================
-             ABA 5: COMUNIDADE WHATSAPP & CLUBE PI BUSINESS PRO
-        ============================================================ -->
-        <div class="member-tab-pane" id="tab-community" role="tabpanel">
-          <div style="text-align:left;max-width:860px;margin-bottom:20px">
-            <h3 style="color:var(--white);font-size:1.4rem;margin-bottom:6px">🌐 Escolha o seu nível de conexão na comunidade</h3>
-            <p style="color:var(--gray-light);font-size:0.95rem;line-height:1.6">
-              Participe do grupo aberto gratuito para acompanhar novidades ou acerte parcerias no Clube Pi PRO exclusivo para criadores e negócios.
-            </p>
-          </div>
-
-          <div class="community-tiers-grid">
-            <!-- GRUPO 1: COMUNIDADE GERAL (GRÁTIS) -->
-            <div class="community-tier-card community-tier-card--free">
-              <span class="community-tier-badge community-tier-badge--free">🟢 Aberto a Todos</span>
-              <div class="community-tier-title">Comunidade Geral de Pioneiros</div>
-              <div class="community-tier-price">100% Gratuito</div>
-              <p style="font-size:0.88rem;color:var(--gray-light);line-height:1.5">
-                O ponto de encontro para todos os pioneiros tirarem dúvidas básicas, celebrarem aprovações de KYC e receberem avisos dos novos vídeos do canal @hokage22b.
-              </p>
-              <ul class="community-tier-features">
-                <li><span>✓</span> <strong>Dúvidas de KYC &amp; Mainnet:</strong> Ajuda mútua entre pioneiros.</li>
-                <li><span>✓</span> <strong>Avisos de Vídeos:</strong> Notificações em primeira mão.</li>
-                <li><span>✓</span> <strong>Sem custo algum:</strong> Basta clicar e entrar.</li>
-              </ul>
-              <div style="margin-top:auto">
-                <a href="https://chat.whatsapp.com/invite/hokage22b" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="width:100%;text-align:center;justify-content:center">
-                  <span>💬</span> Entrar no Grupo Gratuito
-                </a>
-              </div>
-            </div>
-
-            <!-- GRUPO 2: CLUBE PI BUSINESS & NETWORKING PRO (ASSINATURA PI) -->
-            <div class="community-tier-card community-tier-card--pro">
-              <span class="community-tier-badge community-tier-badge--pro">⭐ Exclusivo para Negócios</span>
-              <div class="community-tier-title">Clube Pi Business PRO</div>
-              <div class="community-tier-price">1 π <span style="font-size:0.9rem;font-weight:400;color:var(--gray-light)">/ mês (ou 3.14 π / ano)</span></div>
-              <p style="font-size:0.88rem;color:var(--gray-light);line-height:1.5">
-                Para criadores de conteúdo, comerciantes, autônomos e pioneiros avançados que querem fechar negócios reais, aceitar Pi em produtos e fazer networking qualificado.
-              </p>
-              <ul class="community-tier-features">
-                <li><span>⭐</span> <strong>Networking P2P:</strong> Conexão com pioneiros que compram e vendem com Pi.</li>
-                <li><span>⭐</span> <strong>Acesso Antecipado:</strong> Capítulos do Ebook #2 antes do lançamento.</li>
-                <li><span>⭐</span> <strong>Consultoria de dApps:</strong> Estratégias de monetização e integração do Pi SDK.</li>
-                <li><span>⭐</span> <strong>Filtro Anti-Spam:</strong> Apenas pioneiros sérios e comprometidos com a Web3.</li>
-              </ul>
-              <div style="margin-top:auto">
-                <button type="button" class="btn btn-primary" onclick="window.openPiProModal()" style="width:100%;text-align:center;justify-content:center">
-                  <span>🪙</span> Assinar Clube PRO com Pi (1 π)
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       YOUTUBE
-  ============================================================ -->
-  <section class="section" id="youtube" aria-labelledby="youtube-title">
-    <div class="container">
-      <div class="youtube__inner">
-        <div class="youtube__content reveal">
-          <div class="section-label">Canal no YouTube</div>
-          <h2 id="youtube-title">Conteúdo gratuito toda<br /><span class="gradient-text">semana</span></h2>
-          <p style="margin-top:14px;font-size:1.05rem">O canal @hokage22b no YouTube é o principal canal de conteúdo — vídeos sobre Pi Network, blockchain, Web3 e o cenário do dinheiro digital no Brasil.</p>
-          <div class="youtube__features">
-            <div class="youtube__feature">
-              <div class="youtube__feature-icon">📊</div>
-              <div>
-                <h4>Análises semanais</h4>
-                <p>Atualizações sobre Pi Network, Mainnet, KYC e o mercado de cripto com fatos e fontes.</p>
-              </div>
-            </div>
-            <div class="youtube__feature">
-              <div class="youtube__feature-icon">🎓</div>
-              <div>
-                <h4>Tutoriais educativos</h4>
-                <p>Como usar a carteira Pi, como se proteger de golpes, como declarar cripto no IR — passo a passo.</p>
-              </div>
-            </div>
-            <div class="youtube__feature">
-              <div class="youtube__feature-icon">🌎</div>
-              <div>
-                <h4>Cenário global</h4>
-                <p>EUA, China, BRICS e as disputas que afetam seu dinheiro — explicados em português.</p>
-              </div>
-            </div>
-          </div>
-          <a href="https://youtube.com/@hokage22b" target="_blank" rel="noopener noreferrer" class="btn btn-outline" id="youtube-subscribe-btn">
-            <span>▶</span> Inscrever no canal @hokage22b
-          </a>
-        </div>
-        <div class="reveal reveal-delay-1">
-          <a href="https://youtube.com/@hokage22b" target="_blank" rel="noopener noreferrer" class="youtube__preview" id="youtube-preview" aria-label="Acessar canal @hokage22b no YouTube">
-            <div class="youtube__preview-bg"></div>
-            <div class="youtube__play" aria-hidden="true">▶</div>
-            <div class="youtube__preview-label">@hokage22b no YouTube — Pi Network, Blockchain &amp; Web3</div>
-          </a>
-          <p style="text-align:center;margin-top:16px;font-size:0.82rem;color:var(--gray)">Clique para acessar o canal</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       PI REFERRAL — CONVITE
-  ============================================================ -->
-  <section class="section pi-referral" id="pi-convite" aria-labelledby="pi-convite-title">
-    <div class="container">
-      <div class="pi-referral__inner">
-        <div class="pi-referral__content reveal">
-          <div class="section-label">Comece a minerar Pi</div>
-          <span class="pi-referral__icon" aria-hidden="true">π</span>
-          <h2 id="pi-convite-title">Use meu código de convite<br />e comece a <span class="text-amber">minerar agora</span></h2>
-          <p style="margin-top:14px;font-size:1rem">Se você ainda não minerou Pi, pode começar hoje pelo aplicativo. É gratuito — você só precisa abrir o app uma vez por dia.</p>
-
-          <div class="pi-referral__code-box" role="region" aria-label="Código de convite Pi Network">
-            <div>
-              <div class="pi-referral__code-label">Código de convite</div>
-              <div class="pi-referral__code" id="pi-invite-code">hokage22b</div>
-            </div>
-            <button class="pi-referral__copy-btn" id="copy-invite-btn" aria-label="Copiar código de convite hokage22b" onclick="copyInviteCode()">📋 Copiar</button>
-          </div>
-
-          <div class="pi-referral__disclaimer" role="note" aria-label="Aviso importante sobre mineração de Pi">
-            <strong style="color:var(--white-soft)">Aviso honesto:</strong> Este é meu código de convite pessoal. Usá-lo não me paga comissão em dinheiro — apenas aumenta a taxa de mineração de ambos. <strong style="color:var(--white-soft)">Minerar Pi não garante valor futuro, não é investimento e não exige dinheiro.</strong> Criptoativos podem perder valor. Confirme sempre nas fontes oficiais antes de agir.
-          </div>
-
-          <div class="pi-referral__ctas">
-            <a href="https://minepi.com/hokage22b" target="_blank" rel="noopener noreferrer" class="btn btn-pi" id="pi-app-link">
-              π Baixar o app Pi Network
-            </a>
-            <a href="#lista-espera" class="btn btn-outline" id="pi-learn-more">
-              ✉ Receber o manual
-            </a>
-          </div>
-        </div>
-        <div class="reveal reveal-delay-1">
-          <div class="pi-referral__steps" aria-label="Passos para começar a minerar Pi">
-            <div class="pi-referral__step">
-              <div class="pi-referral__step-num">1</div>
-              <div>
-                <h4>Baixe o app Pi Network</h4>
-                <p>Disponível gratuitamente na App Store e Google Play. Crie sua conta com número de telefone.</p>
-              </div>
-            </div>
-            <div class="pi-referral__step">
-              <div class="pi-referral__step-num">2</div>
-              <div>
-                <h4>Digite o código de convite</h4>
-                <p>Na tela de cadastro, insira <strong style="color:var(--amber)">hokage22b</strong> como código de convite para aumentar sua taxa de mineração.</p>
-              </div>
-            </div>
-            <div class="pi-referral__step">
-              <div class="pi-referral__step-num">3</div>
-              <div>
-                <h4>Mine 1x por dia</h4>
-                <p>Abra o app, clique no botão de mineração. Só isso — não consome bateria ou internet em segundo plano.</p>
-              </div>
-            </div>
-            <div class="pi-referral__step">
-              <div class="pi-referral__step-num">4</div>
-              <div>
-                <h4>Complete o KYC</h4>
-                <p>A verificação de identidade é obrigatória para migrar seu saldo para a Mainnet. O manual explica tudo isso.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       DOAÇÕES E APOIO À COMUNIDADE (PIX & PI)
-  ============================================================ -->
-  <section class="section donation-section" id="doacao" aria-labelledby="donation-title">
-    <div class="container">
-      <div class="donation-header reveal">
-        <div class="section-label" data-i18n="donation.badge">Contribua com a Comunidade</div>
-        <h2 id="donation-title" data-i18n="donation.title">Apoie a Criação de Conteúdo Independente</h2>
-        <p data-i18n="donation.desc">O projeto isar.pi é 100% mantido por esforço independente. Suas doações em Reais (PIX) ou em Pi ajudam a manter os servidores ativos, produzir novos vídeos e manter os livros gratuitos para todos os pioneiros.</p>
-      </div>
-
-      <div class="donation-grid">
-        <!-- CARD PIX -->
-        <div class="donation-card donation-card--pix reveal">
-          <div class="donation-card__badge" data-i18n="donation.pix_badge">Chave Pix (Reais)</div>
-          <div class="donation-card__title">
-            <span>🇧🇷</span> <span data-i18n="donation.pix_title">Doe via PIX</span>
-          </div>
-          <p class="donation-card__desc" data-i18n="donation.pix_desc">
-            Qualquer valor — de R$ 2 a R$ 20 — faz uma enorme diferença para mantermos a pesquisa, gravação e atualizações em dia.
-          </p>
-          <div class="donation-key-box">
-            <div class="donation-key-label" data-i18n="donation.pix_label">Chave PIX (E-mail)</div>
-            <div class="donation-key-val" id="donation-pix-key">isarloiola@gmail.com</div>
-          </div>
-          <div class="donation-card__footer">
-            <button type="button" class="donation-btn-copy donation-btn-copy--pix" id="btn-copy-pix" onclick="copyPixKey()">
-              <span data-i18n="donation.pix_btn">📋 Copiar Chave PIX</span>
-            </button>
-            <div class="donation-note" data-i18n="donation.pix_note">Envio instantâneo pelo app do seu banco</div>
-          </div>
-        </div>
-
-        <!-- CARD PI NETWORK -->
-        <div class="donation-card donation-card--pi reveal reveal-delay-1">
-          <div class="donation-card__badge" data-i18n="donation.pi_badge">Cripto Nativa Web3</div>
-          <div class="donation-card__title">
-            <span>🪙</span> <span data-i18n="donation.pi_title">Doe Pi Network (π)</span>
-          </div>
-          <p class="donation-card__desc" data-i18n="donation.pi_desc">
-            Transfira Pi diretamente da sua carteira para apoiar o ecossistema e fortalecer o projeto dos pioneiros no Brasil.
-          </p>
-          <div class="donation-key-box">
-            <div class="donation-key-label" data-i18n="donation.pi_label">Endereço da Carteira Pi (Chave Pública)</div>
-            <div class="donation-key-val" id="donation-pi-key">GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR</div>
-          </div>
-          <div class="donation-card__footer">
-            <button type="button" class="donation-btn-copy donation-btn-copy--pi" id="btn-copy-pi" onclick="copyPiWallet()">
-              <span data-i18n="donation.pi_btn">📋 Copiar Carteira Pi</span>
-            </button>
-            <div class="donation-note" data-i18n="donation.pi_note">Transfira pelo Pi Browser ou Pi Wallet</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       LIBERAÇÃO DO EBOOK #1 — CAPTURA DE EMAIL
-  ============================================================ -->
-  <section class="section email-capture" id="lista-espera" aria-labelledby="waitlist-title">
-    <div class="container" id="ebook-gratis">
-      <div class="email-capture__box">
-        <div class="section-label">Ebook Gratuito #1</div>
-        <h2 id="waitlist-title">Baixe o <span class="gradient-text">Manual Pi Network</span> Gratuitamente</h2>
-        <p style="margin-top:12px;font-size:1rem;color:var(--gray-light)">Cadastre seu e-mail para desbloquear na hora o download completo (PDF e EPUB) e receba novidades, avisos de atualização e ofertas exclusivas por e-mail (cancele a qualquer momento).</p>
-
-        <!-- FORMULÁRIO DE CAPTURA (SOME APÓS SUBMETER) -->
-        <form class="email-capture__form" id="waitlist-form" novalidate aria-label="Formulário de liberação do manual">
-          <div class="form-group">
-            <label for="waitlist-name">Seu nome <span aria-hidden="true" style="color:var(--amber)">*</span></label>
-            <input type="text" id="waitlist-name" name="name" placeholder="Como posso te chamar?" autocomplete="given-name" required aria-required="true" />
-            <div class="form-error-msg" id="name-error" role="alert">Por favor, informe seu nome.</div>
-          </div>
-          <div class="form-group">
-            <label for="waitlist-email">Seu e-mail <span aria-hidden="true" style="color:var(--amber)">*</span></label>
-            <input type="email" id="waitlist-email" name="email" placeholder="seu@email.com" autocomplete="email" required aria-required="true" />
-            <div class="form-error-msg" id="email-error" role="alert">Por favor, informe um e-mail válido.</div>
-          </div>
-
-          <div class="form-consent">
-            <input type="checkbox" id="consent-lgpd" name="consent" required aria-required="true" />
-            <label for="consent-lgpd">
-              Quero receber o Manual Pi Network gratuitamente e concordo em receber avisos de atualização, novidades sobre o Ebook #2 e ofertas do canal <strong>@hokage22b</strong>.
-              Sei que posso cancelar a qualquer momento com 1 clique. Conforme a
-              <a href="legal/politica-de-privacidade.html" target="_blank">Política de Privacidade</a>
-              e a LGPD. <span aria-hidden="true" style="color:var(--amber)">*</span>
+            <label class="newsletter-consent">
+              <input type="checkbox" id="newsletter-consent" required checked />
+              <span>Concordo em receber comunicados editoriais do portal HOKAGE22B. Tratamento de dados conforme a LGPD; você pode cancelar a inscrição a qualquer momento.</span>
             </label>
-          </div>
-          <div class="form-error-msg" id="consent-error" role="alert">É necessário concordar para continuar.</div>
 
-          <button type="submit" class="btn btn-primary btn-submit form-submit" id="waitlist-submit">
-            🔓 Desbloquear e Baixar o Manual Agora
-          </button>
+            <div class="newsletter-feedback" id="newsletter-feedback" role="alert"></div>
+          </form>
+        </div>
+      </div>
+    </section>
 
-          <div class="form-security" aria-label="Segurança do formulário">
-            <span aria-hidden="true">🔒</span> Sem spam. Seus dados estão protegidos. Cancelamento a qualquer momento.
-          </div>
-        </form>
-
-        <!-- BOX DESBLOQUEADO (SUBSTITUI A LISTA DE ESPERA QUANDO PREENCHIDA) -->
-        <div class="unlocked-lead-card" id="unlocked-lead-card" style="display:none">
-          <div class="unlocked-lead-badge">✓ ACESSO LIBERADO</div>
-          <h3 style="font-size:1.7rem;color:var(--white);margin-bottom:10px">Parabéns, <span id="lead-unlocked-name">Pioneiro</span>!</h3>
-          <p style="font-size:1rem;color:var(--white-soft);max-width:580px;margin:0 auto">
-            Seu acesso ao <strong>Manual Pi Network</strong> foi liberado com sucesso para o e-mail <strong id="lead-unlocked-email" style="color:var(--amber-light)">seu@email.com</strong>. Escolha o formato abaixo para baixar agora:
+    <!-- ============================================================
+         4.9. PARCERIAS E PUBLICIDADE
+    ============================================================ -->
+    <section class="portal-section" id="parcerias" aria-labelledby="partnerships-title">
+      <div class="portal-container">
+        <div class="section-heading-wrap">
+          <div class="section-tag">Oportunidades Comerciais</div>
+          <h2 class="section-title" id="partnerships-title">Sua marca pode fazer parte dessa conversa.</h2>
+          <p class="section-desc">
+            Apresente seu projeto, empresa ou ferramenta a uma audiência engajada e qualificada em tecnologia, inovação e economia digital.
           </p>
+        </div>
 
-          <div class="unlocked-download-row">
-            <a href="downloads/Manual-Pi-Network.pdf" download="Manual-Pi-Network.pdf" class="btn-download btn-download-pdf" onclick="recordEbookDownload('pdf')">
-              <span>📄</span> Baixar PDF (563 KB)
-            </a>
-            <a href="downloads/Manual-Pi-Network.epub" download="Manual-Pi-Network.epub" class="btn-download btn-download-epub" onclick="recordEbookDownload('epub')">
-              <span>📱</span> Baixar EPUB (151 KB)
-            </a>
+        <div class="partnerships-grid">
+          <div class="partner-card">
+            <div class="partner-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            </div>
+            <h3 class="partner-card__title">1. Patrocínio de Conteúdo</h3>
+            <p class="partner-card__desc">
+              Apoie episódios de vídeo no YouTube, artigos aprofundados ou edições especiais do manual com menção transparente da sua marca.
+            </p>
+            <ul class="partner-card__points">
+              <li>✓ Inserções contextualizadas e relevantes</li>
+              <li>✓ Transparência editorial para a audiência</li>
+              <li>✓ Relatório de alcance e impacto</li>
+            </ul>
           </div>
 
-          <div class="unlocked-lead-tip">
-            <strong style="color:var(--amber-light)">🚀 Próximo Passo na Web3:</strong> Faça login com sua conta Pi na <strong>Área de Membros</strong> acima para reservar o Ebook #2 <em>("O dia que o mundo pediu pra provar quem você era")</em> e acumular pontos no <strong>Sistema de Reputação isar.pi</strong>!
+          <div class="partner-card">
+            <div class="partner-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
+            </div>
+            <h3 class="partner-card__title">2. Destaque Comercial</h3>
+            <p class="partner-card__desc">
+              Espaço reservado no portal e no Mural de Classificados para negócios, ferramentas e serviços úteis à comunidade de tecnologia.
+            </p>
+            <ul class="partner-card__points">
+              <li>✓ Posição de destaque na Gazeta Web3</li>
+              <li>✓ Links diretos para sua loja ou canal</li>
+              <li>✓ Taxas justas e transparentes</li>
+            </ul>
           </div>
 
-          <div>
-            <button type="button" class="btn-switch-email" onclick="resetLeadRegistration()">Cadastrar outro e-mail</button>
+          <div class="partner-card">
+            <div class="partner-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3 class="partner-card__title">3. Parcerias &amp; Colaborações</h3>
+            <p class="partner-card__desc">
+              Co-criação de pesquisas, eventos virtuais, integração de dApps educacionais e iniciativas conjuntas de capacitação digital.
+            </p>
+            <ul class="partner-card__points">
+              <li>✓ Projetos com alto valor agregado</li>
+              <li>✓ Foco em educação e utilidade real</li>
+              <li>✓ Alinhamento ético e tecnológico</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="partnerships-cta-box">
+          <h3>Pronto para apresentar sua proposta?</h3>
+          <p>Entre em contato direto com nossa equipe editorial para avaliar a viabilidade da sua colaboração.</p>
+          <button type="button" class="portal-btn portal-btn--primary" onclick="HokagePortal.openModal('modal-proposta')">
+            Apresentar proposta comercial
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4.10. SOBRE O PROJETO HOKAGE22B
+    ============================================================ -->
+    <section class="portal-section" id="sobre" aria-labelledby="about-title">
+      <div class="portal-container">
+        <div class="about-wrap">
+          <div class="about-manifesto">
+            <div class="section-tag">Sobre Nós</div>
+            <h2 class="section-title" id="about-title">A Marca HOKAGE22B</h2>
+            <p>
+              HOKAGE22B é um projeto pessoal e editorial independente fundado por <strong>Isar Loiola</strong>. Nascido da necessidade de oferecer um contraponto sóbrio e rigoroso ao sensacionalismo que frequentemente cerca o mercado cripto e as novas tecnologias.
+            </p>
+            <p>
+              Acreditamos que o acesso à informação de qualidade é a melhor ferramenta de proteção e soberania individual. Não vendemos ilusões nem promessas de ganhos rápidos; fornecemos fundamentos, análises de dados e caminhos práticos para navegar a economia digital contemporânea.
+            </p>
+            <div style="margin-top:24px">
+              <a href="https://youtube.com/@hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm">
+                Conhecer canal no YouTube ↗
+              </a>
+            </div>
+          </div>
+
+          <div class="about-pillars">
+            <div class="about-pillar">
+              <strong>Independência</strong>
+              <span>Sem vínculos comerciais com emissores de moedas ou corretoras. Nossa lealdade é com o leitor.</span>
+            </div>
+            <div class="about-pillar">
+              <strong>Rigor Técnico</strong>
+              <span>Diferenciação estrita entre fatos documentados, planos anunciados e meras hipóteses.</span>
+            </div>
+            <div class="about-pillar">
+              <strong>Visão de Futuro</strong>
+              <span>Exploração contínua de IA, sistemas descentralizados e novas dinâmicas de trabalho.</span>
+            </div>
+            <div class="about-pillar">
+              <strong>Segurança Prática</strong>
+              <span>Combate ativo a fraudes, vazamento de credenciais e esquemas predatórios.</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <!-- ============================================================
-       FOOTER
+       4.11. FOOTER COMPLETO & DECLARAÇÃO DE INDEPENDÊNCIA
   ============================================================ -->
-  <footer class="footer" role="contentinfo">
-    <div class="container">
-      <div class="footer__top">
-        <div class="footer__brand">
-          <div class="footer__logo">
-            <span style="color:var(--amber);font-size:1.6rem">π</span> isar.pi
+  <footer class="portal-footer">
+    <div class="portal-container">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <div class="portal-brand">
+            <span>HOKAGE22B</span>
+            <span class="portal-brand__dot" aria-hidden="true"></span>
           </div>
-          <p>Conteúdo educativo independente sobre Pi Network, blockchain, Web3 e dinheiro digital. Sem afiliação com a Pi Core Team.</p>
-          <div class="footer__socials" aria-label="Redes sociais">
-            <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer" class="footer__social" aria-label="X (Twitter) @hokage22b">𝕏</a>
-            <a href="https://instagram.com/hokage22b" target="_blank" rel="noopener noreferrer" class="footer__social" aria-label="Instagram @hokage22b">📷</a>
-            <a href="https://youtube.com/@hokage22b" target="_blank" rel="noopener noreferrer" class="footer__social" aria-label="YouTube @hokage22b">▶</a>
+          <p>
+            O futuro não se espera. Constrói-se. Um espaço independente para explorar tecnologia, conhecimento e novas possibilidades na economia digital.
+          </p>
+          <div class="footer-social-links">
+            <a href="https://youtube.com/@hokage22b" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="Canal no YouTube">
+              ▶
+            </a>
+            <a href="https://instagram.com/hokage22b" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="Perfil no Instagram">
+              📷
+            </a>
+            <a href="https://twitter.com/hokage22b" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="Twitter / X">
+              𝕏
+            </a>
           </div>
         </div>
-        <div class="footer__col">
-          <h4>O site</h4>
-          <ul class="footer__links">
-            <li><a href="#produto">O Manual</a></li>
-            <li><a href="#blockchain">O que é Blockchain</a></li>
-            <li><a href="#web3">O que é Web3</a></li>
-            <li><a href="#youtube">Canal YouTube</a></li>
-            <li><a href="#doacao">Apoiar o projeto (Pix &amp; Pi)</a></li>
-            <li><a href="#lista-espera">Lista de espera</a></li>
+
+        <div class="footer-col">
+          <h4>Navegação</h4>
+          <ul class="footer-links">
+            <li><a href="#hero">Início</a></li>
+            <li><a href="#comece-aqui">Comece Aqui</a></li>
+            <li><a href="#produtos">Produtos Digitais</a></li>
+            <li><a href="#universo">Universo Digital</a></li>
+            <li><a href="#conteudo">Conteúdo Recente</a></li>
+            <li><a href="mural.html">Mural de Anúncios</a></li>
           </ul>
         </div>
-        <div class="footer__col">
-          <h4>Legal</h4>
-          <ul class="footer__links">
-            <li><a href="legal/termos-de-uso.html">Termos de uso</a></li>
-            <li><a href="legal/politica-de-privacidade.html">Política de privacidade</a></li>
-            <li><a href="legal/politica-de-reembolso.html">Política de reembolso</a></li>
-            <li><a href="legal/aviso-legal.html">Aviso legal e independência</a></li>
+
+        <div class="footer-col">
+          <h4>Recursos</h4>
+          <ul class="footer-links">
+            <li><a href="downloads/Manual-Pi-Network.pdf" download>Manual em PDF</a></li>
+            <li><a href="downloads/Manual-Pi-Network.epub" download>Manual em EPUB</a></li>
+            <li><a href="https://chat.whatsapp.com/invite/hokage22b" target="_blank" rel="noopener noreferrer">Comunidade WhatsApp</a></li>
+            <li><a href="#parcerias">Proposta Comercial</a></li>
+            <li><a href="mailto:contato@hokage22b.com">contato@hokage22b.com</a></li>
           </ul>
         </div>
-        <div class="footer__col">
-          <h4>Pi Network</h4>
-          <ul class="footer__links">
-            <li><a href="https://minepi.com/hokage22b" target="_blank" rel="noopener noreferrer">Baixar o app</a></li>
-            <li><a href="#pi-convite">Código: hokage22b</a></li>
-            <li><a href="https://minepi.com" target="_blank" rel="noopener noreferrer">Site oficial Pi</a></li>
+
+        <div class="footer-col">
+          <h4>Legalidade</h4>
+          <ul class="footer-links">
+            <li><a href="legal/politica-de-privacidade.html">Política de Privacidade</a></li>
+            <li><a href="legal/termos-de-uso.html">Termos de Uso</a></li>
+            <li><a href="legal/politica-de-reembolso.html">Política de Reembolso</a></li>
+            <li><a href="legal/aviso-legal.html">Aviso Legal</a></li>
           </ul>
         </div>
       </div>
 
-      <div class="footer__disclaimer" role="note" aria-label="Aviso legal e de independência">
-        <strong style="color:var(--white-soft)">Aviso legal e de independência:</strong> Este site é material educativo e independente. Não é material oficial da Pi Network, não é afiliado à Pi Core Team e não constitui recomendação de investimento, compra, venda ou manutenção de qualquer ativo. Criptoativos podem perder valor, ter liquidez limitada, enfrentar restrições regulatórias ou ser alvo de fraudes. Não invista dinheiro que você não pode perder. Regras, telas, taxas e listagens mudam — confirme nas fontes oficiais antes de agir. Código de convite Pi Network: <strong>hokage22b</strong> — a mineração via convite aumenta a taxa de ambos e não representa pagamento em dinheiro.
+      <!-- DECLARAÇÃO FORMAL DE INDEPENDÊNCIA -->
+      <div class="footer-disclaimer-box">
+        <strong>Declaração de Independência e Transparência Editorial:</strong><br />
+        HOKAGE22B é uma marca pessoal e projeto de conteúdo educativo independente sob responsabilidade de Isar Loiola. Não possui qualquer vínculo societário, representação oficial, patrocínio ou parceria formal com a Pi Core Team, SocialChain Inc., ou com qualquer corretora, banco ou entidade financeira. Os conteúdos disponibilizados têm finalidade estritamente informativa e não configuram recomendação de investimento ou consultoria jurídica e fiscal.
       </div>
 
-      <div class="footer__bottom">
-        <div class="footer__legal">
-          © 2026 isar.pi — hokage22b. Todos os direitos reservados.
-          &nbsp;·&nbsp; <a href="legal/politica-de-privacidade.html">Privacidade</a>
-          &nbsp;·&nbsp; <a href="legal/termos-de-uso.html">Termos</a>
-        </div>
-        <div class="footer__pi-ref" aria-label="Código de convite Pi Network">
-          π <a href="https://minepi.com/hokage22b" target="_blank" rel="noopener noreferrer">Convite Pi: hokage22b</a>
-        </div>
+      <div class="footer-bottom">
+        <span>© 2026 HOKAGE22B (hokage22b.com). Todos os direitos reservados.</span>
+        <span>Código de Convite Pi: <strong>hokage22b</strong></span>
       </div>
     </div>
   </footer>
 
   <!-- ============================================================
-       COOKIE BANNER — LGPD
+       MODAIS DO SISTEMA
   ============================================================ -->
-  <div class="glass-card cookie-banner" id="cookie-banner" role="dialog" aria-modal="true" aria-labelledby="cookie-title" aria-describedby="cookie-desc">
-    <div class="cookie-banner__text">
-      <strong id="cookie-title" style="color:var(--white);display:block;margin-bottom:4px">🍪 Cookies e privacidade</strong>
-      <span id="cookie-desc">Este site usa apenas cookies essenciais de funcionamento. Nenhum dado é vendido ou compartilhado com terceiros. Leia nossa <a href="legal/politica-de-privacidade.html">Política de Privacidade</a>.</span>
-    </div>
-    <div class="cookie-banner__btns">
-      <button class="btn btn-primary btn-sm" id="cookie-accept" aria-label="Aceitar cookies e fechar aviso">Entendi</button>
-      <a href="legal/politica-de-privacidade.html" class="btn btn-outline btn-sm" id="cookie-learn-more">Saiba mais</a>
+
+  <!-- Modal 1: Download Imediato do Manual Gratuito -->
+  <div class="portal-modal-overlay" id="modal-manual-download" role="dialog" aria-modal="true" aria-labelledby="manual-modal-title">
+    <div class="portal-modal">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag">Acesso Gratuito</div>
+      <h3 id="manual-modal-title" style="font-size:1.35rem;margin-bottom:12px">Manual Pi Network — Edição 1.0</h3>
+      <p style="font-size:0.92rem;margin-bottom:20px;color:var(--text-secondary)">
+        Baixe diretamente a edição completa e revisada em formato PDF ou EPUB para o seu computador ou leitor digital.
+      </p>
+
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+        <a href="downloads/Manual-Pi-Network.pdf" download class="portal-btn portal-btn--primary portal-btn--full">
+          ⬇ Baixar em PDF (Recomendado)
+        </a>
+        <a href="downloads/Manual-Pi-Network.epub" download class="portal-btn portal-btn--outline portal-btn--full">
+          ⬇ Baixar em EPUB (Leitores Digitais)
+        </a>
+      </div>
+
+      <div style="padding-top:16px;border-top:1px solid var(--border-subtle);font-size:0.8rem;color:var(--text-muted);text-align:center">
+        💡 Atualizado trimestralmente · Sem necessidade de cadastro obrigatório
+      </div>
     </div>
   </div>
 
-  <!-- ============================================================
-       MODAL DE LOGIN PI NETWORK
-  ============================================================ -->
-  <div class="pi-modal-overlay" id="pi-login-modal" role="dialog" aria-modal="true" aria-labelledby="modal-pi-title">
-    <div class="pi-modal">
-      <button type="button" class="pi-modal-close" onclick="closePiLoginModal()" aria-label="Fechar modal">✕</button>
-      <div class="pi-modal-logo">π</div>
-      <h3 id="modal-pi-title">Autenticação Pi Network</h3>
-      <p>Acesse a Área de Membros usando seu perfil de Pioneiro na Web3.</p>
+  <!-- Modal 2: Apresentar Proposta Comercial / Parceria -->
+  <div class="portal-modal-overlay" id="modal-proposta" role="dialog" aria-modal="true" aria-labelledby="prop-modal-title">
+    <div class="portal-modal">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag">Contato Comercial</div>
+      <h3 id="prop-modal-title" style="font-size:1.35rem;margin-bottom:10px">Apresentar Proposta Comercial</h3>
+      <p style="font-size:0.9rem;margin-bottom:20px;color:var(--text-secondary)">
+        Envie os detalhes do seu projeto ou estabelecimento para nossa avaliação editorial.
+      </p>
 
-      <!-- INDICADOR DE AMBIENTE -->
-      <div class="env-badge" id="env-badge">
-        <span id="env-badge-dot">●</span> <span id="env-badge-text">Detectando navegador...</span>
-      </div>
-
-      <!-- BOTÃO NATIVO DO PI SDK -->
-      <button type="button" class="btn btn-primary btn-pi-auth" id="btn-pi-authenticate" onclick="handlePiNativeAuth()">
-        <span class="pi-sym">π</span> Entrar com Pi Network
-      </button>
-
-      <!-- INFORMAÇÕES E MODO TESTE / DEMO -->
-      <div class="demo-login-box" id="demo-box">
-        <h5>💡 Testando fora do Pi Browser?</h5>
-        <p>Para login nativo sem senha, abra este link dentro do app <strong>Pi Browser</strong>. Se preferir testar agora no computador ou navegador padrão, use o modo de teste:</p>
-        <div class="demo-input-group">
-          <input type="text" id="demo-username-input" placeholder="Seu @usuário (ex: hokage22b)" maxlength="30" />
-          <button type="button" class="btn btn-secondary btn-sm" onclick="handleDemoLogin()">Entrar</button>
+      <form id="proposal-form" novalidate style="display:flex;flex-direction:column;gap:14px">
+        <div>
+          <label for="prop-name" style="font-size:0.85rem;color:var(--text-secondary);display:block;margin-bottom:6px">Seu nome *</label>
+          <input type="text" id="prop-name" required class="newsletter-input" style="width:100%" placeholder="Ex: Roberto Silva" />
         </div>
-      </div>
+        <div>
+          <label for="prop-email" style="font-size:0.85rem;color:var(--text-secondary);display:block;margin-bottom:6px">Seu e-mail de contato *</label>
+          <input type="email" id="prop-email" required class="newsletter-input" style="width:100%" placeholder="seu@email.com" />
+        </div>
+        <div>
+          <label for="prop-company" style="font-size:0.85rem;color:var(--text-secondary);display:block;margin-bottom:6px">Empresa / Projeto / Canal</label>
+          <input type="text" id="prop-company" class="newsletter-input" style="width:100%" placeholder="Nome da empresa ou canal" />
+        </div>
+        <div>
+          <label for="prop-category" style="font-size:0.85rem;color:var(--text-secondary);display:block;margin-bottom:6px">Tipo de Proposta</label>
+          <select id="prop-category" class="newsletter-input" style="width:100%;background:var(--bg-surface-2)">
+            <option value="Patrocinio">Patrocínio de Conteúdo</option>
+            <option value="Destaque">Destaque Comercial / Mural</option>
+            <option value="Parceria">Parceria &amp; Colaboração Técnica</option>
+            <option value="Estabelecimento">Cadastro de Estabelecimento que aceita Pi</option>
+          </select>
+        </div>
+        <div>
+          <label for="prop-message" style="font-size:0.85rem;color:var(--text-secondary);display:block;margin-bottom:6px">Mensagem / Resumo da Proposta *</label>
+          <textarea id="prop-message" required class="newsletter-input" style="width:100%;min-height:90px" placeholder="Conte brevemente sobre o seu projeto..."></textarea>
+        </div>
+
+        <button type="submit" class="portal-btn portal-btn--primary portal-btn--full" id="proposal-submit-btn">
+          Enviar Proposta Comercial
+        </button>
+        <div class="newsletter-feedback" id="proposal-feedback" role="alert"></div>
+      </form>
     </div>
   </div>
 
-  <!-- MODAL DE ASSINATURA CLUBE PI PRO -->
-  <div class="pi-modal-overlay" id="modal-pi-pro" role="dialog" aria-modal="true" aria-labelledby="modal-pro-title">
-    <div class="pi-modal" style="max-width:540px">
-      <button type="button" class="pi-modal-close" onclick="closePiProModal()" aria-label="Fechar modal">✕</button>
-      <div class="pi-modal-logo">⭐</div>
-      <h3 id="modal-pro-title">Assinatura Clube Pi Business PRO</h3>
-      <p>Contribuição simbólica de <strong>1 π</strong> para apoiar a infraestrutura e conectar pioneiros sérios para negócios Web3.</p>
-
-      <div class="donation-key-box" style="margin:18px 0;text-align:left">
-        <div class="donation-key-label">Carteira Oficial de Destino</div>
-        <div class="donation-key-val" id="pro-wallet-address" style="font-size:0.85rem">GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR</div>
-        <div class="donation-key-label" style="margin-top:10px">Memo de Identificação</div>
-        <div class="donation-key-val" id="pro-wallet-memo">#PI-PRO-ISAR</div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <button type="button" class="btn btn-secondary" onclick="copyProPaymentDetails()">
-          <span>📋</span> Copiar Carteira e Memo
-        </button>
-        <button type="button" class="btn btn-primary" onclick="confirmProSubscription()">
-          <span>✅</span> Já enviei 1 π (Confirmar e Entrar no Grupo VIP)
-        </button>
-      </div>
-
-      <p style="font-size:0.78rem;color:var(--gray);margin-top:14px;text-align:center">
-        Após a confirmação, seu perfil receberá o selo PRO e você será redirecionado para o link exclusivo do WhatsApp.
-      </p>
-    </div>
-  </div>
-
-  <!-- ============================================================
-       MODAL DE ONBOARDING INTERATIVO / BOAS-VINDAS (CRO)
-  ============================================================ -->
-  <div class="onboarding-overlay" id="onboarding-modal" role="dialog" aria-modal="true" aria-labelledby="onboarding-heading">
-    <div class="onboarding-card">
-      <button type="button" class="onboarding-close" onclick="window.IsarOnboarding && window.IsarOnboarding.close(true)" aria-label="Fechar introdução">✕</button>
-      
-      <div class="onboarding-calm-badge">
-        <span>🛡️</span> Calma! Ninguém vai te vender nada aqui.
-      </div>
-
-      <h3 class="onboarding-title" id="onboarding-heading">
-        Bem-vindo ao <span class="gradient-text">isar.pi</span>
-      </h3>
-      <p class="onboarding-desc">
-        Conteúdo 100% gratuito e educativo. Não vendemos cursos nem prometemos lucros fáceis. Para te guiar exatamente ao que você precisa em 30 segundos, qual é o seu momento?
+  <!-- Modal 3: Pagamento com Pi (3.14 π) -->
+  <div class="portal-modal-overlay" id="modal-pagamento-pi" role="dialog" aria-modal="true" aria-labelledby="pi-pay-title">
+    <div class="portal-modal">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag section-tag--amber">Pagamento P2P em Pi</div>
+      <h3 id="pi-pay-title" style="font-size:1.35rem;margin-bottom:12px">Adquirir e-book com Pi Network</h3>
+      <p style="font-size:0.92rem;margin-bottom:18px;color:var(--text-secondary)">
+        Você pode adquirir o e-book <strong>"Pi para seu negócio"</strong> diretamente com Pi na Mainnet.
       </p>
 
-      <!-- OPÇÕES DO QUIZ DE 1 CLIQUE -->
-      <div class="onboarding-options" role="radiogroup" aria-label="Seu nível no ecossistema Pi">
-        <button type="button" class="onboarding-option-btn" data-type="beginner" role="radio" aria-checked="false">
-          <span class="onboarding-option-icon">🌱</span>
-          <div class="onboarding-option-text">
-            <strong>Estou começando do zero</strong>
-            <span>Não sei o que é Pi Network, Pi Coin ou Blockchain e quero entender de forma simples.</span>
-          </div>
-        </button>
-
-        <button type="button" class="onboarding-option-btn" data-type="intermediate" role="radio" aria-checked="false">
-          <span class="onboarding-option-icon">⚡</span>
-          <div class="onboarding-option-text">
-            <strong>Já minero no aplicativo</strong>
-            <span>Clico no raio todo dia, mas estou perdido com KYC, carteira e migração da Mainnet.</span>
-          </div>
-        </button>
-
-        <button type="button" class="onboarding-option-btn" data-type="advanced" role="radio" aria-checked="false">
-          <span class="onboarding-option-icon">💼</span>
-          <div class="onboarding-option-text">
-            <strong>Criador, comerciante ou investidor</strong>
-            <span>Quero entender como lucrar com Pi, aceitar em produtos e fazer negócios Web3.</span>
-          </div>
-        </button>
+      <div style="background:rgba(0,0,0,0.4);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px">
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:4px">Valor do e-book:</div>
+        <div style="font-size:1.6rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono)">3.14 π</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:12px;margin-bottom:4px">Carteira de destino oficial:</div>
+        <code style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:8px;border-radius:4px;color:var(--accent-light)">GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR</code>
       </div>
 
-      <!-- PAINEL DE RESULTADO E RECOMENDAÇÃO -->
-      <div class="onboarding-result" id="onboarding-result-box">
-        <h4 id="onboarding-res-badge">🧭 Rota Recomendada</h4>
-        <strong id="onboarding-res-title" style="color:var(--white);display:block;margin-bottom:6px">Título da Recomendação</strong>
-        <p id="onboarding-res-text">Texto dinâmico da recomendação...</p>
-        <button type="button" class="btn btn-primary onboarding-btn-primary" id="onboarding-res-btn">
-          Acessar Recomendação
-        </button>
-      </div>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:18px">
+        Após a transferência no Pi Wallet, envie o hash da transação ou comprovante para <strong>contato@hokage22b.com</strong> para receber sua cópia e acesso imediato.
+      </p>
 
-      <!-- RODAPÉ DE NAVEGAÇÃO ALTERNATIVA -->
-      <div class="onboarding-links-row">
-        <button type="button" class="onboarding-link-member" onclick="window.IsarOnboarding && window.IsarOnboarding.handleAlreadyMember()">
-          ⚡ Já sou membro (Ir para Área VIP)
-        </button>
-        <button type="button" class="onboarding-link-skip" onclick="window.IsarOnboarding && window.IsarOnboarding.close(true)">
-          Explorar a página sozinho →
-        </button>
-      </div>
+      <a href="mailto:contato@hokage22b.com?subject=Comprovante%20Pagamento%20Pi%20-%20E-book%20Negocios" class="portal-btn portal-btn--amber portal-btn--full">
+        Enviar Comprovante por E-mail
+      </a>
     </div>
   </div>
 
-  <!-- TOAST FEEDBACK -->
-  <div class="toast-box" id="toast-msg" role="status" aria-live="polite">
-    <span id="toast-icon">ℹ️</span>
-    <span id="toast-text">Notificação</span>
+  <!-- Modal 4: Lista de Espera da Plataforma Própria -->
+  <div class="portal-modal-overlay" id="modal-waitlist-comunidade" role="dialog" aria-modal="true" aria-labelledby="wait-title">
+    <div class="portal-modal">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag">Plataforma Própria</div>
+      <h3 id="wait-title" style="font-size:1.35rem;margin-bottom:10px">Lista de Espera da Comunidade HOKAGE22B</h3>
+      <p style="font-size:0.9rem;margin-bottom:20px;color:var(--text-secondary)">
+        Cadastre-se para ser notificado no lançamento da plataforma de membros própria, com ferramentas de blockchain, networking e diretório de lojistas.
+      </p>
+
+      <form id="community-waitlist-form" novalidate style="display:flex;flex-direction:column;gap:14px">
+        <input type="email" id="community-email" required class="newsletter-input" style="width:100%" placeholder="Seu melhor e-mail *" />
+        <button type="submit" class="portal-btn portal-btn--primary portal-btn--full" id="community-waitlist-btn">
+          Garantir Minha Vaga na Lista
+        </button>
+        <div class="newsletter-feedback" id="community-waitlist-feedback" role="alert"></div>
+      </form>
+    </div>
   </div>
 
-  <!-- Supabase CDN (Database & Realtime) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Modular Scripts -->
-  <script src="assets/js/modules/i18n.js"></script>
+  <!-- Scripts do Portal -->
+  <script src="assets/js/config.js"></script>
   <script src="assets/js/modules/db.js"></script>
-  <script src="assets/js/modules/ui.js"></script>
-  <script src="assets/js/modules/auth.js"></script>
-  <script src="assets/js/modules/checklist.js"></script>
-  <script src="assets/js/modules/lead.js"></script>
-  <script src="assets/js/modules/reputation.js"></script>
-  <script src="assets/js/modules/tools.js"></script>
-  <script src="assets/js/modules/onboarding.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script src="assets/js/modules/portal.js"></script>
 </body>
 </html>

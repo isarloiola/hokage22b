@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Gazeta dos Pioneiros — Mural de Classificados Web3 | HOKAGE22B</title>
+  <meta name="description" content="O jornal descentralizado dos pioneiros da Pi Network: divulgue seu canal, produto, serviço ou deixe sua mensagem na comunidade." />
+  <link rel="canonical" href="https://hokage22b.com/mural.html" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- Canvas Particles -->
+  <canvas id="particles-bg" aria-hidden="true"></canvas>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="index.html" class="navbar__logo" aria-label="HOKAGE22B — início">
+          <span class="pi-sym" style="color:var(--accent-light)">✦</span>
+          <div>
+            <div>HOKAGE22B</div>
+            <div class="brand-sub">Gazeta dos Pioneiros</div>
+          </div>
+        </a>
+        <div class="navbar__actions">
+          <a href="index.html" class="btn btn-outline btn-sm">← Voltar ao Início</a>
+          <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural && window.IsarMural.openModal()">
+            📢 Anunciar no Mural
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Cabeçalho Estilo Jornal Gazeta -->
+  <main style="padding-top:100px;min-height:90vh">
+    <div class="container" style="max-width:1100px;margin:0 auto;padding-top:20px">
+      
+      <!-- Topo da Gazeta -->
+      <div style="border-bottom:2px solid var(--amber);padding-bottom:16px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
+        <div>
+          <span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber-light);font-weight:700">Edição Digital Descentralizada · Rede Pi Network</span>
+          <h1 style="font-size:clamp(2.2rem, 5vw, 3.2rem);font-weight:900;color:#fff;margin:6px 0 0;font-family:var(--font-head);letter-spacing:-0.02em">
+            A Gazeta dos Pioneiros
+          </h1>
+          <p style="color:var(--gray-light);font-size:1.05rem;margin:8px 0 0">
+            O mural independente da comunidade: canais de YouTube, produtos que aceitam Pi, serviços e recados de pioneiros de todo o Brasil.
+          </p>
+        </div>
+        <div>
+          <button type="button" class="btn btn-primary" onclick="window.IsarMural && window.IsarMural.openModal()">
+            📢 Criar Meu Anúncio (a partir de 0.314 π)
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros -->
+      <div class="mural-filters-bar" role="tablist" aria-label="Filtro de categorias de anúncios">
+        <button class="mural-filter-btn active" data-category="todos" type="button">📰 Todos os Classificados</button>
+        <button class="mural-filter-btn" data-category="youtube" type="button">▶ Canais de YouTube</button>
+        <button class="mural-filter-btn" data-category="produto" type="button">🛍️ Produtos &amp; Lojas</button>
+        <button class="mural-filter-btn" data-category="servico" type="button">🛠️ Serviços Profissionais</button>
+        <button class="mural-filter-btn" data-category="mensagem" type="button">💬 Recados da Comunidade</button>
+      </div>
+
+      <!-- Grid de Anúncios -->
+      <div class="mural-grid" id="mural-ads-grid">
+        <!-- Renderizado via JavaScript / Supabase -->
+      </div>
+
+      <!-- Tabela de Valores / Transparência -->
+      <div style="margin-top:64px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:32px">
+        <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px">📋 Como Funciona a Publicação na Gazeta</h3>
+        <p style="color:var(--gray-light);font-size:0.92rem;line-height:1.6;margin-bottom:20px">
+          Para evitar spam e manter apenas anúncios reais e sérios no mural, a publicação é feita mediante uma micro-taxa simbólica única em Pi ou Pix. Os valores arrecadados ajudam a manter os servidores do projeto isar.pi e a produção de conteúdo gratuito.
+        </p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:16px">
+          <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:18px">
+            <span style="font-weight:800;color:var(--amber-light);font-size:0.9rem">🥇 Destaque Ouro</span>
+            <div style="font-size:1.4rem;font-weight:900;color:#fff;margin:4px 0">3.14 π <span style="font-size:0.8rem;color:var(--gray-light)">(ou R$ 15,00)</span></div>
+            <p style="font-size:0.82rem;color:var(--gray-light);margin:0">Card duplo em evidência no topo da Gazeta e na página inicial.</p>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(148,163,184,0.3);border-radius:var(--radius-sm);padding:18px">
+            <span style="font-weight:800;color:#e2e8f0;font-size:0.9rem">🥈 Destaque Prata</span>
+            <div style="font-size:1.4rem;font-weight:900;color:#fff;margin:4px 0">1.00 π <span style="font-size:0.8rem;color:var(--gray-light)">(ou R$ 7,00)</span></div>
+            <p style="font-size:0.82rem;color:var(--gray-light);margin:0">Card médio com link clicável direto para o seu canal, WhatsApp ou site.</p>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:18px">
+            <span style="font-weight:800;color:var(--gray-light);font-size:0.9rem">🥉 Classificado Bronze</span>
+            <div style="font-size:1.4rem;font-weight:900;color:#fff;margin:4px 0">0.314 π <span style="font-size:0.8rem;color:var(--gray-light)">(ou R$ 3,00)</span></div>
+            <p style="font-size:0.82rem;color:var(--gray-light);margin:0">Mensagem da comunidade ou recado simples de apoio aos pioneiros.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL DE CRIAR ANÚNCIO -->
+  <div class="pi-modal-overlay" id="ad-create-modal" role="dialog" aria-modal="true" aria-labelledby="modal-ad-title">
+    <div class="pi-modal ad-modal">
+      <button type="button" class="pi-modal-close" onclick="window.IsarMural && window.IsarMural.closeModal()" aria-label="Fechar modal">✕</button>
+      <div class="pi-modal-logo">📢</div>
+      <h3 id="modal-ad-title">Anunciar na Gazeta dos Pioneiros</h3>
+      <p>Divulgue seu canal, produto, serviço ou mensagem para milhares de pioneiros.</p>
+
+      <form onsubmit="window.IsarMural && window.IsarMural.handleAdSubmit(event)">
+        <!-- Escolha do Nível / Posição -->
+        <label style="font-size:0.85rem;color:var(--gray-light);display:block;margin-top:14px;font-weight:700">
+          Escolha a Posição / Destaque:
+        </label>
+        <div class="ad-tier-selector">
+          <div class="ad-tier-option" data-tier="ouro" onclick="window.IsarMural && window.IsarMural.selectTier('ouro')">
+            <span class="ad-tier-name">🥇 Ouro</span>
+            <span class="ad-tier-cost">3.14 π</span>
+            <span class="ad-tier-desc">Topo &amp; Destaque</span>
+          </div>
+          <div class="ad-tier-option selected" data-tier="prata" onclick="window.IsarMural && window.IsarMural.selectTier('prata')">
+            <span class="ad-tier-name">🥈 Prata</span>
+            <span class="ad-tier-cost">1.0 π</span>
+            <span class="ad-tier-desc">Card Médio</span>
+          </div>
+          <div class="ad-tier-option" data-tier="bronze" onclick="window.IsarMural && window.IsarMural.selectTier('bronze')">
+            <span class="ad-tier-name">🥉 Bronze</span>
+            <span class="ad-tier-cost">0.314 π</span>
+            <span class="ad-tier-desc">Classificado</span>
+          </div>
+        </div>
+
+        <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:16px;font-size:0.85rem;color:var(--amber-light)" id="ad-selected-payment-info">
+          Valor do plano: 1.0 π (ou R$ 7,00 via Pix)
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px">
+          <label for="ad-input-title" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Título do Anúncio *</label>
+          <input type="text" id="ad-input-title" required placeholder="Ex: Canal Tech Pi / Vendo Notebook Aceitando Pi" maxlength="60" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px">
+          <label for="ad-input-cat" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Categoria *</label>
+          <select id="ad-input-cat" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff">
+            <option value="youtube">▶ Canal de YouTube / Conteúdo</option>
+            <option value="produto">🛍️ Produto / Comércio Local</option>
+            <option value="servico">🛠️ Serviço Profissional</option>
+            <option value="mensagem">💬 Recado / Mensagem da Comunidade</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px">
+          <label for="ad-input-desc" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Descrição / Mensagem *</label>
+          <textarea id="ad-input-desc" required rows="3" placeholder="Explique o que você oferece ou deixe seu recado para os pioneiros..." maxlength="160" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff"></textarea>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px">
+          <label for="ad-input-link" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Link de Destino (Opcional)</label>
+          <input type="url" id="ad-input-link" placeholder="https://youtube.com/... ou https://wa.me/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px">
+          <label for="ad-input-user" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Seu @usuário ou Nome</label>
+          <input type="text" id="ad-input-user" placeholder="@seu_usuario_pi" maxlength="30" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:14px;font-weight:700">
+          🚀 Publicar Anúncio no Mural
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST FEEDBACK -->
+  <div class="toast-box" id="toast-msg" role="status" aria-live="polite">
+    <span id="toast-icon">ℹ️</span>
+    <span id="toast-text">Notificação</span>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Modular Scripts -->
+  <script src="assets/js/modules/ui.js"></script>
+  <script src="assets/js/modules/db.js"></script>
+  <script src="assets/js/modules/mural.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.IsarUI) {
+        window.IsarUI.initParticles();
+        window.IsarUI.initNavbar();
+      }
+      if (window.IsarMural) {
+        window.IsarMural.init();
+      }
+    });
+  </script>
+</body>
+</html>
+

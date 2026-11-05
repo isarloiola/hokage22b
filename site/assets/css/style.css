@@ -6,6 +6,7 @@
 /* --- 1. Tokens & Base --- */
 @import url('./tokens.css');
 @import url('./base.css');
+@import url('./portal.css');
 
 /* --- 2. Components --- */
 @import url('./components/navbar.css');
@@ -20,6 +21,7 @@
 @import url('./components/members.css');
 @import url('./components/donation.css');
 @import url('./components/onboarding.css');
+@import url('./components/mural.css');
 
 /* --- 3. Sections --- */
 @import url('./sections/hero.css');
