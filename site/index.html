@@ -121,7 +121,7 @@
             onclick="HokagePi.loginWithPi()" title="Conectar Pi Network" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
             ⚡ Conectar Pi
           </button>
-          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--desktop-only"
             onclick="HokagePortal.openModal('modal-manual-download')">
             Acessar Manual
           </button>
@@ -136,6 +136,17 @@
 
   <!-- Mobile Drawer Menu -->
   <div class="portal-drawer" id="portal-drawer" role="navigation" aria-label="Menu Mobile">
+    <!-- Pi Status no Topo do Menu Mobile -->
+    <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <div>
+        <span style="font-size:0.7rem;text-transform:uppercase;color:var(--text-muted);display:block;letter-spacing:0.05em">Sessão Pi Network</span>
+        <span class="pi-drawer-user-status" style="font-size:0.9rem;font-weight:700;color:#fff">⚪ Não conectado</span>
+      </div>
+      <button type="button" class="portal-btn portal-btn--outline portal-btn--sm pi-auth-header-btn" onclick="HokagePi.loginWithPi()" style="padding:6px 12px;font-size:0.8rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
+        ⚡ Conectar Pi
+      </button>
+    </div>
+
     <div class="portal-drawer__nav">
       <a href="#hero">Início</a>
       <a href="#comece-aqui">Comece por Aqui</a>
@@ -147,14 +158,17 @@
       <a href="#sobre">Sobre o Projeto</a>
       <a href="mural.html">Mural dos Pioneiros ↗</a>
     </div>
-    <button type="button" class="portal-btn portal-btn--outline portal-btn--full pi-auth-header-btn" style="margin-bottom:10px;border-color:rgba(139,92,246,0.4);color:var(--accent-light)"
-      onclick="HokagePi.loginWithPi()">
-      ⚡ Conectar Pi Network
-    </button>
-    <button type="button" class="portal-btn portal-btn--primary portal-btn--full"
-      onclick="HokagePortal.openModal('modal-manual-download')">
-      Baixar Manual Gratuito
-    </button>
+
+    <div style="display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:1px solid var(--border-subtle);margin-top:10px">
+      <button type="button" class="portal-btn portal-btn--primary portal-btn--full"
+        onclick="HokagePortal.openModal('modal-manual-download');HokagePortal.closeMobileDrawer()">
+        Baixar Manual Gratuito
+      </button>
+      <button type="button" class="portal-btn portal-btn--outline portal-btn--full"
+        onclick="HokagePortal.openModal('modal-pagamento-pi');HokagePortal.closeMobileDrawer()">
+        ⚡ Adquirir E-book com Pi (3.14 π)
+      </button>
+    </div>
   </div>
 
   <main>

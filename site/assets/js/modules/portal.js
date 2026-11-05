@@ -12,6 +12,17 @@
   const cfg = window.HOKAGE_CONFIG || {};
 
   // ─── 1. Menu Mobile Drawer ─────────────────────────────────
+  function closeMobileDrawer() {
+    const burger = document.getElementById('portal-burger-btn');
+    const drawer = document.getElementById('portal-drawer');
+    if (drawer) drawer.classList.remove('active');
+    if (burger) {
+      burger.setAttribute('aria-expanded', 'false');
+      burger.innerHTML = '☰';
+    }
+    document.body.style.overflow = '';
+  }
+
   function initMobileDrawer() {
     const burger = document.getElementById('portal-burger-btn');
     const drawer = document.getElementById('portal-drawer');
@@ -22,16 +33,14 @@
       drawer.classList.toggle('active', !isOpen);
       burger.setAttribute('aria-expanded', !isOpen);
       burger.innerHTML = isOpen ? '☰' : '✕';
+      // Controla a rolagem no body de forma segura
+      document.body.style.overflow = isOpen ? '' : 'hidden';
     });
 
     // Fecha ao clicar em um link interno
     const drawerLinks = drawer.querySelectorAll('a');
     drawerLinks.forEach(function (link) {
-      link.addEventListener('click', function () {
-        drawer.classList.remove('active');
-        burger.setAttribute('aria-expanded', 'false');
-        burger.innerHTML = '☰';
-      });
+      link.addEventListener('click', closeMobileDrawer);
     });
   }
 
@@ -462,6 +471,7 @@
     init: init,
     openModal: openModal,
     closeModal: closeModal,
+    closeMobileDrawer: closeMobileDrawer,
     payEbookWithPi: payEbookWithPi
   };
 

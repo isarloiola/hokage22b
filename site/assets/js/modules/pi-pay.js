@@ -53,6 +53,15 @@
       }
     }
 
+    const drawerStatuses = document.querySelectorAll('.pi-drawer-user-status');
+    drawerStatuses.forEach(function (el) {
+      if (user && user.username) {
+        el.innerHTML = `<span style="color:#10b981;font-weight:700">🟢 @${escapeHtml(user.username)}</span>`;
+      } else {
+        el.textContent = '⚪ Não conectado';
+      }
+    });
+
     const loginFlowBtn = document.getElementById('btn-login-pi-flow');
     if (loginFlowBtn) {
       if (user && user.username) {
