@@ -268,13 +268,113 @@
     });
   }
 
-  // ─── 6. Inicialização ──────────────────────────────────────
+  // ─── 6. Captura de Lead para Desbloqueio do Manual ─────────
+  function initManualLeadUnlock() {
+    const form = document.getElementById('manual-lead-form');
+    const leadBox = document.getElementById('manual-lead-box');
+    const dlLinks = document.getElementById('manual-download-links');
+    const feedback = document.getElementById('manual-lead-feedback');
+    const submitBtn = document.getElementById('manual-lead-btn');
+
+    // Se o usuário já desbloqueou anteriormente, mostra direto os links
+    try {
+      const unlocked = localStorage.getItem('hokage_lead_unlocked');
+      if (unlocked && leadBox && dlLinks) {
+        leadBox.style.display = 'none';
+        dlLinks.style.display = 'block';
+      }
+    } catch (_) {}
+
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const nameInput = document.getElementById('manual-lead-name');
+      const emailInput = document.getElementById('manual-lead-email');
+      const consentInput = document.getElementById('manual-lead-consent');
+
+      const name = nameInput ? nameInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        if (feedback) {
+          feedback.className = 'newsletter-feedback newsletter-feedback--error';
+          feedback.textContent = 'Por favor, informe um endereço de e-mail válido.';
+        }
+        if (emailInput) emailInput.focus();
+        return;
+      }
+
+      if (consentInput && !consentInput.checked) {
+        if (feedback) {
+          feedback.className = 'newsletter-feedback newsletter-feedback--error';
+          feedback.textContent = 'Por favor, confirme a caixinha de consentimento para prosseguir.';
+        }
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Liberando seu download…';
+      }
+
+      const payload = {
+        name: name || 'Leitor do Manual',
+        email: email,
+        source: 'manual-pi-download',
+        timestamp: new Date().toISOString()
+      };
+
+      // 1. Envia para Google Sheets
+      const sheetsUrl = window.ISAR_GOOGLE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbznz-l1_Y5VKkBiPuRDT-1CJ-kII1Ll1sZ5P_Lpq7Ezb-ZjXVa8vFVNf1batKL_jlIDzA/exec';
+      try {
+        fetch(sheetsUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        }).catch(function () {});
+      } catch (_) {}
+
+      // 2. Salva no Supabase se disponível
+      if (window.IsarDB && window.IsarDB.saveLead) {
+        try {
+          await window.IsarDB.saveLead(payload);
+        } catch (_) {}
+      }
+
+      // 3. Salva desbloqueio no localStorage
+      try {
+        localStorage.setItem('hokage_lead_unlocked', 'true');
+        localStorage.setItem('hokage_subscriber', JSON.stringify(payload));
+      } catch (_) {}
+
+      // 4. Transição visual: oculta formulário e exibe botões de download
+      if (leadBox && dlLinks) {
+        leadBox.style.display = 'none';
+        dlLinks.style.display = 'block';
+      }
+
+      // 5. Inicia o download do PDF automaticamente
+      const pdfBtn = document.getElementById('btn-dl-pdf');
+      if (pdfBtn) {
+        setTimeout(function () {
+          pdfBtn.click();
+        }, 800);
+      }
+    });
+  }
+
+  // ─── 7. Inicialização ──────────────────────────────────────
   function init() {
     initMobileDrawer();
     initModals();
     initNewsletter();
     initPartnerProposal();
     initCommunityWaitlist();
+    initManualLeadUnlock();
   }
 
   window.HokagePortal = {

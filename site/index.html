@@ -791,27 +791,64 @@
        MODAIS DO SISTEMA
   ============================================================ -->
 
-  <!-- Modal 1: Download Imediato do Manual Gratuito -->
+  <!-- Modal 1: Download do Manual Mediante Cadastro de E-mail (Geração de Lead) -->
   <div class="portal-modal-overlay" id="modal-manual-download" role="dialog" aria-modal="true" aria-labelledby="manual-modal-title">
     <div class="portal-modal">
       <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
-      <div class="section-tag">Acesso Gratuito</div>
-      <h3 id="manual-modal-title" style="font-size:1.35rem;margin-bottom:12px">Manual Pi Network — Edição 1.0</h3>
-      <p style="font-size:0.92rem;margin-bottom:20px;color:var(--text-secondary)">
-        Baixe diretamente a edição completa e revisada em formato PDF ou EPUB para o seu computador ou leitor digital.
-      </p>
+      <div class="section-tag">Acesso Gratuito Oficial</div>
+      <h3 id="manual-modal-title" style="font-size:1.35rem;margin-bottom:10px">Manual Pi Network — Edição Oficial</h3>
 
-      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
-        <a href="downloads/Manual-Pi-Network.pdf" download class="portal-btn portal-btn--primary portal-btn--full">
-          ⬇ Baixar em PDF (Recomendado)
-        </a>
-        <a href="downloads/Manual-Pi-Network.epub" download class="portal-btn portal-btn--outline portal-btn--full">
-          ⬇ Baixar em EPUB (Leitores Digitais)
-        </a>
+      <!-- ETAPA 1: FORMULÁRIO DE CAPTURA DO LEAD -->
+      <div id="manual-lead-box">
+        <p style="font-size:0.92rem;margin-bottom:18px;color:var(--text-secondary)">
+          Informe seu e-mail abaixo para <strong>desbloquear o download imediato</strong> em PDF e EPUB e receber as atualizações trimestrais gratuitas.
+        </p>
+
+        <form id="manual-lead-form" novalidate style="display:flex;flex-direction:column;gap:14px">
+          <div>
+            <label for="manual-lead-name" style="font-size:0.85rem;color:var(--text-secondary);display:block;margin-bottom:6px">Seu nome (opcional)</label>
+            <input type="text" id="manual-lead-name" class="newsletter-input" style="width:100%" placeholder="Ex: Lucas Pioneiro" maxlength="60" />
+          </div>
+          <div>
+            <label for="manual-lead-email" style="font-size:0.85rem;color:var(--text-secondary);display:block;margin-bottom:6px">Seu melhor e-mail *</label>
+            <input type="email" id="manual-lead-email" required class="newsletter-input" style="width:100%" placeholder="seu@email.com" maxlength="80" />
+          </div>
+
+          <label class="newsletter-consent" style="margin-top:4px">
+            <input type="checkbox" id="manual-lead-consent" required checked />
+            <span>Concordo em receber o manual e comunicados editoriais do portal HOKAGE22B. Dados protegidos conforme a LGPD; cancelamento a qualquer momento.</span>
+          </label>
+
+          <button type="submit" class="portal-btn portal-btn--primary portal-btn--full" id="manual-lead-btn" style="margin-top:6px">
+            Desbloquear Download Gratuito →
+          </button>
+          <div class="newsletter-feedback" id="manual-lead-feedback" role="alert"></div>
+        </form>
       </div>
 
-      <div style="padding-top:16px;border-top:1px solid var(--border-subtle);font-size:0.8rem;color:var(--text-muted);text-align:center">
-        💡 Atualizado trimestralmente · Sem necessidade de cadastro obrigatório
+      <!-- ETAPA 2: LINKS DE DOWNLOAD DESBLOQUEADOS (Visível após cadastro) -->
+      <div id="manual-download-links" style="display:none">
+        <div style="background:rgba(16, 185, 129, 0.1);border:1px solid rgba(16, 185, 129, 0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;text-align:center">
+          <span style="font-size:1.2rem">✓</span> <strong style="color:var(--success)">Acesso liberado com sucesso!</strong>
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px">Escolha o formato ideal para seu dispositivo:</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+          <a href="downloads/Manual-Pi-Network.pdf" download id="btn-dl-pdf" class="portal-btn portal-btn--primary portal-btn--full">
+            ⬇ Baixar em PDF (Recomendado para PC e Celular)
+          </a>
+          <a href="downloads/Manual-Pi-Network.epub" download id="btn-dl-epub" class="portal-btn portal-btn--outline portal-btn--full">
+            ⬇ Baixar em EPUB (Kindle e Leitores Digitais)
+          </a>
+        </div>
+
+        <p style="font-size:0.8rem;color:var(--text-muted);text-align:center">
+          Enviamos também uma cópia com link de leitura para o e-mail informado.
+        </p>
+      </div>
+
+      <div style="padding-top:16px;border-top:1px solid var(--border-subtle);font-size:0.78rem;color:var(--text-muted);text-align:center;margin-top:18px">
+        💡 Edição 1.0 Oficial · 23 Capítulos Práticos · Sem Custo
       </div>
     </div>
   </div>
