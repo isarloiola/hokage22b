@@ -14,24 +14,62 @@
   let authenticatedUser = null;
   let isAuthenticating = false;
 
-  // 1. Inicializa o SDK oficial da Pi Network
-  function initPiSdk() {
+  // 1. Toast Visual Flutuante (Feedback Imediato no Celular)
+  function showToast(msg, type) {
+    let toast = document.getElementById('hokage-pi-floating-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'hokage-pi-floating-toast';
+      toast.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:999999;padding:12px 20px;border-radius:8px;font-size:0.88rem;font-weight:600;max-width:90vw;box-shadow:0 10px 30px rgba(0,0,0,0.6);transition:all 0.3s ease;text-align:center;pointer-events:none;';
+      document.body.appendChild(toast);
+    }
+
+    if (type === 'success') {
+      toast.style.background = '#065f46';
+      toast.style.color = '#a7f3d0';
+      toast.style.border = '1px solid #10b981';
+    } else if (type === 'error') {
+      toast.style.background = '#7f1d1d';
+      toast.style.color = '#fecaca';
+      toast.style.border = '1px solid #ef4444';
+    } else {
+      toast.style.background = '#312e81';
+      toast.style.color = '#c7d2fe';
+      toast.style.border = '1px solid #6366f1';
+    }
+
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
+
+    if (window._toastTimeout) clearTimeout(window._toastTimeout);
+    window._toastTimeout = setTimeout(function () {
+      if (toast) {
+        toast.style.opacity = '0';
+        setTimeout(function () { toast.style.display = 'none'; }, 300);
+      }
+    }, 4500);
+  }
+
+  // 2. Inicializa o SDK oficial da Pi Network
+  function initPiSdk(useSandbox) {
+    if (useSandbox === undefined) useSandbox = false;
     if (window.Pi) {
       try {
-        window.Pi.init({ version: '2.0', sandbox: false });
+        window.Pi.init({ version: '2.0', sandbox: useSandbox });
       } catch (err) {
         console.warn('Pi.init info:', err);
       }
     }
   }
 
-  // 2. Detecta se está rodando dentro do Pi Browser
+  // 3. Detecta se está rodando dentro do Pi Browser
   function isPiBrowser() {
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
     return /PiBrowser|PiNetwork/i.test(ua) || Boolean(window.Pi);
   }
 
-  // 3. Atualiza os componentes visuais com o estado do pioneiro
+  // 4. Atualiza os componentes visuais com o estado do pioneiro
   function updateAuthUi(user) {
     const headerBtns = document.querySelectorAll('.pi-auth-header-btn');
     headerBtns.forEach(function (btn) {
@@ -86,20 +124,20 @@
       }
     }
 
-    // Se estiver no modal do mural, preenche o campo de usuário
     const muralUserInput = document.getElementById('ad-input-user');
     if (muralUserInput && user && user.username && !muralUserInput.value) {
       muralUserInput.value = '@' + user.username;
     }
   }
 
-  // 4. Autenticação oficial de Pioneiro (Pi.authenticate)
+  // 5. Autenticação oficial de Pioneiro (Pi.authenticate)
   async function loginWithPi(interactive) {
     if (interactive === undefined) interactive = true;
 
-    // Se já estiver em memória, retorna
+    // Se já estiver autenticado em memória, atualiza UI e encerra
     if (authenticatedUser) {
       updateAuthUi(authenticatedUser);
+      showToast(`✓ Conectado como @${authenticatedUser.username}`, 'success');
       return authenticatedUser;
     }
 
@@ -116,7 +154,19 @@
       }
     } catch (_) {}
 
+    // Feedback visual imediato ao tocar no botão
+    showToast('⏳ Conectando ao Pi Browser...', 'info');
+
+    // Se window.Pi não existe de imediato, aguarda até 2.5 segundos para garantir injeção
     if (!window.Pi) {
+      for (let i = 0; i < 5; i++) {
+        await new Promise(r => setTimeout(r, 500));
+        if (window.Pi) break;
+      }
+    }
+
+    if (!window.Pi) {
+      showToast('⚠️ Pi SDK não detectado. Abra pelo app Pi Browser no celular.', 'error');
       if (interactive) {
         showManualP2PModal({
           memo: 'Pagamento Pi Network',
@@ -126,15 +176,23 @@
       return null;
     }
 
-    initPiSdk();
+    initPiSdk(false);
 
-    if (isAuthenticating) return null;
+    if (isAuthenticating) {
+      showToast('⏳ Já existe uma tentativa de conexão em andamento…', 'info');
+      return null;
+    }
     isAuthenticating = true;
+
+    // Trava de segurança: reseta flag após 12 segundos em caso de timeout
+    const safetyTimeout = setTimeout(function () {
+      isAuthenticating = false;
+    }, 12000);
 
     const flowBtn = document.getElementById('btn-login-pi-flow');
     if (flowBtn) {
       flowBtn.disabled = true;
-      flowBtn.textContent = 'Aguardando autorização…';
+      flowBtn.textContent = 'Aguardando no Pi…';
     }
 
     const feedbackArea = document.getElementById('pi-action-feedback');
@@ -146,32 +204,40 @@
       feedbackArea.textContent = '⏳ Autorize a conexão na tela do Pi Browser…';
     }
 
-    return new Promise(function (resolve) {
-      // Scopes estritamente aceitos pela Pi Core Team
-      const scopes = ['username', 'payments'];
+    const scopes = ['username', 'payments'];
 
-      function onIncompletePaymentFound(payment) {
-        console.log('Pagamento incompleto detectado:', payment);
-        if (payment && payment.identifier && payment.transaction && payment.transaction.txid) {
-          completePaymentOnServer(payment.identifier, payment.transaction.txid);
-        }
+    function onIncompletePaymentFound(payment) {
+      console.log('Pagamento incompleto detectado:', payment);
+      if (payment && payment.identifier && payment.transaction && payment.transaction.txid) {
+        completePaymentOnServer(payment.identifier, payment.transaction.txid);
+      }
+    }
+
+    return new Promise(function (resolve) {
+      function runAuth(isSandbox) {
+        initPiSdk(isSandbox);
+        return window.Pi.authenticate(scopes, onIncompletePaymentFound);
       }
 
-      window.Pi.authenticate(scopes, onIncompletePaymentFound)
+      // 1ª Tentativa: Produção (sandbox: false)
+      runAuth(false)
         .then(function (auth) {
+          clearTimeout(safetyTimeout);
           isAuthenticating = false;
           authenticatedUser = auth.user;
+
           try {
             localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
           } catch (_) {}
 
           updateAuthUi(authenticatedUser);
+          showToast(`🎉 Conectado como @${auth.user.username}!`, 'success');
 
           if (feedbackArea) {
             feedbackArea.style.background = 'rgba(16, 185, 129, 0.15)';
             feedbackArea.style.border = '1px solid rgba(16, 185, 129, 0.3)';
             feedbackArea.style.color = '#6ee7b7';
-            feedbackArea.textContent = `✓ Conectado como @${auth.user.username}!`;
+            feedbackArea.textContent = `✓ Conectado com sucesso como @${auth.user.username}!`;
             setTimeout(function () {
               feedbackArea.style.display = 'none';
             }, 4000);
@@ -179,30 +245,68 @@
 
           resolve(auth.user);
         })
-        .catch(function (err) {
-          isAuthenticating = false;
-          console.warn('Erro ou cancelamento ao autenticar no Pi Browser:', err);
+        .catch(function (firstErr) {
+          console.warn('1ª tentativa falhou. Verificando sandbox:', firstErr);
 
-          if (flowBtn) {
-            flowBtn.disabled = false;
-            flowBtn.textContent = '⚡ Conectar Pi Wallet';
+          // Se a falha sugere modo sandbox/testnet, tenta com sandbox: true
+          const errString = String(firstErr || '');
+          const isSandboxIssue = /sandbox|testnet|development/i.test(errString);
+
+          if (isSandboxIssue) {
+            showToast('Tentando autenticação via Sandbox…', 'info');
+            return runAuth(true)
+              .then(function (auth) {
+                clearTimeout(safetyTimeout);
+                isAuthenticating = false;
+                authenticatedUser = auth.user;
+
+                try {
+                  localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
+                } catch (_) {}
+
+                updateAuthUi(authenticatedUser);
+                showToast(`🎉 Conectado (Sandbox) como @${auth.user.username}!`, 'success');
+                resolve(auth.user);
+              })
+              .catch(function (secondErr) {
+                handleAuthFailure(secondErr);
+              });
           }
 
-          if (feedbackArea) {
-            feedbackArea.style.background = 'rgba(239, 68, 68, 0.15)';
-            feedbackArea.style.border = '1px solid rgba(239, 68, 68, 0.3)';
-            feedbackArea.style.color = '#fca5a5';
-            feedbackArea.textContent = '⚠️ Para conectar, acesse pelo aplicativo Pi Browser no celular e autorize a permissão.';
-          } else if (interactive) {
-            alert('💡 Para conectar sua Pi Wallet com 1 clique, abra o site hokage22b.com dentro do aplicativo Pi Browser no celular e autorize o acesso.');
-          }
-
-          resolve(null);
+          handleAuthFailure(firstErr);
         });
+
+      function handleAuthFailure(err) {
+        clearTimeout(safetyTimeout);
+        isAuthenticating = false;
+        console.warn('Erro ao autenticar no Pi Browser:', err);
+
+        if (flowBtn) {
+          flowBtn.disabled = false;
+          flowBtn.textContent = '⚡ Conectar Pi Wallet';
+        }
+
+        const errMsg = (err && (err.message || err.error || (typeof err === 'string' ? err : ''))) || 'Permissão recusada ou cancelada.';
+
+        if (feedbackArea) {
+          feedbackArea.style.background = 'rgba(239, 68, 68, 0.15)';
+          feedbackArea.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+          feedbackArea.style.color = '#fca5a5';
+          feedbackArea.textContent = '⚠️ Resposta do Pi Browser: ' + errMsg;
+        }
+
+        showToast('Pi Browser: ' + errMsg, 'error');
+
+        if (interactive) {
+          alert('Informação Pi Network:\n' + errMsg + '\n\nCertifique-se de estar dentro do aplicativo Pi Browser no celular e de autorizar o acesso.');
+        }
+
+        resolve(null);
+      }
     });
   }
 
-  // 5. Comunicação segura com a Edge Function no Supabase
+  // 6. Comunicação com a Edge Function no Supabase
   async function approvePaymentOnServer(paymentId) {
     try {
       const res = await fetch(SUPABASE_FUNCTIONS_URL, {
@@ -231,22 +335,20 @@
     }
   }
 
-  // 6. Função Principal: Dispara o Pagamento Nativo no Pi Browser
+  // 7. Dispara Pagamento Nativo no Pi Browser
   async function requestPiPayment(options) {
     options = options || {};
     const amount = Number(options.amount) || 0.314;
     const memo = options.memo || 'Pagamento HOKAGE22B';
     const metadata = options.metadata || {};
 
-    initPiSdk();
+    initPiSdk(false);
 
-    // 1. Garante que o pioneiro está autenticado
     let user = authenticatedUser;
     if (!user) {
       user = await loginWithPi(true);
     }
 
-    // Se o usuário ainda não estiver autenticado (ex: fora do Pi Browser ou recusou)
     if (!user) {
       showManualP2PModal({
         amount: amount,
@@ -270,11 +372,13 @@
     const paymentCallbacks = {
       onReadyForServerApproval: async function (paymentId) {
         console.log('Pi Payment pronto para aprovação:', paymentId);
+        showToast('Aprovando transação no servidor...', 'info');
         await approvePaymentOnServer(paymentId);
       },
 
       onReadyForServerCompletion: async function (paymentId, txid) {
         console.log('Pi Payment aprovado na blockchain com TXID:', txid);
+        showToast('✓ Pagamento confirmado na blockchain!', 'success');
         const result = await completePaymentOnServer(paymentId, txid);
 
         if (typeof options.onSuccess === 'function') {
@@ -289,6 +393,7 @@
 
       onCancel: function (paymentId) {
         console.log('Pagamento cancelado pelo pioneiro:', paymentId);
+        showToast('Pagamento cancelado na Pi Wallet.', 'info');
         if (typeof options.onCancel === 'function') {
           options.onCancel(paymentId);
         }
@@ -296,10 +401,12 @@
 
       onError: function (error, payment) {
         console.error('Erro na transação Pi:', error, payment);
+        const errText = error ? (error.message || JSON.stringify(error)) : 'Erro na transação';
+        showToast('Erro Pi: ' + errText, 'error');
         if (typeof options.onError === 'function') {
           options.onError(error, payment);
         } else {
-          alert('Houve um erro no processamento do pagamento via Pi. Tente novamente.');
+          alert('Houve um erro no processamento do pagamento via Pi. ' + errText);
         }
       }
     };
@@ -315,7 +422,7 @@
     }
   }
 
-  // 7. Modal de Pagamento P2P (quando acessado fora do Pi Browser)
+  // 8. Modal de Pagamento P2P (fora do Pi Browser)
   function showManualP2PModal(data) {
     let modal = document.getElementById('pi-p2p-checkout-modal');
     if (!modal) {
@@ -369,7 +476,7 @@
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // 8. Expõe na API global
+  // 9. Expõe na API global
   window.HokagePi = {
     initPiSdk: initPiSdk,
     isPiBrowser: isPiBrowser,
@@ -377,14 +484,24 @@
     authenticatePioneer: loginWithPi,
     requestPiPayment: requestPiPayment,
     showManualP2PModal: showManualP2PModal,
+    showToast: showToast,
     getUser: function () { return authenticatedUser; },
     officialWallet: OFFICIAL_WALLET
   };
 
-  // Inicializa detecção e recupera sessão na carga do DOM
+  // Inicializa SDK e recupera cache sem bloquear cliques
   function autoInit() {
-    initPiSdk();
-    loginWithPi(false);
+    initPiSdk(false);
+    try {
+      const cached = localStorage.getItem('hokage_pi_user');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && parsed.username) {
+          authenticatedUser = parsed;
+          updateAuthUi(authenticatedUser);
+        }
+      }
+    } catch (_) {}
   }
 
   if (document.readyState === 'loading') {
