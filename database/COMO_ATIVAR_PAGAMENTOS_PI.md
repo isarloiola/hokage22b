@@ -7,7 +7,7 @@ Para processar pagamentos na Pi Network sem expor sua Server API Key no navegado
 2. No menu lateral, clique em **Project Settings > Edge Functions** (ou **Secrets**).
 3. Adicione um novo segredo:
    - **Name:** `PI_SERVER_API_KEY`
-   - **Value:** `ovlgbaznszzr0uwxhu4kyq8xoru6n6m9vcdd1kqzsuubljfsikx5l4iixfkxy0y2`
+   - **Value:** `COLE_AQUI_A_SUA_SERVER_API_KEY_DO_PI_DEVELOPER_PORTAL`
 4. Clique em **Save**.
 
 ## 2. Criar a Edge Function

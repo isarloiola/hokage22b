@@ -6,6 +6,26 @@
 (function () {
   'use strict';
 
+  // Sanitização estrita contra Cross-Site Scripting (XSS)
+  function escapeHtml(str) {
+    if (!str || typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function safeUrl(url) {
+    if (!url || typeof url !== 'string') return '';
+    const trimmed = url.trim();
+    if (/^https?:\/\//i.test(trimmed)) {
+      return encodeURI(trimmed);
+    }
+    return '';
+  }
+
   const defaultMockAds = [
     {
       id: 'mock-1',
@@ -113,26 +133,31 @@
 
     let html = '';
     ads.forEach(function (ad) {
-      const tier = ad.plan_tier || 'bronze';
+      const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
       const tierBadgeClass = 'ad-badge--' + tier;
       const tierLabel = tier === 'ouro' ? '🥇 Destaque Ouro' : (tier === 'prata' ? '🥈 Prata' : '🥉 Classificado');
 
       const author = ad.pioneer_username || ad.pioneer_name || '@pioneiro';
-      const linkHtml = ad.link_url
-        ? `<a href="${ad.link_url}" target="_blank" rel="noopener noreferrer" class="ad-card__link">Acessar Anúncio →</a>`
+      const safeAuthor = escapeHtml(author);
+      const safeTitle = escapeHtml(ad.title || '');
+      const safeDesc = escapeHtml(ad.description || '');
+      const cleanUrl = safeUrl(ad.link_url);
+
+      const linkHtml = cleanUrl
+        ? `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">Acessar Anúncio →</a>`
         : `<span style="color:var(--gray);font-size:0.8rem">Mensagem da Comunidade</span>`;
 
       html += `
         <article class="ad-card ad-card--${tier}">
           <div class="ad-card__top">
             <span class="ad-card__badge ${tierBadgeClass}">${tierLabel}</span>
-            <span class="ad-card__author">${author}</span>
+            <span class="ad-card__author">${safeAuthor}</span>
           </div>
-          <h3 class="ad-card__title">${ad.title}</h3>
-          <p class="ad-card__desc">${ad.description}</p>
+          <h3 class="ad-card__title">${safeTitle}</h3>
+          <p class="ad-card__desc">${safeDesc}</p>
           <div class="ad-card__footer">
             ${linkHtml}
-            <span class="ad-card__price-tag">${ad.price_pi ? ad.price_pi + ' π' : ''}</span>
+            <span class="ad-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
           </div>
         </article>
       `;
@@ -206,24 +231,36 @@
 
     const priceInfo = tierPrices[selectedTier] || tierPrices.prata;
 
+    const rawLink = linkInput ? linkInput.value.trim() : '';
+    let validatedLink = '';
+    if (rawLink) {
+      if (/^https?:\/\//i.test(rawLink)) {
+        validatedLink = rawLink;
+      } else {
+        alert('Por favor, informe um link válido iniciando com https:// ou http://');
+        return;
+      }
+    }
+
     const newAd = {
       title: titleInput.value.trim(),
       description: descInput.value.trim(),
-      link_url: linkInput ? linkInput.value.trim() : '',
+      link_url: validatedLink,
       category: catInput ? catInput.value : 'geral',
       pioneer_username: userInput && userInput.value.trim() ? userInput.value.trim() : '@pioneiro',
       pioneer_name: userInput && userInput.value.trim() ? userInput.value.trim() : 'Pioneiro',
       plan_tier: selectedTier,
       price_pi: priceInfo.pi,
       price_brl: parseFloat(priceInfo.brl.replace(/[^\d,]/g, '').replace(',', '.')),
-      status: 'ativo',
+      status: 'pendente',
       created_at: new Date().toISOString()
     };
 
-    // Salva localmente para visualização instantânea
+    // Salva localmente para visualização instantânea do anunciante
     try {
+      const localAdForSelf = Object.assign({}, newAd, { status: 'ativo' });
       const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
-      localAds.unshift(newAd);
+      localAds.unshift(localAdForSelf);
       localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
     } catch (_) {}
 

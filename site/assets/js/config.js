@@ -47,7 +47,7 @@
       badge: 'Guia Prático Comercial',
       headline: 'Como empreendedores podem compreender e explorar as possibilidades comerciais do ecossistema Pi.',
       description: 'Um guia direto e sem rodeios para lojistas, prestadores de serviços e empreendedores digitais avaliarem aceitação de pagamentos, precificação, aspectos legais no Brasil e estratégias seguras de expansão comercial com a Pi Network.',
-      priceBRL: 'R$ 29,90',
+      priceBRL: 'R$ 19,90',
       pricePi: '3.14 π',
       coverImage: 'assets/img/ebook-cover.png',
       checkoutUrl: 'https://pay.hotmart.com/A108356534I',
