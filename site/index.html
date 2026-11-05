@@ -43,6 +43,9 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="assets/css/style.css" />
 
+  <!-- Pi Network SDK Oficial v2.0 -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
@@ -114,6 +117,10 @@
         </nav>
 
         <div class="portal-header__actions">
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm pi-auth-header-btn" id="header-pi-auth-btn"
+            onclick="HokagePi.loginWithPi()" title="Conectar Pi Network" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
+            ⚡ Conectar Pi
+          </button>
           <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
             onclick="HokagePortal.openModal('modal-manual-download')">
             Acessar Manual
@@ -140,6 +147,10 @@
       <a href="#sobre">Sobre o Projeto</a>
       <a href="mural.html">Mural dos Pioneiros ↗</a>
     </div>
+    <button type="button" class="portal-btn portal-btn--outline portal-btn--full pi-auth-header-btn" style="margin-bottom:10px;border-color:rgba(139,92,246,0.4);color:var(--accent-light)"
+      onclick="HokagePi.loginWithPi()">
+      ⚡ Conectar Pi Network
+    </button>
     <button type="button" class="portal-btn portal-btn--primary portal-btn--full"
       onclick="HokagePortal.openModal('modal-manual-download')">
       Baixar Manual Gratuito
@@ -1080,13 +1091,32 @@
         Você pode adquirir o e-book <strong>"Pi para seu negócio"</strong> diretamente com Pi na Mainnet por <strong>3.14 π</strong>.
       </p>
 
+      <!-- Status de Conexão Pi Network -->
+      <div id="pi-connection-box" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <div>
+            <span style="font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);display:block;letter-spacing:0.05em">Sessão Pi Network</span>
+            <span id="pi-user-status-text" style="font-size:0.95rem;font-weight:700;color:#fff">⚪ Não conectado</span>
+          </div>
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-login-pi-flow" onclick="HokagePi.loginWithPi()" style="padding:6px 14px;border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
+            ⚡ Conectar Pi Wallet
+          </button>
+        </div>
+        <div id="pi-connection-hint" style="font-size:0.8rem;color:var(--text-secondary);margin-top:8px">
+          💡 No Pi Browser, clique em <strong>Conectar Pi Wallet</strong> para autorizar sua sessão e habilitar o pagamento nativo com 1 clique.
+        </div>
+      </div>
+
+      <!-- Feedback de Ação Pi -->
+      <div id="pi-action-feedback" style="display:none;padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:14px;font-size:0.85rem"></div>
+
       <!-- Botão Nativo para Pi Browser -->
       <div style="margin-bottom:20px">
         <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="btn-pay-pi-browser" onclick="HokagePortal.payEbookWithPi()" style="padding:14px;font-size:1rem;font-weight:700">
-          ⚡ Pagar 3.14 π no Pi Browser (Validação Automática)
+          ⚡ Pagar 3.14 π na Pi Wallet (1 Clique)
         </button>
         <span style="display:block;font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:6px">
-          Recomendado: abre diretamente sua Pi Wallet e libera o download na hora.
+          Abre a janela nativa de aprovação na Pi Wallet e libera o download imediatamente.
         </span>
       </div>
 

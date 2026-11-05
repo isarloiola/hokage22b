@@ -11,84 +11,189 @@
   const SUPABASE_FUNCTIONS_URL = 'https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-payment';
   const OFFICIAL_WALLET = 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR';
 
-  let sdkLoaded = false;
   let authenticatedUser = null;
+  let isAuthenticating = false;
 
-  // 1. Detecta se está rodando dentro do Pi Browser
+  // 1. Inicializa o SDK oficial da Pi Network
+  function initPiSdk() {
+    if (window.Pi) {
+      try {
+        window.Pi.init({ version: '2.0', sandbox: false });
+      } catch (err) {
+        console.warn('Pi.init info:', err);
+      }
+    }
+  }
+
+  // 2. Detecta se está rodando dentro do Pi Browser
   function isPiBrowser() {
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-    return /PiBrowser|PiNetwork/i.test(ua) || Boolean(window.Pi && window.isPiBrowser);
+    return /PiBrowser|PiNetwork/i.test(ua) || Boolean(window.Pi);
   }
 
-  // 2. Carrega o SDK oficial da Pi Network dinamicamente se necessário
-  function loadPiSdk() {
-    return new Promise(function (resolve) {
-      if (window.Pi) {
-        sdkLoaded = true;
-        try {
-          window.Pi.init({ version: '2.0', sandbox: false });
-        } catch (_) {}
-        return resolve(window.Pi);
+  // 3. Atualiza os componentes visuais com o estado do pioneiro
+  function updateAuthUi(user) {
+    const headerBtns = document.querySelectorAll('.pi-auth-header-btn');
+    headerBtns.forEach(function (btn) {
+      if (user && user.username) {
+        btn.innerHTML = `<span style="color:#10b981">●</span> @${escapeHtml(user.username)}`;
+        btn.title = `Conectado como @${user.username}`;
+      } else {
+        btn.innerHTML = `⚡ Conectar Pi`;
+        btn.title = 'Fazer login com Pi Network';
       }
-
-      const script = document.createElement('script');
-      script.src = 'https://sdk.minepi.com/pi-sdk.js';
-      script.async = true;
-      script.onload = function () {
-        sdkLoaded = true;
-        try {
-          if (window.Pi) {
-            window.Pi.init({ version: '2.0', sandbox: false });
-          }
-        } catch (err) {
-          console.warn('Pi.init warning:', err);
-        }
-        resolve(window.Pi);
-      };
-      script.onerror = function () {
-        console.warn('Falha ao carregar Pi SDK (provavelmente fora do Pi Browser).');
-        resolve(null);
-      };
-      document.head.appendChild(script);
     });
+
+    const statusText = document.getElementById('pi-user-status-text');
+    if (statusText) {
+      if (user && user.username) {
+        statusText.innerHTML = `<span style="color:#10b981;font-weight:700">🟢 Conectado:</span> @${escapeHtml(user.username)}`;
+      } else {
+        statusText.textContent = '⚪ Não conectado';
+      }
+    }
+
+    const loginFlowBtn = document.getElementById('btn-login-pi-flow');
+    if (loginFlowBtn) {
+      if (user && user.username) {
+        loginFlowBtn.textContent = '✓ Conectado';
+        loginFlowBtn.disabled = true;
+        loginFlowBtn.style.opacity = '0.75';
+      } else {
+        loginFlowBtn.textContent = '⚡ Conectar Pi Wallet';
+        loginFlowBtn.disabled = false;
+        loginFlowBtn.style.opacity = '1';
+      }
+    }
+
+    const hint = document.getElementById('pi-connection-hint');
+    if (hint) {
+      if (user && user.username) {
+        hint.innerHTML = `✓ Carteira autorizada com sucesso. Pronto para efetuar pagamentos com 1 clique!`;
+        hint.style.color = '#10b981';
+      } else {
+        hint.innerHTML = `💡 No Pi Browser, clique em <strong>Conectar Pi Wallet</strong> para autorizar sua sessão e habilitar o pagamento com 1 clique.`;
+        hint.style.color = 'var(--text-secondary)';
+      }
+    }
+
+    // Se estiver no modal do mural, preenche o campo de usuário
+    const muralUserInput = document.getElementById('ad-input-user');
+    if (muralUserInput && user && user.username && !muralUserInput.value) {
+      muralUserInput.value = '@' + user.username;
+    }
   }
 
-  // 3. Autentica o pioneiro com 1 clique (sem senha)
-  async function authenticatePioneer() {
-    if (authenticatedUser) return authenticatedUser;
+  // 4. Autenticação oficial de Pioneiro (Pi.authenticate)
+  async function loginWithPi(interactive) {
+    if (interactive === undefined) interactive = true;
 
-    const pi = await loadPiSdk();
-    if (!pi || !isPiBrowser()) {
+    // Se já estiver em memória, retorna
+    if (authenticatedUser) {
+      updateAuthUi(authenticatedUser);
+      return authenticatedUser;
+    }
+
+    // Tenta restaurar do cache local
+    try {
+      const cached = localStorage.getItem('hokage_pi_user');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && parsed.username) {
+          authenticatedUser = parsed;
+          updateAuthUi(authenticatedUser);
+          if (!interactive) return authenticatedUser;
+        }
+      }
+    } catch (_) {}
+
+    if (!window.Pi) {
+      if (interactive) {
+        showManualP2PModal({
+          memo: 'Pagamento Pi Network',
+          amount: 3.14
+        });
+      }
       return null;
     }
 
+    initPiSdk();
+
+    if (isAuthenticating) return null;
+    isAuthenticating = true;
+
+    const flowBtn = document.getElementById('btn-login-pi-flow');
+    if (flowBtn) {
+      flowBtn.disabled = true;
+      flowBtn.textContent = 'Aguardando autorização…';
+    }
+
+    const feedbackArea = document.getElementById('pi-action-feedback');
+    if (feedbackArea) {
+      feedbackArea.style.display = 'block';
+      feedbackArea.style.background = 'rgba(139, 92, 246, 0.15)';
+      feedbackArea.style.border = '1px solid rgba(139, 92, 246, 0.3)';
+      feedbackArea.style.color = '#c4b5fd';
+      feedbackArea.textContent = '⏳ Autorize a conexão na tela do Pi Browser…';
+    }
+
     return new Promise(function (resolve) {
-      const scopes = ['username', 'payments', 'wallet_address'];
+      // Scopes estritamente aceitos pela Pi Core Team
+      const scopes = ['username', 'payments'];
 
       function onIncompletePaymentFound(payment) {
-        console.log('Pagamento incompleto encontrado:', payment);
-        // Tenta completar automaticamente se houver transação pendente
+        console.log('Pagamento incompleto detectado:', payment);
         if (payment && payment.identifier && payment.transaction && payment.transaction.txid) {
           completePaymentOnServer(payment.identifier, payment.transaction.txid);
         }
       }
 
-      pi.authenticate(scopes, onIncompletePaymentFound)
+      window.Pi.authenticate(scopes, onIncompletePaymentFound)
         .then(function (auth) {
+          isAuthenticating = false;
           authenticatedUser = auth.user;
           try {
             localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
           } catch (_) {}
+
+          updateAuthUi(authenticatedUser);
+
+          if (feedbackArea) {
+            feedbackArea.style.background = 'rgba(16, 185, 129, 0.15)';
+            feedbackArea.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            feedbackArea.style.color = '#6ee7b7';
+            feedbackArea.textContent = `✓ Conectado como @${auth.user.username}!`;
+            setTimeout(function () {
+              feedbackArea.style.display = 'none';
+            }, 4000);
+          }
+
           resolve(auth.user);
         })
         .catch(function (err) {
-          console.warn('Erro ao autenticar no Pi Browser:', err);
+          isAuthenticating = false;
+          console.warn('Erro ou cancelamento ao autenticar no Pi Browser:', err);
+
+          if (flowBtn) {
+            flowBtn.disabled = false;
+            flowBtn.textContent = '⚡ Conectar Pi Wallet';
+          }
+
+          if (feedbackArea) {
+            feedbackArea.style.background = 'rgba(239, 68, 68, 0.15)';
+            feedbackArea.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            feedbackArea.style.color = '#fca5a5';
+            feedbackArea.textContent = '⚠️ Para conectar, acesse pelo aplicativo Pi Browser no celular e autorize a permissão.';
+          } else if (interactive) {
+            alert('💡 Para conectar sua Pi Wallet com 1 clique, abra o site hokage22b.com dentro do aplicativo Pi Browser no celular e autorize o acesso.');
+          }
+
           resolve(null);
         });
     });
   }
 
-  // 4. Comunicação segura com a Edge Function no Supabase
+  // 5. Comunicação segura com a Edge Function no Supabase
   async function approvePaymentOnServer(paymentId) {
     try {
       const res = await fetch(SUPABASE_FUNCTIONS_URL, {
@@ -117,37 +222,35 @@
     }
   }
 
-  // 5. Função Principal: Dispara o Pagamento Nativo no Pi Browser
-  // Opções: { amount, memo, metadata, onSuccess, onError, onCancel }
+  // 6. Função Principal: Dispara o Pagamento Nativo no Pi Browser
   async function requestPiPayment(options) {
     options = options || {};
     const amount = Number(options.amount) || 0.314;
     const memo = options.memo || 'Pagamento HOKAGE22B';
     const metadata = options.metadata || {};
 
-    const inPi = isPiBrowser();
+    initPiSdk();
 
-    // Se estiver fora do Pi Browser, orienta o usuário de forma transparente
-    if (!inPi) {
+    // 1. Garante que o pioneiro está autenticado
+    let user = authenticatedUser;
+    if (!user) {
+      user = await loginWithPi(true);
+    }
+
+    // Se o usuário ainda não estiver autenticado (ex: fora do Pi Browser ou recusou)
+    if (!user) {
       showManualP2PModal({
         amount: amount,
         memo: memo,
         metadata: metadata
       });
+      if (typeof options.onCancel === 'function') {
+        options.onCancel('not_authenticated');
+      }
       return;
     }
 
-    const pi = await loadPiSdk();
-    if (!pi) {
-      showManualP2PModal({ amount: amount, memo: memo, metadata: metadata });
-      return;
-    }
-
-    // Garante que o pioneiro está autenticado
-    const user = await authenticatePioneer();
-    if (user && user.username) {
-      metadata.pioneer_username = user.username;
-    }
+    metadata.pioneer_username = user.username;
 
     const paymentData = {
       amount: amount,
@@ -176,7 +279,7 @@
       },
 
       onCancel: function (paymentId) {
-        console.log('Pagamento cancelado pelo usuário:', paymentId);
+        console.log('Pagamento cancelado pelo pioneiro:', paymentId);
         if (typeof options.onCancel === 'function') {
           options.onCancel(paymentId);
         }
@@ -193,14 +296,17 @@
     };
 
     try {
-      pi.createPayment(paymentData, paymentCallbacks);
+      window.Pi.createPayment(paymentData, paymentCallbacks);
     } catch (err) {
-      console.error('Erro ao chamar pi.createPayment:', err);
+      console.error('Erro ao chamar window.Pi.createPayment:', err);
       showManualP2PModal({ amount: amount, memo: memo, metadata: metadata });
+      if (typeof options.onError === 'function') {
+        options.onError(err);
+      }
     }
   }
 
-  // 6. Modal de Pagamento P2P (quando acessado fora do Pi Browser)
+  // 7. Modal de Pagamento P2P (quando acessado fora do Pi Browser)
   function showManualP2PModal(data) {
     let modal = document.getElementById('pi-p2p-checkout-modal');
     if (!modal) {
@@ -219,13 +325,13 @@
         <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">${escapeHtml(data.memo || 'Pagamento')}</h3>
         
         <div style="background:rgba(245, 158, 11, 0.08);border:1px solid rgba(245, 158, 11, 0.25);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.88rem;color:var(--text-secondary)">
-          💡 <strong>Dica de agilidade:</strong> Para pagar e validar com 1 clique, abra este site diretamente no aplicativo <strong>Pi Browser</strong>!
+          💡 <strong>Dica de agilidade:</strong> Para pagar e validar com 1 clique, abra este site diretamente no aplicativo <strong>Pi Browser</strong> no seu celular!
         </div>
 
         <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:18px;margin-bottom:18px">
           <div style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase">Valor a transferir:</div>
           <div style="font-size:1.8rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono);margin:4px 0 14px">
-            ${data.amount} π
+            ${data.amount || '3.14'} π
           </div>
           
           <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:6px">Endereço da Carteira Oficial HOKAGE22B:</div>
@@ -254,20 +360,27 @@
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // 7. Expõe na API global
+  // 8. Expõe na API global
   window.HokagePi = {
+    initPiSdk: initPiSdk,
     isPiBrowser: isPiBrowser,
-    loadPiSdk: loadPiSdk,
-    authenticatePioneer: authenticatePioneer,
+    loginWithPi: loginWithPi,
+    authenticatePioneer: loginWithPi,
     requestPiPayment: requestPiPayment,
     showManualP2PModal: showManualP2PModal,
+    getUser: function () { return authenticatedUser; },
     officialWallet: OFFICIAL_WALLET
   };
 
-  // Inicializa detecção quando o DOM estiver pronto
+  // Inicializa detecção e recupera sessão na carga do DOM
+  function autoInit() {
+    initPiSdk();
+    loginWithPi(false);
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadPiSdk);
+    document.addEventListener('DOMContentLoaded', autoInit);
   } else {
-    loadPiSdk();
+    autoInit();
   }
 })();

@@ -374,15 +374,19 @@
       return;
     }
 
-    if (!window.HokagePi.isPiBrowser()) {
-      alert('💡 Para pagar e validar nativamente com 1 clique, abra este site dentro do app Pi Browser no celular! Para transferir manualmente, utilize os dados da carteira abaixo.');
-      return;
-    }
-
     const payBtn = document.getElementById('btn-pay-pi-browser');
     if (payBtn) {
       payBtn.disabled = true;
-      payBtn.textContent = 'Aguardando aprovação na Pi Wallet…';
+      payBtn.textContent = 'Processando no Pi Browser…';
+    }
+
+    const feedbackArea = document.getElementById('pi-action-feedback');
+    if (feedbackArea) {
+      feedbackArea.style.display = 'block';
+      feedbackArea.style.background = 'rgba(139, 92, 246, 0.15)';
+      feedbackArea.style.border = '1px solid rgba(139, 92, 246, 0.3)';
+      feedbackArea.style.color = '#c4b5fd';
+      feedbackArea.textContent = '⏳ Autenticando e abrindo a Pi Wallet…';
     }
 
     window.HokagePi.requestPiPayment({
@@ -423,13 +427,22 @@
         console.warn('Erro ao processar pagamento:', err);
         if (payBtn) {
           payBtn.disabled = false;
-          payBtn.textContent = '⚡ Pagar 3.14 π no Pi Browser (Validação Automática)';
+          payBtn.textContent = '⚡ Pagar 3.14 π na Pi Wallet (1 Clique)';
+        }
+        if (feedbackArea) {
+          feedbackArea.style.background = 'rgba(239, 68, 68, 0.15)';
+          feedbackArea.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+          feedbackArea.style.color = '#fca5a5';
+          feedbackArea.textContent = '⚠️ Não foi possível abrir o pagamento. Verifique se autorizou no Pi Browser.';
         }
       },
       onCancel: function () {
         if (payBtn) {
           payBtn.disabled = false;
-          payBtn.textContent = '⚡ Pagar 3.14 π no Pi Browser (Validação Automática)';
+          payBtn.textContent = '⚡ Pagar 3.14 π na Pi Wallet (1 Clique)';
+        }
+        if (feedbackArea) {
+          feedbackArea.style.display = 'none';
         }
       }
     });
