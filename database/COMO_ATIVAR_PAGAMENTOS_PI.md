@@ -17,3 +17,4 @@ Para processar pagamentos na Pi Network sem expor sua Server API Key no navegado
 4. Clique em **Deploy**.
 
 Pronto! Seu site agora tem um validador de pagamentos oficial da Pi Network na nuvem com custo R$ 0,00 e segurança total.
+

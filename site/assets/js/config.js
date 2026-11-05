@@ -50,7 +50,9 @@
       priceBRL: 'R$ 29,90',
       pricePi: '3.14 π',
       coverImage: 'assets/img/ebook-cover.png',
-      checkoutUrl: 'https://chk.eduzz.com/exemplo-ou-configuravel', // Substituível pelo link real da Eduzz/Hotmart/Kiwify
+      checkoutUrl: 'https://pay.hotmart.com/A108356534I',
+      salesPageUrl: 'https://go.hotmart.com/A108356534I',
+      affiliateUrl: 'https://affiliate.hotmart.com/affiliate-recruiting/view/9871P108356555',
       guaranteeDays: 7,
       benefits: [
         'Modelos práticos de precificação em reais e Pi',
