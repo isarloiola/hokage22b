@@ -24,7 +24,7 @@
     },
 
     social: {
-      youtube: 'https://youtube.com/@hokage22b',
+      youtube: 'https://www.youtube.com/@justhokage22b',
       instagram: 'https://instagram.com/hokage22b',
       twitter: 'https://twitter.com/hokage22b',
       communityWhatsapp: 'https://chat.whatsapp.com/invite/hokage22b'
@@ -119,3 +119,4 @@
     Object.freeze(window.HOKAGE_CONFIG);
   }
 })();
+

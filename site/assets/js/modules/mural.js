@@ -11,9 +11,9 @@
       id: 'mock-1',
       pioneer_name: 'Isar Loiola',
       pioneer_username: '@hokage22b',
-      title: 'Canal @hokage22b no YouTube',
+      title: 'Canal @justhokage22b no YouTube',
       description: 'Análises semanais sérias sobre Pi Network, Web3, blockchain e finanças digitais no Brasil. Sem hype, com fatos e tecnologia.',
-      link_url: 'https://youtube.com/@hokage22b',
+      link_url: 'https://www.youtube.com/@justhokage22b',
       category: 'youtube',
       plan_tier: 'ouro',
       price_pi: 3.14
