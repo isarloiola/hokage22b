@@ -115,7 +115,7 @@
       <h3 id="modal-ad-title">Anunciar na Gazeta dos Pioneiros</h3>
       <p>Divulgue seu canal, produto, serviço ou mensagem para milhares de pioneiros.</p>
 
-      <form onsubmit="window.IsarMural && window.IsarMural.handleAdSubmit(event)">
+      <form id="ad-create-form" onsubmit="window.IsarMural && window.IsarMural.handleAdSubmit(event)">
         <!-- Escolha do Nível / Posição -->
         <label style="font-size:0.85rem;color:var(--gray-light);display:block;margin-top:14px;font-weight:700">
           Escolha a Posição / Destaque:
@@ -172,8 +172,8 @@
           <input type="text" id="ad-input-user" placeholder="@seu_usuario_pi" maxlength="30" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width:100%;padding:14px;font-weight:700">
-          🚀 Publicar Anúncio no Mural
+        <button type="submit" class="btn btn-primary" id="ad-submit-btn" style="width:100%;padding:14px;font-weight:700">
+          🚀 Publicar Anúncio no Mural (1.0 π)
         </button>
       </form>
     </div>
@@ -191,6 +191,7 @@
   <!-- Modular Scripts -->
   <script src="assets/js/modules/ui.js"></script>
   <script src="assets/js/modules/db.js"></script>
+  <script src="assets/js/modules/pi-pay.js"></script>
   <script src="assets/js/modules/mural.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {

@@ -1,7 +1,9 @@
-// ============================================================
-// isar.pi — Module: Mural dos Pioneiros & Gazeta Web3
-// Classificados descentralizados da comunidade Pi
-// ============================================================
+/**
+ * ============================================================
+ * HOKAGE22B.COM — Module: Mural dos Pioneiros & Gazeta Web3
+ * Classificados descentralizados da comunidade Pi
+ * ============================================================
+ */
 
 (function () {
   'use strict';
@@ -65,7 +67,7 @@
       pioneer_name: 'Pioneiro Curitiba',
       pioneer_username: '@pioneiro_cwb',
       title: 'Rumo à Open Mainnet!',
-      description: 'Apoiando o projeto isar.pi pela coragem de falar a verdade sem prometer falsas riquezas. Parabéns pela iniciativa!',
+      description: 'Apoiando o projeto HOKAGE22B pela coragem de falar a verdade sem prometer falsas riquezas. Parabéns pela iniciativa!',
       link_url: '',
       category: 'mensagem',
       plan_tier: 'bronze',
@@ -77,9 +79,9 @@
   let selectedTier = 'prata';
 
   const tierPrices = {
-    ouro:   { pi: 3.14, brl: 'R$ 15,00', name: '🥇 Destaque Ouro (Topo do Mural)' },
+    ouro:   { pi: 3.14, brl: 'R$ 15,00', name: '🥇 Destaque Ouro (Topo da Gazeta e Card Duplo)' },
     prata:  { pi: 1.00, brl: 'R$ 7,00',  name: '🥈 Destaque Prata (Card Médio)' },
-    bronze: { pi: 0.314, brl: 'R$ 3,00', name: '🥉 Classificado Bronze (Básico)' }
+    bronze: { pi: 0.314, brl: 'R$ 3,00', name: '🥉 Classificado Bronze (Simples)' }
   };
 
   async function loadAds(category) {
@@ -91,10 +93,12 @@
 
     let ads = [];
     if (window.IsarDB && window.IsarDB.getAnuncios) {
-      ads = await window.IsarDB.getAnuncios(category);
+      try {
+        ads = await window.IsarDB.getAnuncios(category);
+      } catch (_) {}
     }
 
-    // Mesclar anúncios locais salvos
+    // Mesclar anúncios locais salvos pelo próprio usuário
     try {
       const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
       if (localAds && localAds.length > 0) {
@@ -102,7 +106,7 @@
       }
     } catch (_) {}
 
-    // Fallback com mock data se o banco estiver vazio
+    // Fallback elegante se o banco ainda não tiver registros
     if (!ads || ads.length === 0) {
       ads = defaultMockAds;
       if (category !== 'todos') {
@@ -119,11 +123,11 @@
 
     if (!ads || ads.length === 0) {
       gridEl.innerHTML = `
-        <div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--gray-light)">
+        <div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--text-secondary)">
           <div style="font-size:2.5rem;margin-bottom:12px">📢</div>
           <h4 style="color:#fff;margin-bottom:6px">Nenhum anúncio nesta categoria ainda</h4>
-          <p style="font-size:0.9rem">Seja o primeiro pioneiro a anunciar aqui por uma taxa simbólica!</p>
-          <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural && window.IsarMural.openModal()" style="margin-top:14px">
+          <p style="font-size:0.9rem">Seja o primeiro pioneiro a anunciar aqui por uma taxa simbólica em Pi!</p>
+          <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="window.IsarMural && window.IsarMural.openModal()" style="margin-top:14px">
             + Publicar Meu Anúncio
           </button>
         </div>
@@ -145,7 +149,7 @@
 
       const linkHtml = cleanUrl
         ? `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">Acessar Anúncio →</a>`
-        : `<span style="color:var(--gray);font-size:0.8rem">Mensagem da Comunidade</span>`;
+        : `<span style="color:var(--text-muted);font-size:0.8rem">Mensagem da Comunidade</span>`;
 
       html += `
         <article class="ad-card ad-card--${tier}">
@@ -183,12 +187,12 @@
     const modal = document.getElementById('ad-create-modal');
     if (modal) modal.classList.add('active');
 
-    // Pré-preenche usuário se estiver logado
+    // Pré-preenche usuário se estiver logado ou na Pi Network
     const userEl = document.getElementById('ad-input-user');
     try {
-      const loggedUser = JSON.parse(localStorage.getItem('isar_pi_user') || 'null');
-      if (loggedUser && userEl && !userEl.value) {
-        userEl.value = loggedUser.username || '';
+      const piUser = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
+      if (piUser && userEl && !userEl.value) {
+        userEl.value = '@' + (piUser.username || '');
       }
     } catch (_) {}
   }
@@ -204,10 +208,15 @@
       opt.classList.toggle('selected', opt.getAttribute('data-tier') === selectedTier);
     });
 
+    const info = tierPrices[selectedTier] || tierPrices.prata;
     const infoEl = document.getElementById('ad-selected-payment-info');
     if (infoEl) {
-      const info = tierPrices[selectedTier];
       infoEl.textContent = `Valor do plano: ${info.pi} π (ou ${info.brl} via Pix)`;
+    }
+
+    const submitBtn = document.getElementById('ad-submit-btn');
+    if (submitBtn) {
+      submitBtn.textContent = `📢 Publicar Anúncio (${info.pi} π)`;
     }
   }
 
@@ -219,13 +228,20 @@
     const linkInput  = document.getElementById('ad-input-link');
     const catInput   = document.getElementById('ad-input-cat');
     const userInput  = document.getElementById('ad-input-user');
+    const submitBtn  = document.getElementById('ad-submit-btn');
 
-    if (!titleInput || !titleInput.value.trim()) {
-      alert('Por favor, informe um título para o seu anúncio.');
+    const title = titleInput ? titleInput.value.trim() : '';
+    const desc = descInput ? descInput.value.trim() : '';
+
+    if (!title || title.length < 3) {
+      alert('Por favor, informe um título para o seu anúncio (mínimo 3 caracteres).');
+      if (titleInput) titleInput.focus();
       return;
     }
-    if (!descInput || !descInput.value.trim()) {
-      alert('Por favor, informe a descrição ou mensagem do anúncio.');
+
+    if (!desc || desc.length < 5) {
+      alert('Por favor, informe uma descrição detalhada para o anúncio (mínimo 5 caracteres).');
+      if (descInput) descInput.focus();
       return;
     }
 
@@ -238,17 +254,26 @@
         validatedLink = rawLink;
       } else {
         alert('Por favor, informe um link válido iniciando com https:// ou http://');
+        if (linkInput) linkInput.focus();
         return;
       }
     }
 
+    // Gera ID único confiável para a transação
+    const adId = (window.crypto && window.crypto.randomUUID)
+      ? window.crypto.randomUUID()
+      : ('ad_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8));
+
+    const username = userInput && userInput.value.trim() ? userInput.value.trim() : '@pioneiro';
+
     const newAd = {
-      title: titleInput.value.trim(),
-      description: descInput.value.trim(),
+      id: adId,
+      title: title,
+      description: desc,
       link_url: validatedLink,
       category: catInput ? catInput.value : 'geral',
-      pioneer_username: userInput && userInput.value.trim() ? userInput.value.trim() : '@pioneiro',
-      pioneer_name: userInput && userInput.value.trim() ? userInput.value.trim() : 'Pioneiro',
+      pioneer_username: username,
+      pioneer_name: username.replace('@', ''),
       plan_tier: selectedTier,
       price_pi: priceInfo.pi,
       price_brl: parseFloat(priceInfo.brl.replace(/[^\d,]/g, '').replace(',', '.')),
@@ -256,7 +281,73 @@
       created_at: new Date().toISOString()
     };
 
-    // Salva localmente para visualização instantânea do anunciante
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Processando…';
+    }
+
+    // ── FLUXO A: Dentro do Pi Browser (Pagamento Nativo com Pi SDK) ──
+    if (window.HokagePi && window.HokagePi.isPiBrowser()) {
+      window.HokagePi.requestPiPayment({
+        amount: priceInfo.pi,
+        memo: `Mural HOKAGE22B: ${title.substring(0, 24)}`,
+        metadata: {
+          type: 'anuncio',
+          adId: adId,
+          tier: selectedTier
+        },
+        onSuccess: async function (paymentResult) {
+          // Pagamento validado na blockchain e confirmado pela Edge Function
+          newAd.status = 'ativo';
+          newAd.payment_txid = paymentResult.txid;
+
+          // Salva no banco de dados Supabase como ativo
+          if (window.IsarDB && window.IsarDB.createAnuncio) {
+            await window.IsarDB.createAnuncio(newAd);
+          }
+
+          // Salva no cache local
+          try {
+            const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+            localAds.unshift(newAd);
+            localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+          } catch (_) {}
+
+          closeModal();
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
+          }
+
+          loadAds(currentCategory);
+          alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na blockchain! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
+        },
+        onError: function (err) {
+          console.error('Erro no pagamento Pi do mural:', err);
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
+          }
+        },
+        onCancel: function () {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
+          }
+        }
+      });
+      return;
+    }
+
+    // ── FLUXO B: Fora do Pi Browser (P2P / Pix) ──
+    // Salva o anúncio como pendente no banco
+    if (window.IsarDB && window.IsarDB.createAnuncio) {
+      try {
+        await window.IsarDB.createAnuncio(newAd);
+      } catch (_) {}
+    }
+
+    // Salva localmente para o visitante visualizar de imediato
     try {
       const localAdForSelf = Object.assign({}, newAd, { status: 'ativo' });
       const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
@@ -264,24 +355,21 @@
       localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
     } catch (_) {}
 
-    // Salva no Supabase se disponível
-    if (window.IsarDB && window.IsarDB.createAnuncio) {
-      window.IsarDB.createAnuncio(newAd);
-    }
-
     closeModal();
-
-    if (window.showToast) {
-      window.showToast('Anúncio cadastrado com sucesso no Mural dos Pioneiros!', '🎉');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
     }
 
     loadAds(currentCategory);
 
-    // Abre modal de pagamento para o usuário copiar os dados
-    if (window.openPiProModal) {
-      setTimeout(function () {
-        window.openPiProModal();
-      }, 500);
+    // Abre modal P2P explicativo com a carteira oficial
+    if (window.HokagePi && window.HokagePi.showManualP2PModal) {
+      window.HokagePi.showManualP2PModal({
+        amount: priceInfo.pi,
+        memo: `Anúncio ${selectedTier.toUpperCase()}: ${title}`,
+        metadata: { adId: adId, plan: selectedTier }
+      });
     }
   }
 
@@ -291,19 +379,19 @@
       loadAds('todos');
       selectTier('prata');
 
-      // Bind fechar modal via botão ✕ e clique no overlay
-      var closeBtn = document.getElementById('ad-modal-close');
+      // Bind fechar modal
+      const closeBtn = document.getElementById('ad-modal-close');
       if (closeBtn) closeBtn.addEventListener('click', closeModal);
 
-      var overlay = document.getElementById('ad-create-modal');
+      const overlay = document.getElementById('ad-create-modal');
       if (overlay) {
         overlay.addEventListener('click', function (e) {
           if (e.target === overlay) closeModal();
         });
       }
 
-      // Bind submit do formulário
-      var form = document.getElementById('ad-create-form');
+      // Bind submit
+      const form = document.getElementById('ad-create-form');
       if (form) form.addEventListener('submit', handleAdSubmit);
     },
     loadAds: loadAds,
@@ -313,5 +401,11 @@
     handleAdSubmit: handleAdSubmit
   };
 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.IsarMural) window.IsarMural.init();
+    });
+  } else {
+    if (window.IsarMural) window.IsarMural.init();
+  }
 })();
-

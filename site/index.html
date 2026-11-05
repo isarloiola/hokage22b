@@ -1072,33 +1072,48 @@
   <!-- Modal 3: Pagamento com Pi (3.14 π) -->
   <div class="portal-modal-overlay" id="modal-pagamento-pi" role="dialog" aria-modal="true"
     aria-labelledby="pi-pay-title">
-    <div class="portal-modal">
+    <div class="portal-modal" id="pi-modal-content-area">
       <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
-      <div class="section-tag section-tag--amber">Pagamento P2P em Pi</div>
+      <div class="section-tag section-tag--amber">Pagamento em Pi Network</div>
       <h3 id="pi-pay-title" style="font-size:1.35rem;margin-bottom:12px">Adquirir e-book com Pi Network</h3>
       <p style="font-size:0.92rem;margin-bottom:18px;color:var(--text-secondary)">
-        Você pode adquirir o e-book <strong>"Pi para seu negócio"</strong> diretamente com Pi na Mainnet.
+        Você pode adquirir o e-book <strong>"Pi para seu negócio"</strong> diretamente com Pi na Mainnet por <strong>3.14 π</strong>.
       </p>
 
-      <div
-        style="background:rgba(0,0,0,0.4);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px">
-        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:4px">Valor do e-book:</div>
-        <div style="font-size:1.6rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono)">3.14 π</div>
-        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:12px;margin-bottom:4px">Carteira de destino
-          oficial:</div>
-        <code
-          style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:8px;border-radius:4px;color:var(--accent-light)">GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR</code>
+      <!-- Botão Nativo para Pi Browser -->
+      <div style="margin-bottom:20px">
+        <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="btn-pay-pi-browser" onclick="HokagePortal.payEbookWithPi()" style="padding:14px;font-size:1rem;font-weight:700">
+          ⚡ Pagar 3.14 π no Pi Browser (Validação Automática)
+        </button>
+        <span style="display:block;font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:6px">
+          Recomendado: abre diretamente sua Pi Wallet e libera o download na hora.
+        </span>
       </div>
 
-      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:18px">
-        Após a transferência no Pi Wallet, envie o hash da transação ou comprovante para
-        <strong>contato@hokage22b.com</strong> para receber sua cópia e acesso imediato.
-      </p>
+      <!-- Alternativa P2P Manual (Para quem estiver em navegador comum) -->
+      <div style="border-top:1px solid var(--border-subtle);padding-top:16px;margin-top:16px">
+        <div style="font-size:0.85rem;color:var(--text-secondary);font-weight:600;margin-bottom:8px">
+          Ou transferência manual P2P:
+        </div>
+        <div
+          style="background:rgba(0,0,0,0.4);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px">
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">Carteira de destino oficial HOKAGE22B:</div>
+          <code
+            style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:8px;border-radius:4px;color:var(--accent-light);user-select:all">GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR</code>
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" style="margin-top:8px" onclick="navigator.clipboard.writeText('GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR');this.textContent='✓ Endereço Copiado!';setTimeout(()=>this.textContent='📋 Copiar Endereço',2000)">
+            📋 Copiar Endereço
+          </button>
+        </div>
 
-      <a href="mailto:contato@hokage22b.com?subject=Comprovante%20Pagamento%20Pi%20-%20E-book%20Negocios"
-        class="portal-btn portal-btn--amber portal-btn--full">
-        Enviar Comprovante por E-mail
-      </a>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;line-height:1.4">
+          Após transferir no Pi Wallet, envie o comprovante para <strong>contato@hokage22b.com</strong> para receber a cópia por e-mail.
+        </p>
+
+        <a href="mailto:contato@hokage22b.com?subject=Comprovante%20Pagamento%20Pi%20-%20E-book%20Negocios"
+          class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm">
+          Enviar Comprovante por E-mail
+        </a>
+      </div>
     </div>
   </div>
 
@@ -1128,6 +1143,7 @@
   <!-- Scripts do Portal -->
   <script src="assets/js/config.js"></script>
   <script src="assets/js/modules/db.js"></script>
+  <script src="assets/js/modules/pi-pay.js"></script>
   <script src="assets/js/modules/portal.js"></script>
 </body>
 

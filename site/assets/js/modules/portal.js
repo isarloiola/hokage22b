@@ -367,7 +367,75 @@
     });
   }
 
-  // ─── 7. Inicialização ──────────────────────────────────────
+  // ─── 7. Pagamento do E-book via Pi Browser ────────────────
+  function payEbookWithPi() {
+    if (!window.HokagePi) {
+      alert('Carregando integração Pi Network... Tente novamente em instantes.');
+      return;
+    }
+
+    if (!window.HokagePi.isPiBrowser()) {
+      alert('💡 Para pagar e validar nativamente com 1 clique, abra este site dentro do app Pi Browser no celular! Para transferir manualmente, utilize os dados da carteira abaixo.');
+      return;
+    }
+
+    const payBtn = document.getElementById('btn-pay-pi-browser');
+    if (payBtn) {
+      payBtn.disabled = true;
+      payBtn.textContent = 'Aguardando aprovação na Pi Wallet…';
+    }
+
+    window.HokagePi.requestPiPayment({
+      amount: 3.14,
+      memo: 'E-book: Pi para seu Negócio',
+      metadata: {
+        type: 'ebook',
+        productId: 'pi-para-seu-negocio'
+      },
+      onSuccess: function (result) {
+        console.log('Pagamento do e-book concluído com sucesso:', result);
+        const modalBody = document.getElementById('pi-modal-content-area');
+        if (modalBody) {
+          modalBody.innerHTML = `
+            <div style="text-align:center;padding:12px 0">
+              <div style="font-size:3rem;margin-bottom:8px">🎉</div>
+              <div class="section-tag section-tag--amber">Pagamento Confirmado</div>
+              <h3 style="color:#fff;font-size:1.5rem;margin:12px 0 8px">Parabéns! Acesso Liberado</h3>
+              <p style="color:var(--text-secondary);font-size:0.92rem;margin-bottom:18px">
+                Sua transação de <strong>3.14 π</strong> foi validada com sucesso na blockchain da Pi Network.
+              </p>
+              <div style="background:rgba(16, 185, 129, 0.1);border:1px solid rgba(16, 185, 129, 0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:20px">
+                <span style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono);word-break:break-all">TXID: ${result.txid || 'Confirmado via Pi SDK'}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <a href="downloads/Manual-Pi-Network.pdf" download class="portal-btn portal-btn--primary portal-btn--full">
+                  ⬇ Baixar E-book em PDF
+                </a>
+                <a href="downloads/Manual-Pi-Network.epub" download class="portal-btn portal-btn--outline portal-btn--full">
+                  ⬇ Baixar em EPUB (Leitores Digitais)
+                </a>
+              </div>
+            </div>
+          `;
+        }
+      },
+      onError: function (err) {
+        console.warn('Erro ao processar pagamento:', err);
+        if (payBtn) {
+          payBtn.disabled = false;
+          payBtn.textContent = '⚡ Pagar 3.14 π no Pi Browser (Validação Automática)';
+        }
+      },
+      onCancel: function () {
+        if (payBtn) {
+          payBtn.disabled = false;
+          payBtn.textContent = '⚡ Pagar 3.14 π no Pi Browser (Validação Automática)';
+        }
+      }
+    });
+  }
+
+  // ─── 8. Inicialização ──────────────────────────────────────
   function init() {
     initMobileDrawer();
     initModals();
@@ -380,7 +448,8 @@
   window.HokagePortal = {
     init: init,
     openModal: openModal,
-    closeModal: closeModal
+    closeModal: closeModal,
+    payEbookWithPi: payEbookWithPi
   };
 
   if (document.readyState === 'loading') {

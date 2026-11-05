@@ -69,6 +69,16 @@ serve(async (req) => {
             .from("anuncios")
             .update({ status: "ativo" })
             .eq("id", data.metadata.adId);
+        } else if (data.metadata.type === "ebook") {
+          // Registra o pedido do e-book pago
+          await supabase
+            .from("doacoes")
+            .insert([{
+              donor_identifier: data.metadata.pioneer_username || "Pioneiro Pi",
+              currency: "PI",
+              amount: data.amount || 3.14,
+              status: "recebido"
+            }]);
         }
       }
 
