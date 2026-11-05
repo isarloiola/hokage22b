@@ -45,6 +45,13 @@
 
   <!-- Pi Network SDK Oficial v2.0 -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+    try {
+      if (window.Pi) {
+        window.Pi.init({ version: "2.0", sandbox: false });
+      }
+    } catch (_) {}
+  </script>
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">

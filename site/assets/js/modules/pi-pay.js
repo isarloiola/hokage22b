@@ -14,13 +14,13 @@
   let authenticatedUser = null;
   let isAuthenticating = false;
 
-  // 1. Toast Visual Flutuante (Feedback Imediato no Celular)
+  // 1. Toast Flutuante na Base da Tela (100% visível no celular)
   function showToast(msg, type) {
     let toast = document.getElementById('hokage-pi-floating-toast');
     if (!toast) {
       toast = document.createElement('div');
       toast.id = 'hokage-pi-floating-toast';
-      toast.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:999999;padding:12px 20px;border-radius:8px;font-size:0.88rem;font-weight:600;max-width:90vw;box-shadow:0 10px 30px rgba(0,0,0,0.6);transition:all 0.3s ease;text-align:center;pointer-events:none;';
+      toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999999;padding:12px 22px;border-radius:10px;font-size:0.9rem;font-weight:700;max-width:92vw;box-shadow:0 12px 36px rgba(0,0,0,0.85);transition:all 0.3s ease;text-align:center;pointer-events:none;';
       document.body.appendChild(toast);
     }
 
@@ -51,7 +51,7 @@
     }, 4500);
   }
 
-  // 2. Inicializa o SDK oficial da Pi Network
+  // 2. Inicialização segura do Pi SDK
   function initPiSdk(useSandbox) {
     if (useSandbox === undefined) useSandbox = false;
     if (window.Pi) {
@@ -63,13 +63,13 @@
     }
   }
 
-  // 3. Detecta se está rodando dentro do Pi Browser
+  // 3. Detecção de Ambiente Pi Browser
   function isPiBrowser() {
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
     return /PiBrowser|PiNetwork/i.test(ua) || Boolean(window.Pi);
   }
 
-  // 4. Atualiza os componentes visuais com o estado do pioneiro
+  // 4. Atualização de Elementos Visuais com status do pioneiro
   function updateAuthUi(user) {
     const headerBtns = document.querySelectorAll('.pi-auth-header-btn');
     headerBtns.forEach(function (btn) {
@@ -130,79 +130,133 @@
     }
   }
 
-  // 5. Autenticação oficial de Pioneiro (Pi.authenticate)
-  async function loginWithPi(interactive) {
-    if (interactive === undefined) interactive = true;
-
-    // Se já estiver autenticado em memória, atualiza UI e encerra
-    if (authenticatedUser) {
-      updateAuthUi(authenticatedUser);
-      showToast(`✓ Conectado como @${authenticatedUser.username}`, 'success');
-      return authenticatedUser;
+  // 5. Modal Web3 de Diagnóstico e Conexão Pi (Abre Imediatamente no Clique)
+  function openPiConnectModal() {
+    let modal = document.getElementById('modal-pi-connect-diag');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.className = 'portal-modal-overlay';
+      modal.id = 'modal-pi-connect-diag';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      document.body.appendChild(modal);
     }
 
-    // Tenta restaurar do cache local
+    const ua = navigator.userAgent || '';
+    const inPi = /PiBrowser|PiNetwork/i.test(ua) || Boolean(window.Pi);
+    const hasSdk = Boolean(window.Pi);
+
+    modal.innerHTML = `
+      <div class="portal-modal" style="max-width:440px">
+        <button type="button" class="portal-modal-close" onclick="document.getElementById('modal-pi-connect-diag').classList.remove('active')">✕</button>
+        <div class="section-tag section-tag--amber">Web3 Pi Network</div>
+        <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">Conectar Pi Wallet</h3>
+
+        <!-- Diagnóstico em Tempo Real -->
+        <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.85rem">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="color:var(--text-muted)">Navegador:</span>
+            <span style="font-weight:700;color:${inPi ? '#10b981' : '#f59e0b'}">
+              ${inPi ? '✓ Pi Browser detectado' : '⚠️ Navegador comum'}
+            </span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="color:var(--text-muted)">Pi SDK Oficial:</span>
+            <span style="font-weight:700;color:${hasSdk ? '#10b981' : '#ef4444'}">
+              ${hasSdk ? '✓ Carregado v2.0' : '✕ Não detectado'}
+            </span>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="color:var(--text-muted)">Status da Sessão:</span>
+            <span id="diag-auth-status" style="font-weight:700;color:#c4b5fd">
+              ${authenticatedUser ? ('🟢 @' + escapeHtml(authenticatedUser.username)) : '⚪ Desconectado'}
+            </span>
+          </div>
+        </div>
+
+        <div id="diag-feedback-box" style="padding:12px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:0.85rem;line-height:1.4;display:none"></div>
+
+        <!-- Ações -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+          ${authenticatedUser ? `
+            <div style="text-align:center;color:#10b981;font-weight:700;padding:12px;background:rgba(16,185,129,0.1);border-radius:var(--radius-sm);border:1px solid rgba(16,185,129,0.3)">
+              ✓ Você já está conectado como @${escapeHtml(authenticatedUser.username)}!
+            </div>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--full" onclick="localStorage.removeItem('hokage_pi_user');location.reload()">
+              Desconectar / Trocar de Conta
+            </button>
+          ` : `
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow(false)" style="padding:14px;font-weight:700">
+              ⚡ Autorizar no Pi Browser (Mainnet)
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="HokagePi.triggerAuthFlow(true)" style="font-size:0.78rem;opacity:0.85">
+              🧪 Tentar em Modo Sandbox (Testnet)
+            </button>
+          `}
+        </div>
+
+        <div style="margin-top:16px;text-align:center">
+          <button type="button" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;text-decoration:underline" onclick="document.getElementById('modal-pi-connect-diag').classList.remove('active');HokagePi.showManualP2PModal({amount:3.14,memo:'Pagamento Direto'})">
+            Preferir pagamento manual P2P
+          </button>
+        </div>
+      </div>
+    `;
+
+    modal.classList.add('active');
+
+    // Se estiver no Pi Browser e desconectado, dispara a autorização imediatamente
+    if (inPi && !authenticatedUser) {
+      setTimeout(function () {
+        triggerAuthFlow(false);
+      }, 350);
+    }
+  }
+
+  // 6. Disparo Real da Autenticação com Pi SDK
+  async function triggerAuthFlow(isSandbox) {
+    if (isSandbox === undefined) isSandbox = false;
+
+    const feedbackBox = document.getElementById('diag-feedback-box');
+    const triggerBtn = document.getElementById('diag-auth-trigger-btn');
+    const statusEl = document.getElementById('diag-auth-status');
+
+    if (triggerBtn) {
+      triggerBtn.disabled = true;
+      triggerBtn.textContent = 'Aguardando permissão no Pi…';
+    }
+
+    if (feedbackBox) {
+      feedbackBox.style.display = 'block';
+      feedbackBox.style.background = 'rgba(139,92,246,0.15)';
+      feedbackBox.style.border = '1px solid rgba(139,92,246,0.3)';
+      feedbackBox.style.color = '#c4b5fd';
+      feedbackBox.innerHTML = '⏳ <strong>Aguardando você permitir no Pi Browser…</strong><br><small>Toque em "Permitir" quando a janela nativa do Pi abrir.</small>';
+    }
+
+    if (statusEl) {
+      statusEl.innerHTML = '<span style="color:#f59e0b">⏳ Autenticando…</span>';
+    }
+
+    showToast('Aguardando permissão no Pi Browser...', 'info');
+
+    if (!window.Pi) {
+      if (feedbackBox) {
+        feedbackBox.style.background = 'rgba(239,68,68,0.15)';
+        feedbackBox.style.border = '1px solid rgba(239,68,68,0.3)';
+        feedbackBox.style.color = '#fca5a5';
+        feedbackBox.innerHTML = '⚠️ <strong>Pi SDK não encontrado.</strong><br>Abra este site dentro do aplicativo oficial Pi Browser no celular.';
+      }
+      if (triggerBtn) {
+        triggerBtn.disabled = false;
+        triggerBtn.textContent = '⚡ Autorizar no Pi Browser';
+      }
+      return null;
+    }
+
     try {
-      const cached = localStorage.getItem('hokage_pi_user');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (parsed && parsed.username) {
-          authenticatedUser = parsed;
-          updateAuthUi(authenticatedUser);
-          if (!interactive) return authenticatedUser;
-        }
-      }
+      window.Pi.init({ version: '2.0', sandbox: isSandbox });
     } catch (_) {}
-
-    // Feedback visual imediato ao tocar no botão
-    showToast('⏳ Conectando ao Pi Browser...', 'info');
-
-    // Se window.Pi não existe de imediato, aguarda até 2.5 segundos para garantir injeção
-    if (!window.Pi) {
-      for (let i = 0; i < 5; i++) {
-        await new Promise(r => setTimeout(r, 500));
-        if (window.Pi) break;
-      }
-    }
-
-    if (!window.Pi) {
-      showToast('⚠️ Pi SDK não detectado. Abra pelo app Pi Browser no celular.', 'error');
-      if (interactive) {
-        showManualP2PModal({
-          memo: 'Pagamento Pi Network',
-          amount: 3.14
-        });
-      }
-      return null;
-    }
-
-    initPiSdk(false);
-
-    if (isAuthenticating) {
-      showToast('⏳ Já existe uma tentativa de conexão em andamento…', 'info');
-      return null;
-    }
-    isAuthenticating = true;
-
-    // Trava de segurança: reseta flag após 12 segundos em caso de timeout
-    const safetyTimeout = setTimeout(function () {
-      isAuthenticating = false;
-    }, 12000);
-
-    const flowBtn = document.getElementById('btn-login-pi-flow');
-    if (flowBtn) {
-      flowBtn.disabled = true;
-      flowBtn.textContent = 'Aguardando no Pi…';
-    }
-
-    const feedbackArea = document.getElementById('pi-action-feedback');
-    if (feedbackArea) {
-      feedbackArea.style.display = 'block';
-      feedbackArea.style.background = 'rgba(139, 92, 246, 0.15)';
-      feedbackArea.style.border = '1px solid rgba(139, 92, 246, 0.3)';
-      feedbackArea.style.color = '#c4b5fd';
-      feedbackArea.textContent = '⏳ Autorize a conexão na tela do Pi Browser…';
-    }
 
     const scopes = ['username', 'payments'];
 
@@ -213,100 +267,65 @@
       }
     }
 
-    return new Promise(function (resolve) {
-      function runAuth(isSandbox) {
-        initPiSdk(isSandbox);
-        return window.Pi.authenticate(scopes, onIncompletePaymentFound);
+    try {
+      const auth = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
+      authenticatedUser = auth.user;
+
+      try {
+        localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
+      } catch (_) {}
+
+      updateAuthUi(authenticatedUser);
+      showToast(`🎉 Conectado como @${auth.user.username}!`, 'success');
+
+      if (feedbackBox) {
+        feedbackBox.style.background = 'rgba(16,185,129,0.15)';
+        feedbackBox.style.border = '1px solid rgba(16,185,129,0.3)';
+        feedbackBox.style.color = '#6ee7b7';
+        feedbackBox.innerHTML = `✅ <strong>Autenticado com sucesso!</strong><br>Bem-vindo, <strong>@${escapeHtml(auth.user.username)}</strong>.`;
       }
 
-      // 1ª Tentativa: Produção (sandbox: false)
-      runAuth(false)
-        .then(function (auth) {
-          clearTimeout(safetyTimeout);
-          isAuthenticating = false;
-          authenticatedUser = auth.user;
-
-          try {
-            localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
-          } catch (_) {}
-
-          updateAuthUi(authenticatedUser);
-          showToast(`🎉 Conectado como @${auth.user.username}!`, 'success');
-
-          if (feedbackArea) {
-            feedbackArea.style.background = 'rgba(16, 185, 129, 0.15)';
-            feedbackArea.style.border = '1px solid rgba(16, 185, 129, 0.3)';
-            feedbackArea.style.color = '#6ee7b7';
-            feedbackArea.textContent = `✓ Conectado com sucesso como @${auth.user.username}!`;
-            setTimeout(function () {
-              feedbackArea.style.display = 'none';
-            }, 4000);
-          }
-
-          resolve(auth.user);
-        })
-        .catch(function (firstErr) {
-          console.warn('1ª tentativa falhou. Verificando sandbox:', firstErr);
-
-          // Se a falha sugere modo sandbox/testnet, tenta com sandbox: true
-          const errString = String(firstErr || '');
-          const isSandboxIssue = /sandbox|testnet|development/i.test(errString);
-
-          if (isSandboxIssue) {
-            showToast('Tentando autenticação via Sandbox…', 'info');
-            return runAuth(true)
-              .then(function (auth) {
-                clearTimeout(safetyTimeout);
-                isAuthenticating = false;
-                authenticatedUser = auth.user;
-
-                try {
-                  localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
-                } catch (_) {}
-
-                updateAuthUi(authenticatedUser);
-                showToast(`🎉 Conectado (Sandbox) como @${auth.user.username}!`, 'success');
-                resolve(auth.user);
-              })
-              .catch(function (secondErr) {
-                handleAuthFailure(secondErr);
-              });
-          }
-
-          handleAuthFailure(firstErr);
-        });
-
-      function handleAuthFailure(err) {
-        clearTimeout(safetyTimeout);
-        isAuthenticating = false;
-        console.warn('Erro ao autenticar no Pi Browser:', err);
-
-        if (flowBtn) {
-          flowBtn.disabled = false;
-          flowBtn.textContent = '⚡ Conectar Pi Wallet';
-        }
-
-        const errMsg = (err && (err.message || err.error || (typeof err === 'string' ? err : ''))) || 'Permissão recusada ou cancelada.';
-
-        if (feedbackArea) {
-          feedbackArea.style.background = 'rgba(239, 68, 68, 0.15)';
-          feedbackArea.style.border = '1px solid rgba(239, 68, 68, 0.3)';
-          feedbackArea.style.color = '#fca5a5';
-          feedbackArea.textContent = '⚠️ Resposta do Pi Browser: ' + errMsg;
-        }
-
-        showToast('Pi Browser: ' + errMsg, 'error');
-
-        if (interactive) {
-          alert('Informação Pi Network:\n' + errMsg + '\n\nCertifique-se de estar dentro do aplicativo Pi Browser no celular e de autorizar o acesso.');
-        }
-
-        resolve(null);
+      if (statusEl) {
+        statusEl.innerHTML = `<span style="color:#10b981">🟢 @${escapeHtml(auth.user.username)}</span>`;
       }
-    });
+
+      setTimeout(function () {
+        const modal = document.getElementById('modal-pi-connect-diag');
+        if (modal) modal.classList.remove('active');
+      }, 1600);
+
+      return auth.user;
+    } catch (err) {
+      console.warn('Erro ao autenticar:', err);
+      const errMsg = (err && (err.message || err.error || (typeof err === 'string' ? err : ''))) || 'Autorização cancelada ou recusada.';
+
+      if (triggerBtn) {
+        triggerBtn.disabled = false;
+        triggerBtn.textContent = '⚡ Tentar Novamente';
+      }
+
+      if (feedbackBox) {
+        feedbackBox.style.background = 'rgba(239,68,68,0.15)';
+        feedbackBox.style.border = '1px solid rgba(239,68,68,0.3)';
+        feedbackBox.style.color = '#fca5a5';
+        feedbackBox.innerHTML = `⚠️ <strong>Resposta do Pi Browser:</strong><br>${escapeHtml(errMsg)}<br><small style="color:#fff;margin-top:6px;display:block">Se o app no develop.pi estiver como Sandbox, toque em "Tentar em Modo Sandbox" abaixo.</small>`;
+      }
+
+      if (statusEl) {
+        statusEl.innerHTML = '<span style="color:#ef4444">✕ Erro</span>';
+      }
+
+      showToast('Resposta Pi: ' + errMsg, 'error');
+      return null;
+    }
   }
 
-  // 6. Comunicação com a Edge Function no Supabase
+  // 7. Ponto de Entrada para Login com Pi
+  function loginWithPi() {
+    openPiConnectModal();
+  }
+
+  // 8. Comunicação com a Edge Function no Supabase
   async function approvePaymentOnServer(paymentId) {
     try {
       const res = await fetch(SUPABASE_FUNCTIONS_URL, {
@@ -335,29 +354,17 @@
     }
   }
 
-  // 7. Dispara Pagamento Nativo no Pi Browser
+  // 9. Dispara Pagamento Nativo no Pi Browser
   async function requestPiPayment(options) {
     options = options || {};
     const amount = Number(options.amount) || 0.314;
     const memo = options.memo || 'Pagamento HOKAGE22B';
     const metadata = options.metadata || {};
 
-    initPiSdk(false);
-
     let user = authenticatedUser;
     if (!user) {
-      user = await loginWithPi(true);
-    }
-
-    if (!user) {
-      showManualP2PModal({
-        amount: amount,
-        memo: memo,
-        metadata: metadata
-      });
-      if (typeof options.onCancel === 'function') {
-        options.onCancel('not_authenticated');
-      }
+      // Abre o modal de conexão se ainda não estiver conectado
+      openPiConnectModal();
       return;
     }
 
@@ -422,7 +429,7 @@
     }
   }
 
-  // 8. Modal de Pagamento P2P (fora do Pi Browser)
+  // 10. Modal de Pagamento P2P (quando fora do Pi Browser)
   function showManualP2PModal(data) {
     let modal = document.getElementById('pi-p2p-checkout-modal');
     if (!modal) {
@@ -476,12 +483,14 @@
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // 9. Expõe na API global
+  // 11. Expõe na API global
   window.HokagePi = {
     initPiSdk: initPiSdk,
     isPiBrowser: isPiBrowser,
     loginWithPi: loginWithPi,
     authenticatePioneer: loginWithPi,
+    openPiConnectModal: openPiConnectModal,
+    triggerAuthFlow: triggerAuthFlow,
     requestPiPayment: requestPiPayment,
     showManualP2PModal: showManualP2PModal,
     showToast: showToast,
@@ -489,7 +498,7 @@
     officialWallet: OFFICIAL_WALLET
   };
 
-  // Inicializa SDK e recupera cache sem bloquear cliques
+  // Inicializa bindings e recupera cache
   function autoInit() {
     initPiSdk(false);
     try {
@@ -502,6 +511,14 @@
         }
       }
     } catch (_) {}
+
+    // Binda todos os botões de conectar Pi para garantir que o clique dispare sempre
+    document.querySelectorAll('.pi-auth-header-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        openPiConnectModal();
+      });
+    });
   }
 
   if (document.readyState === 'loading') {
