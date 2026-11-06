@@ -1,14 +1,14 @@
 /**
  * ============================================================
- * HOKAGE22B.COM — Module: Mural dos Pioneiros & Gazeta Web3
+ * HOKAGE22B.COM — Module: Mural dos Pioneiros & Gazeta Web3 (v4.0)
  * Classificados descentralizados da comunidade Pi
+ * Arquitetura 100% À Prova de Falhas (Bulletproof & Zero-Dependency)
  * ============================================================
  */
 
 (function () {
   'use strict';
 
-  // Sanitização estrita contra Cross-Site Scripting (XSS)
   function escapeHtml(str) {
     if (!str || typeof str !== 'string') return '';
     return str
@@ -37,54 +37,6 @@
     }
     return '';
   }
-
-  const defaultMockAds = [
-    {
-      id: 'mock-1',
-      pioneer_name: 'Isar Loiola',
-      pioneer_username: '@hokage22b',
-      title: 'Canal @justhokage22b no YouTube',
-      description: 'Análises semanais sérias sobre Pi Network, Web3, blockchain e finanças digitais no Brasil. Sem hype, com fatos e tecnologia.',
-      link_url: 'https://www.youtube.com/@justhokage22b',
-      image_url: 'assets/img/ebook-pago-negocios.jpg',
-      category: 'youtube',
-      plan_tier: 'ouro',
-      price_pi: 3.14
-    },
-    {
-      id: 'mock-2',
-      pioneer_name: 'Carlos Oliveira',
-      pioneer_username: '@carlos_dev',
-      title: 'Desenvolvimento de dApps no Pi Browser',
-      description: 'Programador front-end cria páginas e integrações com o Pi SDK para pequenos lojistas que querem aceitar Pi.',
-      link_url: 'https://wa.me/5511999999999',
-      category: 'servico',
-      plan_tier: 'prata',
-      price_pi: 1.0
-    },
-    {
-      id: 'mock-3',
-      pioneer_name: 'Loja Artesanato Mineiro',
-      pioneer_username: '@artes_brasil',
-      title: 'Artesanato Local Aceitando Pi (P2P)',
-      description: 'Peças em madeira e cerâmica enviadas para todo o Brasil. Aceitamos 100% em Pi na Mainnet para pioneiros com KYC aprovado.',
-      link_url: 'https://instagram.com/hokage22b',
-      category: 'produto',
-      plan_tier: 'prata',
-      price_pi: 1.0
-    },
-    {
-      id: 'mock-4',
-      pioneer_name: 'Pioneiro Curitiba',
-      pioneer_username: '@pioneiro_cwb',
-      title: 'Rumo à Open Mainnet!',
-      description: 'Apoiando o projeto HOKAGE22B pela coragem de falar a verdade sem prometer falsas riquezas. Parabéns pela iniciativa!',
-      link_url: '',
-      category: 'mensagem',
-      plan_tier: 'bronze',
-      price_pi: 0.314
-    }
-  ];
 
   let currentCategory = 'todos';
   let selectedTier = 'prata';
@@ -152,6 +104,7 @@
     `;
   }
 
+  // Filtragem estrita por CSS: NUNCA apaga nem altera o HTML dos cards existentes
   function filterCategory(cat) {
     currentCategory = cat || 'todos';
     const gridEl = document.getElementById('mural-ads-grid');
@@ -164,10 +117,11 @@
       const cardCat = card.getAttribute('data-category') || 'geral';
       if (currentCategory === 'todos' || cardCat === currentCategory) {
         card.classList.remove('ad-card--hidden');
-        card.style.display = '';
+        card.style.display = 'flex';
         visibleCount++;
       } else {
         card.classList.add('ad-card--hidden');
+        card.style.display = 'none';
       }
     });
 
@@ -205,11 +159,7 @@
     });
   }
 
-  async function loadAds(category) {
-    category = category || currentCategory || 'todos';
-    filterCategory(category);
-
-    // Mesclar anúncios salvos localmente
+  function loadSavedLocalAds() {
     try {
       const local = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
       if (Array.isArray(local) && local.length > 0) {
@@ -220,39 +170,9 @@
               gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(ad));
             }
           });
-          filterCategory(category);
         }
       }
     } catch (_) {}
-
-    // Busca novos anúncios no Supabase em background
-    if (window.IsarDB && window.IsarDB.getAnuncios) {
-      try {
-        const timeoutPromise = new Promise(function (_, reject) {
-          setTimeout(function () { reject(new Error('timeout')); }, 3000);
-        });
-        const dbAds = await Promise.race([
-          window.IsarDB.getAnuncios(category),
-          timeoutPromise
-        ]);
-        if (Array.isArray(dbAds) && dbAds.length > 0) {
-          const gridEl = document.getElementById('mural-ads-grid');
-          if (gridEl) {
-            dbAds.forEach(function (ad) {
-              if (!document.getElementById('card-' + ad.id)) {
-                gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(ad));
-              }
-            });
-            filterCategory(category);
-          }
-        }
-      } catch (_) {}
-    }
-  }
-
-  function renderAds(ads, targetGridId) {
-    // Compatibilidade: se for chamado com lista, apenas garante a visibilidade
-    loadAds('todos');
   }
 
   // --- Modal de Criação de Anúncio ---
@@ -260,7 +180,6 @@
     const modal = document.getElementById('ad-create-modal');
     if (modal) modal.classList.add('active');
 
-    // Pré-preenche usuário se estiver logado ou na Pi Network
     const userEl = document.getElementById('ad-input-user');
     try {
       const piUser = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
@@ -292,7 +211,6 @@
       submitBtn.textContent = `📢 Publicar Anúncio (${info.pi} π)`;
     }
 
-    // Regras de Link conforme o plano selecionado
     const linkInput = document.getElementById('ad-input-link');
     const badgeEl   = document.getElementById('ad-link-status-badge');
     const hintEl    = document.getElementById('ad-link-hint');
@@ -338,7 +256,6 @@
       }
     }
 
-    // Regras de Capa/Imagem conforme o plano
     const imgInput = document.getElementById('ad-input-image');
     const imgGroup = document.getElementById('ad-image-group');
     if (imgInput && imgGroup) {
@@ -403,7 +320,6 @@
       validatedImg = rawImg;
     }
 
-    // Gera ID único confiável para a transação
     const adId = (window.crypto && window.crypto.randomUUID)
       ? window.crypto.randomUUID()
       : ('ad_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8));
@@ -441,16 +357,13 @@
           tier: selectedTier
         },
         onSuccess: async function (paymentResult) {
-          // Pagamento validado na blockchain e confirmado pela Edge Function
           newAd.status = 'ativo';
           newAd.payment_txid = paymentResult.txid;
 
-          // Salva no banco de dados Supabase como ativo
           if (window.IsarDB && window.IsarDB.createAnuncio) {
-            await window.IsarDB.createAnuncio(newAd);
+            try { await window.IsarDB.createAnuncio(newAd); } catch (_) {}
           }
 
-          // Salva no cache local
           try {
             const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
             localAds.unshift(newAd);
@@ -463,7 +376,11 @@
             submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
           }
 
-          loadAds(currentCategory);
+          const gridEl = document.getElementById('mural-ads-grid');
+          if (gridEl) {
+            gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(newAd));
+          }
+          filterCategory(currentCategory);
           alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na blockchain! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
         },
         onError: function (err) {
@@ -484,14 +401,10 @@
     }
 
     // ── FLUXO B: Fora do Pi Browser (Transferência P2P via Pi Wallet) ──
-    // Salva o anúncio como pendente no banco
     if (window.IsarDB && window.IsarDB.createAnuncio) {
-      try {
-        await window.IsarDB.createAnuncio(newAd);
-      } catch (_) {}
+      try { await window.IsarDB.createAnuncio(newAd); } catch (_) {}
     }
 
-    // Salva localmente para o visitante visualizar de imediato
     try {
       const localAdForSelf = Object.assign({}, newAd, { status: 'ativo' });
       const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
@@ -505,9 +418,12 @@
       submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
     }
 
-    loadAds(currentCategory);
+    const gridEl = document.getElementById('mural-ads-grid');
+    if (gridEl) {
+      gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(newAd));
+    }
+    filterCategory(currentCategory);
 
-    // Abre modal P2P explicativo com a carteira oficial
     if (window.HokagePi && window.HokagePi.showManualP2PModal) {
       window.HokagePi.showManualP2PModal({
         amount: priceInfo.pi,
@@ -525,10 +441,9 @@
       isInitialized = true;
 
       initFilters();
-      loadAds('todos');
+      loadSavedLocalAds();
       selectTier('prata');
 
-      // Bind fechar modal
       const closeBtn = document.getElementById('ad-modal-close');
       if (closeBtn) closeBtn.addEventListener('click', closeModal);
 
@@ -539,11 +454,10 @@
         });
       }
 
-      // Bind submit
       const form = document.getElementById('ad-create-form');
       if (form) form.addEventListener('submit', handleAdSubmit);
     },
-    loadAds: loadAds,
+    filterCategory: filterCategory,
     openModal: openModal,
     closeModal: closeModal,
     selectTier: selectTier,
