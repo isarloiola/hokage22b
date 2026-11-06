@@ -1,6 +1,7 @@
 -- ============================================================
 -- HOKAGE22B.COM — Arquitetura de Segurança Máxima (Zero-Trust)
 -- Funções RPC com SECURITY DEFINER e Proteção Server-Side
+-- Este arquivo é PÚBLICO no GitHub e NÃO contém nenhuma senha!
 -- ============================================================
 
 -- 1. REVOGAR PERMISSÕES PÚBLICAS PERIGOSAS (Blindagem do Banco)
@@ -37,42 +38,83 @@ CREATE POLICY "Permitir inserção pública de leads"
 
 
 -- ============================================================
--- 2. FUNÇÕES ADMINISTRATIVAS SEGURAS (Executam no Servidor)
--- A validação da Chave Mestra é feita DIRETAMENTE NO POSTGRESQL.
--- Nenhum hacker consegue burlar pelo navegador.
+-- 2. TABELA OCULTA DE COFRE ADMINISTRATIVO
+-- ============================================================
+-- Esta tabela armazena APENAS o hash criptográfico da chave mestra.
+-- Ela tem RLS ativa e NENHUMA política pública, logo é 100% INACESSÍVEL
+-- por qualquer chamada da API REST externa ou pelo navegador.
+CREATE TABLE IF NOT EXISTS public.admin_vault (
+    id INT PRIMARY KEY DEFAULT 1,
+    secret_hash TEXT NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE public.admin_vault ENABLE ROW LEVEL SECURITY;
+
+-- Habilitação da Extensão pgcrypto para hashing criptográfico no PostgreSQL
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+
+-- ============================================================
+-- 3. FUNÇÕES ADMINISTRATIVAS SEGURAS (Executam no Servidor)
 -- ============================================================
 
--- Chave Mestra Segura: 'Hkg22b_Vlt_eef84749517404ac465ecfec97523162_Pi9x'
-
--- A) Função para testar a chave e autenticar
+-- A) Função Interna de Validação Criptográfica da Chave
 CREATE OR REPLACE FUNCTION public.admin_verify_access(p_secret text)
 RETURNS boolean
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
+DECLARE
+  v_hash text;
 BEGIN
-  IF p_secret IS NULL OR p_secret != 'Hkg22b_Vlt_eef84749517404ac465ecfec97523162_Pi9x' THEN
+  IF p_secret IS NULL OR LENGTH(TRIM(p_secret)) < 8 THEN
     RETURN false;
   END IF;
+
+  v_hash := encode(digest(p_secret, 'sha256'), 'hex');
+
+  RETURN EXISTS (
+    SELECT 1 FROM public.admin_vault
+    WHERE id = 1 AND secret_hash = v_hash
+  );
+END;
+$$;
+
+-- B) Função para Configurar ou Alterar a Chave Mestra
+CREATE OR REPLACE FUNCTION public.admin_set_vault_key(p_new_key text)
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  IF p_new_key IS NULL OR LENGTH(TRIM(p_new_key)) < 12 THEN
+    RAISE EXCEPTION 'A chave mestra deve possuir no minimo 12 caracteres.';
+  END IF;
+
+  INSERT INTO public.admin_vault (id, secret_hash, updated_at)
+  VALUES (1, encode(digest(p_new_key, 'sha256'), 'hex'), NOW())
+  ON CONFLICT (id) DO UPDATE
+  SET secret_hash = EXCLUDED.secret_hash, updated_at = NOW();
+
   RETURN true;
 END;
 $$;
 
--- B) Listar todos os anúncios (ativos, pausados, pendentes)
+-- C) Listar todos os anúncios (ativos, pausados, pendentes)
 CREATE OR REPLACE FUNCTION public.admin_get_all_ads(p_secret text)
 RETURNS SETOF public.anuncios
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-  IF p_secret IS NULL OR p_secret != 'Hkg22b_Vlt_eef84749517404ac465ecfec97523162_Pi9x' THEN
-    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta ou ausente.';
+  IF NOT public.admin_verify_access(p_secret) THEN
+    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta ou nao configurada.';
   END IF;
   RETURN QUERY SELECT * FROM public.anuncios ORDER BY created_at DESC;
 END;
 $$;
 
--- C) Atualizar status do anúncio (ativar, pausar, promover para ouro)
+-- D) Atualizar status do anúncio (ativar, pausar, promover para ouro)
 CREATE OR REPLACE FUNCTION public.admin_update_ad_status(
   p_secret text,
   p_ad_id text,
@@ -85,8 +127,8 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-  IF p_secret IS NULL OR p_secret != 'Hkg22b_Vlt_eef84749517404ac465ecfec97523162_Pi9x' THEN
-    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta ou ausente.';
+  IF NOT public.admin_verify_access(p_secret) THEN
+    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta.';
   END IF;
 
   IF p_new_tier IS NOT NULL AND p_new_price IS NOT NULL THEN
@@ -103,15 +145,15 @@ BEGIN
 END;
 $$;
 
--- D) Excluir anúncio definitivamente
+-- E) Excluir anúncio definitivamente
 CREATE OR REPLACE FUNCTION public.admin_delete_ad(p_secret text, p_ad_id text)
 RETURNS boolean
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-  IF p_secret IS NULL OR p_secret != 'Hkg22b_Vlt_eef84749517404ac465ecfec97523162_Pi9x' THEN
-    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta ou ausente.';
+  IF NOT public.admin_verify_access(p_secret) THEN
+    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta.';
   END IF;
 
   DELETE FROM public.anuncios WHERE id = p_ad_id;
@@ -119,21 +161,21 @@ BEGIN
 END;
 $$;
 
--- E) Listar todos os leads capturados
+-- F) Listar todos os leads capturados
 CREATE OR REPLACE FUNCTION public.admin_get_leads(p_secret text)
 RETURNS SETOF public.leads
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-  IF p_secret IS NULL OR p_secret != 'Hkg22b_Vlt_eef84749517404ac465ecfec97523162_Pi9x' THEN
-    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta ou ausente.';
+  IF NOT public.admin_verify_access(p_secret) THEN
+    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta.';
   END IF;
   RETURN QUERY SELECT * FROM public.leads ORDER BY created_at DESC;
 END;
 $$;
 
--- F) Criar anúncio com privilégio administrativo
+-- G) Criar anúncio com privilégio administrativo
 CREATE OR REPLACE FUNCTION public.admin_create_ad(
   p_secret text,
   p_id text,
@@ -150,8 +192,8 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-  IF p_secret IS NULL OR p_secret != 'Hkg22b_Vlt_eef84749517404ac465ecfec97523162_Pi9x' THEN
-    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta ou ausente.';
+  IF NOT public.admin_verify_access(p_secret) THEN
+    RAISE EXCEPTION 'Acesso Negado: Chave de seguranca incorreta.';
   END IF;
 
   INSERT INTO public.anuncios (
@@ -163,3 +205,12 @@ BEGIN
   RETURN true;
 END;
 $$;
+
+-- ============================================================
+-- ATIVAÇÃO DA CHAVE MESTRA:
+-- Para definir sua chave, execute a linha abaixo no Supabase
+-- substituindo 'COLE_A_CHAVE_DO_ARQUIVO_COFRE_AQUI' pela chave
+-- que está no seu arquivo local confidencial sys_access_vault_hkg22b.txt:
+--
+-- SELECT public.admin_set_vault_key('COLE_A_CHAVE_DO_ARQUIVO_COFRE_AQUI');
+-- ============================================================

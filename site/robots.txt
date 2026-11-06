@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /obrigado.html
+Disallow: /admin.html
+Disallow: /admin
 
 Sitemap: https://hokage22b.com/sitemap.xml

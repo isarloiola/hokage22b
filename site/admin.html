@@ -749,7 +749,6 @@
     (function () {
       'use strict';
 
-      const FALLBACK_HASH = '781f4e6d1cef74f2e2790c2a3521e5f77f58868b6e8eff3eb132e8b203774575';
       const LOCAL_STORAGE_KEY = 'hkg_vault_master_key';
       const SESSION_AUTH_KEY = 'hkg_active_admin_session';
 
@@ -798,21 +797,17 @@
         return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
       }
 
-      // Validação da Chave no PostgreSQL
+      // Validação da Chave no PostgreSQL via RPC Server-Side
       async function validateKey(key) {
-        if (!key) return false;
+        if (!key || key.trim().length < 8) return false;
         try {
           if (window.IsarDB && window.IsarDB.verifyAdminAccess) {
-            const ok = await window.IsarDB.verifyAdminAccess(key);
-            if (ok) return true;
+            return await window.IsarDB.verifyAdminAccess(key.trim());
           }
-          // Fallback para hash SHA-256 no cliente
-          const hash = await sha256(key);
-          return hash === FALLBACK_HASH;
+          return false;
         } catch (err) {
           console.warn('Erro ao validar chave:', err);
-          const hash = await sha256(key);
-          return hash === FALLBACK_HASH;
+          return false;
         }
       }
 

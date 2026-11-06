@@ -9,6 +9,16 @@
 (function () {
   'use strict';
 
+  function escapeHtml(str) {
+    if (!str || typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   const cfg = window.HOKAGE_CONFIG || {};
 
   // ─── 1. Menu Mobile Drawer ─────────────────────────────────
@@ -418,7 +428,7 @@
                 Sua transação de <strong>3.14 π</strong> foi validada com sucesso na blockchain da Pi Network.
               </p>
               <div style="background:rgba(16, 185, 129, 0.1);border:1px solid rgba(16, 185, 129, 0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:20px">
-                <span style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono);word-break:break-all">TXID: ${result.txid || 'Confirmado via Pi SDK'}</span>
+                <span style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono);word-break:break-all">TXID: ${escapeHtml(result.txid || 'Confirmado via Pi SDK')}</span>
               </div>
               <div style="display:flex;flex-direction:column;gap:10px">
                 <a href="downloads/Manual-Pi-Network.pdf" download class="portal-btn portal-btn--primary portal-btn--full">

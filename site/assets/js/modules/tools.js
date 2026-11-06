@@ -6,6 +6,16 @@
 (function () {
   'use strict';
 
+  function escapeHtml(str) {
+    if (!str || typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   // --- 1. Troca de Abas no Dashboard de Membros ---
   function initMemberTabs() {
     const tabBtns = document.querySelectorAll('.member-tab-btn');
@@ -112,11 +122,11 @@
           <div class="ranking-user">
             <span class="ranking-avatar">👤</span>
             <div>
-              <div class="ranking-username">${p.username || '@pioneiro'}</div>
-              <div class="ranking-level">${p.level_name || 'Pioneiro'}</div>
+              <div class="ranking-username">${escapeHtml(p.username || '@pioneiro')}</div>
+              <div class="ranking-level">${escapeHtml(p.level_name || 'Pioneiro')}</div>
             </div>
           </div>
-          <div class="ranking-score">${p.reputation_score || 0} pts</div>
+          <div class="ranking-score">${parseInt(p.reputation_score, 10) || 0} pts</div>
         </div>
       `;
     });

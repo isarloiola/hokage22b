@@ -24,17 +24,17 @@ CREATE TABLE IF NOT EXISTS public.anuncios (
 -- 2. Habilitação de Segurança RLS (Row Level Security)
 ALTER TABLE public.anuncios ENABLE ROW LEVEL SECURITY;
 
--- 3. Políticas de Segurança (RLS)
--- Leitura de anúncios (pública para exibição na Gazeta e no Painel Admin)
+-- 3. Políticas de Segurança RLS (Proteção Zero-Trust)
+-- Visitantes públicos só podem ler anúncios que estejam com status = 'ativo'
 DROP POLICY IF EXISTS "Permitir leitura pública de anúncios ativos" ON public.anuncios;
 DROP POLICY IF EXISTS "Permitir leitura de todos os anúncios" ON public.anuncios;
-CREATE POLICY "Permitir leitura de todos os anúncios"
+CREATE POLICY "Permitir leitura pública de anúncios ativos"
     ON public.anuncios
     FOR SELECT
     TO anon, authenticated
-    USING (true);
+    USING (status = 'ativo');
 
--- Envio de anúncios (qualquer visitante ou pioneiro pode submeter)
+-- Qualquer pioneiro que pagar taxa pode inserir novo anúncio
 DROP POLICY IF EXISTS "Permitir envio público de anúncio" ON public.anuncios;
 CREATE POLICY "Permitir envio público de anúncio"
     ON public.anuncios
@@ -42,29 +42,10 @@ CREATE POLICY "Permitir envio público de anúncio"
     TO anon, authenticated
     WITH CHECK (true);
 
--- Atualização e Moderação (para o painel de controle administrativo aprovar/pausar)
-DROP POLICY IF EXISTS "Permitir moderação de anúncios" ON public.anuncios;
-CREATE POLICY "Permitir moderação de anúncios"
-    ON public.anuncios
-    FOR UPDATE
-    TO anon, authenticated
-    USING (true);
-
--- Exclusão de Anúncios (remover do mural)
-DROP POLICY IF EXISTS "Permitir exclusão de anúncios" ON public.anuncios;
-CREATE POLICY "Permitir exclusão de anúncios"
-    ON public.anuncios
-    FOR DELETE
-    TO anon, authenticated
-    USING (true);
-
--- Leitura de Leads (para o painel administrativo consultar contatos e e-mails)
-DROP POLICY IF EXISTS "Permitir leitura de leads para admin" ON public.leads;
-CREATE POLICY "Permitir leitura de leads para admin"
-    ON public.leads
-    FOR SELECT
-    TO anon, authenticated
-    USING (true);
+-- NOTA DE SEGURANÇA:
+-- As operações de moderação (UPDATE, DELETE e leitura de pausados)
+-- são restritas e executadas exclusivamente pelas funções RPC de setup_admin.sql.
+-- Nenhuma permissão direta de UPDATE ou DELETE é concedida à chave pública anon!
 
 -- 4. Índice para alta performance na listagem da Gazeta
 CREATE INDEX IF NOT EXISTS idx_anuncios_status_created ON public.anuncios (status, created_at DESC);
