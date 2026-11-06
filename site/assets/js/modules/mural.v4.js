@@ -175,6 +175,32 @@
     } catch (_) {}
   }
 
+  // Sincroniza anúncios aprovados salvos no Supabase em background sem afetar os cards existentes
+  async function syncRemoteAds() {
+    if (window.IsarDB && window.IsarDB.getAnuncios) {
+      try {
+        const timeoutPromise = new Promise(function (_, reject) {
+          setTimeout(function () { reject(new Error('timeout')); }, 3500);
+        });
+        const remoteAds = await Promise.race([
+          window.IsarDB.getAnuncios('todos'),
+          timeoutPromise
+        ]);
+        if (Array.isArray(remoteAds) && remoteAds.length > 0) {
+          const gridEl = document.getElementById('mural-ads-grid');
+          if (gridEl) {
+            remoteAds.forEach(function (ad) {
+              if (!document.getElementById('card-' + ad.id)) {
+                gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(ad));
+              }
+            });
+            filterCategory(currentCategory);
+          }
+        }
+      } catch (_) {}
+    }
+  }
+
   // --- Modal de Criação de Anúncio ---
   function openModal() {
     const modal = document.getElementById('ad-create-modal');
@@ -442,6 +468,7 @@
 
       initFilters();
       loadSavedLocalAds();
+      syncRemoteAds();
       selectTier('prata');
 
       const closeBtn = document.getElementById('ad-modal-close');
@@ -472,3 +499,4 @@
     if (window.IsarMural) window.IsarMural.init();
   }
 })();
+

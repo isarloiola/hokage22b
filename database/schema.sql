@@ -39,16 +39,17 @@ CREATE TABLE IF NOT EXISTS public.doacoes (
 
 -- 4. TABELA DE ANÚNCIOS / MURAL DOS PIONEIROS
 CREATE TABLE IF NOT EXISTS public.anuncios (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    pioneer_name TEXT NOT NULL,
-    pioneer_username TEXT,
+    id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     link_url TEXT,
+    image_url TEXT,
     category TEXT DEFAULT 'geral',
-    plan_tier TEXT DEFAULT 'bronze',
-    price_pi NUMERIC(6, 3) DEFAULT 0.314,
-    price_brl NUMERIC(6, 2) DEFAULT 3.00,
+    pioneer_username TEXT DEFAULT '@pioneiro',
+    pioneer_name TEXT DEFAULT 'Pioneiro',
+    plan_tier TEXT DEFAULT 'prata',
+    price_pi NUMERIC(8, 4) DEFAULT 1.0,
+    payment_txid TEXT,
     status TEXT DEFAULT 'ativo',
     created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
