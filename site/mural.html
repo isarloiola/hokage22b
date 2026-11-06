@@ -21,20 +21,41 @@
     } catch (_) {}
   </script>
   <style>
+    .mural-main {
+      padding-top: 74px;
+      min-height: 90vh;
+    }
+    .ad-btn-short {
+      display: none;
+    }
     @media (max-width: 768px) {
+      .mural-main {
+        padding-top: 66px;
+      }
       .navbar__actions {
         display: flex !important;
         gap: 6px !important;
+        align-items: center !important;
       }
       .navbar__actions .btn {
-        padding: 6px 10px !important;
-        font-size: 0.76rem !important;
+        padding: 6px 9px !important;
+        font-size: 0.74rem !important;
+        white-space: nowrap !important;
       }
       .pi-auth-header-btn {
-        max-width: 120px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        max-width: 105px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+      .nav-btn-home {
+        display: none !important;
+      }
+      .ad-btn-full {
+        display: none !important;
+      }
+      .ad-btn-short {
+        display: inline !important;
       }
     }
   </style>
@@ -59,9 +80,10 @@
             onclick="HokagePi.loginWithPi()" title="Conectar Pi Network" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
             ⚡ Conectar Pi
           </button>
-          <a href="index.html" class="btn btn-outline btn-sm">← Início</a>
-          <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural && window.IsarMural.openModal()">
-            📢 Anunciar no Mural
+          <a href="index.html" class="btn btn-outline btn-sm nav-btn-home">← Início</a>
+          <button type="button" class="btn btn-primary btn-sm nav-btn-ad" onclick="window.IsarMural && window.IsarMural.openModal()">
+            <span class="ad-btn-full">📢 Anunciar no Mural</span>
+            <span class="ad-btn-short">📢 Anunciar</span>
           </button>
         </div>
       </div>
@@ -69,8 +91,8 @@
   </nav>
 
   <!-- Cabeçalho Estilo Jornal Gazeta -->
-  <main style="padding-top:100px;min-height:90vh">
-    <div class="container" style="max-width:1100px;margin:0 auto;padding-top:20px">
+  <main class="mural-main">
+    <div class="container" style="max-width:1100px;margin:0 auto;padding-top:10px">
       
       <!-- Topo da Gazeta -->
       <div style="border-bottom:2px solid var(--amber);padding-bottom:16px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
@@ -244,6 +266,17 @@
           <input type="url" id="ad-input-link" placeholder="https://youtube.com/... ou https://wa.me/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
           <small id="ad-link-hint" style="display:block;font-size:0.75rem;color:var(--gray-light);margin-top:4px">
             Seu link direto para canal do YouTube, WhatsApp, loja ou site.
+          </small>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px" id="ad-image-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <label for="ad-input-image" style="font-size:0.85rem;color:var(--gray-light)">Capa / Imagem do Anúncio (Opcional)</label>
+            <span id="ad-image-badge" style="font-size:0.75rem;color:var(--amber-light);font-weight:600">Destaque Máximo no Ouro 🥇</span>
+          </div>
+          <input type="url" id="ad-input-image" placeholder="https://... (URL da imagem ou capa)" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+          <small id="ad-image-hint" style="display:block;font-size:0.75rem;color:var(--gray-light);margin-top:4px">
+            Se for canal ou vídeo do YouTube, a capa é gerada automaticamente!
           </small>
         </div>
 

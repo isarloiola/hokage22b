@@ -28,6 +28,16 @@
     return '';
   }
 
+  function getYouTubeThumb(url) {
+    if (!url || typeof url !== 'string') return '';
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2] && match[2].length === 11) {
+      return 'https://img.youtube.com/vi/' + match[2] + '/hqdefault.jpg';
+    }
+    return '';
+  }
+
   const defaultMockAds = [
     {
       id: 'mock-1',
@@ -36,6 +46,7 @@
       title: 'Canal @justhokage22b no YouTube',
       description: 'Análises semanais sérias sobre Pi Network, Web3, blockchain e finanças digitais no Brasil. Sem hype, com fatos e tecnologia.',
       link_url: 'https://www.youtube.com/@justhokage22b',
+      image_url: 'assets/img/ebook-pago-negocios.jpg',
       category: 'youtube',
       plan_tier: 'ouro',
       price_pi: 3.14
@@ -147,7 +158,7 @@
     sortedAds.forEach(function (ad) {
       const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
       const tierBadgeClass = 'ad-badge--' + tier;
-      const tierLabel = tier === 'ouro' ? '🥇 Destaque Ouro (Card Duplo)' : (tier === 'prata' ? '🥈 Destaque Prata' : '🥉 Classificado Bronze');
+      const tierLabel = tier === 'ouro' ? '👑 Destaque Ouro VIP' : (tier === 'prata' ? '🥈 Destaque Prata' : '🥉 Classificado Bronze');
 
       const author = ad.pioneer_username || ad.pioneer_name || '@pioneiro';
       const safeAuthor = escapeHtml(author);
@@ -157,15 +168,35 @@
 
       let linkHtml = '';
       if (tier === 'ouro' && cleanUrl) {
-        linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link ad-card__link--ouro" style="background:var(--amber);color:#000;font-weight:800;padding:8px 16px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px">⚡ Visitar Agora →</a>`;
+        linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link ad-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 18px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
       } else if (tier === 'prata' && cleanUrl) {
         linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">Acessar Anúncio →</a>`;
       } else {
         linkHtml = `<span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">💬 Recado da Comunidade</span>`;
       }
 
+      // Banner / Imagem de Capa do Anúncio
+      let bannerHtml = '';
+      const rawImg = ad.image_url ? safeUrl(ad.image_url) : '';
+      const ytThumb = cleanUrl ? getYouTubeThumb(cleanUrl) : '';
+      const finalImg = rawImg || ytThumb || (tier === 'ouro' ? 'assets/img/ebook-pago-negocios.jpg' : '');
+
+      if (finalImg) {
+        bannerHtml = `
+          <div class="ad-card__banner">
+            <img src="${finalImg}" alt="${safeTitle}" loading="lazy" />
+            <div class="ad-card__banner-overlay">
+              <span style="font-size:0.72rem;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);padding:3px 10px;border-radius:4px;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.2)">
+                ${tier === 'ouro' ? '👑 DESTAQUE VIP' : 'FOTO OFICIAL'}
+              </span>
+            </div>
+          </div>
+        `;
+      }
+
       html += `
         <article class="ad-card ad-card--${tier}">
+          ${bannerHtml}
           <div class="ad-card__top">
             <span class="ad-card__badge ${tierBadgeClass}">${tierLabel}</span>
             <span class="ad-card__author">${safeAuthor}</span>
@@ -277,6 +308,24 @@
         }
       }
     }
+
+    // Regras de Capa/Imagem conforme o plano
+    const imgInput = document.getElementById('ad-input-image');
+    const imgGroup = document.getElementById('ad-image-group');
+    if (imgInput && imgGroup) {
+      if (selectedTier === 'bronze') {
+        imgInput.disabled = true;
+        imgInput.value = '';
+        imgInput.placeholder = '🚫 Banners visuais exclusivos para Prata e Ouro';
+        imgGroup.style.opacity = '0.5';
+      } else {
+        imgInput.disabled = false;
+        imgGroup.style.opacity = '1';
+        imgInput.placeholder = selectedTier === 'ouro'
+          ? 'https://... (URL da foto/capa em alta resolução para o banner VIP)'
+          : 'https://... (URL da foto do produto ou serviço)';
+      }
+    }
   }
 
   async function handleAdSubmit(e) {
@@ -285,6 +334,7 @@
     const titleInput = document.getElementById('ad-input-title');
     const descInput  = document.getElementById('ad-input-desc');
     const linkInput  = document.getElementById('ad-input-link');
+    const imgInput   = document.getElementById('ad-input-image');
     const catInput   = document.getElementById('ad-input-cat');
     const userInput  = document.getElementById('ad-input-user');
     const submitBtn  = document.getElementById('ad-submit-btn');
@@ -318,6 +368,12 @@
       }
     }
 
+    const rawImg = imgInput ? imgInput.value.trim() : '';
+    let validatedImg = '';
+    if (selectedTier !== 'bronze' && rawImg && /^https?:\/\//i.test(rawImg)) {
+      validatedImg = rawImg;
+    }
+
     // Gera ID único confiável para a transação
     const adId = (window.crypto && window.crypto.randomUUID)
       ? window.crypto.randomUUID()
@@ -330,6 +386,7 @@
       title: title,
       description: desc,
       link_url: validatedLink,
+      image_url: validatedImg,
       category: catInput ? catInput.value : 'geral',
       pioneer_username: username,
       pioneer_name: username.replace('@', ''),
