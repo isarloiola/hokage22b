@@ -109,7 +109,8 @@
   to { transform: rotate(360deg); }
 }
 
-/* ─── Cards de Anúncio ──────────────────────────────────────── */
+/* ─── Cards de Anúncio / Pioneer Cards (Imunizados contra AdBlock) ──── */
+.pioneer-card,
 .ad-card {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -123,10 +124,12 @@
   overflow: hidden;
 }
 
+.pioneer-card.pioneer-card--hidden,
 .ad-card.ad-card--hidden {
   display: none !important;
 }
 
+.pioneer-card:hover,
 .ad-card:hover {
   border-color: rgba(245, 158, 11, 0.35);
   transform: translateY(-2px);
@@ -134,6 +137,7 @@
 }
 
 /* Destaque Ouro — ocupa 2 colunas no grid com acabamento VIP */
+.pioneer-card--ouro,
 .ad-card--ouro {
   grid-column: span 2;
   border: 2px solid rgba(245, 158, 11, 0.6);
@@ -142,12 +146,14 @@
   position: relative;
 }
 
+.pioneer-card--ouro:hover,
 .ad-card--ouro:hover {
   border-color: rgba(245, 158, 11, 0.9);
   box-shadow: 0 14px 40px rgba(245, 158, 11, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   transform: translateY(-3px);
 }
 
+.pioneer-card--ouro::before,
 .ad-card--ouro::before {
   content: '';
   position: absolute;
@@ -160,6 +166,7 @@
 }
 
 /* Banner de Imagem do Card (Especialmente no Card Ouro) */
+.pioneer-card__banner,
 .ad-card__banner {
   width: calc(100% + 40px);
   margin: -20px -20px 14px -20px;
@@ -169,6 +176,7 @@
   background: #09090b;
 }
 
+.pioneer-card__banner img,
 .ad-card__banner img {
   width: 100%;
   height: 100%;
@@ -177,10 +185,12 @@
   transition: transform 0.3s ease;
 }
 
+.pioneer-card:hover .pioneer-card__banner img,
 .ad-card:hover .ad-card__banner img {
   transform: scale(1.04);
 }
 
+.pioneer-card__banner-overlay,
 .ad-card__banner-overlay {
   position: absolute;
   inset: 0;
@@ -191,11 +201,13 @@
 }
 
 /* Destaque Prata */
+.pioneer-card--prata,
 .ad-card--prata {
   border-color: rgba(148, 163, 184, 0.3);
   background: rgba(148, 163, 184, 0.04);
 }
 
+.pioneer-card--prata::before,
 .ad-card--prata::before {
   content: '';
   position: absolute;
@@ -207,10 +219,12 @@
 }
 
 /* Bronze — sem destaque especial */
+.pioneer-card--bronze,
 .ad-card--bronze {
   font-size: 0.92rem;
 }
 
+.pioneer-card__top,
 .ad-card__top {
   display: flex;
   justify-content: space-between;
@@ -219,6 +233,7 @@
   flex-wrap: wrap;
 }
 
+.pioneer-card__badge,
 .ad-card__badge {
   font-size: 0.7rem;
   font-weight: 800;
@@ -228,6 +243,7 @@
   text-transform: uppercase;
 }
 
+.pioneer-badge--ouro,
 .ad-badge--ouro {
   background: linear-gradient(90deg, #f59e0b, #fbbf24);
   color: #000;
@@ -236,24 +252,28 @@
   box-shadow: 0 2px 10px rgba(245, 158, 11, 0.45);
 }
 
+.pioneer-badge--prata,
 .ad-badge--prata {
   background: rgba(148, 163, 184, 0.15);
   color: #94a3b8;
   border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
+.pioneer-badge--bronze,
 .ad-badge--bronze {
   background: rgba(180, 100, 50, 0.15);
   color: #b46832;
   border: 1px solid rgba(180, 100, 50, 0.3);
 }
 
+.pioneer-card__author,
 .ad-card__author {
   font-size: 0.78rem;
   color: var(--gray);
   font-family: 'JetBrains Mono', monospace;
 }
 
+.pioneer-card__title,
 .ad-card__title {
   font-size: 1rem;
   font-weight: 700;
@@ -262,10 +282,12 @@
   margin: 0;
 }
 
+.pioneer-card--ouro .pioneer-card__title,
 .ad-card--ouro .ad-card__title {
   font-size: 1.15rem;
 }
 
+.pioneer-card__desc,
 .ad-card__desc {
   font-size: 0.88rem;
   color: var(--gray-light);
@@ -274,6 +296,7 @@
   margin: 0;
 }
 
+.pioneer-card__footer,
 .ad-card__footer {
   display: flex;
   justify-content: space-between;
@@ -284,6 +307,7 @@
   font-size: 0.85rem;
 }
 
+.pioneer-card__link,
 .ad-card__link {
   color: var(--amber-light, #fbbf24);
   font-weight: 700;
@@ -294,11 +318,13 @@
   transition: color 0.2s ease;
 }
 
+.pioneer-card__link:hover,
 .ad-card__link:hover {
   color: #fff;
   text-decoration: underline;
 }
 
+.pioneer-card__price-tag,
 .ad-card__price-tag {
   font-size: 0.76rem;
   color: var(--gray);

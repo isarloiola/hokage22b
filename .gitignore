@@ -89,3 +89,12 @@ build/
 .tmp/
 temp/
 tmp/
+
+# 9. Credenciais Administrativas Seguras (Hokage Vault)
+*_vault_*.txt
+*admin_credentials*.txt
+*.vault.txt
+.sys_vault_hkg22b_credentials.txt
+sys_access_vault_hkg22b.txt
+admin_secret*.txt
+

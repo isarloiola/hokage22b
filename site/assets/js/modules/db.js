@@ -161,6 +161,103 @@
     }
   }
 
+  // --- MÉTODOS DE ADMINISTRAÇÃO E GESTÃO ---
+
+  // Busca todos os anúncios (ativos, pausados, pendentes) para moderação
+  async function getAllAnuncios() {
+    const db = getClient();
+    if (!db) return [];
+
+    try {
+      const { data, error } = await db
+        .from('anuncios')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.warn('Supabase: Erro ao carregar todos os anúncios:', err.message);
+      return [];
+    }
+  }
+
+  // Atualiza dados ou status de um anúncio (ex: ativo, pausado, destaque)
+  async function updateAnuncio(id, updates) {
+    const db = getClient();
+    if (!db || !id) return null;
+
+    try {
+      const { data, error } = await db
+        .from('anuncios')
+        .update(updates)
+        .eq('id', id);
+
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      console.warn('Supabase: Erro ao atualizar anúncio:', err.message);
+      return false;
+    }
+  }
+
+  // Exclui permanentemente um anúncio do mural
+  async function deleteAnuncio(id) {
+    const db = getClient();
+    if (!db || !id) return false;
+
+    try {
+      const { error } = await db
+        .from('anuncios')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      console.warn('Supabase: Erro ao excluir anúncio:', err.message);
+      return false;
+    }
+  }
+
+  // Busca todos os leads capturados para o painel de contatos
+  async function getAllLeads() {
+    const db = getClient();
+    if (!db) return [];
+
+    try {
+      const { data, error } = await db
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.warn('Supabase: Erro ao carregar leads:', err.message);
+      return [];
+    }
+  }
+
+  // Busca doações registradas
+  async function getAllDoacoes() {
+    const db = getClient();
+    if (!db) return [];
+
+    try {
+      const { data, error } = await db
+        .from('doacoes')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.warn('Supabase: Erro ao carregar doações:', err.message);
+      return [];
+    }
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
@@ -169,6 +266,12 @@
     getPioneerProfile: getPioneerProfile,
     getAnuncios: getAnuncios,
     createAnuncio: createAnuncio,
+    // Métodos Admin
+    getAllAnuncios: getAllAnuncios,
+    updateAnuncio: updateAnuncio,
+    deleteAnuncio: deleteAnuncio,
+    getAllLeads: getAllLeads,
+    getAllDoacoes: getAllDoacoes,
     isConfigured: function () {
       return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
     }

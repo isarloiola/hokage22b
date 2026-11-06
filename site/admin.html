@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOKAGE22B — Painel de Gestão e Administração Web3</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Pi Network SDK & Supabase -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg: #090a0f;
+      --bg-card: #12151f;
+      --bg-card-hover: #171b28;
+      --bg-input: #1a1f2e;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(245, 158, 11, 0.5);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --amber: #f59e0b;
+      --amber-light: #fbbf24;
+      --amber-glow: rgba(245, 158, 11, 0.25);
+      --purple: #8b5cf6;
+      --green: #10b981;
+      --red: #ef4444;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-head: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* Topbar */
+    .admin-nav {
+      background: rgba(18, 21, 31, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+    .admin-logo-badge {
+      background: linear-gradient(135deg, var(--amber), #d97706);
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .admin-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: 0.86rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--amber), #d97706);
+      color: #000;
+      box-shadow: 0 2px 10px var(--amber-glow);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .btn-pi {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #fff;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+    }
+    .btn-pi:hover {
+      filter: brightness(1.15);
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-sm { padding: 5px 10px; font-size: 0.78rem; }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
+    .btn-danger:hover { background: #ef4444; color: #fff; }
+    .btn-success { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.3); }
+    .btn-success:hover { background: #10b981; color: #000; }
+    .btn-warning { background: rgba(245, 158, 11, 0.15); color: #fde68a; border-color: rgba(245, 158, 11, 0.3); }
+    .btn-warning:hover { background: #f59e0b; color: #000; }
+
+    /* Login Screen */
+    .login-container {
+      max-width: 460px;
+      margin: 80px auto;
+      padding: 32px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+    .login-icon {
+      font-size: 2.8rem;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .login-title {
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .login-desc {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 24px;
+      line-height: 1.45;
+    }
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .login-divider::before, .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .form-input:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 2px var(--amber-glow);
+    }
+    .login-hint {
+      margin-top: 18px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    /* Main Dashboard */
+    .dashboard-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 20px;
+      width: 100%;
+      flex: 1;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+    .stat-value {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .stat-desc {
+      font-size: 0.75rem;
+      color: var(--amber-light);
+    }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 22px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 12px 18px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active {
+      color: var(--amber);
+      border-bottom-color: var(--amber);
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Filters & Actions Bar */
+    .actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .filter-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-pill:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
+    .filter-pill.active {
+      background: var(--amber);
+      color: #000;
+      border-color: var(--amber);
+      font-weight: 800;
+    }
+
+    /* Cards / Table List */
+    .admin-table-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+    table.admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.86rem;
+    }
+    table.admin-table th {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      padding: 12px 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    table.admin-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: middle;
+    }
+    table.admin-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-ativo { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-pausado { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-pendente { background: rgba(156, 163, 175, 0.15); color: #d1d5db; border: 1px solid rgba(156, 163, 175, 0.3); }
+    .badge-tier-ouro { background: linear-gradient(90deg, #f59e0b, #fbbf24); color: #000; font-weight: 900; }
+    .badge-tier-prata { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+    .badge-tier-bronze { background: rgba(180, 100, 50, 0.2); color: #d97706; }
+
+    /* Toast Notification */
+    #admin-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #111827;
+      color: #fff;
+      border: 1px solid var(--amber);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Modal Form */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <header class="admin-nav">
+    <a href="mural.html" class="admin-logo">
+      <span style="color:var(--amber);font-size:1.4rem">✦</span>
+      <span>HOKAGE22B</span>
+      <span class="admin-logo-badge">Painel de Gestão</span>
+    </a>
+
+    <div class="admin-nav-actions" id="nav-actions-auth" style="display:none">
+      <span id="admin-user-tag" style="font-size:0.8rem;color:var(--text-muted);font-family:var(--font-mono)"></span>
+      <a href="mural.html" class="btn btn-outline btn-sm" target="_blank">👁️ Ver Mural</a>
+      <button type="button" class="btn btn-outline btn-sm" onclick="logoutAdmin()">Sair</button>
+    </div>
+  </header>
+
+  <!-- TELA 1: LOGIN ADMINISTRATIVO -->
+  <main id="view-login" class="login-container">
+    <div class="login-icon">🛡️</div>
+    <h1 class="login-title">Acesso Administrativo</h1>
+    <p class="login-desc">Gerencie anúncios da Gazeta, aprove publicações, consulte leads e mantenha o portal sem precisar mexer em uma linha de código.</p>
+
+    <!-- Método A: Login Pi Network -->
+    <button type="button" class="btn btn-pi" style="width:100%;padding:12px;font-size:0.95rem" onclick="loginWithPiAdmin()">
+      ⚡ Entrar com Pi Network (Acesso @hokage22b)
+    </button>
+
+    <div class="login-divider">ou acesse com chave mestra</div>
+
+    <!-- Método B: Senha Mestra -->
+    <form onsubmit="handlePasswordLogin(event)">
+      <div class="form-group">
+        <label class="form-label" for="admin-pass">Chave Mestra / Senha do Cofre</label>
+        <input type="password" id="admin-pass" class="form-input" placeholder="Cole sua chave mestra aqui..." autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:11px;font-weight:700">
+        🔓 Desbloquear Painel
+      </button>
+    </form>
+
+    <div class="login-hint">
+      🔒 <strong>Segurança do Cofre:</strong> A chave mestra está armazenada no arquivo confidencial de cofre (protegido por .gitignore). Se estiver no Pi Browser com seu usuário <code>@hokage22b</code>, o acesso é liberado com 1 clique.
+    </div>
+  </main>
+
+  <!-- TELA 2: DASHBOARD ADMINISTRATIVO -->
+  <main id="view-dashboard" class="dashboard-container" style="display:none">
+    
+    <!-- Estatísticas Rápidas -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Anúncios Ativos</span>
+        <span class="stat-value" id="stat-active-ads">0</span>
+        <span class="stat-desc">Visíveis na Gazeta dos Pioneiros</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Anúncios Pendentes / Pausados</span>
+        <span class="stat-value" id="stat-pending-ads">0</span>
+        <span class="stat-desc">Aguardando moderação ou pausados</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Total de Leads</span>
+        <span class="stat-value" id="stat-total-leads">0</span>
+        <span class="stat-desc">Contatos de pioneiros interessados</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Arrecadação do Mural</span>
+        <span class="stat-value" id="stat-total-pi">0.00 π</span>
+        <span class="stat-desc">Micro-taxas validadas na rede</span>
+      </div>
+    </section>
+
+    <!-- Navegação por Abas -->
+    <nav class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('tab-ads', this)">
+        📢 Moderação de Anúncios (<span id="tab-count-ads">0</span>)
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-leads', this)">
+        👥 Leads &amp; Contatos (<span id="tab-count-leads">0</span>)
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-system', this)">
+        ⚙️ Conexão &amp; Banco de Dados
+      </button>
+    </nav>
+
+    <!-- ABA 1: MODERAÇÃO DE ANÚNCIOS -->
+    <section id="tab-ads" class="tab-pane active">
+      <div class="actions-bar">
+        <div class="filter-pills">
+          <button class="filter-pill active" onclick="filterAds('todos', this)">Todos</button>
+          <button class="filter-pill" onclick="filterAds('ativo', this)">🟢 Ativos</button>
+          <button class="filter-pill" onclick="filterAds('pausado', this)">🟡 Pausados</button>
+          <button class="filter-pill" onclick="filterAds('ouro', this)">👑 Destaque Ouro</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" onclick="loadAllAds()">🔄 Atualizar</button>
+          <button class="btn btn-primary btn-sm" onclick="openCreateAdModal()">+ Novo Anúncio Manual</button>
+        </div>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Plano</th>
+              <th>Título &amp; Descrição</th>
+              <th>Pioneiro</th>
+              <th>Categoria</th>
+              <th>Valor π</th>
+              <th>Data</th>
+              <th style="text-align:right">Ações de Gestão</th>
+            </tr>
+          </thead>
+          <tbody id="ads-table-body">
+            <tr>
+              <td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">
+                Carregando anúncios do banco de dados...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 2: LEADS & CONTATOS -->
+    <section id="tab-leads" class="tab-pane">
+      <div class="actions-bar">
+        <p style="color:var(--text-muted);font-size:0.86rem">
+          Pessoas que baixaram o E-book Manual do Pioneiro ou manifestaram interesse pelo portal.
+        </p>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" onclick="copyAllEmails()">📋 Copiar Todos os E-mails</button>
+          <button class="btn btn-outline btn-sm" onclick="exportLeadsCsv()">📥 Exportar Planilha (CSV)</button>
+          <button class="btn btn-outline btn-sm" onclick="loadAllLeads()">🔄 Atualizar</button>
+        </div>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Origem</th>
+              <th>Data de Cadastro</th>
+              <th style="text-align:right">Contato Rápido</th>
+            </tr>
+          </thead>
+          <tbody id="leads-table-body">
+            <tr>
+              <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted)">
+                Carregando leads...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 3: SISTEMA & STATUS DO BANCO -->
+    <section id="tab-system" class="tab-pane">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:720px">
+        <h3 style="font-family:var(--font-head);color:#fff;margin-bottom:12px;font-size:1.2rem">Status da Conexão Cloud</h3>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:18px">
+          O portal está conectado ao Supabase Cloud com criptografia em trânsito e políticas de isolamento RLS.
+        </p>
+
+        <div style="display:flex;flex-direction:column;gap:10px;font-family:var(--font-mono);font-size:0.82rem;background:rgba(0,0,0,0.3);padding:16px;border-radius:8px;border:1px solid var(--border);margin-bottom:20px">
+          <div>URL: <span style="color:var(--amber)">https://yhzoehwkuxteihsnagcj.supabase.co</span></div>
+          <div>Status RLS: <span style="color:var(--green)">✓ Ativo e Operacional</span></div>
+          <div>Tabelas Conectadas: <span style="color:#fff">anuncios, leads, pioneiros, doacoes</span></div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="https://supabase.com/dashboard/project/yhzoehwkuxteihsnagcj" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+            ↗ Abrir Dashboard Supabase
+          </a>
+          <a href="https://supabase.com/dashboard/project/yhzoehwkuxteihsnagcj/editor" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+            ↗ Abrir Table Editor
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: CRIAR ANÚNCIO MANUAL -->
+  <div id="modal-create-ad" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="color:#fff;font-family:var(--font-head);font-size:1.2rem">Adicionar Anúncio Manualmente</h3>
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeCreateAdModal()">✕</button>
+      </div>
+      <form onsubmit="handleManualAdCreate(event)">
+        <div class="form-group">
+          <label class="form-label">Título do Anúncio</label>
+          <input type="text" id="new-ad-title" class="form-input" required placeholder="Ex: Meu Canal no YouTube" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Descrição</label>
+          <textarea id="new-ad-desc" class="form-input" style="height:70px;resize:vertical" required placeholder="Detalhes do anúncio..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Link de Destino</label>
+          <input type="url" id="new-ad-link" class="form-input" placeholder="https://..." />
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="form-group">
+            <label class="form-label">Categoria</label>
+            <select id="new-ad-category" class="form-input" style="font-family:var(--font)">
+              <option value="youtube">▶ Canal YouTube</option>
+              <option value="produto">🛍️ Produto</option>
+              <option value="servico">🛠️ Serviço</option>
+              <option value="mensagem">💬 Mensagem</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Plano</label>
+            <select id="new-ad-tier" class="form-input" style="font-family:var(--font)">
+              <option value="ouro">🥇 Ouro (3.14 π)</option>
+              <option value="prata" selected>🥈 Prata (1.00 π)</option>
+              <option value="bronze">🥉 Bronze (0.314 π)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nome de Usuário Pi</label>
+          <input type="text" id="new-ad-author" class="form-input" value="@hokage22b" />
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+          <button type="button" class="btn btn-outline" onclick="closeCreateAdModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Anúncio</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="admin-toast"></div>
+
+  <!-- SCRIPTS DE INTEGRAÇÃO & AUTENTICAÇÃO -->
+  <script src="assets/js/modules/db.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // Hash SHA-256 da Senha Mestra (Cofre Secreto)
+      const ADMIN_HASH = '781f4e6d1cef74f2e2790c2a3521e5f77f58868b6e8eff3eb132e8b203774575';
+      const AUTH_KEY = 'hkg_admin_session_auth';
+
+      let cachedAds = [];
+      let cachedLeads = [];
+      let currentAdFilter = 'todos';
+
+      // Toast notification helper
+      function showToast(msg, isError) {
+        const t = document.getElementById('admin-toast');
+        if (!t) return;
+        t.style.borderColor = isError ? 'var(--red)' : 'var(--amber)';
+        t.innerHTML = (isError ? '⚠️ ' : '✓ ') + msg;
+        t.style.display = 'flex';
+        setTimeout(() => { t.style.display = 'none'; }, 3500);
+      }
+      window.showToast = showToast;
+
+      // SHA-256 via Web Crypto
+      async function sha256(str) {
+        const buf = new TextEncoder().encode(str);
+        const digest = await crypto.subtle.digest('SHA-256', buf);
+        return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+
+      // Verifica se já está autenticado na sessão
+      function checkAuth() {
+        const sess = sessionStorage.getItem(AUTH_KEY);
+        if (sess) {
+          showDashboard(sess);
+        } else {
+          showLogin();
+        }
+      }
+
+      function showLogin() {
+        document.getElementById('view-login').style.display = 'block';
+        document.getElementById('view-dashboard').style.display = 'none';
+        document.getElementById('nav-actions-auth').style.display = 'none';
+      }
+
+      function showDashboard(username) {
+        document.getElementById('view-login').style.display = 'none';
+        document.getElementById('view-dashboard').style.display = 'block';
+        document.getElementById('nav-actions-auth').style.display = 'flex';
+        document.getElementById('admin-user-tag').textContent = '🛡️ ' + username;
+        loadAllAds();
+        loadAllLeads();
+      }
+
+      // Login por Chave Mestra
+      window.handlePasswordLogin = async function (e) {
+        e.preventDefault();
+        const pass = document.getElementById('admin-pass').value.trim();
+        if (!pass) return;
+
+        try {
+          const hash = await sha256(pass);
+          if (hash === ADMIN_HASH) {
+            sessionStorage.setItem(AUTH_KEY, 'hokage22b (Chave Mestra)');
+            showToast('Chave mestra aceita! Acesso liberado.');
+            showDashboard('hokage22b (Cofre)');
+          } else {
+            showToast('Chave mestra incorreta.', true);
+          }
+        } catch (err) {
+          showToast('Erro ao validar senha: ' + err.message, true);
+        }
+      };
+
+      // Login por Pi Network SDK (@hokage22b)
+      window.loginWithPiAdmin = function () {
+        if (!window.Pi) {
+          showToast('Pi SDK não detectado. Abra esta página no Pi Browser.', true);
+          return;
+        }
+
+        try {
+          window.Pi.init({ version: '2.0', sandbox: false });
+          window.Pi.authenticate(['username'], function (auth) {
+            const user = auth && auth.user && auth.user.username ? auth.user.username.toLowerCase() : '';
+            if (user === 'hokage22b') {
+              sessionStorage.setItem(AUTH_KEY, '@hokage22b');
+              showToast('Bem-vindo, @hokage22b! Acesso Web3 confirmado.');
+              showDashboard('@hokage22b (Pi Web3)');
+            } else {
+              showToast(`Acesso restrito: usuário @${user || 'desconhecido'} não é administrador.`, true);
+            }
+          }).catch(function (err) {
+            showToast('Erro na autenticação Pi: ' + (err.message || err), true);
+          });
+        } catch (err) {
+          showToast('Erro ao iniciar Pi SDK: ' + err.message, true);
+        }
+      };
+
+      window.logoutAdmin = function () {
+        sessionStorage.removeItem(AUTH_KEY);
+        showToast('Sessão encerrada com segurança.');
+        showLogin();
+      };
+
+      // Gerenciamento de Abas
+      window.switchTab = function (tabId, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById(tabId);
+        if (target) target.classList.add('active');
+      };
+
+      // ─── CARREGAR ANÚNCIOS ─────────────────────────────────────────
+      window.loadAllAds = async function () {
+        const tbody = document.getElementById('ads-table-body');
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-muted)">Carregando...</td></tr>';
+
+        if (!window.IsarDB) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--red)">Módulo IsarDB não carregado.</td></tr>';
+          return;
+        }
+
+        try {
+          const ads = await window.IsarDB.getAllAnuncios();
+          cachedAds = ads || [];
+          renderAdsTable();
+          updateStats();
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--red)">Erro ao carregar anúncios: ${err.message}</td></tr>`;
+        }
+      };
+
+      function renderAdsTable() {
+        const tbody = document.getElementById('ads-table-body');
+        let filtered = cachedAds;
+
+        if (currentAdFilter === 'ativo') filtered = cachedAds.filter(a => a.status === 'ativo');
+        else if (currentAdFilter === 'pausado') filtered = cachedAds.filter(a => a.status === 'pausado');
+        else if (currentAdFilter === 'ouro') filtered = cachedAds.filter(a => a.plan_tier === 'ouro');
+
+        document.getElementById('tab-count-ads').textContent = cachedAds.length;
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">Nenhum anúncio encontrado com este filtro.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = filtered.map(ad => {
+          const tierClass = 'badge-tier-' + (ad.plan_tier || 'bronze');
+          const statusClass = 'badge-' + (ad.status || 'ativo');
+          const dateStr = ad.created_at ? new Date(ad.created_at).toLocaleDateString('pt-BR') : '—';
+          const linkHtml = ad.link_url ? `<a href="${ad.link_url}" target="_blank" rel="noopener" style="color:var(--amber-light);font-size:0.75rem;display:block;margin-top:4px">🔗 Link externo</a>` : '';
+
+          return `
+            <tr id="row-ad-${ad.id}">
+              <td><span class="badge ${statusClass}">${ad.status || 'ativo'}</span></td>
+              <td><span class="badge ${tierClass}">${ad.plan_tier || 'bronze'}</span></td>
+              <td style="max-width:280px">
+                <strong style="color:#fff;display:block;font-size:0.92rem">${escapeHtml(ad.title || '')}</strong>
+                <span style="color:var(--text-muted);font-size:0.78rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(ad.description || '')}</span>
+                ${linkHtml}
+              </td>
+              <td><span style="font-family:var(--font-mono);font-size:0.8rem;color:#cbd5e1">${escapeHtml(ad.pioneer_username || ad.pioneer_name || '@pioneiro')}</span></td>
+              <td><span style="font-size:0.78rem;color:var(--text-muted)">${ad.category || 'geral'}</span></td>
+              <td><strong style="color:var(--amber);font-family:var(--font-mono)">${ad.price_pi ? ad.price_pi + ' π' : '0 π'}</strong></td>
+              <td style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">${dateStr}</td>
+              <td style="text-align:right;white-space:nowrap">
+                ${ad.status === 'ativo' ? `
+                  <button type="button" class="btn btn-warning btn-sm" onclick="toggleAdStatus('${ad.id}', 'pausado')" title="Ocultar do Mural">
+                    ⏸️ Pausar
+                  </button>
+                ` : `
+                  <button type="button" class="btn btn-success btn-sm" onclick="toggleAdStatus('${ad.id}', 'ativo')" title="Aprovar e Tornar Visível">
+                    ✓ Ativar
+                  </button>
+                `}
+                <button type="button" class="btn btn-outline btn-sm" onclick="promoteToOuro('${ad.id}')" title="Destacar como Ouro">
+                  👑
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteAdPrompt('${ad.id}', '${escapeHtml(ad.title || '')}')" title="Excluir Definitivamente">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      window.filterAds = function (filter, btn) {
+        currentAdFilter = filter;
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        renderAdsTable();
+      };
+
+      // Alterar status (Ativar/Pausar)
+      window.toggleAdStatus = async function (id, newStatus) {
+        try {
+          const ok = await window.IsarDB.updateAnuncio(id, { status: newStatus });
+          if (ok) {
+            showToast(`Anúncio ${newStatus === 'ativo' ? 'ativado e publicado' : 'pausado'}!`);
+            const ad = cachedAds.find(a => a.id === id);
+            if (ad) ad.status = newStatus;
+            renderAdsTable();
+            updateStats();
+          } else {
+            showToast('Falha ao atualizar anúncio.', true);
+          }
+        } catch (err) {
+          showToast('Erro: ' + err.message, true);
+        }
+      };
+
+      // Promover para Destaque Ouro
+      window.promoteToOuro = async function (id) {
+        try {
+          const ok = await window.IsarDB.updateAnuncio(id, { plan_tier: 'ouro', price_pi: 3.14 });
+          if (ok) {
+            showToast('Anúncio promovido para Destaque Ouro (VIP)!');
+            const ad = cachedAds.find(a => a.id === id);
+            if (ad) { ad.plan_tier = 'ouro'; ad.price_pi = 3.14; }
+            renderAdsTable();
+          }
+        } catch (err) {
+          showToast('Erro: ' + err.message, true);
+        }
+      };
+
+      // Excluir anúncio
+      window.deleteAdPrompt = async function (id, title) {
+        if (!confirm(`Deseja realmente excluir permanentemente o anúncio "${title}"?`)) return;
+
+        try {
+          const ok = await window.IsarDB.deleteAnuncio(id);
+          if (ok) {
+            showToast('Anúncio excluído com sucesso.');
+            cachedAds = cachedAds.filter(a => a.id !== id);
+            renderAdsTable();
+            updateStats();
+          } else {
+            showToast('Falha ao excluir anúncio.', true);
+          }
+        } catch (err) {
+          showToast('Erro: ' + err.message, true);
+        }
+      };
+
+      // Modal Criar Anúncio
+      window.openCreateAdModal = function () { document.getElementById('modal-create-ad').style.display = 'flex'; };
+      window.closeCreateAdModal = function () { document.getElementById('modal-create-ad').style.display = 'none'; };
+
+      window.handleManualAdCreate = async function (e) {
+        e.preventDefault();
+        const tier = document.getElementById('new-ad-tier').value;
+        const prices = { ouro: 3.14, prata: 1.0, bronze: 0.314 };
+
+        const payload = {
+          id: 'admin_' + Date.now().toString(36),
+          title: document.getElementById('new-ad-title').value.trim(),
+          description: document.getElementById('new-ad-desc').value.trim(),
+          link_url: document.getElementById('new-ad-link').value.trim() || null,
+          category: document.getElementById('new-ad-category').value,
+          plan_tier: tier,
+          price_pi: prices[tier] || 1.0,
+          pioneer_username: document.getElementById('new-ad-author').value.trim() || '@hokage22b',
+          status: 'ativo'
+        };
+
+        try {
+          const res = await window.IsarDB.createAnuncio(payload);
+          if (res) {
+            showToast('Anúncio criado e publicado com sucesso!');
+            closeCreateAdModal();
+            loadAllAds();
+          } else {
+            showToast('Erro ao criar anúncio.', true);
+          }
+        } catch (err) {
+          showToast('Erro: ' + err.message, true);
+        }
+      };
+
+      // ─── CARREGAR LEADS ───────────────────────────────────────────
+      window.loadAllLeads = async function () {
+        const tbody = document.getElementById('leads-table-body');
+        if (!window.IsarDB) return;
+
+        try {
+          const leads = await window.IsarDB.getAllLeads();
+          cachedLeads = leads || [];
+          document.getElementById('tab-count-leads').textContent = cachedLeads.length;
+
+          if (cachedLeads.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted)">Nenhum lead registrado ainda.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = cachedLeads.map(l => {
+            const dateStr = l.created_at ? new Date(l.created_at).toLocaleDateString('pt-BR') : '—';
+            return `
+              <tr>
+                <td><strong style="color:#fff">${escapeHtml(l.name || 'Pioneiro')}</strong></td>
+                <td><span style="font-family:var(--font-mono);color:var(--amber-light)">${escapeHtml(l.email || '')}</span></td>
+                <td><span style="font-size:0.75rem;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px">${escapeHtml(l.source || 'ebook')}</span></td>
+                <td style="font-size:0.75rem;color:var(--text-muted)">${dateStr}</td>
+                <td style="text-align:right">
+                  <a href="mailto:${l.email}" class="btn btn-outline btn-sm">✉️ E-mail</a>
+                </td>
+              </tr>
+            `;
+          }).join('');
+
+          updateStats();
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--red)">Erro ao carregar leads: ${err.message}</td></tr>`;
+        }
+      };
+
+      window.copyAllEmails = function () {
+        if (!cachedLeads.length) {
+          showToast('Nenhum e-mail para copiar.', true);
+          return;
+        }
+        const emails = cachedLeads.map(l => l.email).filter(Boolean).join(', ');
+        navigator.clipboard.writeText(emails).then(() => {
+          showToast(`Copiados ${cachedLeads.length} e-mails para a área de transferência!`);
+        });
+      };
+
+      window.exportLeadsCsv = function () {
+        if (!cachedLeads.length) {
+          showToast('Nenhum dado para exportar.', true);
+          return;
+        }
+        let csv = 'Nome,Email,Origem,Data\n';
+        cachedLeads.forEach(l => {
+          csv += `"${l.name || ''}","${l.email || ''}","${l.source || ''}","${l.created_at || ''}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `leads_hokage22b_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Planilha CSV baixada com sucesso!');
+      };
+
+      // Atualiza cards de estatísticas no topo
+      function updateStats() {
+        const active = cachedAds.filter(a => a.status === 'ativo').length;
+        const pending = cachedAds.filter(a => a.status !== 'ativo').length;
+        const totalPi = cachedAds.reduce((acc, a) => acc + (parseFloat(a.price_pi) || 0), 0);
+
+        document.getElementById('stat-active-ads').textContent = active;
+        document.getElementById('stat-pending-ads').textContent = pending;
+        document.getElementById('stat-total-leads').textContent = cachedLeads.length;
+        document.getElementById('stat-total-pi').textContent = totalPi.toFixed(2) + ' π';
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      // Inicialização
+      checkAuth();
+
+    })();
+  </script>
+</body>
+</html>

@@ -49,7 +49,7 @@
 
   function buildAdCardHtml(ad) {
     const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
-    const tierBadgeClass = 'ad-badge--' + tier;
+    const tierBadgeClass = 'pioneer-badge--' + tier;
     const tierLabel = tier === 'ouro' ? '👑 Destaque Ouro · Card Duplo' : (tier === 'prata' ? '🥈 Destaque Prata' : '🥉 Classificado Bronze');
 
     const author = ad.pioneer_username || ad.pioneer_name || '@pioneiro';
@@ -62,9 +62,9 @@
 
     let linkHtml = '';
     if (tier === 'ouro' && cleanUrl) {
-      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link ad-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
+      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="pioneer-card__link pioneer-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
     } else if (tier === 'prata' && cleanUrl) {
-      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">Acessar Anúncio →</a>`;
+      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="pioneer-card__link">Acessar Anúncio →</a>`;
     } else {
       linkHtml = `<span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">💬 Recado Fraterno da Comunidade</span>`;
     }
@@ -76,9 +76,9 @@
 
     if (finalImg) {
       bannerHtml = `
-        <div class="ad-card__banner">
+        <div class="pioneer-card__banner">
           <img src="${finalImg}" alt="${safeTitle}" loading="lazy" />
-          <div class="ad-card__banner-overlay">
+          <div class="pioneer-card__banner-overlay">
             <span style="font-size:0.72rem;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 10px;border-radius:4px;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.25)">
               ${tier === 'ouro' ? '👑 DESTAQUE VIP' : 'FOTO OFICIAL'}
             </span>
@@ -88,17 +88,17 @@
     }
 
     return `
-      <article class="ad-card ad-card--${tier}" data-category="${category}" id="card-${cardId}">
+      <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" id="card-${cardId}">
         ${bannerHtml}
-        <div class="ad-card__top">
-          <span class="ad-card__badge ${tierBadgeClass}">${tierLabel}</span>
-          <span class="ad-card__author">${safeAuthor}</span>
+        <div class="pioneer-card__top">
+          <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
+          <span class="pioneer-card__author">${safeAuthor}</span>
         </div>
-        <h3 class="ad-card__title">${safeTitle}</h3>
-        <p class="ad-card__desc">${safeDesc}</p>
-        <div class="ad-card__footer">
+        <h3 class="pioneer-card__title">${safeTitle}</h3>
+        <p class="pioneer-card__desc">${safeDesc}</p>
+        <div class="pioneer-card__footer">
           ${linkHtml}
-          <span class="ad-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
+          <span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
         </div>
       </article>
     `;
@@ -107,20 +107,20 @@
   // Filtragem estrita por CSS: NUNCA apaga nem altera o HTML dos cards existentes
   function filterCategory(cat) {
     currentCategory = cat || 'todos';
-    const gridEl = document.getElementById('mural-ads-grid');
+    const gridEl = document.getElementById('mural-ads-grid') || document.getElementById('gazeta-posts-grid');
     if (!gridEl) return;
 
-    const cards = gridEl.querySelectorAll('.ad-card');
+    const cards = gridEl.querySelectorAll('.pioneer-card, .ad-card');
     let visibleCount = 0;
 
     cards.forEach(function (card) {
       const cardCat = card.getAttribute('data-category') || 'geral';
       if (currentCategory === 'todos' || cardCat === currentCategory) {
-        card.classList.remove('ad-card--hidden');
+        card.classList.remove('pioneer-card--hidden', 'ad-card--hidden');
         card.style.display = 'flex';
         visibleCount++;
       } else {
-        card.classList.add('ad-card--hidden');
+        card.classList.add('pioneer-card--hidden', 'ad-card--hidden');
         card.style.display = 'none';
       }
     });
