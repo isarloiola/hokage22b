@@ -205,6 +205,8 @@
 .ad-card--prata {
   border-color: rgba(148, 163, 184, 0.3);
   background: rgba(148, 163, 184, 0.04);
+  padding: 16px 18px;
+  gap: 8px;
 }
 
 .pioneer-card--prata::before,
@@ -222,6 +224,8 @@
 .pioneer-card--bronze,
 .ad-card--bronze {
   font-size: 0.92rem;
+  padding: 16px 18px;
+  gap: 8px;
 }
 
 .pioneer-card__top,
@@ -477,10 +481,59 @@
   background: #1a1f2e;
 }
 
-/* ─── Responsivo ─────────────────────────────────────────── */
+/* ─── Responsivo Mobile ──────────────────────────────────── */
 @media (max-width: 768px) {
+  .mural-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .pioneer-card,
+  .ad-card {
+    padding: 14px 15px !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .pioneer-card--ouro,
   .ad-card--ouro {
-    grid-column: span 1;
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .pioneer-card--prata,
+  .ad-card--prata,
+  .pioneer-card--bronze,
+  .ad-card--bronze {
+    padding: 12px 14px !important;
+    gap: 7px !important;
+  }
+
+  .pioneer-card__banner,
+  .ad-card__banner {
+    width: calc(100% + 30px) !important;
+    margin: -14px -15px 10px -15px !important;
+    height: 150px !important;
+  }
+
+  .pioneer-card__footer,
+  .ad-card__footer {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding-top: 8px !important;
+  }
+
+  .pioneer-card__link--ouro,
+  .ad-card__link--ouro {
+    padding: 8px 14px !important;
+    font-size: 0.82rem !important;
   }
 
   .ad-tier-selector {
