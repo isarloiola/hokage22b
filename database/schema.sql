@@ -68,6 +68,7 @@ ALTER TABLE public.anuncios ENABLE ROW LEVEL SECURITY;
 
 -- Regra para LEADS: Qualquer visitante pode inserir seu próprio lead (INSERT)
 -- NENHUM visitante anônimo pode listar ou ler a tabela de leads (SELECT bloqueado para anon)
+DROP POLICY IF EXISTS "Permitir inserção pública de leads" ON public.leads;
 CREATE POLICY "Permitir inserção pública de leads"
     ON public.leads
     FOR INSERT
@@ -75,18 +76,21 @@ CREATE POLICY "Permitir inserção pública de leads"
     WITH CHECK (true);
 
 -- Regra para PIONEIROS: O pioneiro pode ler seus dados e atualizar seu progresso
+DROP POLICY IF EXISTS "Pioneiro pode consultar seu perfil" ON public.pioneiros;
 CREATE POLICY "Pioneiro pode consultar seu perfil"
     ON public.pioneiros
     FOR SELECT
     TO anon, authenticated
     USING (true);
 
+DROP POLICY IF EXISTS "Pioneiro pode atualizar seu próprio perfil" ON public.pioneiros;
 CREATE POLICY "Pioneiro pode atualizar seu próprio perfil"
     ON public.pioneiros
     FOR INSERT
     TO anon, authenticated
     WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Pioneiro pode modificar seu próprio score" ON public.pioneiros;
 CREATE POLICY "Pioneiro pode modificar seu próprio score"
     ON public.pioneiros
     FOR UPDATE
@@ -94,6 +98,7 @@ CREATE POLICY "Pioneiro pode modificar seu próprio score"
     USING (true);
 
 -- Regra para DOAÇÕES: Registro anônimo permitido
+DROP POLICY IF EXISTS "Permitir registro de apoio voluntário" ON public.doacoes;
 CREATE POLICY "Permitir registro de apoio voluntário"
     ON public.doacoes
     FOR INSERT
@@ -101,15 +106,22 @@ CREATE POLICY "Permitir registro de apoio voluntário"
     WITH CHECK (true);
 
 -- Regras para ANÚNCIOS: Qualquer pessoa pode ler anúncios ativos e submeter novos
+DROP POLICY IF EXISTS "Permitir leitura pública de anúncios ativos" ON public.anuncios;
 CREATE POLICY "Permitir leitura pública de anúncios ativos"
     ON public.anuncios
     FOR SELECT
     TO anon, authenticated
     USING (status = 'ativo');
 
+DROP POLICY IF EXISTS "Permitir envio público de anúncio" ON public.anuncios;
 CREATE POLICY "Permitir envio público de anúncio"
     ON public.anuncios
     FOR INSERT
     TO anon, authenticated
     WITH CHECK (true);
+
+-- Índices de Alta Performance
+CREATE INDEX IF NOT EXISTS idx_leads_email ON public.leads (email);
+CREATE INDEX IF NOT EXISTS idx_pioneiros_score ON public.pioneiros (reputation_score DESC);
+CREATE INDEX IF NOT EXISTS idx_anuncios_status_created ON public.anuncios (status, created_at DESC);
 
