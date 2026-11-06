@@ -10,7 +10,7 @@
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/style.css?v=2.2" />
   <!-- Pi Network SDK Oficial v2.0 -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
@@ -121,9 +121,87 @@
         <button class="mural-filter-btn" data-category="mensagem" type="button">💬 Recados da Comunidade</button>
       </div>
 
-      <!-- Grid de Anúncios -->
+      <!-- Grid de Anúncios (Estático + Dinâmico) -->
       <div class="mural-grid" id="mural-ads-grid">
-        <!-- Renderizado via JavaScript / Supabase -->
+        <!-- 1. DESTAQUE OURO (CARD DUPLO VIP COM BANNER VISUAL) -->
+        <article class="ad-card ad-card--ouro">
+          <div class="ad-card__banner">
+            <img src="assets/img/ebook-pago-negocios.jpg" alt="Canal @justhokage22b no YouTube" loading="lazy" />
+            <div class="ad-card__banner-overlay">
+              <span style="font-size:0.72rem;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 10px;border-radius:4px;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.25)">
+                👑 DESTAQUE VIP · VÍDEOS &amp; ANÁLISES
+              </span>
+            </div>
+          </div>
+          <div class="ad-card__top">
+            <span class="ad-card__badge ad-badge--ouro">👑 Destaque Ouro · Card Duplo</span>
+            <span class="ad-card__author">@hokage22b</span>
+          </div>
+          <h3 class="ad-card__title">Canal @justhokage22b no YouTube</h3>
+          <p class="ad-card__desc">
+            Análises semanais sérias e sem hype sobre Pi Network, Web3, nós validadores e finanças descentralizadas no Brasil. Conteúdo com embasamento técnico e foco na Open Mainnet.
+          </p>
+          <div class="ad-card__footer">
+            <a href="https://www.youtube.com/@justhokage22b" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link ad-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">
+              ⚡ Acessar Canal Oficial →
+            </a>
+            <span class="ad-card__price-tag">3.14 π</span>
+          </div>
+        </article>
+
+        <!-- 2. DESTAQUE PRATA (SERVIÇO) -->
+        <article class="ad-card ad-card--prata">
+          <div class="ad-card__top">
+            <span class="ad-card__badge ad-badge--prata">🥈 Destaque Prata · Serviços</span>
+            <span class="ad-card__author">@carlos_dev</span>
+          </div>
+          <h3 class="ad-card__title">Desenvolvimento de dApps no Pi Browser</h3>
+          <p class="ad-card__desc">
+            Programador front-end cria páginas modernas e integrações com o Pi SDK oficial para comércios e criadores que desejam aceitar Pi.
+          </p>
+          <div class="ad-card__footer">
+            <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">
+              Falar no WhatsApp →
+            </a>
+            <span class="ad-card__price-tag">1.00 π</span>
+          </div>
+        </article>
+
+        <!-- 3. DESTAQUE PRATA (PRODUTO) -->
+        <article class="ad-card ad-card--prata">
+          <div class="ad-card__top">
+            <span class="ad-card__badge ad-badge--prata">🥈 Destaque Prata · Comércio</span>
+            <span class="ad-card__author">@artes_brasil</span>
+          </div>
+          <h3 class="ad-card__title">Artesanato Mineiro Aceitando Pi (P2P)</h3>
+          <p class="ad-card__desc">
+            Peças artesanais em madeira e cerâmica com frete para todo o Brasil. Aceitamos 100% em Pi na Mainnet para pioneiros verificados.
+          </p>
+          <div class="ad-card__footer">
+            <a href="https://instagram.com/hokage22b" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">
+              Ver Catálogo no Instagram →
+            </a>
+            <span class="ad-card__price-tag">1.00 π</span>
+          </div>
+        </article>
+
+        <!-- 4. CLASSIFICADO BRONZE (MENSAGEM SEM LINK EXTERNO) -->
+        <article class="ad-card ad-card--bronze">
+          <div class="ad-card__top">
+            <span class="ad-card__badge ad-badge--bronze">🥉 Classificado Bronze · Recado</span>
+            <span class="ad-card__author">@pioneiro_cwb</span>
+          </div>
+          <h3 class="ad-card__title">Rumo à Open Mainnet!</h3>
+          <p class="ad-card__desc">
+            Apoiando o portal HOKAGE22B pela seriedade e compromisso com a verdade. Sucesso a todos os pioneiros focados em construir a economia real!
+          </p>
+          <div class="ad-card__footer">
+            <span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">
+              💬 Recado Fraterno da Comunidade
+            </span>
+            <span class="ad-card__price-tag">0.314 π</span>
+          </div>
+        </article>
       </div>
 
       <!-- Tabela de Valores / Transparência e Benefícios dos Planos -->
@@ -306,11 +384,11 @@
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Modular Scripts -->
-  <script src="assets/js/modules/ui.js"></script>
-  <script src="assets/js/modules/db.js"></script>
-  <script src="assets/js/modules/pi-pay.js"></script>
-  <script src="assets/js/modules/mural.js"></script>
+  <!-- Modular Scripts com Cache Busting -->
+  <script src="assets/js/modules/ui.js?v=2.2"></script>
+  <script src="assets/js/modules/db.js?v=2.2"></script>
+  <script src="assets/js/modules/pi-pay.js?v=2.2"></script>
+  <script src="assets/js/modules/mural.js?v=2.2"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       if (window.IsarUI) {

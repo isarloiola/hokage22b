@@ -102,30 +102,40 @@
     category = category || currentCategory;
     currentCategory = category;
 
-    let ads = [];
+    let dbAds = [];
     if (window.IsarDB && window.IsarDB.getAnuncios) {
       try {
-        ads = await window.IsarDB.getAnuncios(category);
+        dbAds = await window.IsarDB.getAnuncios(category);
       } catch (_) {}
     }
 
     // Mesclar anúncios locais salvos pelo próprio usuário
+    let localAds = [];
     try {
-      const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
-      if (localAds && localAds.length > 0) {
-        ads = localAds.concat(ads);
-      }
+      localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
     } catch (_) {}
 
-    // Fallback elegante se o banco ainda não tiver registros
-    if (!ads || ads.length === 0) {
-      ads = defaultMockAds;
-      if (category !== 'todos') {
-        ads = ads.filter(function (a) { return a.category === category; });
-      }
+    let allAds = [];
+    if (localAds && localAds.length > 0) {
+      allAds = allAds.concat(localAds);
+    }
+    if (dbAds && dbAds.length > 0) {
+      allAds = allAds.concat(dbAds);
     }
 
-    renderAds(ads);
+    // Sempre incluir os exemplos oficiais garantindo que o mural nunca fique vazio
+    const existingIds = new Set(allAds.map(function (a) { return a.id; }));
+    defaultMockAds.forEach(function (mock) {
+      if (!existingIds.has(mock.id)) {
+        allAds.push(mock);
+      }
+    });
+
+    if (category && category !== 'todos') {
+      allAds = allAds.filter(function (a) { return a.category === category; });
+    }
+
+    renderAds(allAds);
   }
 
   function renderAds(ads, targetGridId) {
