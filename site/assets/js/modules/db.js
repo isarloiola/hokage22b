@@ -161,14 +161,32 @@
     }
   }
 
-  // --- MÉTODOS DE ADMINISTRAÇÃO E GESTÃO ---
+  // --- MÉTODOS DE ADMINISTRAÇÃO E GESTÃO (COM SUPORTE A RPC ZERO-TRUST) ---
+
+  // Valida a chave mestra no servidor PostgreSQL
+  async function verifyAdminAccess(secret) {
+    const db = getClient();
+    if (!db || !secret) return false;
+    try {
+      const { data, error } = await db.rpc('admin_verify_access', { p_secret: secret });
+      if (error) return false;
+      return Boolean(data);
+    } catch (_) {
+      return false;
+    }
+  }
 
   // Busca todos os anúncios (ativos, pausados, pendentes) para moderação
-  async function getAllAnuncios() {
+  async function getAllAnuncios(secret) {
     const db = getClient();
     if (!db) return [];
 
     try {
+      if (secret) {
+        const { data, error } = await db.rpc('admin_get_all_ads', { p_secret: secret });
+        if (error) throw error;
+        return data || [];
+      }
       const { data, error } = await db
         .from('anuncios')
         .select('*')
@@ -183,12 +201,23 @@
   }
 
   // Atualiza dados ou status de um anúncio (ex: ativo, pausado, destaque)
-  async function updateAnuncio(id, updates) {
+  async function updateAnuncio(id, updates, secret) {
     const db = getClient();
-    if (!db || !id) return null;
+    if (!db || !id) return false;
 
     try {
-      const { data, error } = await db
+      if (secret) {
+        const { data, error } = await db.rpc('admin_update_ad_status', {
+          p_secret: secret,
+          p_ad_id: id,
+          p_new_status: updates.status || 'ativo',
+          p_new_tier: updates.plan_tier || null,
+          p_new_price: updates.price_pi ? parseFloat(updates.price_pi) : null
+        });
+        if (error) throw error;
+        return true;
+      }
+      const { error } = await db
         .from('anuncios')
         .update(updates)
         .eq('id', id);
@@ -202,11 +231,19 @@
   }
 
   // Exclui permanentemente um anúncio do mural
-  async function deleteAnuncio(id) {
+  async function deleteAnuncio(id, secret) {
     const db = getClient();
     if (!db || !id) return false;
 
     try {
+      if (secret) {
+        const { data, error } = await db.rpc('admin_delete_ad', {
+          p_secret: secret,
+          p_ad_id: id
+        });
+        if (error) throw error;
+        return true;
+      }
       const { error } = await db
         .from('anuncios')
         .delete()
@@ -221,11 +258,16 @@
   }
 
   // Busca todos os leads capturados para o painel de contatos
-  async function getAllLeads() {
+  async function getAllLeads(secret) {
     const db = getClient();
     if (!db) return [];
 
     try {
+      if (secret) {
+        const { data, error } = await db.rpc('admin_get_leads', { p_secret: secret });
+        if (error) throw error;
+        return data || [];
+      }
       const { data, error } = await db
         .from('leads')
         .select('*')
@@ -236,6 +278,34 @@
     } catch (err) {
       console.warn('Supabase: Erro ao carregar leads:', err.message);
       return [];
+    }
+  }
+
+  // Criação de anúncio administrativo com bypass seguro via RPC
+  async function createAdminAnuncio(adData, secret) {
+    const db = getClient();
+    if (!db) return null;
+
+    try {
+      if (secret) {
+        const { data, error } = await db.rpc('admin_create_ad', {
+          p_secret: secret,
+          p_id: adData.id,
+          p_title: adData.title,
+          p_description: adData.description,
+          p_link_url: adData.link_url || null,
+          p_category: adData.category || 'geral',
+          p_tier: adData.plan_tier || 'prata',
+          p_price: parseFloat(adData.price_pi) || 1.0,
+          p_author: adData.pioneer_username || '@hokage22b'
+        });
+        if (error) throw error;
+        return true;
+      }
+      return await createAnuncio(adData);
+    } catch (err) {
+      console.warn('Supabase: Erro ao criar anúncio admin:', err.message);
+      return null;
     }
   }
 
@@ -266,11 +336,13 @@
     getPioneerProfile: getPioneerProfile,
     getAnuncios: getAnuncios,
     createAnuncio: createAnuncio,
-    // Métodos Admin
+    // Métodos Admin com Proteção Zero-Trust
+    verifyAdminAccess: verifyAdminAccess,
     getAllAnuncios: getAllAnuncios,
     updateAnuncio: updateAnuncio,
     deleteAnuncio: deleteAnuncio,
     getAllLeads: getAllLeads,
+    createAdminAnuncio: createAdminAnuncio,
     getAllDoacoes: getAllDoacoes,
     isConfigured: function () {
       return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);

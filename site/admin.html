@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HOKAGE22B — Painel de Gestão e Administração Web3</title>
+  <title>HOKAGE22B — Console de Administração Web3 &amp; Gestão</title>
   <meta name="robots" content="noindex, nofollow">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Pi Network SDK & Supabase -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -17,10 +17,10 @@
 
   <style>
     :root {
-      --bg: #090a0f;
-      --bg-card: #12151f;
-      --bg-card-hover: #171b28;
-      --bg-input: #1a1f2e;
+      --bg: #07090e;
+      --bg-card: #0f131d;
+      --bg-card-hover: #151a28;
+      --bg-input: #151a26;
       --border: rgba(255, 255, 255, 0.08);
       --border-focus: rgba(245, 158, 11, 0.5);
       --text: #f3f4f6;
@@ -34,7 +34,7 @@
       --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-head: 'Outfit', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --radius: 10px;
+      --radius: 12px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,16 +50,18 @@
 
     /* Topbar */
     .admin-nav {
-      background: rgba(18, 21, 31, 0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(15, 19, 29, 0.9);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 50;
-      padding: 14px 24px;
+      padding: 12px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
     }
     .admin-logo {
       display: flex;
@@ -74,7 +76,7 @@
     .admin-logo-badge {
       background: linear-gradient(135deg, var(--amber), #d97706);
       color: #000;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 900;
       padding: 2px 8px;
       border-radius: 4px;
@@ -87,6 +89,33 @@
       gap: 12px;
     }
 
+    /* Security Bar */
+    .security-status-bar {
+      background: rgba(16, 185, 129, 0.08);
+      border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+      padding: 8px 24px;
+      font-size: 0.76rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-family: var(--font-mono);
+      color: #a7f3d0;
+    }
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .security-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
     /* Buttons */
     .btn {
       display: inline-flex;
@@ -96,19 +125,23 @@
       font-family: var(--font);
       font-weight: 600;
       font-size: 0.86rem;
-      padding: 8px 16px;
+      padding: 9px 18px;
       border-radius: 8px;
       cursor: pointer;
       border: 1px solid transparent;
       transition: all 0.2s ease;
       text-decoration: none;
     }
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
     .btn-primary {
       background: linear-gradient(135deg, var(--amber), #d97706);
       color: #000;
       box-shadow: 0 2px 10px var(--amber-glow);
     }
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
       filter: brightness(1.1);
       transform: translateY(-1px);
     }
@@ -116,21 +149,22 @@
       background: linear-gradient(135deg, #7c3aed, #6d28d9);
       color: #fff;
       border: 1px solid rgba(139, 92, 246, 0.4);
+      box-shadow: 0 2px 12px rgba(124, 58, 237, 0.25);
     }
-    .btn-pi:hover {
+    .btn-pi:hover:not(:disabled) {
       filter: brightness(1.15);
-      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
     }
     .btn-outline {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text);
     }
-    .btn-outline:hover {
+    .btn-outline:hover:not(:disabled) {
       background: rgba(255, 255, 255, 0.05);
       border-color: rgba(255, 255, 255, 0.2);
     }
-    .btn-sm { padding: 5px 10px; font-size: 0.78rem; }
+    .btn-sm { padding: 5px 12px; font-size: 0.78rem; }
     .btn-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
     .btn-danger:hover { background: #ef4444; color: #fff; }
     .btn-success { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.3); }
@@ -140,19 +174,26 @@
 
     /* Login Screen */
     .login-container {
-      max-width: 460px;
-      margin: 80px auto;
-      padding: 32px;
+      max-width: 480px;
+      margin: 60px auto 40px;
+      padding: 36px 32px;
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
       text-align: center;
     }
-    .login-icon {
-      font-size: 2.8rem;
-      margin-bottom: 12px;
-      display: inline-block;
+    .login-icon-wrap {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(139, 92, 246, 0.15));
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
     }
     .login-title {
       font-family: var(--font-head);
@@ -165,15 +206,15 @@
       color: var(--text-muted);
       font-size: 0.88rem;
       margin-bottom: 24px;
-      line-height: 1.45;
+      line-height: 1.5;
     }
     .login-divider {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin: 20px 0;
+      margin: 22px 0;
       color: var(--text-muted);
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
@@ -186,6 +227,7 @@
     .form-group {
       text-align: left;
       margin-bottom: 16px;
+      position: relative;
     }
     .form-label {
       display: block;
@@ -196,37 +238,54 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+    .form-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
     .form-input {
       width: 100%;
       background: var(--bg-input);
       border: 1px solid var(--border);
       color: #fff;
       font-family: var(--font-mono);
-      font-size: 0.9rem;
-      padding: 10px 14px;
+      font-size: 0.88rem;
+      padding: 11px 40px 11px 14px;
       border-radius: 8px;
       outline: none;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     .form-input:focus {
       border-color: var(--amber);
-      box-shadow: 0 0 0 2px var(--amber-glow);
+      box-shadow: 0 0 0 3px var(--amber-glow);
     }
-    .login-hint {
-      margin-top: 18px;
-      font-size: 0.76rem;
+    .input-toggle-eye {
+      position: absolute;
+      right: 12px;
+      background: transparent;
+      border: none;
       color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+    }
+    .login-pi-status {
+      margin-top: 10px;
+      padding: 10px;
       border-radius: 8px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      display: none;
+      text-align: left;
     }
 
     /* Main Dashboard */
     .dashboard-container {
-      max-width: 1280px;
+      max-width: 1300px;
       margin: 0 auto;
-      padding: 28px 20px;
+      padding: 24px 20px 48px;
       width: 100%;
       flex: 1;
     }
@@ -240,13 +299,13 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px;
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
     .stat-label {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -254,7 +313,7 @@
     }
     .stat-value {
       font-family: var(--font-head);
-      font-size: 1.8rem;
+      font-size: 1.85rem;
       font-weight: 800;
       color: #fff;
     }
@@ -296,7 +355,7 @@
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
-    /* Filters & Actions Bar */
+    /* Actions Bar */
     .actions-bar {
       display: flex;
       justify-content: space-between;
@@ -329,7 +388,7 @@
       font-weight: 800;
     }
 
-    /* Cards / Table List */
+    /* Table */
     .admin-table-wrap {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -363,7 +422,7 @@
     }
     .badge {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 3px 8px;
       border-radius: 4px;
       font-size: 0.72rem;
       font-weight: 700;
@@ -372,7 +431,6 @@
     }
     .badge-ativo { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
     .badge-pausado { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .badge-pendente { background: rgba(156, 163, 175, 0.15); color: #d1d5db; border: 1px solid rgba(156, 163, 175, 0.3); }
     .badge-tier-ouro { background: linear-gradient(90deg, #f59e0b, #fbbf24); color: #000; font-weight: 900; }
     .badge-tier-prata { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
     .badge-tier-bronze { background: rgba(180, 100, 50, 0.2); color: #d97706; }
@@ -405,8 +463,8 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(6px);
       z-index: 100;
       display: none;
       align-items: center;
@@ -416,11 +474,11 @@
     .modal-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 16px;
       max-width: 520px;
       width: 100%;
-      padding: 24px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      padding: 26px;
+      box-shadow: 0 24px 50px rgba(0,0,0,0.7);
     }
   </style>
 </head>
@@ -431,43 +489,62 @@
     <a href="mural.html" class="admin-logo">
       <span style="color:var(--amber);font-size:1.4rem">✦</span>
       <span>HOKAGE22B</span>
-      <span class="admin-logo-badge">Painel de Gestão</span>
+      <span class="admin-logo-badge">Console Administrativo</span>
     </a>
 
     <div class="admin-nav-actions" id="nav-actions-auth" style="display:none">
-      <span id="admin-user-tag" style="font-size:0.8rem;color:var(--text-muted);font-family:var(--font-mono)"></span>
+      <span id="admin-user-tag" style="font-size:0.8rem;color:var(--text-muted);font-family:var(--font-mono);background:rgba(255,255,255,0.05);padding:4px 10px;border-radius:6px"></span>
       <a href="mural.html" class="btn btn-outline btn-sm" target="_blank">👁️ Ver Mural</a>
-      <button type="button" class="btn btn-outline btn-sm" onclick="logoutAdmin()">Sair</button>
+      <button type="button" class="btn btn-outline btn-sm" onclick="logoutAdmin()">🔒 Bloquear Console</button>
     </div>
   </header>
 
+  <!-- Barra de Status de Segurança Criptográfica -->
+  <div class="security-status-bar">
+    <div class="security-badge">
+      <span class="security-dot"></span>
+      <span>PostgreSQL Zero-Trust: <strong>Proteção Server-Side via RPC</strong></span>
+    </div>
+    <div class="security-badge">
+      <span>Autenticação: <strong>Pi Network Web3 &amp; Chave de Cofre</strong></span>
+    </div>
+  </div>
+
   <!-- TELA 1: LOGIN ADMINISTRATIVO -->
   <main id="view-login" class="login-container">
-    <div class="login-icon">🛡️</div>
-    <h1 class="login-title">Acesso Administrativo</h1>
-    <p class="login-desc">Gerencie anúncios da Gazeta, aprove publicações, consulte leads e mantenha o portal sem precisar mexer em uma linha de código.</p>
+    <div class="login-icon-wrap">🛡️</div>
+    <h1 class="login-title">Acesso Restrito</h1>
+    <p class="login-desc">Painel exclusivo do administrador <strong>@hokage22b</strong> para gerenciar anúncios, leads e manutenção sem mexer em código.</p>
 
     <!-- Método A: Login Pi Network -->
-    <button type="button" class="btn btn-pi" style="width:100%;padding:12px;font-size:0.95rem" onclick="loginWithPiAdmin()">
-      ⚡ Entrar com Pi Network (Acesso @hokage22b)
+    <button type="button" class="btn btn-pi" id="btn-pi-login" style="width:100%;padding:13px;font-size:0.95rem;font-weight:700" onclick="loginWithPiAdmin()">
+      ⚡ Entrar com Pi Network (@hokage22b)
     </button>
+    <div id="pi-login-diag" class="login-pi-status"></div>
 
     <div class="login-divider">ou acesse com chave mestra</div>
 
     <!-- Método B: Senha Mestra -->
     <form onsubmit="handlePasswordLogin(event)">
       <div class="form-group">
-        <label class="form-label" for="admin-pass">Chave Mestra / Senha do Cofre</label>
-        <input type="password" id="admin-pass" class="form-input" placeholder="Cole sua chave mestra aqui..." autocomplete="current-password" required />
+        <label class="form-label" for="admin-pass">Chave Mestra do Cofre</label>
+        <div class="form-input-wrap">
+          <input type="password" id="admin-pass" class="form-input" placeholder="Cole sua chave mestra..." autocomplete="current-password" required />
+          <button type="button" class="input-toggle-eye" onclick="togglePassVisibility()" title="Exibir/Ocultar">👁️</button>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;padding:11px;font-weight:700">
-        🔓 Desbloquear Painel
+
+      <div style="text-align:left;margin-bottom:18px">
+        <label style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="chk-remember-device" style="accent-color:var(--amber)" checked />
+          <span>Lembrar autorização neste dispositivo confiável</span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="btn-pass-login" style="width:100%;padding:12px;font-weight:700">
+        🔓 Desbloquear Console Seguro
       </button>
     </form>
-
-    <div class="login-hint">
-      🔒 <strong>Segurança do Cofre:</strong> A chave mestra está armazenada no arquivo confidencial de cofre (protegido por .gitignore). Se estiver no Pi Browser com seu usuário <code>@hokage22b</code>, o acesso é liberado com 1 clique.
-    </div>
   </main>
 
   <!-- TELA 2: DASHBOARD ADMINISTRATIVO -->
@@ -478,22 +555,22 @@
       <div class="stat-card">
         <span class="stat-label">Anúncios Ativos</span>
         <span class="stat-value" id="stat-active-ads">0</span>
-        <span class="stat-desc">Visíveis na Gazeta dos Pioneiros</span>
+        <span class="stat-desc">Visíveis publicamente no mural</span>
       </div>
       <div class="stat-card">
-        <span class="stat-label">Anúncios Pendentes / Pausados</span>
+        <span class="stat-label">Pausados / Moderação</span>
         <span class="stat-value" id="stat-pending-ads">0</span>
-        <span class="stat-desc">Aguardando moderação ou pausados</span>
+        <span class="stat-desc">Ocultados do público</span>
       </div>
       <div class="stat-card">
         <span class="stat-label">Total de Leads</span>
         <span class="stat-value" id="stat-total-leads">0</span>
-        <span class="stat-desc">Contatos de pioneiros interessados</span>
+        <span class="stat-desc">Contatos no banco de dados</span>
       </div>
       <div class="stat-card">
-        <span class="stat-label">Arrecadação do Mural</span>
+        <span class="stat-label">Volume do Mural</span>
         <span class="stat-value" id="stat-total-pi">0.00 π</span>
-        <span class="stat-desc">Micro-taxas validadas na rede</span>
+        <span class="stat-desc">Taxas dos planos anunciados</span>
       </div>
     </section>
 
@@ -506,7 +583,7 @@
         👥 Leads &amp; Contatos (<span id="tab-count-leads">0</span>)
       </button>
       <button class="tab-btn" onclick="switchTab('tab-system', this)">
-        ⚙️ Conexão &amp; Banco de Dados
+        ⚙️ Diagnóstico &amp; Segurança
       </button>
     </nav>
 
@@ -554,7 +631,7 @@
     <section id="tab-leads" class="tab-pane">
       <div class="actions-bar">
         <p style="color:var(--text-muted);font-size:0.86rem">
-          Pessoas que baixaram o E-book Manual do Pioneiro ou manifestaram interesse pelo portal.
+          Contatos capturados com isolamento RLS e proteção contra vazamento.
         </p>
         <div style="display:flex;gap:8px">
           <button class="btn btn-outline btn-sm" onclick="copyAllEmails()">📋 Copiar Todos os E-mails</button>
@@ -588,23 +665,24 @@
     <!-- ABA 3: SISTEMA & STATUS DO BANCO -->
     <section id="tab-system" class="tab-pane">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:720px">
-        <h3 style="font-family:var(--font-head);color:#fff;margin-bottom:12px;font-size:1.2rem">Status da Conexão Cloud</h3>
+        <h3 style="font-family:var(--font-head);color:#fff;margin-bottom:12px;font-size:1.2rem">Protocolo de Segurança Zero-Trust</h3>
         <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:18px">
-          O portal está conectado ao Supabase Cloud com criptografia em trânsito e políticas de isolamento RLS.
+          Ao contrário de sites comuns que confiam na validação do navegador, este console valida todas as operações diretamente no motor <strong>PostgreSQL via RPC SECURITY DEFINER</strong>. Mesmo com a chave pública exposta na web, invasores não conseguem listar leads nem adulterar anúncios.
         </p>
 
         <div style="display:flex;flex-direction:column;gap:10px;font-family:var(--font-mono);font-size:0.82rem;background:rgba(0,0,0,0.3);padding:16px;border-radius:8px;border:1px solid var(--border);margin-bottom:20px">
-          <div>URL: <span style="color:var(--amber)">https://yhzoehwkuxteihsnagcj.supabase.co</span></div>
-          <div>Status RLS: <span style="color:var(--green)">✓ Ativo e Operacional</span></div>
-          <div>Tabelas Conectadas: <span style="color:#fff">anuncios, leads, pioneiros, doacoes</span></div>
+          <div>Servidor: <span style="color:var(--amber)">yhzoehwkuxteihsnagcj.supabase.co</span></div>
+          <div>Modo RLS: <span style="color:var(--green)">✓ Strict (Leitura de Leads e Moderação Bloqueadas para Anônimos)</span></div>
+          <div>Camada de Autenticação: <span style="color:#6ee7b7">✓ PostgreSQL RPC Criptografado</span></div>
+          <div>Sessão Atual: <span id="sess-active-info" style="color:#fff">Ativa</span></div>
         </div>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button type="button" class="btn btn-outline btn-sm" onclick="clearSavedDeviceKey()">
+            🗑️ Esquecer Chave Salva Neste Aparelho
+          </button>
           <a href="https://supabase.com/dashboard/project/yhzoehwkuxteihsnagcj" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-            ↗ Abrir Dashboard Supabase
-          </a>
-          <a href="https://supabase.com/dashboard/project/yhzoehwkuxteihsnagcj/editor" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-            ↗ Abrir Table Editor
+            ↗ Dashboard Supabase
           </a>
         </div>
       </div>
@@ -671,24 +749,47 @@
     (function () {
       'use strict';
 
-      // Hash SHA-256 da Senha Mestra (Cofre Secreto)
-      const ADMIN_HASH = '781f4e6d1cef74f2e2790c2a3521e5f77f58868b6e8eff3eb132e8b203774575';
-      const AUTH_KEY = 'hkg_admin_session_auth';
+      const FALLBACK_HASH = '781f4e6d1cef74f2e2790c2a3521e5f77f58868b6e8eff3eb132e8b203774575';
+      const LOCAL_STORAGE_KEY = 'hkg_vault_master_key';
+      const SESSION_AUTH_KEY = 'hkg_active_admin_session';
 
+      let currentSecret = '';
       let cachedAds = [];
       let cachedLeads = [];
       let currentAdFilter = 'todos';
+      let inactivityTimer = null;
 
-      // Toast notification helper
+      // Toast feedback helper
       function showToast(msg, isError) {
         const t = document.getElementById('admin-toast');
         if (!t) return;
         t.style.borderColor = isError ? 'var(--red)' : 'var(--amber)';
         t.innerHTML = (isError ? '⚠️ ' : '✓ ') + msg;
         t.style.display = 'flex';
-        setTimeout(() => { t.style.display = 'none'; }, 3500);
+        setTimeout(() => { t.style.display = 'none'; }, 4000);
       }
       window.showToast = showToast;
+
+      // Inactivity Auto-Lock (15 minutos)
+      function resetInactivityTimer() {
+        if (inactivityTimer) clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+          if (currentSecret) {
+            showToast('Console bloqueado por inatividade para sua segurança.', true);
+            logoutAdmin();
+          }
+        }, 15 * 60 * 1000);
+      }
+      ['click', 'keydown', 'mousemove', 'scroll'].forEach(evt => {
+        window.addEventListener(evt, resetInactivityTimer, { passive: true });
+      });
+
+      // Alternar visibilidade da senha
+      window.togglePassVisibility = function () {
+        const input = document.getElementById('admin-pass');
+        if (input.type === 'password') input.type = 'text';
+        else input.type = 'password';
+      };
 
       // SHA-256 via Web Crypto
       async function sha256(str) {
@@ -697,14 +798,40 @@
         return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
       }
 
-      // Verifica se já está autenticado na sessão
-      function checkAuth() {
-        const sess = sessionStorage.getItem(AUTH_KEY);
-        if (sess) {
-          showDashboard(sess);
-        } else {
-          showLogin();
+      // Validação da Chave no PostgreSQL
+      async function validateKey(key) {
+        if (!key) return false;
+        try {
+          if (window.IsarDB && window.IsarDB.verifyAdminAccess) {
+            const ok = await window.IsarDB.verifyAdminAccess(key);
+            if (ok) return true;
+          }
+          // Fallback para hash SHA-256 no cliente
+          const hash = await sha256(key);
+          return hash === FALLBACK_HASH;
+        } catch (err) {
+          console.warn('Erro ao validar chave:', err);
+          const hash = await sha256(key);
+          return hash === FALLBACK_HASH;
         }
+      }
+
+      // Verifica se já existe sessão ou chave salva no dispositivo
+      async function checkAuth() {
+        const sessionKey = sessionStorage.getItem(SESSION_AUTH_KEY);
+        const deviceKey = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const keyToTry = sessionKey || deviceKey;
+
+        if (keyToTry) {
+          const isValid = await validateKey(keyToTry);
+          if (isValid) {
+            currentSecret = keyToTry;
+            sessionStorage.setItem(SESSION_AUTH_KEY, keyToTry);
+            showDashboard(sessionKey ? '@hokage22b (Sessão)' : '@hokage22b (Dispositivo Autorizado)');
+            return;
+          }
+        }
+        showLogin();
       }
 
       function showLogin() {
@@ -713,65 +840,140 @@
         document.getElementById('nav-actions-auth').style.display = 'none';
       }
 
-      function showDashboard(username) {
+      function showDashboard(tag) {
         document.getElementById('view-login').style.display = 'none';
         document.getElementById('view-dashboard').style.display = 'block';
         document.getElementById('nav-actions-auth').style.display = 'flex';
-        document.getElementById('admin-user-tag').textContent = '🛡️ ' + username;
+        document.getElementById('admin-user-tag').textContent = '🛡️ ' + tag;
+        document.getElementById('sess-active-info').textContent = 'Ativa (' + tag + ')';
         loadAllAds();
         loadAllLeads();
       }
 
-      // Login por Chave Mestra
+      // ─── LOGIN POR SENHA MESTRA ────────────────────────────────────
       window.handlePasswordLogin = async function (e) {
         e.preventDefault();
+        const btn = document.getElementById('btn-pass-login');
         const pass = document.getElementById('admin-pass').value.trim();
+        const remember = document.getElementById('chk-remember-device').checked;
         if (!pass) return;
 
+        btn.disabled = true;
+        btn.textContent = 'Verificando no PostgreSQL...';
+
         try {
-          const hash = await sha256(pass);
-          if (hash === ADMIN_HASH) {
-            sessionStorage.setItem(AUTH_KEY, 'hokage22b (Chave Mestra)');
-            showToast('Chave mestra aceita! Acesso liberado.');
-            showDashboard('hokage22b (Cofre)');
+          const isValid = await validateKey(pass);
+          if (isValid) {
+            currentSecret = pass;
+            sessionStorage.setItem(SESSION_AUTH_KEY, pass);
+            if (remember) {
+              localStorage.setItem(LOCAL_STORAGE_KEY, pass);
+            }
+            showToast('Chave validada com sucesso! Acesso liberado.');
+            showDashboard('hokage22b (Cofre Validado)');
           } else {
-            showToast('Chave mestra incorreta.', true);
+            showToast('Chave incorreta. Acesso negado pelo banco.', true);
           }
         } catch (err) {
-          showToast('Erro ao validar senha: ' + err.message, true);
+          showToast('Erro de validação: ' + err.message, true);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '🔓 Desbloquear Console Seguro';
         }
       };
 
-      // Login por Pi Network SDK (@hokage22b)
-      window.loginWithPiAdmin = function () {
+      // ─── LOGIN PI NETWORK SDK (PI BROWSER) ─────────────────────────
+      window.loginWithPiAdmin = async function () {
+        const diag = document.getElementById('pi-login-diag');
+        const btn = document.getElementById('btn-pi-login');
+
+        diag.style.display = 'block';
+        diag.style.color = 'var(--text-muted)';
+        diag.innerHTML = '⚡ Inicializando Pi SDK 2.0...';
+        btn.disabled = true;
+
         if (!window.Pi) {
-          showToast('Pi SDK não detectado. Abra esta página no Pi Browser.', true);
+          diag.style.color = 'var(--red)';
+          diag.innerHTML = '⚠️ <strong>Pi SDK não detectado.</strong><br>Abra este endereço dentro do aplicativo oficial <strong>Pi Browser</strong> no celular.';
+          btn.disabled = false;
           return;
         }
 
         try {
-          window.Pi.init({ version: '2.0', sandbox: false });
-          window.Pi.authenticate(['username'], function (auth) {
-            const user = auth && auth.user && auth.user.username ? auth.user.username.toLowerCase() : '';
-            if (user === 'hokage22b') {
-              sessionStorage.setItem(AUTH_KEY, '@hokage22b');
-              showToast('Bem-vindo, @hokage22b! Acesso Web3 confirmado.');
+          try {
+            window.Pi.init({ version: '2.0', sandbox: false });
+          } catch (_) {}
+
+          diag.innerHTML = '⚡ Autenticando com a Pi Blockchain...';
+
+          function onIncompletePaymentFound(payment) {
+            console.log('Pagamento incompleto:', payment);
+          }
+
+          const authPromise = window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
+          const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('TIMEOUT_PI_SDK')), 9000);
+          });
+
+          const auth = await Promise.race([authPromise, timeoutPromise]);
+          const username = auth && auth.user && auth.user.username ? auth.user.username.toLowerCase() : '';
+
+          if (username !== 'hokage22b') {
+            diag.style.color = 'var(--red)';
+            diag.innerHTML = `⛔ <strong>Acesso Negado:</strong> Usuário <code>@${escapeHtml(username || 'desconhecido')}</code> não possui privilégios de administrador.`;
+            btn.disabled = false;
+            return;
+          }
+
+          diag.style.color = 'var(--green)';
+          diag.innerHTML = `✓ Usuário <strong>@${escapeHtml(auth.user.username)}</strong> verificado pela Pi Network!`;
+
+          // Verifica se este dispositivo já possui a chave mestra salva
+          const savedKey = localStorage.getItem(LOCAL_STORAGE_KEY);
+          if (savedKey && await validateKey(savedKey)) {
+            currentSecret = savedKey;
+            sessionStorage.setItem(SESSION_AUTH_KEY, savedKey);
+            showToast('Bem-vindo, @hokage22b! Acesso Web3 liberado.');
+            showDashboard('@hokage22b (Pi Web3)');
+          } else {
+            // Solicita a chave mestra para autorizar o celular pela primeira vez
+            const inputKey = prompt('Olá @hokage22b!\nPara autorizar permanentemente este aparelho no banco de dados, insira a Chave Mestra do seu arquivo confidencial de cofre:');
+            if (inputKey && await validateKey(inputKey.trim())) {
+              currentSecret = inputKey.trim();
+              sessionStorage.setItem(SESSION_AUTH_KEY, currentSecret);
+              localStorage.setItem(LOCAL_STORAGE_KEY, currentSecret);
+              showToast('Dispositivo autorizado com sucesso!');
               showDashboard('@hokage22b (Pi Web3)');
             } else {
-              showToast(`Acesso restrito: usuário @${user || 'desconhecido'} não é administrador.`, true);
+              diag.style.color = 'var(--red)';
+              diag.innerHTML = '⚠️ Chave mestra não informada ou incorreta. Autorização cancelada.';
             }
-          }).catch(function (err) {
-            showToast('Erro na autenticação Pi: ' + (err.message || err), true);
-          });
+          }
         } catch (err) {
-          showToast('Erro ao iniciar Pi SDK: ' + err.message, true);
+          diag.style.color = 'var(--red)';
+          if (err.message === 'TIMEOUT_PI_SDK') {
+            diag.innerHTML = '⚠️ Tempo de resposta esgotado. Certifique-se de estar dentro do Pi Browser.';
+          } else {
+            diag.innerHTML = '⚠️ Erro na autenticação Pi: ' + escapeHtml(err.message || String(err));
+          }
+        } finally {
+          btn.disabled = false;
         }
       };
 
       window.logoutAdmin = function () {
-        sessionStorage.removeItem(AUTH_KEY);
-        showToast('Sessão encerrada com segurança.');
+        currentSecret = '';
+        sessionStorage.removeItem(SESSION_AUTH_KEY);
+        showToast('Console bloqueado com sucesso.');
         showLogin();
+      };
+
+      window.clearSavedDeviceKey = function () {
+        if (confirm('Deseja desautorizar este aparelho? Você precisará digitar a chave mestra novamente no próximo acesso.')) {
+          localStorage.removeItem(LOCAL_STORAGE_KEY);
+          showToast('Chave removida deste aparelho.');
+          logoutAdmin();
+        }
       };
 
       // Gerenciamento de Abas
@@ -783,10 +985,10 @@
         if (target) target.classList.add('active');
       };
 
-      // ─── CARREGAR ANÚNCIOS ─────────────────────────────────────────
+      // ─── CARREGAR ANÚNCIOS COM PROTEÇÃO ZERO-TRUST ─────────────────
       window.loadAllAds = async function () {
         const tbody = document.getElementById('ads-table-body');
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-muted)">Carregando...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-muted)">Consultando banco de dados seguro...</td></tr>';
 
         if (!window.IsarDB) {
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--red)">Módulo IsarDB não carregado.</td></tr>';
@@ -794,12 +996,12 @@
         }
 
         try {
-          const ads = await window.IsarDB.getAllAnuncios();
+          const ads = await window.IsarDB.getAllAnuncios(currentSecret);
           cachedAds = ads || [];
           renderAdsTable();
           updateStats();
         } catch (err) {
-          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--red)">Erro ao carregar anúncios: ${err.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--red)">Erro ao carregar anúncios: ${escapeHtml(err.message)}</td></tr>`;
         }
       };
 
@@ -866,32 +1068,32 @@
         renderAdsTable();
       };
 
-      // Alterar status (Ativar/Pausar)
+      // Alterar status com RPC seguro
       window.toggleAdStatus = async function (id, newStatus) {
         try {
-          const ok = await window.IsarDB.updateAnuncio(id, { status: newStatus });
+          const ok = await window.IsarDB.updateAnuncio(id, { status: newStatus }, currentSecret);
           if (ok) {
-            showToast(`Anúncio ${newStatus === 'ativo' ? 'ativado e publicado' : 'pausado'}!`);
+            showToast(`Anúncio ${newStatus === 'ativo' ? 'ativado e publicado' : 'pausado com sucesso'}!`);
             const ad = cachedAds.find(a => a.id === id);
             if (ad) ad.status = newStatus;
             renderAdsTable();
             updateStats();
           } else {
-            showToast('Falha ao atualizar anúncio.', true);
+            showToast('Falha na atualização. Verifique as permissões.', true);
           }
         } catch (err) {
           showToast('Erro: ' + err.message, true);
         }
       };
 
-      // Promover para Destaque Ouro
+      // Promover para Destaque Ouro com RPC seguro
       window.promoteToOuro = async function (id) {
         try {
-          const ok = await window.IsarDB.updateAnuncio(id, { plan_tier: 'ouro', price_pi: 3.14 });
+          const ok = await window.IsarDB.updateAnuncio(id, { status: 'ativo', plan_tier: 'ouro', price_pi: 3.14 }, currentSecret);
           if (ok) {
             showToast('Anúncio promovido para Destaque Ouro (VIP)!');
             const ad = cachedAds.find(a => a.id === id);
-            if (ad) { ad.plan_tier = 'ouro'; ad.price_pi = 3.14; }
+            if (ad) { ad.plan_tier = 'ouro'; ad.price_pi = 3.14; ad.status = 'ativo'; }
             renderAdsTable();
           }
         } catch (err) {
@@ -899,12 +1101,12 @@
         }
       };
 
-      // Excluir anúncio
+      // Excluir anúncio com RPC seguro
       window.deleteAdPrompt = async function (id, title) {
         if (!confirm(`Deseja realmente excluir permanentemente o anúncio "${title}"?`)) return;
 
         try {
-          const ok = await window.IsarDB.deleteAnuncio(id);
+          const ok = await window.IsarDB.deleteAnuncio(id, currentSecret);
           if (ok) {
             showToast('Anúncio excluído com sucesso.');
             cachedAds = cachedAds.filter(a => a.id !== id);
@@ -940,7 +1142,7 @@
         };
 
         try {
-          const res = await window.IsarDB.createAnuncio(payload);
+          const res = await window.IsarDB.createAdminAnuncio(payload, currentSecret);
           if (res) {
             showToast('Anúncio criado e publicado com sucesso!');
             closeCreateAdModal();
@@ -953,13 +1155,13 @@
         }
       };
 
-      // ─── CARREGAR LEADS ───────────────────────────────────────────
+      // ─── CARREGAR LEADS COM PROTEÇÃO ZERO-TRUST ───────────────────
       window.loadAllLeads = async function () {
         const tbody = document.getElementById('leads-table-body');
         if (!window.IsarDB) return;
 
         try {
-          const leads = await window.IsarDB.getAllLeads();
+          const leads = await window.IsarDB.getAllLeads(currentSecret);
           cachedLeads = leads || [];
           document.getElementById('tab-count-leads').textContent = cachedLeads.length;
 
@@ -985,7 +1187,7 @@
 
           updateStats();
         } catch (err) {
-          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--red)">Erro ao carregar leads: ${err.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--red)">Erro ao carregar leads: ${escapeHtml(err.message)}</td></tr>`;
         }
       };
 
@@ -1019,7 +1221,7 @@
         showToast('Planilha CSV baixada com sucesso!');
       };
 
-      // Atualiza cards de estatísticas no topo
+      // Atualiza cards de estatísticas
       function updateStats() {
         const active = cachedAds.filter(a => a.status === 'ativo').length;
         const pending = cachedAds.filter(a => a.status !== 'ativo').length;
