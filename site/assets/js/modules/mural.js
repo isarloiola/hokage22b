@@ -95,140 +95,101 @@
     bronze: { pi: 0.314, brl: 'R$ 3,00', name: '🥉 Classificado Bronze (Simples)' }
   };
 
-  function getConsolidatedAds(extraAds, category) {
-    let list = [];
-    try {
-      const local = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
-      if (Array.isArray(local)) list = list.concat(local);
-    } catch (_) {}
+  function buildAdCardHtml(ad) {
+    const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
+    const tierBadgeClass = 'ad-badge--' + tier;
+    const tierLabel = tier === 'ouro' ? '👑 Destaque Ouro · Card Duplo' : (tier === 'prata' ? '🥈 Destaque Prata' : '🥉 Classificado Bronze');
 
-    if (Array.isArray(extraAds) && extraAds.length > 0) {
-      list = list.concat(extraAds);
+    const author = ad.pioneer_username || ad.pioneer_name || '@pioneiro';
+    const safeAuthor = escapeHtml(author);
+    const safeTitle = escapeHtml(ad.title || '');
+    const safeDesc = escapeHtml(ad.description || '');
+    const cleanUrl = tier !== 'bronze' ? safeUrl(ad.link_url) : '';
+    const category = escapeHtml(ad.category || 'geral');
+    const cardId = escapeHtml(ad.id || ('ad_' + Math.random().toString(36).substring(2, 7)));
+
+    let linkHtml = '';
+    if (tier === 'ouro' && cleanUrl) {
+      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link ad-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
+    } else if (tier === 'prata' && cleanUrl) {
+      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">Acessar Anúncio →</a>`;
+    } else {
+      linkHtml = `<span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">💬 Recado Fraterno da Comunidade</span>`;
     }
 
-    const seen = new Set(list.map(function (a) { return a.id; }));
-    defaultMockAds.forEach(function (mock) {
-      if (!seen.has(mock.id)) {
-        list.push(mock);
+    let bannerHtml = '';
+    const rawImg = ad.image_url ? safeUrl(ad.image_url) : '';
+    const ytThumb = cleanUrl ? getYouTubeThumb(cleanUrl) : '';
+    const finalImg = rawImg || ytThumb || (tier === 'ouro' ? 'assets/img/ebook-pago-negocios.jpg' : '');
+
+    if (finalImg) {
+      bannerHtml = `
+        <div class="ad-card__banner">
+          <img src="${finalImg}" alt="${safeTitle}" loading="lazy" />
+          <div class="ad-card__banner-overlay">
+            <span style="font-size:0.72rem;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 10px;border-radius:4px;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.25)">
+              ${tier === 'ouro' ? '👑 DESTAQUE VIP' : 'FOTO OFICIAL'}
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <article class="ad-card ad-card--${tier}" data-category="${category}" id="card-${cardId}">
+        ${bannerHtml}
+        <div class="ad-card__top">
+          <span class="ad-card__badge ${tierBadgeClass}">${tierLabel}</span>
+          <span class="ad-card__author">${safeAuthor}</span>
+        </div>
+        <h3 class="ad-card__title">${safeTitle}</h3>
+        <p class="ad-card__desc">${safeDesc}</p>
+        <div class="ad-card__footer">
+          ${linkHtml}
+          <span class="ad-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
+        </div>
+      </article>
+    `;
+  }
+
+  function filterCategory(cat) {
+    currentCategory = cat || 'todos';
+    const gridEl = document.getElementById('mural-ads-grid');
+    if (!gridEl) return;
+
+    const cards = gridEl.querySelectorAll('.ad-card');
+    let visibleCount = 0;
+
+    cards.forEach(function (card) {
+      const cardCat = card.getAttribute('data-category') || 'geral';
+      if (currentCategory === 'todos' || cardCat === currentCategory) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
       }
     });
 
-    if (category && category !== 'todos') {
-      list = list.filter(function (a) { return a.category === category; });
-    }
-    return list;
-  }
-
-  async function loadAds(category) {
-    category = category || currentCategory;
-    currentCategory = category;
-
-    // 1. Renderiza IMEDIATAMENTE (sem travar à espera de rede)
-    const instantAds = getConsolidatedAds([], category);
-    renderAds(instantAds);
-
-    // 2. Busca novos anúncios no Supabase em background com timeout de 3s
-    if (window.IsarDB && window.IsarDB.getAnuncios) {
-      try {
-        const timeoutPromise = new Promise(function (_, reject) {
-          setTimeout(function () { reject(new Error('timeout')); }, 3000);
-        });
-        const dbAds = await Promise.race([
-          window.IsarDB.getAnuncios(category),
-          timeoutPromise
-        ]);
-        if (dbAds && dbAds.length > 0) {
-          const updatedAds = getConsolidatedAds(dbAds, category);
-          renderAds(updatedAds);
-        }
-      } catch (_) {}
-    }
-  }
-
-  function renderAds(ads, targetGridId) {
-    const gridEl = document.getElementById(targetGridId || 'mural-ads-grid');
-    if (!gridEl) return;
-
-    if (!ads || ads.length === 0) {
-      gridEl.innerHTML = `
-        <div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--text-secondary)">
+    let emptyNotice = document.getElementById('mural-empty-notice');
+    if (visibleCount === 0) {
+      if (!emptyNotice) {
+        emptyNotice = document.createElement('div');
+        emptyNotice.id = 'mural-empty-notice';
+        emptyNotice.style.cssText = 'grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--text-secondary);';
+        emptyNotice.innerHTML = `
           <div style="font-size:2.5rem;margin-bottom:12px">📢</div>
           <h4 style="color:#fff;margin-bottom:6px">Nenhum anúncio nesta categoria ainda</h4>
           <p style="font-size:0.9rem">Seja o primeiro pioneiro a anunciar aqui por uma taxa simbólica em Pi!</p>
           <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="window.IsarMural && window.IsarMural.openModal()" style="margin-top:14px">
             + Publicar Meu Anúncio
           </button>
-        </div>
-      `;
-      return;
-    }
-
-    // Ordenar: Ouro primeiro (topo), depois Prata, depois Bronze
-    const tierPriority = { ouro: 3, prata: 2, bronze: 1 };
-    const sortedAds = ads.slice().sort(function (a, b) {
-      const pA = tierPriority[a.plan_tier] || 1;
-      const pB = tierPriority[b.plan_tier] || 1;
-      return pB - pA;
-    });
-
-    let html = '';
-    sortedAds.forEach(function (ad) {
-      const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
-      const tierBadgeClass = 'ad-badge--' + tier;
-      const tierLabel = tier === 'ouro' ? '👑 Destaque Ouro VIP' : (tier === 'prata' ? '🥈 Destaque Prata' : '🥉 Classificado Bronze');
-
-      const author = ad.pioneer_username || ad.pioneer_name || '@pioneiro';
-      const safeAuthor = escapeHtml(author);
-      const safeTitle = escapeHtml(ad.title || '');
-      const safeDesc = escapeHtml(ad.description || '');
-      const cleanUrl = tier !== 'bronze' ? safeUrl(ad.link_url) : '';
-
-      let linkHtml = '';
-      if (tier === 'ouro' && cleanUrl) {
-        linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link ad-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 18px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
-      } else if (tier === 'prata' && cleanUrl) {
-        linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">Acessar Anúncio →</a>`;
-      } else {
-        linkHtml = `<span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">💬 Recado da Comunidade</span>`;
-      }
-
-      // Banner / Imagem de Capa do Anúncio
-      let bannerHtml = '';
-      const rawImg = ad.image_url ? safeUrl(ad.image_url) : '';
-      const ytThumb = cleanUrl ? getYouTubeThumb(cleanUrl) : '';
-      const finalImg = rawImg || ytThumb || (tier === 'ouro' ? 'assets/img/ebook-pago-negocios.jpg' : '');
-
-      if (finalImg) {
-        bannerHtml = `
-          <div class="ad-card__banner">
-            <img src="${finalImg}" alt="${safeTitle}" loading="lazy" />
-            <div class="ad-card__banner-overlay">
-              <span style="font-size:0.72rem;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);padding:3px 10px;border-radius:4px;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.2)">
-                ${tier === 'ouro' ? '👑 DESTAQUE VIP' : 'FOTO OFICIAL'}
-              </span>
-            </div>
-          </div>
         `;
+        gridEl.appendChild(emptyNotice);
       }
-
-      html += `
-        <article class="ad-card ad-card--${tier}">
-          ${bannerHtml}
-          <div class="ad-card__top">
-            <span class="ad-card__badge ${tierBadgeClass}">${tierLabel}</span>
-            <span class="ad-card__author">${safeAuthor}</span>
-          </div>
-          <h3 class="ad-card__title">${safeTitle}</h3>
-          <p class="ad-card__desc">${safeDesc}</p>
-          <div class="ad-card__footer">
-            ${linkHtml}
-            <span class="ad-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
-          </div>
-        </article>
-      `;
-    });
-
-    gridEl.innerHTML = html;
+      emptyNotice.style.display = 'block';
+    } else if (emptyNotice) {
+      emptyNotice.style.display = 'none';
+    }
   }
 
   function initFilters() {
@@ -238,9 +199,59 @@
         filterBtns.forEach(function (b) { b.classList.remove('active'); });
         btn.classList.add('active');
         const cat = btn.getAttribute('data-category') || 'todos';
-        loadAds(cat);
+        filterCategory(cat);
       });
     });
+  }
+
+  async function loadAds(category) {
+    category = category || currentCategory || 'todos';
+    filterCategory(category);
+
+    // Mesclar anúncios salvos localmente
+    try {
+      const local = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+      if (Array.isArray(local) && local.length > 0) {
+        const gridEl = document.getElementById('mural-ads-grid');
+        if (gridEl) {
+          local.forEach(function (ad) {
+            if (!document.getElementById('card-' + ad.id)) {
+              gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(ad));
+            }
+          });
+          filterCategory(category);
+        }
+      }
+    } catch (_) {}
+
+    // Busca novos anúncios no Supabase em background
+    if (window.IsarDB && window.IsarDB.getAnuncios) {
+      try {
+        const timeoutPromise = new Promise(function (_, reject) {
+          setTimeout(function () { reject(new Error('timeout')); }, 3000);
+        });
+        const dbAds = await Promise.race([
+          window.IsarDB.getAnuncios(category),
+          timeoutPromise
+        ]);
+        if (Array.isArray(dbAds) && dbAds.length > 0) {
+          const gridEl = document.getElementById('mural-ads-grid');
+          if (gridEl) {
+            dbAds.forEach(function (ad) {
+              if (!document.getElementById('card-' + ad.id)) {
+                gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(ad));
+              }
+            });
+            filterCategory(category);
+          }
+        }
+      } catch (_) {}
+    }
+  }
+
+  function renderAds(ads, targetGridId) {
+    // Compatibilidade: se for chamado com lista, apenas garante a visibilidade
+    loadAds('todos');
   }
 
   // --- Modal de Criação de Anúncio ---
