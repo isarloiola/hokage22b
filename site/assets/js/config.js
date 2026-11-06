@@ -27,7 +27,7 @@
       youtube: 'https://www.youtube.com/@justhokage22b',
       instagram: 'https://instagram.com/hokage22b',
       twitter: 'https://twitter.com/hokage22b',
-      communityWhatsapp: 'https://chat.whatsapp.com/invite/hokage22b'
+      communityWhatsapp: 'https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2'
     },
 
     manual: {

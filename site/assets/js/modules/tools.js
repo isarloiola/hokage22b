@@ -172,7 +172,7 @@
     window.closePiProModal();
 
     setTimeout(function () {
-      window.open('https://chat.whatsapp.com/invite/hokage22b-pro', '_blank');
+      window.open('https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2', '_blank');
     }, 600);
   };
 

@@ -90,9 +90,9 @@
   let selectedTier = 'prata';
 
   const tierPrices = {
-    ouro:   { pi: 3.14, brl: 'R$ 15,00', name: '🥇 Destaque Ouro (Topo da Gazeta e Card Duplo)' },
-    prata:  { pi: 1.00, brl: 'R$ 7,00',  name: '🥈 Destaque Prata (Card Médio)' },
-    bronze: { pi: 0.314, brl: 'R$ 3,00', name: '🥉 Classificado Bronze (Simples)' }
+    ouro:   { pi: 3.14, name: '🥇 Destaque Ouro (Topo da Gazeta e Card Duplo)' },
+    prata:  { pi: 1.00, name: '🥈 Destaque Prata (Card Médio)' },
+    bronze: { pi: 0.314, name: '🥉 Classificado Bronze (Simples)' }
   };
 
   function buildAdCardHtml(ad) {
@@ -163,10 +163,11 @@
     cards.forEach(function (card) {
       const cardCat = card.getAttribute('data-category') || 'geral';
       if (currentCategory === 'todos' || cardCat === currentCategory) {
+        card.classList.remove('ad-card--hidden');
         card.style.display = '';
         visibleCount++;
       } else {
-        card.style.display = 'none';
+        card.classList.add('ad-card--hidden');
       }
     });
 
@@ -283,7 +284,7 @@
     const info = tierPrices[selectedTier] || tierPrices.prata;
     const infoEl = document.getElementById('ad-selected-payment-info');
     if (infoEl) {
-      infoEl.textContent = `Valor do plano: ${info.pi} π (ou ${info.brl} via Pix)`;
+      infoEl.textContent = `Taxa da publicação: ${info.pi} π (pagamento exclusivo em Pi Network)`;
     }
 
     const submitBtn = document.getElementById('ad-submit-btn');
@@ -420,7 +421,6 @@
       pioneer_name: username.replace('@', ''),
       plan_tier: selectedTier,
       price_pi: priceInfo.pi,
-      price_brl: parseFloat(priceInfo.brl.replace(/[^\d,]/g, '').replace(',', '.')),
       status: 'pendente',
       created_at: new Date().toISOString()
     };
@@ -483,7 +483,7 @@
       return;
     }
 
-    // ── FLUXO B: Fora do Pi Browser (P2P / Pix) ──
+    // ── FLUXO B: Fora do Pi Browser (Transferência P2P via Pi Wallet) ──
     // Salva o anúncio como pendente no banco
     if (window.IsarDB && window.IsarDB.createAnuncio) {
       try {
