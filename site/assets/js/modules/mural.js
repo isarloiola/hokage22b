@@ -95,47 +95,54 @@
     bronze: { pi: 0.314, brl: 'R$ 3,00', name: '🥉 Classificado Bronze (Simples)' }
   };
 
-  async function loadAds(category) {
-    const gridEl = document.getElementById('mural-ads-grid');
-    if (!gridEl) return;
-
-    category = category || currentCategory;
-    currentCategory = category;
-
-    let dbAds = [];
-    if (window.IsarDB && window.IsarDB.getAnuncios) {
-      try {
-        dbAds = await window.IsarDB.getAnuncios(category);
-      } catch (_) {}
-    }
-
-    // Mesclar anúncios locais salvos pelo próprio usuário
-    let localAds = [];
+  function getConsolidatedAds(extraAds, category) {
+    let list = [];
     try {
-      localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+      const local = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+      if (Array.isArray(local)) list = list.concat(local);
     } catch (_) {}
 
-    let allAds = [];
-    if (localAds && localAds.length > 0) {
-      allAds = allAds.concat(localAds);
-    }
-    if (dbAds && dbAds.length > 0) {
-      allAds = allAds.concat(dbAds);
+    if (Array.isArray(extraAds) && extraAds.length > 0) {
+      list = list.concat(extraAds);
     }
 
-    // Sempre incluir os exemplos oficiais garantindo que o mural nunca fique vazio
-    const existingIds = new Set(allAds.map(function (a) { return a.id; }));
+    const seen = new Set(list.map(function (a) { return a.id; }));
     defaultMockAds.forEach(function (mock) {
-      if (!existingIds.has(mock.id)) {
-        allAds.push(mock);
+      if (!seen.has(mock.id)) {
+        list.push(mock);
       }
     });
 
     if (category && category !== 'todos') {
-      allAds = allAds.filter(function (a) { return a.category === category; });
+      list = list.filter(function (a) { return a.category === category; });
     }
+    return list;
+  }
 
-    renderAds(allAds);
+  async function loadAds(category) {
+    category = category || currentCategory;
+    currentCategory = category;
+
+    // 1. Renderiza IMEDIATAMENTE (sem travar à espera de rede)
+    const instantAds = getConsolidatedAds([], category);
+    renderAds(instantAds);
+
+    // 2. Busca novos anúncios no Supabase em background com timeout de 3s
+    if (window.IsarDB && window.IsarDB.getAnuncios) {
+      try {
+        const timeoutPromise = new Promise(function (_, reject) {
+          setTimeout(function () { reject(new Error('timeout')); }, 3000);
+        });
+        const dbAds = await Promise.race([
+          window.IsarDB.getAnuncios(category),
+          timeoutPromise
+        ]);
+        if (dbAds && dbAds.length > 0) {
+          const updatedAds = getConsolidatedAds(dbAds, category);
+          renderAds(updatedAds);
+        }
+      } catch (_) {}
+    }
   }
 
   function renderAds(ads, targetGridId) {
@@ -499,8 +506,13 @@
     }
   }
 
+  let isInitialized = false;
+
   window.IsarMural = {
     init: function () {
+      if (isInitialized) return;
+      isInitialized = true;
+
       initFilters();
       loadAds('todos');
       selectTier('prata');
