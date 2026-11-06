@@ -63,10 +63,10 @@
     }
   }
 
-  // 3. Detecção de Ambiente Pi Browser
+  // 3. Detecção Real e Precisa do Ambiente Pi Browser
   function isPiBrowser() {
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-    return /PiBrowser|PiNetwork/i.test(ua) || Boolean(window.Pi);
+    return /PiBrowser|PiNetwork/i.test(ua);
   }
 
   // 4. Atualização de Elementos Visuais com status do pioneiro
@@ -130,7 +130,7 @@
     }
   }
 
-  // 5. Modal Web3 de Diagnóstico e Conexão Pi (Abre Imediatamente no Clique)
+  // 5. Modal Web3 de Diagnóstico e Conexão Pi
   function openPiConnectModal() {
     let modal = document.getElementById('modal-pi-connect-diag');
     if (!modal) {
@@ -142,8 +142,7 @@
       document.body.appendChild(modal);
     }
 
-    const ua = navigator.userAgent || '';
-    const inPi = /PiBrowser|PiNetwork/i.test(ua) || Boolean(window.Pi);
+    const inPi = isPiBrowser();
     const hasSdk = Boolean(window.Pi);
 
     modal.innerHTML = `
@@ -155,9 +154,9 @@
         <!-- Diagnóstico em Tempo Real -->
         <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.85rem">
           <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-            <span style="color:var(--text-muted)">Navegador:</span>
+            <span style="color:var(--text-muted)">Navegador Atual:</span>
             <span style="font-weight:700;color:${inPi ? '#10b981' : '#f59e0b'}">
-              ${inPi ? '✓ Pi Browser detectado' : '⚠️ Navegador comum'}
+              ${inPi ? '✓ Pi Browser detectado' : '⚠️ Navegador Comum (Chrome/Safari)'}
             </span>
           </div>
           <div style="display:flex;justify-content:space-between;margin-bottom:8px">
@@ -174,6 +173,16 @@
           </div>
         </div>
 
+        ${!inPi ? `
+          <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;font-size:0.84rem;color:var(--text-secondary);line-height:1.4">
+            💡 <strong>Você está em um navegador comum:</strong><br>
+            A autenticação automática por 1 clique é exclusiva do aplicativo <strong>Pi Browser</strong>. Abra o app Pi Browser no celular e acesse <strong>hokage22b.com</strong> para conectar!
+          </div>
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="margin-bottom:12px" onclick="navigator.clipboard.writeText('https://hokage22b.com');this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link para abrir no Pi Browser',2000)">
+            📋 Copiar Link para abrir no Pi Browser
+          </button>
+        ` : ''}
+
         <div id="diag-feedback-box" style="padding:12px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:0.85rem;line-height:1.4;display:none"></div>
 
         <!-- Ações -->
@@ -187,25 +196,34 @@
             </button>
           ` : `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow(false)" style="padding:14px;font-weight:700">
-              ⚡ Autorizar no Pi Browser (Mainnet)
+              ⚡ Conectar no Pi Browser (Mainnet)
             </button>
             <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="HokagePi.triggerAuthFlow(true)" style="font-size:0.78rem;opacity:0.85">
-              🧪 Tentar em Modo Sandbox (Testnet)
+              🧪 Testar em Modo Sandbox (Testnet)
             </button>
           `}
         </div>
 
-        <div style="margin-top:16px;text-align:center">
-          <button type="button" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;text-decoration:underline" onclick="document.getElementById('modal-pi-connect-diag').classList.remove('active');HokagePi.showManualP2PModal({amount:3.14,memo:'Pagamento Direto'})">
-            Preferir pagamento manual P2P
-          </button>
+        <!-- Opção Direta de Carteira P2P -->
+        <div style="background:rgba(245, 158, 11, 0.08);border:1px solid rgba(245, 158, 11, 0.25);border-radius:var(--radius-sm);padding:14px;margin-top:16px;font-size:0.82rem">
+          <div style="font-weight:700;color:var(--amber-light);margin-bottom:4px">💰 Pagamento Direto via Pi Wallet:</div>
+          <div style="color:var(--text-secondary);margin-bottom:8px">Envie Pi para a carteira oficial HOKAGE22B:</div>
+          <code style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:8px;border-radius:4px;color:var(--accent-light);user-select:all;margin-bottom:8px">${OFFICIAL_WALLET}</code>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" onclick="navigator.clipboard.writeText('${OFFICIAL_WALLET}');this.textContent='✓ Carteira Copiada!';setTimeout(()=>this.textContent='📋 Copiar Carteira',2000)">
+              📋 Copiar Carteira
+            </button>
+            <a href="https://wallet.pi" class="portal-btn portal-btn--amber portal-btn--sm portal-btn--full" style="text-align:center;text-decoration:none">
+              🚀 Abrir wallet.pi
+            </a>
+          </div>
         </div>
       </div>
     `;
 
     modal.classList.add('active');
 
-    // Se estiver no Pi Browser e desconectado, dispara a autorização imediatamente
+    // Se estiver de fato no Pi Browser e desconectado, tenta autenticar
     if (inPi && !authenticatedUser) {
       setTimeout(function () {
         triggerAuthFlow(false);
@@ -213,7 +231,7 @@
     }
   }
 
-  // 6. Disparo Real da Autenticação com Pi SDK
+  // 6. Disparo Real da Autenticação com Pi SDK (com Proteção de Timeout)
   async function triggerAuthFlow(isSandbox) {
     if (isSandbox === undefined) isSandbox = false;
 
@@ -223,7 +241,7 @@
 
     if (triggerBtn) {
       triggerBtn.disabled = true;
-      triggerBtn.textContent = 'Aguardando permissão no Pi…';
+      triggerBtn.textContent = 'Aguardando no Pi…';
     }
 
     if (feedbackBox) {
@@ -231,11 +249,11 @@
       feedbackBox.style.background = 'rgba(139,92,246,0.15)';
       feedbackBox.style.border = '1px solid rgba(139,92,246,0.3)';
       feedbackBox.style.color = '#c4b5fd';
-      feedbackBox.innerHTML = '⏳ <strong>Aguardando você permitir no Pi Browser…</strong><br><small>Toque em "Permitir" quando a janela nativa do Pi abrir.</small>';
+      feedbackBox.innerHTML = '⏳ <strong>Aguardando janela de autorização do Pi Browser…</strong><br><small>Toque em "Permitir" assim que a caixa de permissões surgir.</small>';
     }
 
     if (statusEl) {
-      statusEl.innerHTML = '<span style="color:#f59e0b">⏳ Autenticando…</span>';
+      statusEl.innerHTML = '<span style="color:#f59e0b">⏳ Solicitando…</span>';
     }
 
     showToast('Aguardando permissão no Pi Browser...', 'info');
@@ -249,7 +267,7 @@
       }
       if (triggerBtn) {
         triggerBtn.disabled = false;
-        triggerBtn.textContent = '⚡ Autorizar no Pi Browser';
+        triggerBtn.textContent = '⚡ Conectar no Pi Browser';
       }
       return null;
     }
@@ -268,7 +286,15 @@
     }
 
     try {
-      const auth = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
+      // Cria promessa com timeout de 6.5s caso esteja aberto diretamente fora do container do develop.pi
+      const authPromise = window.Pi.authenticate(scopes, onIncompletePaymentFound);
+      const timeoutPromise = new Promise(function (_, reject) {
+        setTimeout(function () {
+          reject(new Error('TIMEOUT_STANDALONE'));
+        }, 6500);
+      });
+
+      const auth = await Promise.race([authPromise, timeoutPromise]);
       authenticatedUser = auth.user;
 
       try {
@@ -297,7 +323,6 @@
       return auth.user;
     } catch (err) {
       console.warn('Erro ao autenticar:', err);
-      const errMsg = (err && (err.message || err.error || (typeof err === 'string' ? err : ''))) || 'Autorização cancelada ou recusada.';
 
       if (triggerBtn) {
         triggerBtn.disabled = false;
@@ -308,14 +333,26 @@
         feedbackBox.style.background = 'rgba(239,68,68,0.15)';
         feedbackBox.style.border = '1px solid rgba(239,68,68,0.3)';
         feedbackBox.style.color = '#fca5a5';
-        feedbackBox.innerHTML = `⚠️ <strong>Resposta do Pi Browser:</strong><br>${escapeHtml(errMsg)}<br><small style="color:#fff;margin-top:6px;display:block">Se o app no develop.pi estiver como Sandbox, toque em "Tentar em Modo Sandbox" abaixo.</small>`;
+
+        if (err && err.message === 'TIMEOUT_STANDALONE') {
+          feedbackBox.innerHTML = `
+            ℹ️ <strong>Como conectar seu app no Pi Browser:</strong><br>
+            Você acessou pela barra de endereços direta.<br><br>
+            Para que o Pi Browser abra a janela oficial de autorização nativa do SDK:<br>
+            1. Acesse <strong>develop.pi</strong> na barra do Pi Browser.<br>
+            2. Localize seu app cadastrado e toque em <strong>Open App</strong>.<br><br>
+            <em>Ou realize o pagamento direto usando a carteira abaixo!</em>
+          `;
+        } else {
+          const errMsg = (err && (err.message || err.error || (typeof err === 'string' ? err : ''))) || 'Autorização cancelada ou recusada.';
+          feedbackBox.innerHTML = `⚠️ <strong>Resposta do Pi Browser:</strong><br>${escapeHtml(errMsg)}<br><small style="color:#fff;margin-top:6px;display:block">Se o app no develop.pi for Sandbox, toque no botão de Testnet acima.</small>`;
+        }
       }
 
       if (statusEl) {
-        statusEl.innerHTML = '<span style="color:#ef4444">✕ Erro</span>';
+        statusEl.innerHTML = '<span style="color:#ef4444">✕ Não autorizado</span>';
       }
 
-      showToast('Resposta Pi: ' + errMsg, 'error');
       return null;
     }
   }
@@ -363,7 +400,6 @@
 
     let user = authenticatedUser;
     if (!user) {
-      // Abre o modal de conexão se ainda não estiver conectado
       openPiConnectModal();
       return;
     }
@@ -512,7 +548,6 @@
       }
     } catch (_) {}
 
-    // Binda todos os botões de conectar Pi para garantir que o clique dispare sempre
     document.querySelectorAll('.pi-auth-header-btn').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.preventDefault();
