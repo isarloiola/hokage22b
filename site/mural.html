@@ -104,35 +104,78 @@
         <!-- Renderizado via JavaScript / Supabase -->
       </div>
 
-      <!-- Tabela de Valores / Transparência -->
+      <!-- Tabela de Valores / Transparência e Benefícios dos Planos -->
       <div style="margin-top:64px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:32px">
-        <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px">📋 Como Funciona a Publicação na Gazeta</h3>
-        <p style="color:var(--gray-light);font-size:0.92rem;line-height:1.6;margin-bottom:20px">
-          Para evitar spam e manter apenas anúncios reais e sérios no mural, a publicação é feita mediante uma micro-taxa simbólica única em Pi ou Pix. Os valores arrecadados ajudam a manter os servidores do projeto isar.pi e a produção de conteúdo gratuito.
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+          <div>
+            <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.08em">Tabela Oficial de Planos</span>
+            <h3 style="color:#fff;font-size:1.4rem;margin:4px 0 8px">📋 Como Funciona a Publicação na Gazeta</h3>
+          </div>
+          <span style="font-size:0.8rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--amber-light);padding:4px 12px;border-radius:12px;font-weight:700">
+            Validação Imediata na Pi Network
+          </span>
+        </div>
+        <p style="color:var(--gray-light);font-size:0.92rem;line-height:1.6;margin-bottom:24px">
+          Para evitar spam e manter apenas anúncios reais e sérios no mural, a publicação é feita mediante uma micro-taxa simbólica única em Pi (ou Pix). Os recursos mantém os servidores do portal e a produção de conteúdo gratuito da comunidade.
         </p>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:16px">
-          <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:18px">
-            <span style="font-weight:800;color:var(--amber-light);font-size:0.9rem">🥇 Destaque Ouro</span>
-            <div style="font-size:1.4rem;font-weight:900;color:#fff;margin:4px 0">3.14 π <span style="font-size:0.8rem;color:var(--gray-light)">(ou R$ 15,00)</span></div>
-            <p style="font-size:0.82rem;color:var(--gray-light);margin:0">Card duplo em evidência no topo da Gazeta e na página inicial.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px">
+          <!-- PLANO OURO -->
+          <div style="background:linear-gradient(145deg, rgba(245,158,11,0.12) 0%, rgba(20,24,33,0.95) 100%);border:2px solid rgba(245,158,11,0.45);border-radius:var(--radius-md);padding:22px;position:relative;display:flex;flex-direction:column;justify-content:space-between">
+            <span style="position:absolute;top:12px;right:14px;background:var(--amber);color:#000;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:10px;text-transform:uppercase">Mais Popular</span>
+            <div>
+              <span style="font-weight:800;color:var(--amber-light);font-size:1rem;display:flex;align-items:center;gap:6px">🥇 Destaque Ouro (VIP)</span>
+              <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">3.14 π <span style="font-size:0.85rem;color:var(--gray-light);font-weight:500">(ou R$ 15,00)</span></div>
+              <ul style="font-size:0.85rem;color:var(--gray-light);margin:14px 0;padding-left:18px;line-height:1.6">
+                <li><strong style="color:#fff">Card Duplo:</strong> 2 colunas de largura, dobro do tamanho visual!</li>
+                <li><strong style="color:#fff">Topo Absoluto:</strong> Prioridade máxima na Gazeta.</li>
+                <li><strong style="color:#fff">Link Clicável:</strong> Botão de ação âmbar para canal, loja ou WhatsApp.</li>
+                <li><strong style="color:#fff">Vitrine na Home:</strong> Espelhado na página inicial de hokage22b.com.</li>
+                <li>Borda dourada luminosa com efeito VIP.</li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-primary" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('ouro'), window.IsarMural.openModal())">
+              Escolher Destaque Ouro
+            </button>
           </div>
 
-          <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(148,163,184,0.3);border-radius:var(--radius-sm);padding:18px">
-            <span style="font-weight:800;color:#e2e8f0;font-size:0.9rem">🥈 Destaque Prata</span>
-            <div style="font-size:1.4rem;font-weight:900;color:#fff;margin:4px 0">1.00 π <span style="font-size:0.8rem;color:var(--gray-light)">(ou R$ 7,00)</span></div>
-            <p style="font-size:0.82rem;color:var(--gray-light);margin:0">Card médio com link clicável direto para o seu canal, WhatsApp ou site.</p>
+          <!-- PLANO PRATA -->
+          <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(148,163,184,0.35);border-radius:var(--radius-md);padding:22px;display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <span style="font-weight:800;color:#e2e8f0;font-size:1rem;display:flex;align-items:center;gap:6px">🥈 Destaque Prata</span>
+              <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">1.00 π <span style="font-size:0.85rem;color:var(--gray-light);font-weight:500">(ou R$ 7,00)</span></div>
+              <ul style="font-size:0.85rem;color:var(--gray-light);margin:14px 0;padding-left:18px;line-height:1.6">
+                <li><strong style="color:#fff">Card Médio Individual:</strong> 1 coluna padrão bem formatada.</li>
+                <li><strong style="color:#fff">Link Clicável:</strong> Direto para seu canal do YouTube, Instagram, WhatsApp ou Loja.</li>
+                <li>Filtragem por categoria (YouTube, Produtos, Serviços).</li>
+                <li>Borda prateada metálica elegante.</li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('prata'), window.IsarMural.openModal())">
+              Escolher Destaque Prata
+            </button>
           </div>
 
-          <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:18px">
-            <span style="font-weight:800;color:var(--gray-light);font-size:0.9rem">🥉 Classificado Bronze</span>
-            <div style="font-size:1.4rem;font-weight:900;color:#fff;margin:4px 0">0.314 π <span style="font-size:0.8rem;color:var(--gray-light)">(ou R$ 3,00)</span></div>
-            <p style="font-size:0.82rem;color:var(--gray-light);margin:0">Mensagem da comunidade ou recado simples de apoio aos pioneiros.</p>
+          <!-- PLANO BRONZE -->
+          <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);padding:22px;display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <span style="font-weight:800;color:var(--gray-light);font-size:1rem;display:flex;align-items:center;gap:6px">🥉 Classificado Bronze</span>
+              <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">0.314 π <span style="font-size:0.85rem;color:var(--gray-light);font-weight:500">(ou R$ 3,00)</span></div>
+              <ul style="font-size:0.85rem;color:var(--gray-light);margin:14px 0;padding-left:18px;line-height:1.6">
+                <li><strong style="color:#fff">Card Compacto:</strong> Mensagem da comunidade ou apoio.</li>
+                <li>Exibe seu @usuário oficial ou nome.</li>
+                <li><span style="color:var(--amber-light);font-weight:600">Sem link externo</span> (anti-spam garantido para recados entre pioneiros).</li>
+                <li>Custo ultra-acessível para deixar sua marca.</li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('bronze'), window.IsarMural.openModal())">
+              Escolher Classificado Bronze
+            </button>
           </div>
         </div>
 
         <div style="margin-top:24px;text-align:center;font-size:0.85rem;color:var(--gray-light)">
-          Dúvidas sobre o mural ou parcerias? Entre em contato: <a href="mailto:contato@hokage22b.com" style="color:var(--amber-light);font-weight:700">contato@hokage22b.com</a>
+          Dúvidas sobre o mural ou parcerias institucionais? Fale conosco: <a href="mailto:contato@hokage22b.com" style="color:var(--amber-light);font-weight:700">contato@hokage22b.com</a>
         </div>
       </div>
     </div>
@@ -193,9 +236,15 @@
           <textarea id="ad-input-desc" required rows="3" placeholder="Explique o que você oferece ou deixe seu recado para os pioneiros..." maxlength="160" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff"></textarea>
         </div>
 
-        <div class="form-group" style="margin-bottom:14px">
-          <label for="ad-input-link" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Link de Destino (Opcional)</label>
+        <div class="form-group" style="margin-bottom:14px" id="ad-link-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <label for="ad-input-link" style="font-size:0.85rem;color:var(--gray-light)">Link de Destino</label>
+            <span id="ad-link-status-badge" style="font-size:0.75rem;color:var(--accent-light);font-weight:600">Disponível no Prata e Ouro</span>
+          </div>
           <input type="url" id="ad-input-link" placeholder="https://youtube.com/... ou https://wa.me/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+          <small id="ad-link-hint" style="display:block;font-size:0.75rem;color:var(--gray-light);margin-top:4px">
+            Seu link direto para canal do YouTube, WhatsApp, loja ou site.
+          </small>
         </div>
 
         <div class="form-group" style="margin-bottom:20px">

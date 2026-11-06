@@ -117,8 +117,8 @@
     renderAds(ads);
   }
 
-  function renderAds(ads) {
-    const gridEl = document.getElementById('mural-ads-grid');
+  function renderAds(ads, targetGridId) {
+    const gridEl = document.getElementById(targetGridId || 'mural-ads-grid');
     if (!gridEl) return;
 
     if (!ads || ads.length === 0) {
@@ -135,21 +135,34 @@
       return;
     }
 
+    // Ordenar: Ouro primeiro (topo), depois Prata, depois Bronze
+    const tierPriority = { ouro: 3, prata: 2, bronze: 1 };
+    const sortedAds = ads.slice().sort(function (a, b) {
+      const pA = tierPriority[a.plan_tier] || 1;
+      const pB = tierPriority[b.plan_tier] || 1;
+      return pB - pA;
+    });
+
     let html = '';
-    ads.forEach(function (ad) {
+    sortedAds.forEach(function (ad) {
       const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
       const tierBadgeClass = 'ad-badge--' + tier;
-      const tierLabel = tier === 'ouro' ? '🥇 Destaque Ouro' : (tier === 'prata' ? '🥈 Prata' : '🥉 Classificado');
+      const tierLabel = tier === 'ouro' ? '🥇 Destaque Ouro (Card Duplo)' : (tier === 'prata' ? '🥈 Destaque Prata' : '🥉 Classificado Bronze');
 
       const author = ad.pioneer_username || ad.pioneer_name || '@pioneiro';
       const safeAuthor = escapeHtml(author);
       const safeTitle = escapeHtml(ad.title || '');
       const safeDesc = escapeHtml(ad.description || '');
-      const cleanUrl = safeUrl(ad.link_url);
+      const cleanUrl = tier !== 'bronze' ? safeUrl(ad.link_url) : '';
 
-      const linkHtml = cleanUrl
-        ? `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">Acessar Anúncio →</a>`
-        : `<span style="color:var(--text-muted);font-size:0.8rem">Mensagem da Comunidade</span>`;
+      let linkHtml = '';
+      if (tier === 'ouro' && cleanUrl) {
+        linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link ad-card__link--ouro" style="background:var(--amber);color:#000;font-weight:800;padding:8px 16px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px">⚡ Visitar Agora →</a>`;
+      } else if (tier === 'prata' && cleanUrl) {
+        linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">Acessar Anúncio →</a>`;
+      } else {
+        linkHtml = `<span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">💬 Recado da Comunidade</span>`;
+      }
 
       html += `
         <article class="ad-card ad-card--${tier}">
@@ -218,6 +231,52 @@
     if (submitBtn) {
       submitBtn.textContent = `📢 Publicar Anúncio (${info.pi} π)`;
     }
+
+    // Regras de Link conforme o plano selecionado
+    const linkInput = document.getElementById('ad-input-link');
+    const badgeEl   = document.getElementById('ad-link-status-badge');
+    const hintEl    = document.getElementById('ad-link-hint');
+
+    if (linkInput) {
+      if (selectedTier === 'bronze') {
+        linkInput.disabled = true;
+        linkInput.value = '';
+        linkInput.placeholder = '🚫 Links externos exclusivos para Prata e Ouro';
+        linkInput.style.opacity = '0.5';
+        linkInput.style.cursor = 'not-allowed';
+        if (badgeEl) {
+          badgeEl.textContent = 'Sem link externo no Bronze';
+          badgeEl.style.color = 'var(--text-muted)';
+        }
+        if (hintEl) {
+          hintEl.textContent = 'O plano Bronze publica sua mensagem fraterna e @usuário sem links externos.';
+        }
+      } else if (selectedTier === 'prata') {
+        linkInput.disabled = false;
+        linkInput.placeholder = 'https://youtube.com/... ou https://wa.me/...';
+        linkInput.style.opacity = '1';
+        linkInput.style.cursor = 'text';
+        if (badgeEl) {
+          badgeEl.textContent = 'Link Clicável Incluído 🥈';
+          badgeEl.style.color = '#e2e8f0';
+        }
+        if (hintEl) {
+          hintEl.textContent = 'Link direto para seu canal, WhatsApp, Instagram ou site.';
+        }
+      } else if (selectedTier === 'ouro') {
+        linkInput.disabled = false;
+        linkInput.placeholder = 'https://seu-canal-ou-loja.com';
+        linkInput.style.opacity = '1';
+        linkInput.style.cursor = 'text';
+        if (badgeEl) {
+          badgeEl.textContent = 'Link VIP em Card Duplo 🥇';
+          badgeEl.style.color = 'var(--amber-light)';
+        }
+        if (hintEl) {
+          hintEl.textContent = 'Link prioritário com botão âmbar de alta conversão + card com dobro de largura no topo!';
+        }
+      }
+    }
   }
 
   async function handleAdSubmit(e) {
@@ -249,7 +308,7 @@
 
     const rawLink = linkInput ? linkInput.value.trim() : '';
     let validatedLink = '';
-    if (rawLink) {
+    if (selectedTier !== 'bronze' && rawLink) {
       if (/^https?:\/\//i.test(rawLink)) {
         validatedLink = rawLink;
       } else {

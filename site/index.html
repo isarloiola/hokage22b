@@ -118,6 +118,7 @@
           <li><a href="#comece-aqui">Comece Aqui</a></li>
           <li><a href="#produtos">Produtos</a></li>
           <li><a href="#universo">Universo Digital</a></li>
+          <li><a href="mural.html" style="color:var(--amber-light);font-weight:700">📢 Mural dos Pioneiros</a></li>
           <li><a href="#conteudo">Conteúdo</a></li>
           <li><a href="#comunidade">Comunidade</a></li>
           <li><a href="#sobre">Sobre</a></li>
@@ -156,6 +157,10 @@
 
     <div class="portal-drawer__nav">
       <a href="#hero">Início</a>
+      <a href="mural.html" style="color:var(--amber-light);font-weight:700;display:flex;align-items:center;justify-content:space-between">
+        <span>📢 Mural &amp; Classificados Pi</span>
+        <span style="font-size:0.75rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);padding:2px 8px;border-radius:12px;color:var(--amber-light)">Novo</span>
+      </a>
       <a href="#comece-aqui">Comece por Aqui</a>
       <a href="#produtos">Produtos Digitais</a>
       <a href="#universo">Universo Digital</a>
@@ -245,32 +250,37 @@
         </div>
 
         <div class="portal-start-grid">
-          <!-- CARD 1: MANUAL PI NETWORK -->
-          <article class="start-card start-card--featured">
-            <div class="start-card__top">
-              <div class="start-card__icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-                  <path d="M6 6h10" />
-                  <path d="M6 10h10" />
-                </svg>
+          <!-- CARD 1: MANUAL PI NETWORK (EBOOK GRATUITO) -->
+          <article class="start-card start-card--featured" style="display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <div style="background:linear-gradient(180deg, rgba(139,92,246,0.12) 0%, rgba(0,0,0,0.3) 100%);border-radius:var(--radius-sm);padding:14px;text-align:center;margin-bottom:16px;border:1px solid rgba(139,92,246,0.2)">
+                <img src="assets/img/ebook-cover.png" alt="Capa Oficial do Manual Pi Network Gratuito" style="max-height:170px;width:auto;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,0.6);display:inline-block" loading="lazy" />
               </div>
-              <span class="start-card__badge start-card__badge--accent">Gratuito</span>
+              <div class="start-card__top">
+                <div class="start-card__icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                    <path d="M6 6h10" />
+                    <path d="M6 10h10" />
+                  </svg>
+                </div>
+                <span class="start-card__badge start-card__badge--accent">E-book Gratuito</span>
+              </div>
+              <h3 class="start-card__title">Comece com Pi Network</h3>
+              <p class="start-card__desc">
+                Aprenda desde os fundamentos até os conceitos mais avançados do ecossistema Pi com rigor técnico e
+                linguagem clara.
+              </p>
+              <ul class="start-card__meta-list">
+                <li>✓ Para iniciantes e usuários avançados</li>
+                <li>✓ Acesso imediato em PDF e EPUB</li>
+                <li>✓ Atualizado trimestralmente (Edição Oficial)</li>
+              </ul>
             </div>
-            <h3 class="start-card__title">Comece com Pi Network</h3>
-            <p class="start-card__desc">
-              Aprenda desde os fundamentos até os conceitos mais avançados do ecossistema Pi com rigor técnico e
-              linguagem clara.
-            </p>
-            <ul class="start-card__meta-list">
-              <li>✓ Para iniciantes e usuários avançados</li>
-              <li>✓ Acesso imediato sem cadastro obrigatório</li>
-              <li>✓ Atualizado trimestralmente (Outubro/2026)</li>
-            </ul>
             <button type="button" class="portal-btn portal-btn--primary portal-btn--sm"
-              onclick="HokagePortal.openModal('modal-manual-download')">
-              Acessar manual →
+              onclick="HokagePortal.openModal('modal-manual-download')" style="width:100%;margin-top:12px">
+              Baixar Manual Gratuito →
             </button>
           </article>
 
@@ -380,8 +390,8 @@
         <!-- PRODUTO PRINCIPAL: PI PARA SEU NEGÓCIO -->
         <div class="product-showcase">
           <div class="product-cover-wrap">
-            <img src="assets/img/ebook-cover.png" alt="Capa do E-book Pi para seu Negócio — HOKAGE22B"
-              class="product-cover-img" loading="lazy" />
+            <img src="assets/img/ebook-pago-negocios.jpg" alt="Capa do E-book Pi Network para seu Negócio — HOKAGE22B"
+              class="product-cover-img" loading="lazy" style="box-shadow:0 12px 36px rgba(0,0,0,0.7);border-radius:10px" />
           </div>
 
           <div class="product-details">
@@ -581,6 +591,112 @@
               Cadastrar Proposta
             </button>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4.5B. A GAZETA DOS PIONEIROS — MURAL DE CLASSIFICADOS WEB3
+    ============================================================ -->
+    <section class="portal-section" id="mural" aria-labelledby="mural-section-title" style="background:linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(9,9,11,0.8) 100%)">
+      <div class="portal-container">
+        <div class="section-heading-wrap" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
+          <div>
+            <div class="section-tag section-tag--amber">Funcionalidade Primordial · Comunidade</div>
+            <h2 class="section-title" id="mural-section-title">A Gazeta dos Pioneiros</h2>
+            <p class="section-desc">
+              O mural descentralizado da comunidade: conecte-se com canais de YouTube, lojas que aceitam Pi, desenvolvedores e recados de pioneiros de todo o país.
+            </p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="mural.html" class="portal-btn portal-btn--amber portal-btn--sm">
+              Ver Mural Completo ↗
+            </a>
+            <a href="mural.html" class="portal-btn portal-btn--outline portal-btn--sm">
+              📢 Publicar Meu Anúncio (a partir de 0.314 π)
+            </a>
+          </div>
+        </div>
+
+        <!-- Vitrine de Anúncios da Gazeta (Grid Estilo Jornal) -->
+        <div class="mural-grid" style="margin-top:32px">
+          <!-- 1. DESTAQUE OURO (CARD DUPLO VIP) -->
+          <article class="ad-card ad-card--ouro">
+            <div class="ad-card__top">
+              <span class="ad-card__badge ad-badge--ouro">🥇 Destaque Ouro · Card Duplo</span>
+              <span class="ad-card__author">@hokage22b</span>
+            </div>
+            <h3 class="ad-card__title">Canal @justhokage22b no YouTube</h3>
+            <p class="ad-card__desc">
+              Análises semanais sérias e sem hype sobre Pi Network, Web3, nós validadores e finanças descentralizadas no Brasil. Conteúdo com embasamento técnico e foco na Open Mainnet.
+            </p>
+            <div class="ad-card__footer">
+              <a href="https://www.youtube.com/@justhokage22b" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link ad-card__link--ouro" style="background:var(--amber);color:#000;font-weight:800;padding:8px 16px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+                ⚡ Assistir ao Canal no YouTube →
+              </a>
+              <span class="ad-card__price-tag">3.14 π</span>
+            </div>
+          </article>
+
+          <!-- 2. DESTAQUE PRATA (SERVIÇO) -->
+          <article class="ad-card ad-card--prata">
+            <div class="ad-card__top">
+              <span class="ad-card__badge ad-badge--prata">🥈 Destaque Prata · Serviços</span>
+              <span class="ad-card__author">@carlos_dev</span>
+            </div>
+            <h3 class="ad-card__title">Desenvolvimento de dApps no Pi Browser</h3>
+            <p class="ad-card__desc">
+              Programador front-end cria páginas modernas e integrações com o Pi SDK oficial para comércios e criadores que desejam aceitar Pi.
+            </p>
+            <div class="ad-card__footer">
+              <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">
+                Falar no WhatsApp →
+              </a>
+              <span class="ad-card__price-tag">1.00 π</span>
+            </div>
+          </article>
+
+          <!-- 3. DESTAQUE PRATA (PRODUTO) -->
+          <article class="ad-card ad-card--prata">
+            <div class="ad-card__top">
+              <span class="ad-card__badge ad-badge--prata">🥈 Destaque Prata · Comércio</span>
+              <span class="ad-card__author">@artes_brasil</span>
+            </div>
+            <h3 class="ad-card__title">Artesanato Mineiro Aceitando Pi (P2P)</h3>
+            <p class="ad-card__desc">
+              Peças artesanais em madeira e cerâmica com frete para todo o Brasil. Aceitamos 100% em Pi na Mainnet para pioneiros verificados.
+            </p>
+            <div class="ad-card__footer">
+              <a href="https://instagram.com/hokage22b" target="_blank" rel="noopener noreferrer nofollow" class="ad-card__link">
+                Ver Catálogo no Instagram →
+              </a>
+              <span class="ad-card__price-tag">1.00 π</span>
+            </div>
+          </article>
+
+          <!-- 4. CLASSIFICADO BRONZE (MENSAGEM DA COMUNIDADE SEM LINK EXTERNO) -->
+          <article class="ad-card ad-card--bronze">
+            <div class="ad-card__top">
+              <span class="ad-card__badge ad-badge--bronze">🥉 Classificado Bronze · Recado</span>
+              <span class="ad-card__author">@pioneiro_cwb</span>
+            </div>
+            <h3 class="ad-card__title">Rumo à Open Mainnet!</h3>
+            <p class="ad-card__desc">
+              Apoiando o portal HOKAGE22B pela seriedade e compromisso com a verdade. Sucesso a todos os pioneiros focados em construir a economia real!
+            </p>
+            <div class="ad-card__footer">
+              <span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">
+                💬 Recado Fraterno da Comunidade
+              </span>
+              <span class="ad-card__price-tag">0.314 π</span>
+            </div>
+          </article>
+        </div>
+
+        <div style="text-align:center;margin-top:28px">
+          <a href="mural.html" class="portal-btn portal-btn--outline" style="padding:12px 28px;font-size:0.95rem">
+            📢 Ver Todos os Anúncios &amp; Filtrar Categorias na Gazeta ↗
+          </a>
         </div>
       </div>
     </section>
@@ -974,6 +1090,13 @@
 
       <!-- ETAPA 1: FORMULÁRIO DE CAPTURA DO LEAD -->
       <div id="manual-lead-box">
+        <div style="display:flex;gap:18px;align-items:center;margin-bottom:18px;background:rgba(255,255,255,0.03);border:1px solid var(--border-subtle);padding:14px;border-radius:var(--radius-sm)">
+          <img src="assets/img/ebook-cover.png" alt="Capa Oficial do Manual Pi Network" style="width:72px;height:auto;border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,0.5);flex-shrink:0" />
+          <div>
+            <strong style="color:#fff;font-size:0.95rem;display:block">Manual Prático Pi Network (Edição Oficial)</strong>
+            <span style="font-size:0.8rem;color:var(--text-secondary);display:block;margin-top:4px">23 capítulos completos · Formatos PDF e EPUB · Acesso 100% Gratuito</span>
+          </div>
+        </div>
         <p style="font-size:0.92rem;margin-bottom:18px;color:var(--text-secondary)">
           Informe seu e-mail abaixo para <strong>desbloquear o download imediato</strong> em PDF e EPUB e receber as
           atualizações trimestrais gratuitas.
