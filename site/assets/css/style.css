@@ -22,6 +22,7 @@
 @import url('./components/donation.css');
 @import url('./components/onboarding.css');
 @import url('./components/mural.css');
+@import url('./components/i18n.css');
 
 /* --- 3. Sections --- */
 @import url('./sections/hero.css');

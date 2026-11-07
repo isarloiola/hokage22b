@@ -1,0 +1,224 @@
+/* ============================================================
+   HOKAGE22B — Component: Internationalization (i18n / Languages)
+   Glassmorphism Language Selector & Dropdown
+   ============================================================ */
+
+/* Botão Gatilho do Seletor de Idioma */
+.lang-selector {
+  position: relative;
+  display: inline-block;
+  font-family: inherit;
+  z-index: 1050;
+}
+
+.lang-btn-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(18, 18, 26, 0.7);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  color: var(--text-primary, #f4f4f5);
+  padding: 6px 10px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  user-select: none;
+}
+
+.lang-btn-trigger:hover,
+.lang-btn-trigger:focus-visible {
+  border-color: var(--accent, #8b5cf6);
+  background: rgba(139, 92, 246, 0.15);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
+}
+
+.lang-btn-trigger .lang-globe-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.lang-btn-trigger .lang-code {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+.lang-btn-trigger .lang-arrow {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.lang-selector.open .lang-btn-trigger .lang-arrow {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu Glassmorphism */
+.lang-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 250px;
+  max-height: 380px;
+  overflow-y: auto;
+  background: rgba(13, 13, 20, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 12px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.2);
+  padding: 8px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 2000;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: langFadeIn 0.2s ease-out forwards;
+}
+
+.lang-selector.open .lang-dropdown {
+  display: flex;
+}
+
+@keyframes langFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Categorias / Cabeçalho dentro do menu */
+.lang-group-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted, #71717a);
+  padding: 6px 10px 4px;
+}
+
+/* Itens individuais de idioma */
+.lang-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-secondary, #d4d4d8);
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.lang-item:hover,
+.lang-item:focus {
+  background: rgba(139, 92, 246, 0.18);
+  color: #fff;
+}
+
+.lang-item.active {
+  background: rgba(139, 92, 246, 0.28);
+  color: #fff;
+  font-weight: 700;
+  border-left: 2px solid var(--accent-light, #a78bfa);
+}
+
+.lang-item-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.lang-native {
+  font-weight: 500;
+}
+
+.lang-tag {
+  font-size: 0.7rem;
+  color: var(--text-muted, #71717a);
+  text-transform: uppercase;
+}
+
+.lang-item.active .lang-tag {
+  color: var(--accent-light, #a78bfa);
+}
+
+/* Divisor */
+.lang-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 4px 0;
+}
+
+/* Scrollbar estilizada no menu */
+.lang-dropdown::-webkit-scrollbar {
+  width: 5px;
+}
+.lang-dropdown::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+.lang-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 10px;
+}
+.lang-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.6);
+}
+
+/* Esconder elementos nativos feios do Google Translate */
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+.goog-text-highlight {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#google_translate_element {
+  display: none !important;
+}
+
+/* Ajustes no Mobile */
+@media (max-width: 768px) {
+  .lang-btn-trigger {
+    padding: 5px 8px;
+    font-size: 0.72rem;
+    gap: 4px;
+  }
+  .lang-btn-trigger .lang-arrow {
+    display: none;
+  }
+  .lang-dropdown {
+    right: 0;
+    width: 220px;
+    max-height: 320px;
+  }
+}
