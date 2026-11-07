@@ -38,3 +38,4 @@ CREATE POLICY "Upload público de imagens para o mural"
          storage.extension(name) = 'webp' OR
          storage.extension(name) = 'gif')
     );
+

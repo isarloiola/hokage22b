@@ -403,6 +403,35 @@
     return urlRes.data.publicUrl;
   }
 
+  // Incrementa contador atômico de cliques do anúncio
+  async function incrementAdClick(adId) {
+    var db = getClient();
+    if (!db || !adId || adId.startsWith('testnet_') || adId.startsWith('mock_') || adId === 'preview_card_mock') return null;
+
+    try {
+      var res = await db.rpc('increment_ad_click', { p_ad_id: adId });
+      if (res.error) throw res.error;
+      return res.data;
+    } catch (err) {
+      console.warn('Erro ao registrar clique:', err.message);
+      return null;
+    }
+  }
+
+  // Incrementa contador atômico de visualizações do anúncio
+  async function incrementAdView(adId) {
+    var db = getClient();
+    if (!db || !adId || adId.startsWith('testnet_') || adId.startsWith('mock_') || adId === 'preview_card_mock') return null;
+
+    try {
+      var res = await db.rpc('increment_ad_view', { p_ad_id: adId });
+      if (res.error) throw res.error;
+      return res.data;
+    } catch (_) {
+      return null;
+    }
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
@@ -413,6 +442,8 @@
     createAnuncio: createAnuncio,
     uploadAdImage: uploadAdImage,
     compressImageFile: compressImageFile,
+    incrementAdClick: incrementAdClick,
+    incrementAdView: incrementAdView,
     // Métodos Admin com Proteção Zero-Trust
     verifyAdminAccess: verifyAdminAccess,
     getAllAnuncios: getAllAnuncios,

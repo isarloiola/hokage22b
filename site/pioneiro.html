@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil do Pioneiro — HOKAGE22B</title>
+  <meta name="description" content="Mini-página oficial do Pioneiro no ecossistema Pi Network: chave pública, links de contato e anúncios verificados na Gazeta." />
+  <link rel="canonical" href="https://hokage22b.com/pioneiro" />
+
+  <!-- Security Hardening -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
+
+  <!-- Clean URLs -->
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
+  <link rel="stylesheet" href="assets/css/style.css?v=4.2" />
+
+  <!-- Pi Network SDK Oficial v2.0 -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+    try {
+      if (window.Pi) {
+        window.Pi.init({ version: "2.0", sandbox: false });
+      }
+    } catch (_) {}
+  </script>
+
+  <style>
+    .pioneer-hero-card {
+      background: linear-gradient(135deg, rgba(26, 16, 45, 0.95), rgba(13, 13, 20, 0.98));
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 18px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(139, 92, 246, 0.2);
+      max-width: 680px;
+      margin: 0 auto 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .pioneer-avatar {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent, #8b5cf6), var(--amber, #f59e0b));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 auto 16px;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+      border: 3px solid rgba(255, 255, 255, 0.2);
+    }
+    .pioneer-handle {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pioneer-badge-verified {
+      font-size: 0.75rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .pioneer-link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+      transition: all 0.2s ease;
+    }
+    .pioneer-link-btn:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-bg" class="particles-bg" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar" style="background:rgba(9,9,11,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.1);padding:10px 0">
+    <div class="container">
+      <div class="navbar__inner" style="display:flex;justify-content:space-between;align-items:center">
+        <a href="./" class="navbar__logo" aria-label="HOKAGE22B — Início" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:800">
+          <span class="pi-sym" style="color:var(--accent-light)">✦</span>
+          <div><div>HOKAGE22B</div><div class="brand-sub" style="font-size:0.7rem;color:var(--text-muted)">Vitrine do Pioneiro</div></div>
+        </a>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="lang-mount-point"></div>
+          <a href="mural" class="btn btn-outline btn-sm">← Gazeta dos Pioneiros</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main style="padding:100px 16px 60px;position:relative;z-index:1;min-height:85vh">
+    <div class="container" style="max-width:720px;margin:0 auto">
+      
+      <!-- Cartão Principal do Pioneiro -->
+      <div class="pioneer-hero-card" id="pioneer-card">
+        <div class="pioneer-avatar" id="pioneer-avatar">π</div>
+        <h1 class="pioneer-handle" id="pioneer-handle">@carregando...</h1>
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin-top:6px;margin-bottom:18px" id="pioneer-bio">
+          Pioneiro Verificado na comunidade independente HOKAGE22B.
+        </p>
+        <span class="pioneer-badge-verified" id="pioneer-badge">✓ Pioneiro Verificado Pi Network</span>
+
+        <!-- Caixa de Pagamento Direto com Pi -->
+        <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:16px;margin-top:24px;text-align:left">
+          <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--amber-light);font-weight:700;margin-bottom:6px">
+            ⚡ Pagar ou Transferir Pi para este Pioneiro
+          </div>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px">
+            Envie Pi diretamente pelo Pi Browser ou Pi Wallet de forma 100% descentralizada (P2P).
+          </p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <a href="https://wallet.pi" class="portal-btn portal-btn--amber portal-btn--sm" style="flex:1;text-align:center;text-decoration:none;padding:10px;font-weight:700">
+              🚀 Abrir no wallet.pi
+            </a>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-share-profile" onclick="shareProfile()" style="padding:10px 14px">
+              📢 Compartilhar Perfil
+            </button>
+          </div>
+        </div>
+
+        <!-- Links Oficiais do Pioneiro -->
+        <div style="margin-top:24px;text-align:left">
+          <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700;margin-bottom:10px">
+            Links &amp; Redes de Contato
+          </div>
+          <div id="pioneer-links-list">
+            <!-- Injetado dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Anúncios Ativos na Gazeta -->
+        <div style="margin-top:28px;text-align:left">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700">
+              Anúncios na Gazeta dos Pioneiros
+            </div>
+            <a href="mural" style="font-size:0.75rem;color:var(--accent-light);text-decoration:none">Ver todos no Mural →</a>
+          </div>
+          <div id="pioneer-ads-list" style="display:flex;flex-direction:column;gap:12px">
+            <!-- Anúncios carregados via Supabase -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé da Mini-Página -->
+      <div style="text-align:center;color:var(--text-muted);font-size:0.8rem;margin-top:24px">
+        <p>Esta é uma mini-página independente verificada pelo portal <a href="./" style="color:var(--accent-light)">HOKAGE22B</a>.</p>
+        <p style="margin-top:6px"><a href="mural" style="color:var(--amber-light);font-weight:700">Quer ter sua mini-página e anunciar? Clique aqui ↗</a></p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/modules/i18n.js?v=4.0"></script>
+  <script src="assets/js/modules/db.js?v=4.1"></script>
+
+  <script>
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    async function loadPioneerProfile() {
+      let username = getQueryParam('u') || getQueryParam('user') || '@hokage22b';
+      if (!username.startsWith('@')) username = '@' + username;
+
+      document.getElementById('pioneer-handle').textContent = username;
+      document.getElementById('pioneer-avatar').textContent = username.replace('@', '').charAt(0).toUpperCase() || 'π';
+      document.title = `${username} — Vitrine Oficial de Pioneiro | HOKAGE22B`;
+
+      const linksList = document.getElementById('pioneer-links-list');
+      const adsList = document.getElementById('pioneer-ads-list');
+
+      // Busca anúncios deste pioneiro no Supabase
+      if (window.IsarDB && window.IsarDB.getClient) {
+        try {
+          const db = window.IsarDB.getClient();
+          if (db) {
+            const { data: ads, error } = await db
+              .from('anuncios')
+              .select('*')
+              .ilike('pioneer_username', username)
+              .eq('status', 'ativo')
+              .order('created_at', { ascending: false });
+
+            if (!error && Array.isArray(ads) && ads.length > 0) {
+              adsList.innerHTML = '';
+              linksList.innerHTML = '';
+
+              ads.forEach(ad => {
+                // Monta card compacto do anúncio
+                const adEl = document.createElement('div');
+                adEl.style.cssText = 'background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;';
+                adEl.innerHTML = `
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                    <span style="font-size:0.75rem;color:var(--amber-light);font-weight:700">📢 ${ad.plan_tier ? ad.plan_tier.toUpperCase() : 'CLASSIFICADO'}</span>
+                    <span style="font-size:0.75rem;color:var(--text-muted)">👁️ ${ad.views_count || 0} · 🖱️ ${ad.clicks_count || 0} cliques</span>
+                  </div>
+                  <h4 style="color:#fff;font-size:1rem;margin-bottom:4px">${ad.title || ''}</h4>
+                  <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:10px">${ad.description || ''}</p>
+                  ${ad.link_url ? `<a href="${ad.link_url}" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--primary portal-btn--sm" style="display:inline-block;text-decoration:none">Acessar Oferta →</a>` : ''}
+                `;
+                adsList.appendChild(adEl);
+
+                // Adiciona link se existir
+                if (ad.link_url) {
+                  const linkBtn = document.createElement('a');
+                  linkBtn.href = ad.link_url;
+                  linkBtn.target = '_blank';
+                  linkBtn.rel = 'noopener noreferrer';
+                  linkBtn.className = 'pioneer-link-btn';
+                  linkBtn.innerHTML = `<span>🔗 ${ad.title || 'Acessar Link Oficial'}</span> <span>↗</span>`;
+                  linksList.appendChild(linkBtn);
+                }
+              });
+            } else {
+              adsList.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem">Nenhum anúncio ativo encontrado para este pioneiro no momento.</div>';
+              linksList.innerHTML = `
+                <a href="https://minepi.com/${encodeURIComponent(username.replace('@', ''))}" target="_blank" class="pioneer-link-btn">
+                  <span>⛏️ Baixar Pi Network com ${username}</span> <span>↗</span>
+                </a>
+              `;
+            }
+          }
+        } catch (_) {}
+      }
+    }
+
+    function shareProfile() {
+      const shareUrl = window.location.href;
+      if (navigator.share) {
+        navigator.share({
+          title: document.title,
+          text: `Confira minha mini-página e meus anúncios aceitando Pi Network:`,
+          url: shareUrl
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          alert('✓ Link copiado para a área de transferência! Cole no X ou WhatsApp.');
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadPioneerProfile);
+  </script>
+</body>
+</html>

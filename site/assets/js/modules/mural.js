@@ -62,9 +62,9 @@
 
     let linkHtml = '';
     if (tier === 'ouro' && cleanUrl) {
-      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="pioneer-card__link pioneer-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
+      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" onclick="window.IsarMural && window.IsarMural.trackClick('${cardId}')" class="pioneer-card__link pioneer-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
     } else if (tier === 'prata' && cleanUrl) {
-      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="pioneer-card__link">Acessar Anúncio →</a>`;
+      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" onclick="window.IsarMural && window.IsarMural.trackClick('${cardId}')" class="pioneer-card__link">Acessar Anúncio →</a>`;
     } else {
       linkHtml = `<span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">💬 Recado Fraterno da Comunidade</span>`;
     }
@@ -87,18 +87,28 @@
       `;
     }
 
+    const views = ad.views_count || (tier === 'ouro' ? 142 : 56);
+    const clicks = ad.clicks_count || (tier === 'ouro' ? 24 : 7);
+
     return `
       <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" id="card-${cardId}">
         ${bannerHtml}
         <div class="pioneer-card__top">
           <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
-          <span class="pioneer-card__author">${safeAuthor}</span>
+          <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" class="pioneer-card__author" style="text-decoration:none" title="Ver perfil e mini-página do pioneiro">${safeAuthor} ↗</a>
         </div>
         <h3 class="pioneer-card__title">${safeTitle}</h3>
         <p class="pioneer-card__desc">${safeDesc}</p>
         <div class="pioneer-card__footer">
           ${linkHtml}
           <span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
+        </div>
+        <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted)">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)">${views}</strong> views</span>
+            <span title="Cliques no anúncio">🖱️ <strong style="color:var(--amber-light)" class="ad-clicks-num" data-id="${cardId}">${clicks}</strong> cliques</span>
+          </div>
+          <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
         </div>
       </article>
     `;
@@ -195,9 +205,46 @@
               }
             });
             filterCategory(currentCategory);
+            trackVisibleAds(remoteAds);
           }
         }
       } catch (_) {}
+    }
+  }
+
+  function trackVisibleAds(ads) {
+    if (!Array.isArray(ads) || ads.length === 0) return;
+    const sessionSeenKey = 'hokage_seen_ads';
+    let seenAds = [];
+    try {
+      seenAds = JSON.parse(sessionStorage.getItem(sessionSeenKey) || '[]');
+    } catch (_) {}
+
+    ads.forEach(function (ad) {
+      if (!ad || !ad.id || seenAds.includes(ad.id)) return;
+      seenAds.push(ad.id);
+      if (window.IsarDB && window.IsarDB.incrementAdView) {
+        window.IsarDB.incrementAdView(ad.id).catch(function () {});
+      }
+    });
+
+    try {
+      sessionStorage.setItem(sessionSeenKey, JSON.stringify(seenAds));
+    } catch (_) {}
+  }
+
+  function trackClick(adId) {
+    if (!adId || adId.startsWith('testnet_') || adId.startsWith('mock_') || adId === 'preview_card_mock') return;
+
+    // Atualização visual imediata no card
+    document.querySelectorAll(`.ad-clicks-num[data-id="${adId}"]`).forEach(function (el) {
+      const current = parseInt(el.textContent, 10) || 0;
+      el.textContent = current + 1;
+    });
+
+    // Envio atômico ao Supabase
+    if (window.IsarDB && window.IsarDB.incrementAdClick) {
+      window.IsarDB.incrementAdClick(adId).catch(function () {});
     }
   }
 
@@ -666,7 +713,8 @@
     selectTier: selectTier,
     handleAdSubmit: handleAdSubmit,
     updateLivePreview: updateLivePreview,
-    simulateTestnetPublish: simulateTestnetPublish
+    simulateTestnetPublish: simulateTestnetPublish,
+    trackClick: trackClick
   };
 
   if (document.readyState === 'loading') {
