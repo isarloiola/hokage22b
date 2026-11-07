@@ -328,6 +328,81 @@
     }
   }
 
+  // Comprime e redimensiona a imagem no navegador antes do upload
+  async function compressImageFile(file, maxWidth, maxHeight, quality) {
+    maxWidth = maxWidth || 1000;
+    maxHeight = maxHeight || 1000;
+    quality = quality || 0.82;
+
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = function (e) {
+        var img = new Image();
+        img.onerror = reject;
+        img.onload = function () {
+          var width = img.width;
+          var height = img.height;
+
+          if (width > maxWidth || height > maxHeight) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          var canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(function (blob) {
+            if (!blob) return reject(new Error('Falha na compressão'));
+            resolve(blob);
+          }, 'image/jpeg', quality);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Faz o upload direto para o Supabase Storage (Bucket 'mural-images')
+  async function uploadAdImage(file, onProgress) {
+    var db = getClient();
+    if (!db) throw new Error('Serviço de banco de dados indisponível');
+    if (!file) throw new Error('Nenhum arquivo selecionado');
+
+    if (onProgress) onProgress('Otimizando imagem...');
+    var compressedBlob = await compressImageFile(file, 1000, 1000, 0.82);
+
+    var cleanFileName = 'ad_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8) + '.jpg';
+
+    if (onProgress) onProgress('Enviando para o servidor...');
+    var res = await db.storage
+      .from('mural-images')
+      .upload(cleanFileName, compressedBlob, {
+        contentType: 'image/jpeg',
+        cacheControl: '31536000',
+        upsert: false
+      });
+
+    if (res.error) {
+      console.warn('Erro no upload da imagem:', res.error);
+      throw res.error;
+    }
+
+    var urlRes = db.storage
+      .from('mural-images')
+      .getPublicUrl(cleanFileName);
+
+    return urlRes.data.publicUrl;
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
@@ -336,6 +411,8 @@
     getPioneerProfile: getPioneerProfile,
     getAnuncios: getAnuncios,
     createAnuncio: createAnuncio,
+    uploadAdImage: uploadAdImage,
+    compressImageFile: compressImageFile,
     // Métodos Admin com Proteção Zero-Trust
     verifyAdminAccess: verifyAdminAccess,
     getAllAnuncios: getAllAnuncios,

@@ -390,13 +390,33 @@
         </div>
 
         <div class="form-group" style="margin-bottom:14px" id="ad-image-group">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <label for="ad-input-image" style="font-size:0.85rem;color:var(--gray-light)">Capa / Imagem do Anúncio (Opcional)</label>
-            <span id="ad-image-badge" style="font-size:0.75rem;color:var(--amber-light);font-weight:600">Destaque Máximo no Ouro 🥇</span>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <label style="font-size:0.85rem;color:var(--gray-light);font-weight:700">Capa / Foto do Anúncio (Opcional)</label>
+            <span id="ad-image-badge" style="font-size:0.75rem;color:var(--amber-light);font-weight:600">Destaque no Ouro e Prata</span>
           </div>
-          <input type="url" id="ad-input-image" placeholder="https://... (URL da imagem ou capa)" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+
+          <!-- Upload Direto da Galeria / Computador -->
+          <div class="ad-upload-box" id="ad-upload-box">
+            <input type="file" id="ad-file-input" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" />
+            <button type="button" class="ad-upload-btn" id="ad-upload-btn" onclick="document.getElementById('ad-file-input').click()">
+              <span>📷 Escolher Foto da Galeria / Celular</span>
+            </button>
+            <div class="ad-upload-status" id="ad-upload-status"></div>
+          </div>
+
+          <!-- Opção Alternativa de URL / Link -->
+          <div style="margin-top:6px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-size:0.75rem;color:var(--text-muted)">Ou informe uma URL externa:</span>
+              <button type="button" id="ad-clear-img-btn" style="display:none;background:none;border:none;color:#ef4444;font-size:0.72rem;cursor:pointer;text-decoration:underline">
+                ✕ Remover foto
+              </button>
+            </div>
+            <input type="url" id="ad-input-image" placeholder="https://... (URL da imagem ou canal do YouTube)" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+          </div>
+
           <small id="ad-image-hint" style="display:block;font-size:0.75rem;color:var(--gray-light);margin-top:4px">
-            Se for canal ou vídeo do YouTube, a capa é gerada automaticamente!
+            Dica: Se colar o link de um vídeo do YouTube, a capa é gerada automaticamente!
           </small>
         </div>
 

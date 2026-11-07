@@ -597,3 +597,61 @@
   border-color: var(--amber) !important;
 }
 
+/* ─── Upload Direto de Imagens (Supabase Storage) ────────── */
+.ad-upload-box {
+  background: rgba(18, 18, 26, 0.7);
+  border: 1px dashed rgba(139, 92, 246, 0.4);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.ad-upload-box:hover {
+  border-color: var(--accent);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.ad-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.ad-upload-btn:hover {
+  background: rgba(139, 92, 246, 0.35);
+  box-shadow: 0 0 14px rgba(139, 92, 246, 0.35);
+}
+
+.ad-upload-status {
+  font-size: 0.78rem;
+  margin-top: 6px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--accent-light);
+}
+
+.ad-upload-status.success {
+  color: #10b981;
+}
+
+.ad-upload-status.error {
+  color: #ef4444;
+}
+
+

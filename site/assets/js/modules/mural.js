@@ -547,6 +547,77 @@
     }
   }
 
+  // --- Upload Direto de Imagens (Supabase Storage) ---
+  function initFileUpload() {
+    const fileInput = document.getElementById('ad-file-input');
+    const statusEl  = document.getElementById('ad-upload-status');
+    const imgInput  = document.getElementById('ad-input-image');
+    const clearBtn  = document.getElementById('ad-clear-img-btn');
+
+    if (!fileInput) return;
+
+    fileInput.addEventListener('change', async function () {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione um arquivo de imagem válido (JPEG, PNG ou WebP).');
+        return;
+      }
+
+      // 1. Atualiza a Prévia ao Vivo imediatamente com o blob local
+      const localBlobUrl = URL.createObjectURL(file);
+      if (imgInput) imgInput.value = localBlobUrl;
+      updateLivePreview();
+
+      // 2. Exibe feedback de envio
+      if (statusEl) {
+        statusEl.className = 'ad-upload-status';
+        statusEl.style.display = 'flex';
+        statusEl.innerHTML = '⏳ <span>Otimizando e enviando foto...</span>';
+      }
+
+      try {
+        if (!window.IsarDB || !window.IsarDB.uploadAdImage) {
+          throw new Error('Módulo de upload não disponível');
+        }
+
+        const publicUrl = await window.IsarDB.uploadAdImage(file, function (msg) {
+          if (statusEl) statusEl.innerHTML = `⏳ <span>${msg}</span>`;
+        });
+
+        // 3. Sucesso: atualiza o input de imagem com a URL permanente do Supabase Storage
+        if (imgInput) imgInput.value = publicUrl;
+        if (statusEl) {
+          statusEl.className = 'ad-upload-status success';
+          statusEl.innerHTML = '✓ <span>Foto pronta e vinculada ao anúncio!</span>';
+        }
+        if (clearBtn) clearBtn.style.display = 'inline-block';
+        updateLivePreview();
+
+      } catch (err) {
+        console.warn('Upload de imagem falhou:', err);
+        if (statusEl) {
+          statusEl.className = 'ad-upload-status error';
+          statusEl.innerHTML = '⚠️ <span>Não foi possível salvar no Storage. A foto temporária foi mantida na prévia.</span>';
+        }
+      }
+    });
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function () {
+        if (fileInput) fileInput.value = '';
+        if (imgInput) imgInput.value = '';
+        if (statusEl) {
+          statusEl.style.display = 'none';
+          statusEl.textContent = '';
+        }
+        clearBtn.style.display = 'none';
+        updateLivePreview();
+      });
+    }
+  }
+
   let isInitialized = false;
 
   window.IsarMural = {
@@ -558,6 +629,7 @@
       loadSavedLocalAds();
       syncRemoteAds();
       selectTier('prata');
+      initFileUpload();
 
       const closeBtn = document.getElementById('ad-modal-close');
       if (closeBtn) closeBtn.addEventListener('click', closeModal);
