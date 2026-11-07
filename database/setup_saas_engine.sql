@@ -63,6 +63,7 @@ CREATE POLICY "Inserção ou atualização de pioneiros"
     WITH CHECK (true);
 
 -- 3. Função RPC: Buscar Anúncios do Próprio Pioneiro (com dias restantes)
+DROP FUNCTION IF EXISTS public.pioneer_get_my_ads(TEXT);
 CREATE OR REPLACE FUNCTION public.pioneer_get_my_ads(p_username TEXT)
 RETURNS TABLE (
     id TEXT,
@@ -108,6 +109,7 @@ END;
 $$;
 
 -- 4. Função RPC: Editar Anúncio pelo Próprio Anunciante
+DROP FUNCTION IF EXISTS public.pioneer_update_my_ad(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT);
 CREATE OR REPLACE FUNCTION public.pioneer_update_my_ad(
     p_ad_id TEXT,
     p_username TEXT,
@@ -139,6 +141,7 @@ END;
 $$;
 
 -- 5. Função RPC: Renovar Anúncio por mais 30 dias (ou turbinar plano)
+DROP FUNCTION IF EXISTS public.pioneer_renew_ad(TEXT, TEXT, TEXT, TEXT);
 CREATE OR REPLACE FUNCTION public.pioneer_renew_ad(
     p_ad_id TEXT,
     p_username TEXT,
@@ -168,6 +171,7 @@ END;
 $$;
 
 -- 6. Função RPC: Salvar/Atualizar Perfil Completo do Pioneiro (com Mini-Loja)
+DROP FUNCTION IF EXISTS public.pioneer_save_profile(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB);
 CREATE OR REPLACE FUNCTION public.pioneer_save_profile(
     p_username TEXT,
     p_bio TEXT DEFAULT NULL,
@@ -230,6 +234,7 @@ END;
 $$;
 
 -- 7. Atualização Segura da Função do Painel Admin (com Métricas e Imagem)
+DROP FUNCTION IF EXISTS public.admin_get_all_ads(TEXT);
 CREATE OR REPLACE FUNCTION public.admin_get_all_ads(p_secret TEXT)
 RETURNS TABLE (
     id TEXT,
@@ -288,3 +293,4 @@ GRANT EXECUTE ON FUNCTION public.pioneer_get_my_ads(TEXT) TO anon, authenticated
 GRANT EXECUTE ON FUNCTION public.pioneer_update_my_ad(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT) TO anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.pioneer_renew_ad(TEXT, TEXT, TEXT, TEXT) TO anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.pioneer_save_profile(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB) TO anon, authenticated, service_role;
+
