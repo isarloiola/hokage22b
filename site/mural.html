@@ -410,9 +410,29 @@
           <input type="text" id="ad-input-user" placeholder="@seu_usuario_pi" maxlength="30" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
         </div>
 
-        <button type="submit" class="btn btn-primary" id="ad-submit-btn" style="width:100%;padding:14px;font-weight:700">
-          🚀 Publicar Anúncio no Mural (1.0 π)
-        </button>
+        <!-- PRÉVIA EM TEMPO REAL (LIVE PREVIEW) -->
+        <div class="ad-preview-wrapper" id="ad-preview-wrapper">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent-light);font-weight:700;display:flex;align-items:center;gap:6px">
+              <span class="live-indicator-dot"></span>
+              Prévia ao Vivo do seu Anúncio
+            </span>
+            <span style="font-size:0.72rem;color:var(--text-muted)">Atualização em tempo real</span>
+          </div>
+          <div id="ad-live-preview-target">
+            <!-- Renderizado dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Ações do Modal: Publicar Real ou Testar na Testnet -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <button type="submit" class="btn btn-primary" id="ad-submit-btn" style="width:100%;padding:14px;font-weight:700">
+            🚀 Publicar Anúncio no Mural (1.0 π)
+          </button>
+          <button type="button" class="btn btn-outline" id="ad-testnet-btn" onclick="window.IsarMural && window.IsarMural.simulateTestnetPublish()" style="width:100%;padding:11px;font-size:0.86rem;border-color:rgba(139,92,246,0.5);color:var(--accent-light)">
+            🧪 Testar com Test-Pi (Simulação Sandbox Gratuita)
+          </button>
+        </div>
       </form>
     </div>
   </div>

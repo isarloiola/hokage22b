@@ -202,6 +202,90 @@
   }
 
   // --- Modal de Criação de Anúncio ---
+  function updateLivePreview() {
+    const previewContainer = document.getElementById('ad-live-preview-target');
+    if (!previewContainer) return;
+
+    const titleInput = document.getElementById('ad-input-title');
+    const descInput  = document.getElementById('ad-input-desc');
+    const userInput  = document.getElementById('ad-input-user');
+    const catInput   = document.getElementById('ad-input-cat');
+    const linkInput  = document.getElementById('ad-input-link');
+    const imgInput   = document.getElementById('ad-input-image');
+
+    const title = (titleInput && titleInput.value.trim()) || 'Seu Título Aqui (Ex: Canal Tech / Loja Pi)';
+    const desc = (descInput && descInput.value.trim()) || 'Aqui aparecerá a mensagem que todos os pioneiros vão ler no mural. Mostre seu projeto e atraia a comunidade!';
+    const user = (userInput && userInput.value.trim()) || '@seu_usuario';
+    const cat = (catInput && catInput.value) || 'youtube';
+    const link = (linkInput && !linkInput.disabled && linkInput.value.trim()) || (selectedTier !== 'bronze' ? 'https://hokage22b.com' : '');
+    const img = (imgInput && imgInput.value.trim()) || '';
+
+    const previewAd = {
+      id: 'preview_card_mock',
+      plan_tier: selectedTier,
+      title: title,
+      description: desc,
+      pioneer_username: user,
+      category: cat,
+      link_url: link,
+      image_url: img,
+      price_pi: tierPrices[selectedTier] ? tierPrices[selectedTier].pi : 1.0
+    };
+
+    previewContainer.innerHTML = buildAdCardHtml(previewAd);
+  }
+
+  function simulateTestnetPublish() {
+    const titleInput = document.getElementById('ad-input-title');
+    const descInput  = document.getElementById('ad-input-desc');
+    const userInput  = document.getElementById('ad-input-user');
+    const catInput   = document.getElementById('ad-input-cat');
+    const linkInput  = document.getElementById('ad-input-link');
+    const imgInput   = document.getElementById('ad-input-image');
+
+    const title = (titleInput && titleInput.value.trim()) || 'Pioneiro Web3';
+    const desc = (descInput && descInput.value.trim()) || 'Simulação de anúncio no mural via Testnet Pi. Pronto para publicação oficial na Mainnet!';
+    const user = (userInput && userInput.value.trim()) || '@pioneiro_testnet';
+    const cat = (catInput && catInput.value) || 'geral';
+    const link = (linkInput && !linkInput.disabled && linkInput.value.trim()) || '';
+    const img = (imgInput && imgInput.value.trim()) || '';
+
+    const testId = 'testnet_' + Date.now();
+    const testAd = {
+      id: testId,
+      plan_tier: selectedTier,
+      title: '🧪 [TESTNET] ' + title,
+      description: desc + ' — (Simulação gratuita de teste)',
+      pioneer_username: user,
+      category: cat,
+      link_url: link,
+      image_url: img,
+      price_pi: '0.00 (Testnet)'
+    };
+
+    const gridEl = document.getElementById('mural-ads-grid');
+    if (gridEl) {
+      gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(testAd));
+      const newCard = document.getElementById('card-' + testId);
+      if (newCard) {
+        newCard.classList.add('card-testnet-highlight');
+      }
+    }
+
+    closeModal();
+
+    if (window.showToast) {
+      window.showToast('🧪 Anúncio Testnet criado com sucesso! Role para ver seu card.', '🎉');
+    }
+
+    setTimeout(function () {
+      const newCard = document.getElementById('card-' + testId);
+      if (newCard) {
+        newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 250);
+  }
+
   function openModal() {
     const modal = document.getElementById('ad-create-modal');
     if (modal) modal.classList.add('active');
@@ -213,6 +297,8 @@
         userEl.value = '@' + (piUser.username || '');
       }
     } catch (_) {}
+
+    updateLivePreview();
   }
 
   function closeModal() {
@@ -298,6 +384,8 @@
           : 'https://... (URL da foto do produto ou serviço)';
       }
     }
+
+    updateLivePreview();
   }
 
   async function handleAdSubmit(e) {
@@ -483,12 +571,30 @@
 
       const form = document.getElementById('ad-create-form');
       if (form) form.addEventListener('submit', handleAdSubmit);
+
+      // Ouvintes para atualização da Prévia ao Vivo em tempo real
+      const previewInputs = [
+        'ad-input-title',
+        'ad-input-desc',
+        'ad-input-user',
+        'ad-input-link',
+        'ad-input-image'
+      ];
+      previewInputs.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateLivePreview);
+      });
+
+      const catEl = document.getElementById('ad-input-cat');
+      if (catEl) catEl.addEventListener('change', updateLivePreview);
     },
     filterCategory: filterCategory,
     openModal: openModal,
     closeModal: closeModal,
     selectTier: selectTier,
-    handleAdSubmit: handleAdSubmit
+    handleAdSubmit: handleAdSubmit,
+    updateLivePreview: updateLivePreview,
+    simulateTestnetPublish: simulateTestnetPublish
   };
 
   if (document.readyState === 'loading') {
