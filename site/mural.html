@@ -5,10 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>A Gazeta dos Pioneiros — Mural de Classificados Web3 | HOKAGE22B</title>
   <meta name="description" content="O jornal descentralizado dos pioneiros da Pi Network: divulgue seu canal, produto, serviço ou deixe sua mensagem na comunidade." />
-  <link rel="canonical" href="https://hokage22b.com/mural.html" />
+  <link rel="canonical" href="https://hokage22b.com/mural" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
+
+  <!-- Clean URLs (Remove .html da barra de endereços) -->
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
   <link rel="stylesheet" href="assets/css/style.css?v=4.1" />
   <!-- Pi Network SDK Oficial v2.0 -->
@@ -100,7 +108,7 @@
   <nav class="navbar" id="navbar">
     <div class="container">
       <div class="navbar__inner">
-        <a href="index.html" class="navbar__logo" aria-label="HOKAGE22B — início">
+        <a href="./" class="navbar__logo" aria-label="HOKAGE22B — início">
           <span class="pi-sym" style="color:var(--accent-light)">✦</span>
           <div>
             <div>HOKAGE22B</div>
@@ -113,7 +121,7 @@
             <span class="pi-btn-full">⚡ Conectar Pi</span>
             <span class="pi-btn-short">⚡ Pi</span>
           </button>
-          <a href="index.html" class="btn btn-outline btn-sm nav-btn-home">← Início</a>
+          <a href="./" class="btn btn-outline btn-sm nav-btn-home">← Início</a>
           <button type="button" class="btn btn-primary btn-sm nav-btn-ad" onclick="window.IsarMural && window.IsarMural.openModal()">
             <span class="ad-btn-full">📢 Anunciar no Mural</span>
             <span class="ad-btn-short">📢 Anunciar</span>

@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Obrigado! Inscrição confirmada — HOKAGE22B</title>
   <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Clean URLs (Remove .html da barra de endereços) -->
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
 </head>
@@ -48,12 +56,12 @@
         <a href="https://minepi.com/hokage22b" target="_blank" rel="noopener noreferrer" class="btn btn-pi" id="ty-pi-btn">
           π Baixar Pi Network
         </a>
-        <a href="index.html" class="btn btn-outline" id="ty-home-btn">← Voltar ao site</a>
+        <a href="./" class="btn btn-outline" id="ty-home-btn">← Voltar ao site</a>
       </div>
 
       <p style="margin-top:32px;font-size:0.78rem;color:var(--gray)">
         Você pode cancelar sua inscrição a qualquer momento pelo link nos nossos e-mails. Seus dados são protegidos conforme a LGPD.
-        <a href="legal/politica-de-privacidade.html" style="color:var(--violet-light)">Política de Privacidade</a>
+        <a href="legal/politica-de-privacidade" style="color:var(--violet-light)">Política de Privacidade</a>
       </p>
     </div>
   </div>

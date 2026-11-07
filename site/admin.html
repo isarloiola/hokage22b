@@ -6,6 +6,14 @@
   <title>HOKAGE22B — Console de Administração Web3 &amp; Gestão</title>
   <meta name="robots" content="noindex, nofollow">
 
+  <!-- Clean URLs (Remove .html da barra de endereços) -->
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -486,7 +494,7 @@
 
   <!-- Topbar -->
   <header class="admin-nav">
-    <a href="mural.html" class="admin-logo">
+    <a href="mural" class="admin-logo">
       <span style="color:var(--amber);font-size:1.4rem">✦</span>
       <span>HOKAGE22B</span>
       <span class="admin-logo-badge">Console Administrativo</span>
@@ -494,7 +502,7 @@
 
     <div class="admin-nav-actions" id="nav-actions-auth" style="display:none">
       <span id="admin-user-tag" style="font-size:0.8rem;color:var(--text-muted);font-family:var(--font-mono);background:rgba(255,255,255,0.05);padding:4px 10px;border-radius:6px"></span>
-      <a href="mural.html" class="btn btn-outline btn-sm" target="_blank">👁️ Ver Mural</a>
+      <a href="mural" class="btn btn-outline btn-sm" target="_blank">👁️ Ver Mural</a>
       <button type="button" class="btn btn-outline btn-sm" onclick="logoutAdmin()">🔒 Bloquear Console</button>
     </div>
   </header>

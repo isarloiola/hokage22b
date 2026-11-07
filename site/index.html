@@ -17,6 +17,14 @@
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
 
+  <!-- Clean URLs (Remove .html da barra de endereços) -->
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hokage22b.com/" />
@@ -118,7 +126,7 @@
           <li><a href="#comece-aqui">Comece Aqui</a></li>
           <li><a href="#produtos">Produtos</a></li>
           <li><a href="#universo">Universo Digital</a></li>
-          <li><a href="mural.html" style="color:var(--amber-light);font-weight:700">📢 Mural dos Pioneiros</a></li>
+          <li><a href="mural" style="color:var(--amber-light);font-weight:700">📢 Mural dos Pioneiros</a></li>
           <li><a href="#conteudo">Conteúdo</a></li>
           <li><a href="#comunidade">Comunidade</a></li>
           <li><a href="#sobre">Sobre</a></li>
@@ -157,7 +165,7 @@
 
     <div class="portal-drawer__nav">
       <a href="#hero">Início</a>
-      <a href="mural.html" style="color:var(--amber-light);font-weight:700;display:flex;align-items:center;justify-content:space-between">
+      <a href="mural" style="color:var(--amber-light);font-weight:700;display:flex;align-items:center;justify-content:space-between">
         <span>📢 Mural &amp; Classificados Pi</span>
         <span style="font-size:0.75rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);padding:2px 8px;border-radius:12px;color:var(--amber-light)">Novo</span>
       </a>
@@ -168,7 +176,7 @@
       <a href="#comunidade">Comunidade</a>
       <a href="#parcerias">Parcerias &amp; Anúncios</a>
       <a href="#sobre">Sobre o Projeto</a>
-      <a href="mural.html">Mural dos Pioneiros ↗</a>
+      <a href="mural">Mural dos Pioneiros ↗</a>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:1px solid var(--border-subtle);margin-top:10px">
@@ -588,7 +596,7 @@
             </p>
           </div>
           <div class="directory-callout__actions">
-            <a href="mural.html" class="portal-btn portal-btn--outline portal-btn--sm" style="margin-right:8px">
+            <a href="mural" class="portal-btn portal-btn--outline portal-btn--sm" style="margin-right:8px">
               Ver Mural de Anúncios ↗
             </a>
             <button type="button" class="portal-btn portal-btn--primary portal-btn--sm"
@@ -614,10 +622,10 @@
             </p>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <a href="mural.html" class="portal-btn portal-btn--amber portal-btn--sm">
+            <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm">
               Ver Mural Completo ↗
             </a>
-            <a href="mural.html" class="portal-btn portal-btn--outline portal-btn--sm">
+            <a href="mural" class="portal-btn portal-btn--outline portal-btn--sm">
               📢 Publicar Meu Anúncio (a partir de 0.314 π)
             </a>
           </div>
@@ -707,7 +715,7 @@
         </div>
 
         <div style="text-align:center;margin-top:28px">
-          <a href="mural.html" class="portal-btn portal-btn--outline" style="padding:12px 28px;font-size:0.95rem">
+          <a href="mural" class="portal-btn portal-btn--outline" style="padding:12px 28px;font-size:0.95rem">
             📢 Ver Todos os Anúncios &amp; Filtrar Categorias na Gazeta ↗
           </a>
         </div>
@@ -1045,7 +1053,7 @@
             <li><a href="#produtos">Produtos Digitais</a></li>
             <li><a href="#universo">Universo Digital</a></li>
             <li><a href="#conteudo">Conteúdo Recente</a></li>
-            <li><a href="mural.html">Mural de Anúncios</a></li>
+            <li><a href="mural">Mural de Anúncios</a></li>
           </ul>
         </div>
 
@@ -1064,10 +1072,10 @@
         <div class="footer-col">
           <h4>Legalidade</h4>
           <ul class="footer-links">
-            <li><a href="legal/politica-de-privacidade.html">Política de Privacidade</a></li>
-            <li><a href="legal/termos-de-uso.html">Termos de Uso</a></li>
-            <li><a href="legal/politica-de-reembolso.html">Política de Reembolso</a></li>
-            <li><a href="legal/aviso-legal.html">Aviso Legal</a></li>
+            <li><a href="legal/politica-de-privacidade">Política de Privacidade</a></li>
+            <li><a href="legal/termos-de-uso">Termos de Uso</a></li>
+            <li><a href="legal/politica-de-reembolso">Política de Reembolso</a></li>
+            <li><a href="legal/aviso-legal">Aviso Legal</a></li>
           </ul>
         </div>
       </div>
