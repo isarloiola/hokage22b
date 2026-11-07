@@ -665,6 +665,19 @@
     }
   }
 
+  function syncProfileButton() {
+    try {
+      const piUser = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
+      const profileBtn = document.getElementById('nav-btn-profile');
+      if (profileBtn && piUser && piUser.username) {
+        const u = piUser.username.startsWith('@') ? piUser.username : '@' + piUser.username;
+        profileBtn.href = `pioneiro?u=${encodeURIComponent(u)}`;
+        const textSpan = profileBtn.querySelector('.profile-btn-full');
+        if (textSpan) textSpan.textContent = `👤 ${u}`;
+      }
+    } catch (_) {}
+  }
+
   let isInitialized = false;
 
   window.IsarMural = {
@@ -677,6 +690,7 @@
       syncRemoteAds();
       selectTier('prata');
       initFileUpload();
+      syncProfileButton();
 
       const closeBtn = document.getElementById('ad-modal-close');
       if (closeBtn) closeBtn.addEventListener('click', closeModal);

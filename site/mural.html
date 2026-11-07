@@ -41,7 +41,8 @@
       min-height: 90vh;
     }
     .ad-btn-short,
-    .pi-btn-short {
+    .pi-btn-short,
+    .profile-btn-short {
       display: none;
     }
     @media (max-width: 768px) {
@@ -93,6 +94,12 @@
         display: inline !important;
         font-weight: 800 !important;
       }
+      .profile-btn-full {
+        display: none !important;
+      }
+      .profile-btn-short {
+        display: inline !important;
+      }
       .nav-btn-ad {
         flex-shrink: 0 !important;
         overflow: visible !important;
@@ -122,6 +129,10 @@
             <span class="pi-btn-full">⚡ Conectar Pi</span>
             <span class="pi-btn-short">⚡ Pi</span>
           </button>
+          <a href="pioneiro" class="btn btn-outline btn-sm nav-btn-profile" id="nav-btn-profile" title="Minha Vitrine e Perfil de Pioneiro" style="border-color:rgba(139,92,246,0.35);color:var(--text-primary)">
+            <span class="profile-btn-full">👤 Meu Perfil</span>
+            <span class="profile-btn-short">👤</span>
+          </a>
           <a href="./" class="btn btn-outline btn-sm nav-btn-home">← Início</a>
           <button type="button" class="btn btn-primary btn-sm nav-btn-ad" onclick="window.IsarMural && window.IsarMural.openModal()">
             <span class="ad-btn-full">📢 Anunciar no Mural</span>
