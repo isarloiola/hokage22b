@@ -678,6 +678,183 @@
     } catch (_) {}
   }
 
+  // --- PAINEL DO ANUNCIANTE (MEUS ANÚNCIOS SAAS) ---
+  let myCachedAds = [];
+
+  function openMyAdsModal() {
+    const modal = document.getElementById('my-ads-modal');
+    if (modal) modal.classList.add('active');
+
+    const input = document.getElementById('my-ads-username-input');
+    try {
+      const piUser = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
+      if (piUser && piUser.username && input && !input.value) {
+        input.value = '@' + piUser.username.replace('@', '');
+      }
+    } catch (_) {}
+
+    if (input && input.value) {
+      loadMyAds();
+    }
+  }
+
+  function closeMyAdsModal() {
+    const modal = document.getElementById('my-ads-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  async function loadMyAds() {
+    const input = document.getElementById('my-ads-username-input');
+    const container = document.getElementById('my-ads-list-container');
+    const user = (input && input.value.trim()) || '';
+
+    if (!user) {
+      alert('Por favor, informe seu @usuário da Pi Network.');
+      return;
+    }
+
+    container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted)">Consultando seus anúncios no banco...</div>';
+
+    try {
+      const ads = await window.IsarDB.getMyAds(user);
+      myCachedAds = ads || [];
+
+      let totalViews = 0;
+      let totalClicks = 0;
+      myCachedAds.forEach(a => {
+        totalViews += (a.views_count || 0);
+        totalClicks += (a.clicks_count || 0);
+      });
+
+      const countEl = document.getElementById('my-ads-count');
+      const viewsEl = document.getElementById('my-ads-views');
+      const clicksEl = document.getElementById('my-ads-clicks');
+
+      if (countEl) countEl.textContent = myCachedAds.length;
+      if (viewsEl) viewsEl.textContent = totalViews;
+      if (clicksEl) clicksEl.textContent = totalClicks;
+
+      if (myCachedAds.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:24px;color:var(--text-muted)">
+            Nenhum anúncio encontrado para ${escapeHtml(user)}.<br />
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural.closeMyAdsModal();window.IsarMural.openModal();" style="margin-top:10px">
+              + Publicar Primeiro Anúncio
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = myCachedAds.map(ad => {
+        const statusBadge = ad.status === 'ativo' 
+          ? '<span style="color:#10b981;font-weight:700">● Ativo</span>' 
+          : '<span style="color:#f59e0b;font-weight:700">● Moderação</span>';
+        const daysLeft = ad.days_left !== undefined ? ad.days_left : 30;
+
+        return `
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+            <div style="max-width:340px">
+              <div style="font-size:0.75rem;color:var(--text-muted);display:flex;gap:8px;align-items:center;margin-bottom:4px">
+                ${statusBadge}
+                <span>·</span>
+                <span style="color:var(--amber-light);font-weight:600">${ad.plan_tier ? ad.plan_tier.toUpperCase() : 'PRATA'}</span>
+                <span>·</span>
+                <span>Expira em: <strong>${daysLeft} dias</strong></span>
+              </div>
+              <strong style="color:#fff;font-size:0.95rem;display:block">${escapeHtml(ad.title || '')}</strong>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">
+                👁️ ${ad.views_count || 0} views &nbsp;·&nbsp; 🖱️ <strong style="color:var(--amber-light)">${ad.clicks_count || 0} cliques</strong>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button type="button" class="btn btn-outline btn-sm" onclick="window.IsarMural.openEditModal('${ad.id}')" style="font-size:0.78rem;padding:6px 10px">
+                ✏️ Editar
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural.renewAdPrompt('${ad.id}')" style="font-size:0.78rem;padding:6px 10px">
+                🚀 +30 dias
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+    } catch (err) {
+      container.innerHTML = `<div style="text-align:center;padding:18px;color:#ef4444">Erro: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  function openEditModal(adId) {
+    const ad = myCachedAds.find(a => a.id === adId);
+    if (!ad) return;
+
+    document.getElementById('edit-ad-id').value = ad.id;
+    document.getElementById('edit-ad-input-title').value = ad.title || '';
+    document.getElementById('edit-ad-input-desc').value = ad.description || '';
+    document.getElementById('edit-ad-input-link').value = ad.link_url || '';
+    document.getElementById('edit-ad-input-image').value = ad.image_url || '';
+
+    const editModal = document.getElementById('edit-ad-modal');
+    if (editModal) editModal.classList.add('active');
+  }
+
+  function closeEditModal() {
+    const editModal = document.getElementById('edit-ad-modal');
+    if (editModal) editModal.classList.remove('active');
+  }
+
+  async function saveEditedAd() {
+    const id = document.getElementById('edit-ad-id').value;
+    const title = document.getElementById('edit-ad-input-title').value.trim();
+    const desc = document.getElementById('edit-ad-input-desc').value.trim();
+    const link = document.getElementById('edit-ad-input-link').value.trim();
+    const img = document.getElementById('edit-ad-input-image').value.trim();
+    const user = (document.getElementById('my-ads-username-input').value || '').trim();
+
+    if (!title || !desc) {
+      alert('Preencha pelo menos título e descrição.');
+      return;
+    }
+
+    try {
+      const ok = await window.IsarDB.updateMyAd(id, user, {
+        title: title,
+        description: desc,
+        link_url: link,
+        image_url: img
+      });
+
+      if (ok) {
+        if (window.showToast) window.showToast('✓ Anúncio atualizado com sucesso!', '💾');
+        closeEditModal();
+        loadMyAds();
+      } else {
+        alert('Não foi possível atualizar o anúncio. Verifique o usuário.');
+      }
+    } catch (err) {
+      alert('Erro ao salvar: ' + err.message);
+    }
+  }
+
+  async function renewAdPrompt(adId) {
+    const user = (document.getElementById('my-ads-username-input').value || '').trim();
+    if (!confirm('Deseja renovar a exibição deste anúncio por mais 30 dias na Gazeta?')) return;
+
+    if (window.HokagePi && window.HokagePi.showManualP2PModal) {
+      window.HokagePi.showManualP2PModal({
+        amount: 1.0,
+        memo: `Renovacao Anuncio 30d: ${adId}`,
+        metadata: { adId: adId, action: 'renew' }
+      });
+    } else {
+      const ok = await window.IsarDB.renewMyAd(adId, user);
+      if (ok) {
+        if (window.showToast) window.showToast('✓ Anúncio renovado com sucesso por +30 dias!', '🚀');
+        loadMyAds();
+      }
+    }
+  }
+
   let isInitialized = false;
 
   window.IsarMural = {
@@ -728,7 +905,15 @@
     handleAdSubmit: handleAdSubmit,
     updateLivePreview: updateLivePreview,
     simulateTestnetPublish: simulateTestnetPublish,
-    trackClick: trackClick
+    trackClick: trackClick,
+    // Métodos do Painel do Anunciante SaaS
+    openMyAdsModal: openMyAdsModal,
+    closeMyAdsModal: closeMyAdsModal,
+    loadMyAds: loadMyAds,
+    openEditModal: openEditModal,
+    closeEditModal: closeEditModal,
+    saveEditedAd: saveEditedAd,
+    renewAdPrompt: renewAdPrompt
   };
 
   if (document.readyState === 'loading') {

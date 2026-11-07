@@ -432,6 +432,119 @@
     }
   }
 
+  // --- MOTOR SAAS: GESTÃO DO ANUNCIANTE E VITRINE ---
+
+  // Busca os anúncios publicados pelo próprio pioneiro
+  async function getMyAds(username) {
+    var db = getClient();
+    if (!db || !username) return [];
+
+    try {
+      var res = await db.rpc('pioneer_get_my_ads', { p_username: username });
+      if (res.error) throw res.error;
+      return res.data || [];
+    } catch (err) {
+      console.warn('Erro ao carregar meus anúncios:', err.message);
+      // Fallback: consulta direta na tabela
+      try {
+        var cleanUser = username.replace('@', '').toLowerCase();
+        var qRes = await db
+          .from('anuncios')
+          .select('*')
+          .ilike('pioneer_username', '%' + cleanUser + '%')
+          .order('created_at', { ascending: false });
+        return qRes.data || [];
+      } catch (_) {
+        return [];
+      }
+    }
+  }
+
+  // Atualiza um anúncio pelo próprio anunciante
+  async function updateMyAd(adId, username, data) {
+    var db = getClient();
+    if (!db || !adId || !username) return false;
+
+    try {
+      var res = await db.rpc('pioneer_update_my_ad', {
+        p_ad_id: adId,
+        p_username: username,
+        p_title: data.title || '',
+        p_description: data.description || '',
+        p_link_url: data.link_url || null,
+        p_image_url: data.image_url || null
+      });
+      if (res.error) throw res.error;
+      return Boolean(res.data);
+    } catch (err) {
+      console.warn('Erro ao atualizar meu anúncio:', err.message);
+      return false;
+    }
+  }
+
+  // Renova anúncio por mais 30 dias ou turbina plano
+  async function renewMyAd(adId, username, txid, upgradeTier) {
+    var db = getClient();
+    if (!db || !adId || !username) return false;
+
+    try {
+      var res = await db.rpc('pioneer_renew_ad', {
+        p_ad_id: adId,
+        p_username: username,
+        p_txid: txid || null,
+        p_upgrade_tier: upgradeTier || null
+      });
+      if (res.error) throw res.error;
+      return Boolean(res.data);
+    } catch (err) {
+      console.warn('Erro ao renovar anúncio:', err.message);
+      return false;
+    }
+  }
+
+  // Salva o perfil completo do pioneiro (links sociais e mini-loja)
+  async function savePioneerProfile(username, profileData) {
+    var db = getClient();
+    if (!db || !username) return null;
+
+    try {
+      var res = await db.rpc('pioneer_save_profile', {
+        p_username: username,
+        p_bio: profileData.bio || null,
+        p_wallet: profileData.wallet_address || null,
+        p_whatsapp: profileData.whatsapp_url || null,
+        p_youtube: profileData.youtube_url || null,
+        p_twitter: profileData.twitter_url || null,
+        p_instagram: profileData.instagram_url || null,
+        p_products: profileData.products || []
+      });
+      if (res.error) throw res.error;
+      return res.data;
+    } catch (err) {
+      console.warn('Erro ao salvar perfil do pioneiro:', err.message);
+      return null;
+    }
+  }
+
+  // Busca perfil completo do pioneiro
+  async function getPioneerFullProfile(username) {
+    var db = getClient();
+    if (!db || !username) return null;
+
+    try {
+      var clean = username.replace('@', '').toLowerCase();
+      var res = await db
+        .from('pioneiros')
+        .select('*')
+        .ilike('username', '%' + clean + '%')
+        .maybeSingle();
+
+      return res.data || null;
+    } catch (err) {
+      return null;
+    }
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
@@ -444,6 +557,12 @@
     compressImageFile: compressImageFile,
     incrementAdClick: incrementAdClick,
     incrementAdView: incrementAdView,
+    // Métodos SaaS do Anunciante e Vitrine
+    getMyAds: getMyAds,
+    updateMyAd: updateMyAd,
+    renewMyAd: renewMyAd,
+    savePioneerProfile: savePioneerProfile,
+    getPioneerFullProfile: getPioneerFullProfile,
     // Métodos Admin com Proteção Zero-Trust
     verifyAdminAccess: verifyAdminAccess,
     getAllAnuncios: getAllAnuncios,

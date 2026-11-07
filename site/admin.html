@@ -616,11 +616,11 @@
             <tr>
               <th>Status</th>
               <th>Plano</th>
+              <th>Capa</th>
               <th>Título &amp; Descrição</th>
               <th>Pioneiro</th>
-              <th>Categoria</th>
-              <th>Valor π</th>
-              <th>Data</th>
+              <th>Performance</th>
+              <th>Expira em</th>
               <th style="text-align:right">Ações de Gestão</th>
             </tr>
           </thead>
@@ -1028,20 +1028,45 @@
           const statusClass = 'badge-' + (ad.status || 'ativo');
           const dateStr = ad.created_at ? new Date(ad.created_at).toLocaleDateString('pt-BR') : '—';
           const linkHtml = ad.link_url ? `<a href="${ad.link_url}" target="_blank" rel="noopener" style="color:var(--amber-light);font-size:0.75rem;display:block;margin-top:4px">🔗 Link externo</a>` : '';
+          
+          const thumbHtml = ad.image_url 
+            ? `<a href="${ad.image_url}" target="_blank" rel="noopener" title="Clique para ampliar"><img src="${ad.image_url}" style="width:48px;height:48px;border-radius:6px;object-fit:cover;border:1px solid rgba(255,255,255,0.2)" loading="lazy" /></a>` 
+            : `<div style="width:48px;height:48px;border-radius:6px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.1rem">📷</div>`;
+
+          const views = ad.views_count || 0;
+          const clicks = ad.clicks_count || 0;
+          const ctr = views > 0 ? ((clicks / views) * 100).toFixed(1) : '0.0';
+          const daysLeft = ad.days_left !== undefined ? ad.days_left : 30;
+          const author = escapeHtml(ad.pioneer_username || ad.pioneer_name || '@pioneiro');
 
           return `
             <tr id="row-ad-${ad.id}">
               <td><span class="badge ${statusClass}">${ad.status || 'ativo'}</span></td>
               <td><span class="badge ${tierClass}">${ad.plan_tier || 'bronze'}</span></td>
-              <td style="max-width:280px">
+              <td>${thumbHtml}</td>
+              <td style="max-width:260px">
                 <strong style="color:#fff;display:block;font-size:0.92rem">${escapeHtml(ad.title || '')}</strong>
                 <span style="color:var(--text-muted);font-size:0.78rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(ad.description || '')}</span>
                 ${linkHtml}
               </td>
-              <td><span style="font-family:var(--font-mono);font-size:0.8rem;color:#cbd5e1">${escapeHtml(ad.pioneer_username || ad.pioneer_name || '@pioneiro')}</span></td>
-              <td><span style="font-size:0.78rem;color:var(--text-muted)">${ad.category || 'geral'}</span></td>
-              <td><strong style="color:var(--amber);font-family:var(--font-mono)">${ad.price_pi ? ad.price_pi + ' π' : '0 π'}</strong></td>
-              <td style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">${dateStr}</td>
+              <td>
+                <a href="pioneiro?u=${encodeURIComponent(author)}" target="_blank" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do pioneiro">
+                  ${author} ↗
+                </a>
+              </td>
+              <td>
+                <div style="font-size:0.78rem;white-space:nowrap">
+                  <span>👁️ <strong>${views}</strong></span> · 
+                  <span style="color:var(--amber-light)">🖱️ <strong>${clicks}</strong></span>
+                  <div style="font-size:0.7rem;color:var(--text-muted)">CTR: ${ctr}%</div>
+                </div>
+              </td>
+              <td>
+                <span style="font-size:0.8rem;font-weight:700;color:${daysLeft <= 5 ? '#ef4444' : '#10b981'}">
+                  ${daysLeft} dias
+                </span>
+                <div style="font-size:0.7rem;color:var(--text-muted)">desde ${dateStr}</div>
+              </td>
               <td style="text-align:right;white-space:nowrap">
                 ${ad.status === 'ativo' ? `
                   <button type="button" class="btn btn-warning btn-sm" onclick="toggleAdStatus('${ad.id}', 'pausado')" title="Ocultar do Mural">
@@ -1054,6 +1079,9 @@
                 `}
                 <button type="button" class="btn btn-outline btn-sm" onclick="promoteToOuro('${ad.id}')" title="Destacar como Ouro">
                   👑
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="extendAdDuration('${ad.id}')" title="Renovar por +30 dias">
+                  +30d
                 </button>
                 <button type="button" class="btn btn-danger btn-sm" onclick="deleteAdPrompt('${ad.id}', '${escapeHtml(ad.title || '')}')" title="Excluir Definitivamente">
                   🗑️
@@ -1101,6 +1129,23 @@
           }
         } catch (err) {
           showToast('Erro: ' + err.message, true);
+        }
+      };
+
+      // Renovar duração do anúncio por +30 dias
+      window.extendAdDuration = async function (id) {
+        if (!confirm('Deseja renovar este anúncio por mais 30 dias a partir de hoje?')) return;
+        try {
+          const ok = await window.IsarDB.updateAnuncio(id, { 
+            status: 'ativo',
+            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+          }, currentSecret);
+          if (ok) {
+            showToast('✓ Anúncio renovado com sucesso por +30 dias!');
+            await loadAllAds();
+          }
+        } catch (err) {
+          showToast('Erro ao renovar: ' + err.message, true);
         }
       };
 

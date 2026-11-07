@@ -158,9 +158,12 @@
             O mural independente da comunidade: canais de YouTube, produtos que aceitam Pi, serviços e recados de pioneiros de todo o Brasil.
           </p>
         </div>
-        <div>
-          <button type="button" class="btn btn-primary" onclick="window.IsarMural && window.IsarMural.openModal()" style="white-space:nowrap;padding:12px 20px;font-weight:700">
-            📢 Criar Meu Anúncio (a partir de 0.314 π)
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button type="button" class="btn btn-outline" onclick="window.IsarMural && window.IsarMural.openMyAdsModal()" style="white-space:nowrap;padding:11px 16px;font-weight:700;border-color:rgba(245,158,11,0.5);color:var(--amber-light)">
+            📊 Meus Anúncios &amp; Métricas
+          </button>
+          <button type="button" class="btn btn-primary" onclick="window.IsarMural && window.IsarMural.openModal()" style="white-space:nowrap;padding:11px 18px;font-weight:700">
+            📢 Criar Meu Anúncio
           </button>
         </div>
       </div>
@@ -465,6 +468,83 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL: MEUS ANÚNCIOS (PAINEL DO ANUNCIANTE SAAS) -->
+  <div class="pi-modal-overlay" id="my-ads-modal" role="dialog" aria-modal="true" aria-labelledby="my-ads-title">
+    <div class="pi-modal ad-modal" style="max-width:680px">
+      <button type="button" class="pi-modal-close" onclick="window.IsarMural && window.IsarMural.closeMyAdsModal()" aria-label="Fechar modal">✕</button>
+      <div class="pi-modal-logo">📊</div>
+      <h3 id="my-ads-title">Painel do Anunciante</h3>
+      <p style="font-size:0.88rem;color:var(--text-secondary)">Acompanhe cliques, visualizações e gerencie seus anúncios na Gazeta.</p>
+
+      <!-- Identificação do Usuário -->
+      <div style="display:flex;gap:8px;margin:16px 0;align-items:center">
+        <input type="text" id="my-ads-username-input" placeholder="Digite seu @usuário Pi (Ex: @joao)" style="flex:1;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural && window.IsarMural.loadMyAds()" style="padding:10px 16px">
+          🔍 Carregar
+        </button>
+      </div>
+
+      <!-- Resumo de Métricas (Dashboard) -->
+      <div id="my-ads-dashboard" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin-bottom:18px">
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:12px;border-radius:8px;text-align:center">
+          <span style="font-size:0.7rem;text-transform:uppercase;color:var(--text-muted);display:block">Anúncios</span>
+          <strong id="my-ads-count" style="font-size:1.3rem;color:#fff">0</strong>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:12px;border-radius:8px;text-align:center">
+          <span style="font-size:0.7rem;text-transform:uppercase;color:var(--text-muted);display:block">Visualizações</span>
+          <strong id="my-ads-views" style="font-size:1.3rem;color:var(--accent-light)">0</strong>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:12px;border-radius:8px;text-align:center">
+          <span style="font-size:0.7rem;text-transform:uppercase;color:var(--text-muted);display:block">Cliques Gerados</span>
+          <strong id="my-ads-clicks" style="font-size:1.3rem;color:var(--amber-light)">0</strong>
+        </div>
+      </div>
+
+      <!-- Lista de Anúncios do Usuário -->
+      <div id="my-ads-list-container" style="max-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:10px">
+        <div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.85rem">
+          Carregando seus anúncios...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDITAR ANÚNCIO (SELF-SERVICE SAAS) -->
+  <div class="pi-modal-overlay" id="edit-ad-modal" role="dialog" aria-modal="true" aria-labelledby="edit-ad-title">
+    <div class="pi-modal ad-modal" style="max-width:540px">
+      <button type="button" class="pi-modal-close" onclick="window.IsarMural && window.IsarMural.closeEditModal()" aria-label="Fechar modal">✕</button>
+      <div class="pi-modal-logo">✏️</div>
+      <h3 id="edit-ad-title">Editar Meu Anúncio</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:14px">Atualize os detalhes do seu anúncio ativo.</p>
+
+      <input type="hidden" id="edit-ad-id" />
+
+      <div class="form-group" style="margin-bottom:12px">
+        <label for="edit-ad-input-title" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Título *</label>
+        <input type="text" id="edit-ad-input-title" required maxlength="60" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
+      </div>
+
+      <div class="form-group" style="margin-bottom:12px">
+        <label for="edit-ad-input-desc" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Descrição / Mensagem *</label>
+        <textarea id="edit-ad-input-desc" required rows="3" maxlength="160" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff"></textarea>
+      </div>
+
+      <div class="form-group" style="margin-bottom:12px">
+        <label for="edit-ad-input-link" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Link de Destino</label>
+        <input type="url" id="edit-ad-input-link" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label for="edit-ad-input-image" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">URL da Capa / Imagem</label>
+        <input type="url" id="edit-ad-input-image" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
+      </div>
+
+      <button type="button" class="btn btn-primary" onclick="window.IsarMural && window.IsarMural.saveEditedAd()" style="width:100%;padding:12px;font-weight:700">
+        💾 Salvar Alterações
+      </button>
     </div>
   </div>
 

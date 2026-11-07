@@ -54,3 +54,4 @@ GRANT EXECUTE ON FUNCTION public.increment_ad_click(TEXT) TO anon, authenticated
 
 REVOKE ALL ON FUNCTION public.increment_ad_view(TEXT) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.increment_ad_view(TEXT) TO anon, authenticated, service_role;
+
