@@ -273,7 +273,7 @@
   <!-- BARRA DE CONTROLE DA VITRINE (SUBSTITUI NAVBAR PADRÃO EM MODO FOCO) -->
   <header class="vitrine-topbar" id="vitrine-topbar" style="display:none">
     <button type="button" class="btn btn-outline btn-sm" onclick="resetToOnboarding()" style="padding:6px 14px;font-size:0.8rem">
-      ← Voltar
+      ← Início
     </button>
 
     <!-- Alternador: Visão do Cliente vs Visão do Dono -->
@@ -282,13 +282,18 @@
         👁️ Visão do Cliente
       </button>
       <button type="button" class="mode-tab-btn" id="tab-owner" onclick="setViewMode('owner')">
-        ✏️ Visão do Dono (Editar)
+        ✏️ Visão do Dono
       </button>
     </div>
 
-    <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="padding:6px 14px;font-size:0.8rem;font-weight:700">
-      🚀 Criar a Minha
-    </button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="padding:6px 14px;font-size:0.8rem;font-weight:700">
+        🚀 Criar / Editar
+      </button>
+      <button type="button" class="btn btn-outline btn-sm" id="btn-logout-header" onclick="logoutPioneer()" style="padding:6px 10px;font-size:0.75rem;border-color:rgba(255,255,255,0.25);color:var(--text-muted);display:none" title="Limpar sessão ativa">
+        Sair
+      </button>
+    </div>
   </header>
 
   <!-- NAVBAR PADRÃO (VISÍVEL APENAS NA TELA INICIAL DE ONBOARDING) -->
@@ -612,6 +617,16 @@
       ]
     };
 
+    function cleanUsername(raw) {
+      if (!raw) return '';
+      return '@' + String(raw).replace(/@+/g, '').trim().toLowerCase();
+    }
+
+    function isPiBrowser() {
+      const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+      return /PiBrowser|PiNetwork/i.test(ua) || Boolean(window.Pi && window.isPiBrowser);
+    }
+
     function getQueryParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
@@ -629,12 +644,30 @@
       return null;
     }
 
-    function setLoggedUser(username, uid) {
-      const userObj = { username: username, uid: uid || ('user_' + username.replace('@', '')) };
+    function isPiSdkAuthenticated() {
+      const user = getLoggedUser();
+      return Boolean(user && user.authType === 'pi-sdk' && user.uid && !user.uid.startsWith('demo-'));
+    }
+
+    function setLoggedUser(username, uid, authType) {
+      const clean = cleanUsername(username);
+      const userObj = { 
+        username: clean, 
+        uid: uid || ('user_' + clean.replace('@', '')),
+        authType: authType || 'demo'
+      };
       try {
         localStorage.setItem('hokage_pi_user', JSON.stringify(userObj));
         localStorage.setItem('isar_pi_user', JSON.stringify(userObj));
       } catch (_) {}
+    }
+
+    function logoutPioneer() {
+      try {
+        localStorage.removeItem('hokage_pi_user');
+        localStorage.removeItem('isar_pi_user');
+      } catch (_) {}
+      window.location.href = 'pioneiro';
     }
 
     // Alternar entre Visão do Cliente e Visão do Dono
@@ -692,11 +725,11 @@
         return;
       }
 
-      if (!username.startsWith('@')) username = '@' + username;
+      username = cleanUsername(username);
       currentPioneerUser = username;
 
       // Se for @hokage22b ou demo explícita, carrega demo completa
-      if (username.toLowerCase() === '@hokage22b' || username.toLowerCase() === '@exemplo') {
+      if (username === '@hokage22b' || username === '@exemplo') {
         loadRealisticDemoShowcase();
         return;
       }
@@ -718,7 +751,7 @@
           renderShowcaseData(currentProfileData, ads);
 
           // Verifica se é o dono da conta logada
-          if (loggedUser && loggedUser.username.toLowerCase() === username.toLowerCase()) {
+          if (loggedUser && cleanUsername(loggedUser.username) === username) {
             setViewMode('owner');
           } else {
             setViewMode('client');
@@ -739,7 +772,13 @@
       document.getElementById('pioneer-card').style.display = 'block';
       document.getElementById('pioneer-footer').style.display = 'block';
 
-      const username = prof.username || currentPioneerUser || '@pioneiro';
+      const logged = getLoggedUser();
+      const logoutBtn = document.getElementById('btn-logout-header');
+      if (logoutBtn) {
+        logoutBtn.style.display = logged ? 'inline-block' : 'none';
+      }
+
+      const username = cleanUsername(prof.username || currentPioneerUser || '@pioneiro');
       document.getElementById('pioneer-handle').textContent = username;
       document.getElementById('pioneer-avatar').textContent = username.replace('@', '').charAt(0).toUpperCase() || 'π';
       document.title = `${username} — Vitrine Oficial de Pioneiro | HOKAGE22B`;
@@ -856,13 +895,12 @@
 
     // Ação: Conectar via Pi Browser
     function connectPiBrowserAndStart() {
-      const inPi = /PiBrowser|PiNetwork/i.test(navigator.userAgent) || (window.Pi && window.isPiBrowser);
-      if (window.Pi && inPi) {
+      if (window.Pi && isPiBrowser()) {
         window.Pi.authenticate(['username', 'payments', 'wallet_address'], function(p) { console.log('Pendência:', p); })
           .then(function(auth) {
             if (auth && auth.user && auth.user.username) {
-              const u = '@' + auth.user.username.replace('@', '');
-              setLoggedUser(u, auth.user.uid);
+              const u = cleanUsername(auth.user.username);
+              setLoggedUser(u, auth.user.uid, 'pi-sdk');
               window.history.replaceState(null, '', `?u=${encodeURIComponent(u)}`);
               loadPioneerProfile().then(() => {
                 openProfileEditModal();
@@ -870,24 +908,27 @@
             }
           })
           .catch(function(err) {
-            alert('Falha ao conectar via Pi SDK. Por favor, digite seu @usuário manualmente no campo abaixo.');
-            document.getElementById('onboarding-user-input').focus();
+            alert('Falha ao conectar via Pi SDK. Por favor, tente novamente no Pi Browser.');
           });
       } else {
-        alert('Dica: Para autenticação automática com 1 clique, abra esta página dentro do Pi Browser.\n\nVocê também pode digitar seu @usuário no campo abaixo!');
+        alert(
+          '💡 Dica Importante:\n\n' +
+          'A autenticação criptográfica oficial da Pi Network só existe dentro do aplicativo Pi Browser (onde sua carteira e KYC estão integrados).\n\n' +
+          'Aqui no navegador comum, você pode navegar, ver vitrines e testar a prévia ao vivo.\n\n' +
+          'Para publicar oficialmente sua vitrine na rede, abra este site dentro do Pi Browser!'
+        );
         document.getElementById('onboarding-user-input').focus();
       }
     }
 
-    // Submissão Manual na Onboarding
+    // Submissão Manual na Onboarding (Visualização ou Simulação)
     function handleOnboardingManualSubmit(e) {
       if (e) e.preventDefault();
       let inputVal = document.getElementById('onboarding-user-input').value.trim();
       if (!inputVal) return;
-      if (!inputVal.startsWith('@')) inputVal = '@' + inputVal;
+      const clean = cleanUsername(inputVal);
 
-      setLoggedUser(inputVal);
-      window.history.replaceState(null, '', `?u=${encodeURIComponent(inputVal)}`);
+      window.history.replaceState(null, '', `?u=${encodeURIComponent(clean)}`);
       loadPioneerProfile();
     }
 
@@ -1034,16 +1075,48 @@
       alert('✨ Prévia atualizada ao vivo na sua tela! Você pode ver como seus clientes enxergarão clicando em "Visão do Cliente" no topo.');
     }
 
-    // Salvar Oficialmente no Supabase
+    // Salvar Oficialmente na Pi Network (Exige Pi Browser para Validar Identidade KYC)
     async function saveProfileForm(e) {
       if (e) e.preventDefault();
 
-      let username = document.getElementById('prof-input-user').value.trim();
-      if (!username) {
+      let rawUser = document.getElementById('prof-input-user').value.trim();
+      if (!rawUser) {
         alert('Por favor, informe seu @usuário Pi.');
         return;
       }
-      if (!username.startsWith('@')) username = '@' + username;
+      let username = cleanUsername(rawUser);
+
+      // Verificação de Segurança Anti-Fraude:
+      // Se estiver em navegador comum (fora do Pi Browser) e sem sessão do Pi SDK:
+      const inPi = isPiBrowser();
+      const isAuth = isPiSdkAuthenticated();
+
+      if (!inPi && !isAuth) {
+        // Atualiza como simulação local na tela
+        applyLivePreviewFromForm();
+        alert(
+          '💡 Modo Simulação (Navegador Comum)\n\n' +
+          'Sua prévia foi atualizada na sua tela com sucesso!\n\n' +
+          '🔒 Por que não salvou no banco público?\n' +
+          'Como o HOKAGE22B é uma rede 100% verificada (Anti-Bot / KYC), a gravação definitiva de uma vitrine no banco de dados exige autenticação pelo Pi Browser para comprovar que você é o verdadeiro dono deste @usuário.\n\n' +
+          '👉 Para publicar definitivamente na rede mundial, abra esta página dentro do Pi Browser e clique em "Salvar Oficialmente"!'
+        );
+        return;
+      }
+
+      // Se estiver no Pi Browser mas não autenticado ainda, autentica primeiro
+      if (inPi && !isAuth && window.Pi) {
+        try {
+          const auth = await window.Pi.authenticate(['username', 'payments', 'wallet_address'], function(p) { console.log('Pendência:', p); });
+          if (auth && auth.user && auth.user.username) {
+            username = cleanUsername(auth.user.username);
+            setLoggedUser(username, auth.user.uid, 'pi-sdk');
+          }
+        } catch (err) {
+          alert('Falha na autenticação Pi. Confirme o acesso dentro do Pi Browser.');
+          return;
+        }
+      }
 
       const bio = document.getElementById('prof-input-bio').value.trim();
       const wallet = document.getElementById('prof-input-wallet').value.trim();
@@ -1080,15 +1153,14 @@
             products: products
           });
 
-          setLoggedUser(username);
+          setLoggedUser(username, null, 'pi-sdk');
           currentPioneerUser = username;
           window.history.replaceState(null, '', `?u=${encodeURIComponent(username)}`);
 
-          alert('✓ Vitrine oficial salva com sucesso na rede!');
+          alert('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!');
           closeProfileEditModal();
           loadPioneerProfile();
         } else {
-          // Fallback para teste local
           applyLivePreviewFromForm();
         }
       } catch (err) {
