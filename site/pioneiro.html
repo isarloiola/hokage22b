@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Perfil do Pioneiro — HOKAGE22B</title>
-  <meta name="description" content="Mini-página oficial do Pioneiro no ecossistema Pi Network: chave pública, links de contato e anúncios verificados na Gazeta." />
+  <title>Vitrine Oficial do Pioneiro — Pi Network | HOKAGE22B</title>
+  <meta name="description" content="Mini-página oficial (estilo Linktree) do Pioneiro no ecossistema Pi Network: chave pública, links de contato, mini-loja e anúncios verificados na Gazeta." />
   <link rel="canonical" href="https://hokage22b.com/pioneiro" />
 
   <!-- Open Graph / WhatsApp / Facebook -->
@@ -49,10 +49,22 @@
   </script>
 
   <style>
+    /* Estilos da Vitrine e Onboarding */
+    .onboarding-hero {
+      background: linear-gradient(135deg, rgba(26, 16, 45, 0.96), rgba(13, 13, 20, 0.98));
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 20px;
+      padding: 36px 24px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(139, 92, 246, 0.2);
+      max-width: 680px;
+      margin: 0 auto 32px;
+      position: relative;
+    }
     .pioneer-hero-card {
       background: linear-gradient(135deg, rgba(26, 16, 45, 0.95), rgba(13, 13, 20, 0.98));
       border: 1px solid rgba(139, 92, 246, 0.35);
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 32px 24px;
       text-align: center;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(139, 92, 246, 0.2);
@@ -62,22 +74,22 @@
       overflow: hidden;
     }
     .pioneer-avatar {
-      width: 86px;
-      height: 86px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent, #8b5cf6), var(--amber, #f59e0b));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.2rem;
+      font-size: 2.3rem;
       font-weight: 800;
       color: #fff;
       margin: 0 auto 16px;
-      box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
-      border: 3px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 24px rgba(139, 92, 246, 0.5);
+      border: 3px solid rgba(255, 255, 255, 0.25);
     }
     .pioneer-handle {
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       font-weight: 800;
       color: #fff;
       display: flex;
@@ -87,12 +99,15 @@
       flex-wrap: wrap;
     }
     .pioneer-badge-verified {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       font-size: 0.75rem;
       background: rgba(16, 185, 129, 0.15);
       border: 1px solid rgba(16, 185, 129, 0.4);
       color: #10b981;
-      padding: 3px 10px;
-      border-radius: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -103,34 +118,73 @@
       justify-content: space-between;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 14px 18px;
       color: #fff;
       text-decoration: none;
       font-weight: 600;
       font-size: 0.95rem;
       margin-bottom: 10px;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
     .pioneer-link-btn:hover {
-      background: rgba(139, 92, 246, 0.2);
+      background: rgba(139, 92, 246, 0.22);
       border-color: var(--accent);
       transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+      color: #fff;
+    }
+    .pioneer-link-btn--whatsapp {
+      border-color: rgba(37, 211, 102, 0.35);
+    }
+    .pioneer-link-btn--whatsapp:hover {
+      background: rgba(37, 211, 102, 0.2);
+      border-color: #25d366;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+    }
+    .pioneer-link-btn--youtube {
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+    .pioneer-link-btn--youtube:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
     }
     .product-mini-card {
       background: rgba(0, 0, 0, 0.45);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      padding: 12px;
+      border-radius: 12px;
+      padding: 14px;
       display: flex;
       gap: 12px;
       align-items: center;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
     .product-mini-card:hover {
       border-color: rgba(245, 158, 11, 0.5);
-      background: rgba(245, 158, 11, 0.05);
+      background: rgba(245, 158, 11, 0.06);
+      transform: translateY(-2px);
+    }
+    .product-edit-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .tag-free-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(139, 92, 246, 0.2));
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
     }
   </style>
 </head>
@@ -143,7 +197,10 @@
       <div class="navbar__inner" style="display:flex;justify-content:space-between;align-items:center">
         <a href="./" class="navbar__logo" aria-label="HOKAGE22B — Início" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:800">
           <span class="pi-sym" style="color:var(--accent-light)">✦</span>
-          <div><div>HOKAGE22B</div><div class="brand-sub" style="font-size:0.7rem;color:var(--text-muted)">Vitrine do Pioneiro</div></div>
+          <div>
+            <div>HOKAGE22B</div>
+            <div class="brand-sub" style="font-size:0.7rem;color:var(--text-muted)">Vitrine do Pioneiro Web3</div>
+          </div>
         </a>
         <div style="display:flex;align-items:center;gap:10px">
           <div class="lang-mount-point"></div>
@@ -156,30 +213,91 @@
   <main style="padding:100px 16px 60px;position:relative;z-index:1;min-height:85vh">
     <div class="container" style="max-width:720px;margin:0 auto">
       
-      <!-- Cartão Principal do Pioneiro -->
-      <div class="pioneer-hero-card" id="pioneer-card">
+      <!-- ========================================== -->
+      <!-- ESTADO 1: TELA DE ONBOARDING / CRIAR VITRINE -->
+      <!-- Exibido quando visitante não está logado e não passou ?u= -->
+      <!-- ========================================== -->
+      <div id="onboarding-view" class="onboarding-hero" style="display:none">
+        <span class="tag-free-badge">✨ 100% Grátis para Sempre</span>
+        <h1 style="font-size:1.85rem;font-weight:800;color:#fff;margin-bottom:10px">
+          Sua Vitrine Web3 Oficial na Pi Network
+        </h1>
+        <p style="color:var(--text-secondary);font-size:0.95rem;line-height:1.6;margin-bottom:28px">
+          Crie seu <strong>Linktree descentralizado</strong> no ecossistema Pi: receba pagamentos diretamente na sua <strong>Pi Wallet</strong>, reúna seus links externos, WhatsApp e produtos em uma página única e compartilhável.
+        </p>
+
+        <!-- Ação Principal: Pi Browser -->
+        <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:20px;margin-bottom:20px">
+          <button type="button" class="btn btn-primary" onclick="connectPiBrowserAndStart()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">
+            <span>⚡</span> Conectar Pi Browser e Criar Vitrine
+          </button>
+          <small style="color:var(--text-muted);font-size:0.75rem;display:block;margin-top:8px">
+            Identificação segura e com 1 clique usando o Pi SDK Oficial.
+          </small>
+        </div>
+
+        <!-- Ação Secundária: Acesso Rápido por Username -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+          <div style="flex:1;height:1px;background:rgba(255,255,255,0.1)"></div>
+          <span style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em">ou digite seu @usuário Pi</span>
+          <div style="flex:1;height:1px;background:rgba(255,255,255,0.1)"></div>
+        </div>
+
+        <form onsubmit="handleOnboardingManualSubmit(event)" style="display:flex;gap:8px;margin-bottom:24px">
+          <input type="text" id="onboarding-user-input" placeholder="Ex: @seunome" required maxlength="50" style="flex:1;padding:12px 16px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:10px;color:#fff;font-size:0.95rem" />
+          <button type="submit" class="btn btn-outline" style="padding:12px 20px;font-weight:700;border-color:var(--amber);color:var(--amber-light)">
+            Criar / Ver Vitrine →
+          </button>
+        </form>
+
+        <!-- Demonstração -->
+        <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:18px">
+          <button type="button" onclick="loadDemoShowcase()" class="btn btn-outline btn-sm" style="font-size:0.8rem;border-color:rgba(255,255,255,0.15);color:var(--text-secondary)">
+            👀 Ver Exemplo de Vitrine Pronta (@hokage22b)
+          </button>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- ESTADO 2: VITRINE DO PIONEIRO (SHOWCASE)   -->
+      <!-- ========================================== -->
+      <div class="pioneer-hero-card" id="pioneer-card" style="display:none">
         
-        <!-- Botão de Edição Rápida da Vitrine -->
-        <button type="button" class="btn btn-outline btn-sm" onclick="openProfileEditModal()" style="position:absolute;top:16px;right:16px;font-size:0.75rem;padding:5px 10px;border-color:rgba(139,92,246,0.4)">
-          ✏️ Editar Vitrine
-        </button>
+        <!-- Botão Superior de Ação / Edição -->
+        <div style="position:absolute;top:16px;right:16px;display:flex;gap:8px">
+          <button type="button" class="btn btn-outline btn-sm" id="btn-edit-showcase" onclick="openProfileEditModal()" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(139,92,246,0.5);color:var(--accent-light);font-weight:700">
+            ✏️ Editar Minha Vitrine
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-switch-user" onclick="resetToOnboarding()" style="font-size:0.75rem;padding:6px 10px;border-color:rgba(255,255,255,0.2);color:var(--text-muted);display:none" title="Trocar ou criar outra vitrine">
+            ⇄ Trocar
+          </button>
+        </div>
 
         <div class="pioneer-avatar" id="pioneer-avatar">π</div>
         <h1 class="pioneer-handle" id="pioneer-handle">@carregando...</h1>
-        <p style="color:var(--text-secondary);font-size:0.9rem;margin-top:6px;margin-bottom:18px" id="pioneer-bio">
+        <p style="color:var(--text-secondary);font-size:0.95rem;margin-top:8px;margin-bottom:16px;line-height:1.5" id="pioneer-bio">
           Pioneiro Verificado na comunidade independente HOKAGE22B.
         </p>
         <span class="pioneer-badge-verified" id="pioneer-badge">✓ Pioneiro Verificado Pi Network</span>
 
-        <!-- Caixa de Pagamento Direto com Pi -->
-        <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:16px;margin-top:24px;text-align:left">
-          <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--amber-light);font-weight:700;margin-bottom:6px">
-            ⚡ Pagar ou Transferir Pi para este Pioneiro
+        <!-- Caixa de Pagamento Direto com Pi Wallet -->
+        <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:18px;margin-top:24px;text-align:left">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--amber-light);font-weight:700">
+              ⚡ Pagar ou Transferir Pi para este Pioneiro
+            </span>
+            <span style="font-size:0.7rem;color:var(--text-muted)">Pi Mainnet / Testnet</span>
           </div>
-          <div id="pioneer-wallet-box" style="margin-bottom:10px;display:none">
-            <span style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:3px">Chave Pública Oficial (Carteira):</span>
-            <code id="pioneer-wallet-key" style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:8px;border-radius:4px;color:var(--accent-light);user-select:all"></code>
+          
+          <div id="pioneer-wallet-box" style="margin-bottom:12px;display:none">
+            <span style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:4px">Chave Pública Oficial (Carteira):</span>
+            <code id="pioneer-wallet-key" style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:10px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);color:var(--accent-light);user-select:all"></code>
           </div>
+
+          <div id="pioneer-wallet-empty" style="margin-bottom:12px;display:none;font-size:0.82rem;color:var(--text-muted)">
+            Chave pública ainda não cadastrada. Clique em <em>"Editar Minha Vitrine"</em> para adicionar sua carteira Pi.
+          </div>
+
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" id="btn-copy-wallet" onclick="copyWalletKey()" style="flex:1;padding:10px;font-weight:700">
               📋 Copiar Chave Pública
@@ -193,34 +311,34 @@
           </div>
         </div>
 
-        <!-- Seção: Mini-Loja / Produtos Aceitando Pi -->
-        <div id="pioneer-products-section" style="margin-top:24px;text-align:left;display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:700">
-              🛍️ Produtos &amp; Serviços (Aceita Pi)
-            </div>
-            <span style="font-size:0.72rem;color:var(--text-muted)">Negociação Direta P2P</span>
-          </div>
-          <div id="pioneer-products-list" style="display:flex;flex-direction:column;gap:8px">
-            <!-- Injetado dinamicamente -->
-          </div>
-        </div>
-
-        <!-- Links Oficiais do Pioneiro -->
-        <div style="margin-top:24px;text-align:left">
-          <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700;margin-bottom:10px">
-            Links &amp; Redes de Contato
+        <!-- Seção: Links & Redes de Contato (Estilo Linktree) -->
+        <div style="margin-top:28px;text-align:left">
+          <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700;margin-bottom:12px">
+            🔗 Links &amp; Contatos Oficiais
           </div>
           <div id="pioneer-links-list">
             <!-- Injetado dinamicamente -->
           </div>
         </div>
 
-        <!-- Anúncios Ativos na Gazeta -->
+        <!-- Seção: Mini-Loja / Produtos Aceitando Pi -->
+        <div id="pioneer-products-section" style="margin-top:28px;text-align:left;display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:700">
+              🛍️ Produtos &amp; Serviços (Aceita Pi)
+            </div>
+            <span style="font-size:0.72rem;color:var(--text-muted)">Negociação Direta P2P</span>
+          </div>
+          <div id="pioneer-products-list" style="display:flex;flex-direction:column;gap:10px">
+            <!-- Injetado dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Seção: Anúncios & Boosts Ativos na Gazeta -->
         <div style="margin-top:28px;text-align:left">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
             <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700">
-              Anúncios na Gazeta dos Pioneiros
+              📢 Anúncios na Gazeta dos Pioneiros
             </div>
             <a href="mural" style="font-size:0.75rem;color:var(--accent-light);text-decoration:none">Ver todos no Mural →</a>
           </div>
@@ -231,56 +349,94 @@
 
       </div>
 
-      <!-- Rodapé da Mini-Página -->
-      <div style="text-align:center;color:var(--text-muted);font-size:0.8rem;margin-top:24px">
-        <p>Esta é uma mini-página independente verificada pelo portal <a href="./" style="color:var(--accent-light)">HOKAGE22B</a>.</p>
-        <p style="margin-top:6px"><a href="mural" style="color:var(--amber-light);font-weight:700">Quer ter sua mini-página e anunciar? Clique aqui ↗</a></p>
+      <!-- Rodapé da Vitrine Oficial -->
+      <div id="pioneer-footer" style="text-align:center;color:var(--text-muted);font-size:0.82rem;margin-top:24px;display:none">
+        <p>✦ Vitrine Web3 Oficial fornecida gratuitamente pela plataforma <a href="./" style="color:var(--accent-light);font-weight:600">HOKAGE22B</a>.</p>
+        <p style="margin-top:8px">
+          <a href="javascript:void(0)" onclick="resetToOnboarding()" style="color:var(--amber-light);font-weight:700;text-decoration:none">
+            🚀 Crie sua vitrine grátis na Pi Network também ↗
+          </a>
+        </p>
       </div>
 
     </div>
   </main>
 
-  <!-- MODAL: EDITAR MINHA VITRINE / PERFIL -->
+  <!-- ======================================================= -->
+  <!-- MODAL: EDITAR MINHA VITRINE (PREENCHIMENTO AUTOMÁTICO) -->
+  <!-- ======================================================= -->
   <div class="pi-modal-overlay" id="edit-profile-modal" role="dialog" aria-modal="true" aria-labelledby="modal-profile-title">
-    <div class="pi-modal ad-modal" style="max-width:540px;text-align:left">
+    <div class="pi-modal ad-modal" style="max-width:580px;text-align:left">
       <button type="button" class="pi-modal-close" onclick="closeProfileEditModal()" aria-label="Fechar modal">✕</button>
       <div class="pi-modal-logo">✏️</div>
-      <h3 id="modal-profile-title" style="text-align:center">Editar Minha Vitrine Pi</h3>
-      <p style="font-size:0.85rem;color:var(--text-secondary);text-align:center;margin-bottom:16px">Configure seus links de contato, chave pública Pi e mini-produtos.</p>
+      <h3 id="modal-profile-title" style="text-align:center;margin-bottom:4px">Editar Minha Vitrine Pi</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);text-align:center;margin-bottom:20px">
+        Altere os dados que desejar. Seus dados atuais já estão preenchidos abaixo.
+      </p>
 
       <form id="profile-edit-form" onsubmit="saveProfileForm(event)">
-        <div class="form-group" style="margin-bottom:12px">
-          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Bio / Apresentação Rápida</label>
-          <input type="text" id="prof-input-bio" maxlength="120" placeholder="Ex: Criador de conteúdo Web3 e comerciante aceitando Pi." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
+        
+        <!-- Identificação do Usuário -->
+        <div class="form-group" style="margin-bottom:14px">
+          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Seu @usuário Pi</label>
+          <input type="text" id="prof-input-user" required placeholder="@seunome" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:var(--accent-light);font-weight:700" />
         </div>
 
-        <div class="form-group" style="margin-bottom:12px">
-          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Sua Chave Pública Pi (Carteira)</label>
+        <!-- Bio / Apresentação Rápida -->
+        <div class="form-group" style="margin-bottom:14px">
+          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Bio / Apresentação Rápida (máx 140 caracteres)</label>
+          <input type="text" id="prof-input-bio" maxlength="140" placeholder="Ex: Pioneiro Web3, vendo camisetas e aceito Pi em todo Brasil." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
+        </div>
+
+        <!-- Chave Pública Pi Wallet -->
+        <div class="form-group" style="margin-bottom:14px">
+          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Sua Chave Pública Pi Wallet (Endereço G...)</label>
           <input type="text" id="prof-input-wallet" placeholder="G..." maxlength="70" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-family:var(--font-mono);font-size:0.8rem" />
-          <small style="color:var(--text-muted);font-size:0.72rem;display:block;margin-top:2px">Sua chave pública oficial da Pi Wallet para receber pagamentos.</small>
+          <small style="color:var(--text-muted);font-size:0.72rem;display:block;margin-top:3px">
+            Seus clientes usarão esta chave para transferir Pi direto para você.
+          </small>
         </div>
 
-        <div class="form-group" style="margin-bottom:12px">
-          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Link do WhatsApp</label>
-          <input type="url" id="prof-input-whatsapp" placeholder="https://wa.me/55..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
-        </div>
-
-        <div class="form-group" style="margin-bottom:12px">
-          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Canal do YouTube ou Rede Social</label>
-          <input type="url" id="prof-input-social" placeholder="https://youtube.com/@... ou https://instagram.com/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
-        </div>
-
-        <!-- Mini-Produto 1 -->
-        <div style="background:rgba(255,255,255,0.03);border:1px dashed rgba(245,158,11,0.3);border-radius:8px;padding:12px;margin-bottom:16px">
-          <div style="font-size:0.78rem;font-weight:700;color:var(--amber-light);margin-bottom:8px">🛍️ Produto / Serviço em Destaque</div>
-          <input type="text" id="prof-prod-title" placeholder="Nome do produto (Ex: Camiseta Pi Network)" style="width:100%;padding:8px 12px;margin-bottom:6px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;font-size:0.82rem" />
-          <div style="display:flex;gap:6px">
-            <input type="text" id="prof-prod-price" placeholder="Preço em π (Ex: 2.5 π)" style="flex:1;padding:8px 12px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;font-size:0.82rem" />
-            <input type="url" id="prof-prod-link" placeholder="Link de compra ou zap" style="flex:2;padding:8px 12px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;font-size:0.82rem" />
+        <!-- Links de Contato -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div>
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">WhatsApp (Link)</label>
+            <input type="url" id="prof-input-whatsapp" placeholder="https://wa.me/55..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem" />
+          </div>
+          <div>
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">YouTube / Rede Social</label>
+            <input type="url" id="prof-input-social" placeholder="https://youtube.com/@..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem" />
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;font-weight:700">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+          <div>
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Instagram (Link)</label>
+            <input type="url" id="prof-input-instagram" placeholder="https://instagram.com/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem" />
+          </div>
+          <div>
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">X / Twitter (Link)</label>
+            <input type="url" id="prof-input-twitter" placeholder="https://x.com/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem" />
+          </div>
+        </div>
+
+        <!-- Seção: Produtos & Cartões Linktree Dinâmicos -->
+        <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:14px;margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span style="font-size:0.82rem;font-weight:700;color:var(--amber-light)">
+              🛍️ Produtos &amp; Links Externos (Cards)
+            </span>
+            <button type="button" class="btn btn-outline btn-sm" onclick="addProductRow('', '', '')" style="font-size:0.75rem;padding:4px 10px;border-color:var(--amber)">
+              ➕ Adicionar Link / Card
+            </button>
+          </div>
+
+          <div id="prof-products-container">
+            <!-- Injetado dinamicamente com dados existentes -->
+          </div>
+        </div>
+
+        <button type="submit" id="btn-save-profile" class="btn btn-primary" style="width:100%;padding:12px;font-size:0.95rem;font-weight:700">
           💾 Salvar Minha Vitrine
         </button>
       </form>
@@ -295,26 +451,61 @@
   <script>
     let currentPioneerUser = '';
     let currentPioneerWallet = '';
+    let currentProfileData = null;
 
     function getQueryParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
     }
 
+    function getLoggedUser() {
+      try {
+        const h = localStorage.getItem('hokage_pi_user');
+        if (h) return JSON.parse(h);
+      } catch (_) {}
+      try {
+        const i = localStorage.getItem('isar_pi_user');
+        if (i) return JSON.parse(i);
+      } catch (_) {}
+      return null;
+    }
+
+    function setLoggedUser(username, uid) {
+      const userObj = { username: username, uid: uid || ('user_' + username.replace('@', '')) };
+      try {
+        localStorage.setItem('hokage_pi_user', JSON.stringify(userObj));
+        localStorage.setItem('isar_pi_user', JSON.stringify(userObj));
+      } catch (_) {}
+    }
+
+    // Carrega a Vitrine ou a Tela de Onboarding
     async function loadPioneerProfile() {
       let username = getQueryParam('u') || getQueryParam('user');
-      
-      // Se não passou na URL, tenta pegar da sessão Pi
-      if (!username) {
-        try {
-          const piUser = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
-          if (piUser && piUser.username) username = piUser.username;
-        } catch (_) {}
+      const loggedUser = getLoggedUser();
+
+      // Se não passou na URL, mas está logado, usa a conta logada
+      if (!username && loggedUser && loggedUser.username) {
+        username = loggedUser.username;
       }
 
-      if (!username) username = '@hokage22b';
+      // Se NÃO tem parâmetro E NÃO está logado: exibe a tela de onboarding limpa e amigável!
+      if (!username) {
+        document.getElementById('onboarding-view').style.display = 'block';
+        document.getElementById('pioneer-card').style.display = 'none';
+        document.getElementById('pioneer-footer').style.display = 'none';
+        return;
+      }
+
+      // Se tem usuário definido: exibe a vitrine
+      document.getElementById('onboarding-view').style.display = 'none';
+      document.getElementById('pioneer-card').style.display = 'block';
+      document.getElementById('pioneer-footer').style.display = 'block';
+
       if (!username.startsWith('@')) username = '@' + username;
       currentPioneerUser = username;
+
+      // Botão trocar vitrine visível
+      document.getElementById('btn-switch-user').style.display = 'inline-block';
 
       document.getElementById('pioneer-handle').textContent = username;
       document.getElementById('pioneer-avatar').textContent = username.replace('@', '').charAt(0).toUpperCase() || 'π';
@@ -324,83 +515,230 @@
       const adsList = document.getElementById('pioneer-ads-list');
       const productsList = document.getElementById('pioneer-products-list');
       const productsSection = document.getElementById('pioneer-products-section');
+      const walletBox = document.getElementById('pioneer-wallet-box');
+      const walletEmpty = document.getElementById('pioneer-wallet-empty');
+
+      // Limpa dados temporários
+      linksList.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem">Carregando links...</div>';
+      adsList.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem">Buscando anúncios na Gazeta...</div>';
+      productsSection.style.display = 'none';
+      walletBox.style.display = 'none';
+      walletEmpty.style.display = 'none';
 
       // 1. Carrega Perfil Completo no Supabase
       if (window.IsarDB && window.IsarDB.getPioneerFullProfile) {
         try {
           const prof = await window.IsarDB.getPioneerFullProfile(username);
-          if (prof) {
-            if (prof.bio) document.getElementById('pioneer-bio').textContent = prof.bio;
-            if (prof.wallet_address) {
-              currentPioneerWallet = prof.wallet_address;
-              document.getElementById('pioneer-wallet-key').textContent = prof.wallet_address;
-              document.getElementById('pioneer-wallet-box').style.display = 'block';
-            }
-            // Produtos cadastrados
-            if (Array.isArray(prof.products) && prof.products.length > 0) {
-              productsList.innerHTML = prof.products.map(p => `
-                <div class="product-mini-card">
-                  <div style="font-size:1.4rem">🛍️</div>
-                  <div style="flex:1">
-                    <strong style="color:#fff;font-size:0.9rem;display:block">${p.title || 'Produto'}</strong>
-                    <span style="color:var(--amber-light);font-size:0.8rem;font-weight:700">${p.price || 'Sob Consulta'}</span>
-                  </div>
-                  ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="padding:6px 12px;font-size:0.75rem">Comprar →</a>` : ''}
-                </div>
-              `).join('');
-              productsSection.style.display = 'block';
-            }
+          currentProfileData = prof || {};
+
+          // Bio
+          document.getElementById('pioneer-bio').textContent = prof && prof.bio 
+            ? prof.bio 
+            : 'Pioneiro oficial na comunidade independente Pi Network HOKAGE22B.';
+
+          // Carteira Pi
+          if (prof && prof.wallet_address) {
+            currentPioneerWallet = prof.wallet_address;
+            document.getElementById('pioneer-wallet-key').textContent = prof.wallet_address;
+            walletBox.style.display = 'block';
+            walletEmpty.style.display = 'none';
+          } else {
+            currentPioneerWallet = '';
+            walletBox.style.display = 'none';
+            walletEmpty.style.display = 'block';
           }
-        } catch (_) {}
+
+          // Montagem dos Links Oficiais (Linktree)
+          const customLinks = [];
+
+          if (prof && prof.whatsapp_url) {
+            customLinks.push({
+              title: '💬 Conversar no WhatsApp',
+              url: prof.whatsapp_url,
+              cssClass: 'pioneer-link-btn--whatsapp'
+            });
+          }
+
+          if (prof && prof.youtube_url) {
+            customLinks.push({
+              title: '📺 Canal no YouTube / Vídeo',
+              url: prof.youtube_url,
+              cssClass: 'pioneer-link-btn--youtube'
+            });
+          }
+
+          if (prof && prof.instagram_url) {
+            customLinks.push({
+              title: '📸 Seguir no Instagram',
+              url: prof.instagram_url
+            });
+          }
+
+          if (prof && prof.twitter_url) {
+            customLinks.push({
+              title: '🐦 Perfil no X (Twitter)',
+              url: prof.twitter_url
+            });
+          }
+
+          // Link padrão de convite Pi
+          customLinks.push({
+            title: `⛏️ Baixar Pi Network com ${username}`,
+            url: `https://minepi.com/${encodeURIComponent(username.replace('@', ''))}`
+          });
+
+          linksList.innerHTML = customLinks.map(link => `
+            <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn ${link.cssClass || ''}">
+              <span>${link.title}</span> <span>↗</span>
+            </a>
+          `).join('');
+
+          // Produtos / Cards Dinâmicos
+          if (prof && Array.isArray(prof.products) && prof.products.length > 0) {
+            productsList.innerHTML = prof.products.map(p => `
+              <div class="product-mini-card">
+                <div style="font-size:1.5rem">🛍️</div>
+                <div style="flex:1">
+                  <strong style="color:#fff;font-size:0.92rem;display:block">${p.title || 'Produto / Oferta'}</strong>
+                  <span style="color:var(--amber-light);font-size:0.82rem;font-weight:700">${p.price || 'Sob Consulta'}</span>
+                </div>
+                ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="padding:7px 14px;font-size:0.8rem">Acessar →</a>` : ''}
+              </div>
+            `).join('');
+            productsSection.style.display = 'block';
+          }
+
+        } catch (err) {
+          console.warn('Erro ao carregar perfil do pioneiro:', err);
+        }
       }
 
-      // 2. Busca anúncios deste pioneiro no Supabase
+      // 2. Busca anúncios deste pioneiro no Mural da Gazeta
       if (window.IsarDB && window.IsarDB.getMyAds) {
         try {
           const ads = await window.IsarDB.getMyAds(username);
           if (Array.isArray(ads) && ads.length > 0) {
-            adsList.innerHTML = '';
-            linksList.innerHTML = '';
-
-            ads.forEach(ad => {
-              const adEl = document.createElement('div');
-              adEl.style.cssText = 'background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;';
-              adEl.innerHTML = `
+            adsList.innerHTML = ads.map(ad => `
+              <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
                   <span style="font-size:0.75rem;color:var(--amber-light);font-weight:700">📢 ${ad.plan_tier ? ad.plan_tier.toUpperCase() : 'CLASSIFICADO'}</span>
-                  <span style="font-size:0.75rem;color:var(--text-muted)">👁️ ${ad.views_count || 0} · 🖱️ ${ad.clicks_count || 0} cliques</span>
+                  <span style="font-size:0.75rem;color:var(--text-muted)">👁️ ${ad.views_count || 0} visualizações · 🖱️ ${ad.clicks_count || 0} cliques</span>
                 </div>
-                <h4 style="color:#fff;font-size:1rem;margin-bottom:4px">${ad.title || ''}</h4>
+                <h4 style="color:#fff;font-size:0.98rem;margin-bottom:4px">${ad.title || ''}</h4>
                 <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:10px">${ad.description || ''}</p>
                 ${ad.link_url ? `<a href="${ad.link_url}" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--primary portal-btn--sm" style="display:inline-block;text-decoration:none">Acessar Oferta →</a>` : ''}
-              `;
-              adsList.appendChild(adEl);
-
-              if (ad.link_url) {
-                const linkBtn = document.createElement('a');
-                linkBtn.href = ad.link_url;
-                linkBtn.target = '_blank';
-                linkBtn.rel = 'noopener noreferrer';
-                linkBtn.className = 'pioneer-link-btn';
-                linkBtn.innerHTML = `<span>🔗 ${ad.title || 'Acessar Link Oficial'}</span> <span>↗</span>`;
-                linksList.appendChild(linkBtn);
-              }
-            });
+              </div>
+            `).join('');
           } else {
-            adsList.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem">Nenhum anúncio ativo na Gazeta no momento.</div>';
-            linksList.innerHTML = `
-              <a href="https://minepi.com/${encodeURIComponent(username.replace('@', ''))}" target="_blank" class="pioneer-link-btn">
-                <span>⛏️ Baixar Pi Network com ${username}</span> <span>↗</span>
-              </a>
+            adsList.innerHTML = `
+              <div style="background:rgba(0,0,0,0.3);border:1px dashed rgba(255,255,255,0.15);border-radius:12px;padding:16px;text-align:center">
+                <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:8px">Nenhum anúncio ativo na Gazeta no momento.</p>
+                <a href="mural" class="btn btn-outline btn-sm" style="font-size:0.78rem;border-color:var(--amber);color:var(--amber-light)">
+                  🚀 Anunciar no Mural (+Visibilidade)
+                </a>
+              </div>
             `;
           }
-        } catch (_) {}
+        } catch (_) {
+          adsList.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem">Nenhum anúncio disponível.</div>';
+        }
       }
     }
 
+    // Ação: Conectar via Pi Browser
+    function connectPiBrowserAndStart() {
+      const inPi = /PiBrowser|PiNetwork/i.test(navigator.userAgent) || (window.Pi && window.isPiBrowser);
+      if (window.Pi && inPi) {
+        window.Pi.authenticate(['username', 'payments', 'wallet_address'], function(p) { console.log('Pendência:', p); })
+          .then(function(auth) {
+            if (auth && auth.user && auth.user.username) {
+              const u = '@' + auth.user.username.replace('@', '');
+              setLoggedUser(u, auth.user.uid);
+              window.history.replaceState(null, '', `?u=${encodeURIComponent(u)}`);
+              loadPioneerProfile().then(() => {
+                openProfileEditModal();
+              });
+            }
+          })
+          .catch(function(err) {
+            alert('Falha ao conectar via Pi SDK. Por favor, digite seu @usuário manualmente no campo abaixo.');
+            document.getElementById('onboarding-user-input').focus();
+          });
+      } else {
+        // Fora do Pi Browser
+        alert('Dica: Para autenticação automática com 1 clique, abra esta página dentro do Pi Browser.\n\nVocê também pode digitar seu @usuário no campo abaixo!');
+        document.getElementById('onboarding-user-input').focus();
+      }
+    }
+
+    // Submissão Manual na Onboarding
+    function handleOnboardingManualSubmit(e) {
+      if (e) e.preventDefault();
+      let inputVal = document.getElementById('onboarding-user-input').value.trim();
+      if (!inputVal) return;
+      if (!inputVal.startsWith('@')) inputVal = '@' + inputVal;
+
+      setLoggedUser(inputVal);
+      window.history.replaceState(null, '', `?u=${encodeURIComponent(inputVal)}`);
+      loadPioneerProfile();
+    }
+
+    // Demonstração
+    function loadDemoShowcase() {
+      window.history.replaceState(null, '', '?u=@hokage22b');
+      loadPioneerProfile();
+    }
+
+    // Volta para o Onboarding
+    function resetToOnboarding() {
+      window.history.replaceState(null, '', 'pioneiro');
+      loadPioneerProfile();
+    }
+
+    // ==========================================
+    // MODAL DE EDIÇÃO COM PREENCHIMENTO AUTOMÁTICO
+    // ==========================================
     function openProfileEditModal() {
       const modal = document.getElementById('edit-profile-modal');
-      if (modal) modal.classList.add('active');
+      if (!modal) return;
+
+      const loggedUser = getLoggedUser();
+      const activeUser = currentPioneerUser || (loggedUser ? loggedUser.username : '');
+
+      // 1. Preenche o @usuário
+      document.getElementById('prof-input-user').value = activeUser || '';
+
+      // 2. Preenche os campos principais com os dados atuais salvos
+      if (currentProfileData) {
+        document.getElementById('prof-input-bio').value = currentProfileData.bio || '';
+        document.getElementById('prof-input-wallet').value = currentProfileData.wallet_address || '';
+        document.getElementById('prof-input-whatsapp').value = currentProfileData.whatsapp_url || '';
+        document.getElementById('prof-input-social').value = currentProfileData.youtube_url || '';
+        document.getElementById('prof-input-instagram').value = currentProfileData.instagram_url || '';
+        document.getElementById('prof-input-twitter').value = currentProfileData.twitter_url || '';
+      } else {
+        document.getElementById('prof-input-bio').value = '';
+        document.getElementById('prof-input-wallet').value = '';
+        document.getElementById('prof-input-whatsapp').value = '';
+        document.getElementById('prof-input-social').value = '';
+        document.getElementById('prof-input-instagram').value = '';
+        document.getElementById('prof-input-twitter').value = '';
+      }
+
+      // 3. Preenche a lista dinâmica de produtos / cartões
+      const container = document.getElementById('prof-products-container');
+      container.innerHTML = '';
+
+      if (currentProfileData && Array.isArray(currentProfileData.products) && currentProfileData.products.length > 0) {
+        currentProfileData.products.forEach(p => {
+          addProductRow(p.title || '', p.price || '', p.link || '');
+        });
+      } else {
+        // Se ainda não tem nenhum, adiciona 1 linha vazia pronta para uso
+        addProductRow('', '', '');
+      }
+
+      modal.classList.add('active');
     }
 
     function closeProfileEditModal() {
@@ -408,47 +746,91 @@
       if (modal) modal.classList.remove('active');
     }
 
+    // Adiciona uma linha de produto/link editável
+    function addProductRow(title, price, link) {
+      const container = document.getElementById('prof-products-container');
+      const itemEl = document.createElement('div');
+      itemEl.className = 'product-edit-item';
+      itemEl.innerHTML = `
+        <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#ef4444;cursor:pointer;font-size:0.85rem" title="Remover item">✕</button>
+        <div style="font-size:0.75rem;font-weight:700;color:var(--amber-light);margin-bottom:6px">Item / Oferta</div>
+        <input type="text" class="prod-item-title" placeholder="Nome do produto ou título do link (Ex: Camiseta Pi)" value="${title ? title.replace(/"/g, '&quot;') : ''}" style="width:100%;padding:8px 10px;margin-bottom:6px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;font-size:0.82rem" />
+        <div style="display:flex;gap:6px">
+          <input type="text" class="prod-item-price" placeholder="Preço (Ex: 2.5 π ou Sob Consulta)" value="${price ? price.replace(/"/g, '&quot;') : ''}" style="flex:1;padding:8px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;font-size:0.82rem" />
+          <input type="url" class="prod-item-link" placeholder="Link de compra ou contato (https://...)" value="${link ? link.replace(/"/g, '&quot;') : ''}" style="flex:2;padding:8px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;font-size:0.82rem" />
+        </div>
+      `;
+      container.appendChild(itemEl);
+    }
+
+    // Salvar o Perfil com Dados Atualizados
     async function saveProfileForm(e) {
       if (e) e.preventDefault();
+
+      let username = document.getElementById('prof-input-user').value.trim();
+      if (!username) {
+        alert('Por favor, informe seu @usuário Pi.');
+        return;
+      }
+      if (!username.startsWith('@')) username = '@' + username;
 
       const bio = document.getElementById('prof-input-bio').value.trim();
       const wallet = document.getElementById('prof-input-wallet').value.trim();
       const whatsapp = document.getElementById('prof-input-whatsapp').value.trim();
       const social = document.getElementById('prof-input-social').value.trim();
+      const instagram = document.getElementById('prof-input-instagram').value.trim();
+      const twitter = document.getElementById('prof-input-twitter').value.trim();
 
-      const prodTitle = document.getElementById('prof-prod-title').value.trim();
-      const prodPrice = document.getElementById('prof-prod-price').value.trim();
-      const prodLink = document.getElementById('prof-prod-link').value.trim();
-
+      // Coleta lista dinâmica de produtos
+      const productElements = document.querySelectorAll('#prof-products-container .product-edit-item');
       const products = [];
-      if (prodTitle) {
-        products.push({ title: prodTitle, price: prodPrice, link: prodLink });
-      }
+      productElements.forEach(el => {
+        const title = el.querySelector('.prod-item-title').value.trim();
+        const price = el.querySelector('.prod-item-price').value.trim();
+        const link = el.querySelector('.prod-item-link').value.trim();
+        if (title || link) {
+          products.push({ title: title, price: price, link: link });
+        }
+      });
+
+      const btn = document.getElementById('btn-save-profile');
+      btn.disabled = true;
+      btn.textContent = '⏳ Salvando no Supabase...';
 
       try {
         if (window.IsarDB && window.IsarDB.savePioneerProfile) {
-          const res = await window.IsarDB.savePioneerProfile(currentPioneerUser, {
+          const res = await window.IsarDB.savePioneerProfile(username, {
             bio: bio,
             wallet_address: wallet,
             whatsapp_url: whatsapp,
             youtube_url: social,
+            instagram_url: instagram,
+            twitter_url: twitter,
             products: products
           });
 
-          if (res) {
-            alert('✓ Vitrine salva com sucesso!');
-            closeProfileEditModal();
-            loadPioneerProfile();
-          }
+          // Atualiza usuário ativo na sessão
+          setLoggedUser(username);
+          currentPioneerUser = username;
+          window.history.replaceState(null, '', `?u=${encodeURIComponent(username)}`);
+
+          alert('✓ Vitrine atualizada com sucesso!');
+          closeProfileEditModal();
+          loadPioneerProfile();
+        } else {
+          throw new Error('Módulo de banco de dados não disponível.');
         }
       } catch (err) {
         alert('Erro ao salvar vitrine: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '💾 Salvar Minha Vitrine';
       }
     }
 
     function copyWalletKey() {
       if (!currentPioneerWallet) {
-        alert('Chave pública não configurada para este pioneiro. Clique em "Editar Vitrine" para cadastrar.');
+        alert('Chave pública não configurada para este pioneiro. Clique em "Editar Minha Vitrine" para cadastrar.');
         return;
       }
       navigator.clipboard.writeText(currentPioneerWallet).then(() => {
@@ -463,12 +845,12 @@
       if (navigator.share) {
         navigator.share({
           title: document.title,
-          text: `Confira minha mini-página e meus anúncios aceitando Pi Network:`,
+          text: `Confira minha vitrine oficial e meus links aceitando Pi Network:`,
           url: shareUrl
         }).catch(() => {});
       } else {
         navigator.clipboard.writeText(shareUrl).then(() => {
-          alert('✓ Link copiado para a área de transferência! Cole no X ou WhatsApp.');
+          alert('✓ Link copiado para a área de transferência! Compartilhe no WhatsApp ou X.');
         });
       }
     }
