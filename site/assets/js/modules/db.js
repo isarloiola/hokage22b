@@ -502,24 +502,48 @@
     }
   }
 
-  // Salva o perfil completo do pioneiro (links sociais e mini-loja)
+  // Salva o perfil completo do pioneiro (avatar, links sociais e mini-loja)
   async function savePioneerProfile(username, profileData) {
     var db = getClient();
     if (!db || !username) return null;
 
     try {
-      var res = await db.rpc('pioneer_save_profile', {
-        p_username: username,
-        p_bio: profileData.bio || null,
-        p_wallet: profileData.wallet_address || null,
-        p_whatsapp: profileData.whatsapp_url || null,
-        p_youtube: profileData.youtube_url || null,
-        p_twitter: profileData.twitter_url || null,
-        p_instagram: profileData.instagram_url || null,
-        p_products: profileData.products || []
-      });
-      if (res.error) throw res.error;
-      return res.data;
+      var clean = username.replace('@', '').toLowerCase();
+      var updatePayload = {
+        uid: 'user_' + clean,
+        username: '@' + clean,
+        bio: profileData.bio || null,
+        avatar_url: profileData.avatar_url || null,
+        wallet_address: profileData.wallet_address || null,
+        whatsapp_url: profileData.whatsapp_url || null,
+        youtube_url: profileData.youtube_url || null,
+        twitter_url: profileData.twitter_url || null,
+        instagram_url: profileData.instagram_url || null,
+        checklist_state: {
+          showcase_zero: profileData.showcase_zero !== false,
+          showcase_mural: profileData.showcase_mural !== false
+        },
+        products: profileData.products || [],
+        updated_at: new Date().toISOString()
+      };
+
+      var res = await db.from('pioneiros').upsert(updatePayload, { onConflict: 'uid' });
+      if (res.error) {
+        // Fallback para RPC se necessário
+        var rpcRes = await db.rpc('pioneer_save_profile', {
+          p_username: username,
+          p_bio: profileData.bio || null,
+          p_wallet: profileData.wallet_address || null,
+          p_whatsapp: profileData.whatsapp_url || null,
+          p_youtube: profileData.youtube_url || null,
+          p_twitter: profileData.twitter_url || null,
+          p_instagram: profileData.instagram_url || null,
+          p_products: profileData.products || []
+        });
+        if (rpcRes.error) throw rpcRes.error;
+        return rpcRes.data;
+      }
+      return res.data || updatePayload;
     } catch (err) {
       console.warn('Erro ao salvar perfil do pioneiro:', err.message);
       return null;
@@ -539,7 +563,16 @@
         .ilike('username', '%' + clean + '%')
         .maybeSingle();
 
-      return res.data || null;
+      var data = res.data || null;
+      if (data && data.checklist_state) {
+        if (data.checklist_state.showcase_zero !== undefined) {
+          data.showcase_zero = data.checklist_state.showcase_zero;
+        }
+        if (data.checklist_state.showcase_mural !== undefined) {
+          data.showcase_mural = data.checklist_state.showcase_mural;
+        }
+      }
+      return data;
     } catch (err) {
       return null;
     }

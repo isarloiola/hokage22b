@@ -309,15 +309,16 @@
       box-shadow: 0 8px 28px rgba(245, 158, 11, 0.3);
     }
 
-    /* Cards de Produtos com Foto Real (Mobile-Optimized Sem Cortes) */
+    /* Cards de Produtos com Foto Real (Anti-Sobreposição Mobile 100%) */
     .product-mini-card {
       background: rgba(0, 0, 0, 0.55);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 16px;
-      padding: 14px;
+      padding: 14px 16px;
       display: flex;
       gap: 14px;
       align-items: center;
+      justify-content: space-between;
       transition: all 0.25s ease;
       text-align: left;
     }
@@ -327,9 +328,16 @@
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
     }
+    .product-card-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-width: 0;
+    }
     .product-thumb {
-      width: 62px;
-      height: 62px;
+      width: 60px;
+      height: 60px;
       border-radius: 12px;
       object-fit: cover;
       background: #18181b;
@@ -337,8 +345,8 @@
       flex-shrink: 0;
     }
     .product-thumb-fallback {
-      width: 62px;
-      height: 62px;
+      width: 60px;
+      height: 60px;
       border-radius: 12px;
       background: rgba(245, 158, 11, 0.15);
       border: 1px solid rgba(245, 158, 11, 0.3);
@@ -358,7 +366,8 @@
       font-weight: 700;
       display: block;
       line-height: 1.35;
-      word-break: break-word;
+      word-break: normal;
+      overflow-wrap: break-word;
       white-space: normal;
       margin-bottom: 4px;
     }
@@ -383,32 +392,48 @@
       border-radius: 10px;
       font-weight: 600;
     }
+    .product-action-btn {
+      flex-shrink: 0;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-    @media (max-width: 480px) {
+    @media (max-width: 520px) {
       .product-mini-card {
+        flex-direction: column;
+        align-items: stretch;
         padding: 12px;
         gap: 10px;
       }
+      .product-card-top {
+        gap: 12px;
+        width: 100%;
+      }
       .product-thumb, .product-thumb-fallback {
-        width: 52px;
-        height: 52px;
-        font-size: 1.5rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem;
       }
       .product-title {
-        font-size: 0.86rem;
+        font-size: 0.88rem;
+        line-height: 1.3;
       }
-      .product-mini-card .btn {
-        padding: 7px 11px;
-        font-size: 0.74rem;
-        white-space: nowrap;
+      .product-action-btn {
+        width: 100%;
+        padding: 9px 12px;
+        font-size: 0.82rem;
+        text-align: center;
       }
       .pioneer-link-btn {
         padding: 12px 14px;
         gap: 12px;
       }
       .pioneer-link-icon-wrap {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
       }
       .pioneer-link-heading {
         font-size: 0.86rem;
@@ -515,8 +540,11 @@
           </button>
         </form>
 
-        <!-- Simulador Interativo Totalmente Separado -->
-        <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:20px">
+        <!-- Exemplos e Simulador -->
+        <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;display:flex;flex-direction:column;gap:10px">
+          <a href="?u=hokage22b" class="btn btn-outline" style="width:100%;padding:12px;font-size:0.9rem;border-color:rgba(245,158,11,0.5);color:var(--amber-light);font-weight:700;text-decoration:none;display:block;text-align:center">
+            🌟 Ver Exemplo Real (@hokage22b) →
+          </a>
           <button type="button" onclick="startSimulatorMode()" class="btn btn-outline" style="width:100%;padding:12px;font-size:0.9rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
             🧪 Abrir Simulador Interativo (Testar sem Login) →
           </button>
@@ -539,8 +567,13 @@
           </button>
         </div>
 
-        <!-- Avatar do Pioneiro -->
-        <div class="pioneer-avatar" id="pioneer-avatar">π</div>
+        <!-- Avatar do Pioneiro (com botão de câmera se for Dono ou Modo Teste) -->
+        <div style="position:relative;width:96px;height:96px;margin:0 auto 16px">
+          <div class="pioneer-avatar" id="pioneer-avatar" style="margin:0">π</div>
+          <button type="button" id="btn-avatar-camera" onclick="triggerAvatarUpload()" title="Alterar foto de perfil" style="position:absolute;bottom:0;right:0;width:34px;height:34px;border-radius:50%;background:var(--accent);border:2px solid #fff;color:#fff;display:none;align-items:center;justify-content:center;font-size:0.95rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.6);transition:transform 0.2s ease" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+            📷
+          </button>
+        </div>
         
         <!-- Handle & Badges -->
         <h1 class="pioneer-handle" id="pioneer-handle">@carregando...</h1>
@@ -656,6 +689,23 @@
 
       <form id="profile-edit-form" onsubmit="saveProfileForm(event)">
         
+        <!-- Foto de Perfil com Cortador Interativo -->
+        <div class="form-group" style="margin-bottom:16px;text-align:center;background:rgba(255,255,255,0.03);padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08)">
+          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:8px;font-weight:700">Foto de Perfil</label>
+          <div style="display:flex;align-items:center;justify-content:center;gap:14px">
+            <div id="modal-avatar-preview" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg, var(--accent), var(--amber));background-size:cover;background-position:center;border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;color:#fff;box-shadow:0 0 16px rgba(139,92,246,0.3)">π</div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
+              <button type="button" class="btn btn-outline btn-sm" onclick="triggerAvatarUpload()" style="font-size:0.8rem;padding:7px 14px;border-color:var(--accent);color:var(--accent-light);font-weight:700">
+                📷 Escolher Foto &amp; Cortar
+              </button>
+              <button type="button" id="btn-remove-avatar" class="btn btn-outline btn-sm" onclick="removeAvatar()" style="font-size:0.75rem;padding:3px 10px;border-color:rgba(239,68,68,0.4);color:#ef4444;display:none">
+                ✕ Remover Foto
+              </button>
+            </div>
+          </div>
+          <input type="hidden" id="prof-input-avatar" value="" />
+        </div>
+
         <!-- Identificação do Usuário -->
         <div class="form-group" style="margin-bottom:14px">
           <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Seu @usuário Pi</label>
@@ -700,6 +750,21 @@
           </div>
         </div>
 
+        <!-- Opções de Destaques Comunitários na Vitrine -->
+        <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left">
+          <span style="font-size:0.78rem;font-weight:700;color:var(--amber-light);display:block;margin-bottom:8px">
+            🌟 Ajudar a Comunidade (Destaques no seu Linktree):
+          </span>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#fff;cursor:pointer;margin-bottom:8px">
+            <input type="checkbox" id="prof-check-zero" checked style="width:16px;height:16px;accent-color:var(--amber)" />
+            <span>Exibir card educativo <strong>📘 Pi Network do Zero</strong></span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#fff;cursor:pointer">
+            <input type="checkbox" id="prof-check-mural" checked style="width:16px;height:16px;accent-color:var(--amber)" />
+            <span>Exibir link da <strong>📢 Gazeta dos Pioneiros (Mural)</strong></span>
+          </label>
+        </div>
+
         <!-- Seção: Produtos com Fotos Reais & Cards Linktree -->
         <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:14px;margin-bottom:18px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
@@ -729,10 +794,47 @@
     </div>
   </div>
 
+  <!-- Input Invisível de Arquivo para Foto de Perfil -->
+  <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="handleAvatarFileSelect(event)" />
+
+  <!-- MODAL DO CORTADOR DE FOTO DE PERFIL (HTML5 CANVAS INTERATIVO) -->
+  <div class="pi-modal-overlay" id="avatar-crop-modal" role="dialog" aria-modal="true" style="z-index:10000;display:none">
+    <div class="pi-modal" style="max-width:380px;text-align:center;padding:24px 20px">
+      <div style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:4px">
+        ✂️ Ajustar Foto de Perfil
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:16px">
+        Arraste a foto para centralizar seu rosto/logo e use o zoom.
+      </p>
+
+      <!-- Viewport Circular com Máscara e Sombra -->
+      <div style="position:relative;width:240px;height:240px;margin:0 auto 16px;border-radius:50%;overflow:hidden;border:3px solid var(--accent);box-shadow:0 0 30px rgba(139,92,246,0.45);background:#09090b;cursor:grab;touch-action:none" id="crop-viewport">
+        <canvas id="crop-canvas" width="240" height="240" style="display:block;width:100%;height:100%"></canvas>
+      </div>
+
+      <!-- Barra de Controle de Zoom -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px;background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.08)">
+        <span style="font-size:0.75rem;color:var(--text-muted);font-weight:700">🔍 Zoom:</span>
+        <button type="button" class="btn btn-outline btn-sm" onclick="adjustCropZoom(-0.1)" style="padding:2px 10px;font-size:1rem;line-height:1">−</button>
+        <input type="range" id="crop-zoom-range" min="0.5" max="3" step="0.05" value="1" oninput="onCropZoomChange(this.value)" style="width:130px;accent-color:var(--accent);cursor:pointer" />
+        <button type="button" class="btn btn-outline btn-sm" onclick="adjustCropZoom(0.1)" style="padding:2px 10px;font-size:1rem;line-height:1">+</button>
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button type="button" class="btn btn-outline" onclick="closeAvatarCropModal()" style="flex:1;padding:11px;font-size:0.9rem">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" onclick="confirmAvatarCrop()" style="flex:1;padding:11px;font-size:0.9rem;font-weight:700">
+          ✓ Aplicar Foto
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="assets/js/modules/i18n.js?v=4.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/modules/db.js?v=4.2"></script>
+  <script src="assets/js/modules/db.js?v=4.3"></script>
 
   <script>
     // =========================================================================
@@ -1030,8 +1132,16 @@
 
       const username = cleanUsername(prof.username || currentPioneerUser || '@pioneiro');
       document.getElementById('pioneer-handle').textContent = username;
-      document.getElementById('pioneer-avatar').textContent = username.replace('@', '').charAt(0).toUpperCase() || 'π';
       document.title = `${username} — Vitrine Oficial na Pi Network | HOKAGE22B`;
+
+      // Renderiza Avatar (Foto com Cortador ou Letra Inicial)
+      applyAvatarOnScreen(prof.avatar_url, username);
+
+      // Mostra botão de câmera do avatar se for dono da vitrine ou simulador
+      const cameraBtn = document.getElementById('btn-avatar-camera');
+      if (cameraBtn) {
+        cameraBtn.style.display = isOwner ? 'flex' : 'none';
+      }
 
       const shortUrl = `hokage22b.com/@${username.replace(/^@+/, '')}`;
       const shortUrlEl = document.getElementById('pioneer-short-url');
@@ -1058,35 +1168,60 @@
       const linksList = document.getElementById('pioneer-links-list');
       let linksHtml = '';
 
-      // 1. Links em Destaque da Comunidade (ex: Pi Network do Zero e Mural)
-      if (Array.isArray(prof.featured_links) && prof.featured_links.length > 0) {
-        linksHtml += prof.featured_links.map(f => `
-          <a href="${f.url}" class="pioneer-link-btn pioneer-link-btn--featured">
+      // 1. Links em Destaque da Comunidade (Qualquer pioneiro pode ativar para ajudar a rede)
+      const showZero = (prof.showcase_zero !== false);
+      const showMural = (prof.showcase_mural !== false);
+
+      if (showZero) {
+        linksHtml += `
+          <a href="zero" class="pioneer-link-btn pioneer-link-btn--featured">
             <div class="pioneer-link-icon-wrap">
-              ${f.type === 'zero' ? '<span style="font-size:1.35rem">📘</span>' : '<span style="font-size:1.35rem">📢</span>'}
+              <span style="font-size:1.35rem">📘</span>
             </div>
             <div class="pioneer-link-content">
               <span class="pioneer-link-heading">
-                ${f.title}
-                ${f.badge ? `<span style="font-size:0.68rem;background:rgba(245,158,11,0.25);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:2px 8px;border-radius:10px;font-weight:700">${f.badge}</span>` : ''}
+                📘 Pi Network do Zero (Guia Iniciante)
+                <span style="font-size:0.68rem;background:rgba(245,158,11,0.25);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:2px 8px;border-radius:10px;font-weight:700">Trilha Grátis</span>
               </span>
-              <span class="pioneer-link-caption">${f.subtitle || ''}</span>
+              <span class="pioneer-link-caption">Aprenda do zero: carteira, blockchain e segurança anti-golpes</span>
             </div>
             <span class="pioneer-link-chevron">↗</span>
           </a>
-        `).join('');
+        `;
       }
 
-      // 2. Redes Sociais Oficiais com SVGs e Subtítulos
+      if (showMural) {
+        linksHtml += `
+          <a href="mural" class="pioneer-link-btn pioneer-link-btn--featured">
+            <div class="pioneer-link-icon-wrap">
+              <span style="font-size:1.35rem">📢</span>
+            </div>
+            <div class="pioneer-link-content">
+              <span class="pioneer-link-heading">
+                📢 Gazeta dos Pioneiros (Mural de Anúncios)
+                <span style="font-size:0.68rem;background:rgba(245,158,11,0.25);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:2px 8px;border-radius:10px;font-weight:700">Classificados P2P</span>
+              </span>
+              <span class="pioneer-link-caption">Divulgue sua loja, canal ou serviço para a comunidade</span>
+            </div>
+            <span class="pioneer-link-chevron">↗</span>
+          </a>
+        `;
+      }
+
+      // 2. Redes Sociais Oficiais Personalizadas com SVGs e Subtítulos
+      const isOfficialFounder = (username === '@hokage22b');
+
       if (prof.whatsapp_url) {
+        const waTitle = isOfficialFounder ? 'Comunidade &amp; Suporte no WhatsApp' : 'Falar no WhatsApp';
+        const waSub = isOfficialFounder ? 'Grupo VIP de Pioneiros · Dúvidas e Networking' : 'Atendimento direto e negociações com Pi';
         linksHtml += `
           <a href="${prof.whatsapp_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--whatsapp">
             <div class="pioneer-link-icon-wrap">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z"/></svg>
             </div>
             <div class="pioneer-link-content">
-              <span class="pioneer-link-heading">Comunidade &amp; Suporte no WhatsApp</span>
-              <span class="pioneer-link-caption">Grupo VIP de Pioneiros · Dúvidas e Networking</span>
+              <span class="pioneer-link-heading">${waTitle}</span>
+              <span class="pioneer-link-caption">${waSub}</span>
             </div>
             <span class="pioneer-link-chevron">↗</span>
           </a>
@@ -1094,14 +1229,16 @@
       }
 
       if (prof.youtube_url) {
+        const ytTitle = isOfficialFounder ? 'Canal Oficial no YouTube' : 'Canal no YouTube';
+        const ytSub = isOfficialFounder ? '@justhokage22b · Análises, tutoriais e Web3' : 'Vídeos e novidades da comunidade';
         linksHtml += `
           <a href="${prof.youtube_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--youtube">
             <div class="pioneer-link-icon-wrap">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </div>
             <div class="pioneer-link-content">
-              <span class="pioneer-link-heading">Canal Oficial no YouTube</span>
-              <span class="pioneer-link-caption">@justhokage22b · Análises, tutoriais e Web3</span>
+              <span class="pioneer-link-heading">${ytTitle}</span>
+              <span class="pioneer-link-caption">${ytSub}</span>
             </div>
             <span class="pioneer-link-chevron">↗</span>
           </a>
@@ -1109,14 +1246,16 @@
       }
 
       if (prof.instagram_url) {
+        const igTitle = isOfficialFounder ? 'Instagram @hokage22b' : 'Perfil no Instagram';
+        const igSub = isOfficialFounder ? 'Bastidores, novidades e alertas rápidos' : 'Fotos, novidades e contato diário';
         linksHtml += `
           <a href="${prof.instagram_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--instagram">
             <div class="pioneer-link-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
             </div>
             <div class="pioneer-link-content">
-              <span class="pioneer-link-heading">Instagram @hokage22b</span>
-              <span class="pioneer-link-caption">Bastidores, novidades e alertas rápidos</span>
+              <span class="pioneer-link-heading">${igTitle}</span>
+              <span class="pioneer-link-caption">${igSub}</span>
             </div>
             <span class="pioneer-link-chevron">↗</span>
           </a>
@@ -1124,14 +1263,16 @@
       }
 
       if (prof.twitter_url) {
+        const twTitle = isOfficialFounder ? 'Perfil Oficial no Twitter / X' : 'Perfil no Twitter / X';
+        const twSub = isOfficialFounder ? '@hokage22b · Informações da Open Mainnet' : 'Atualizações e opiniões na rede';
         linksHtml += `
           <a href="${prof.twitter_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--twitter">
             <div class="pioneer-link-icon-wrap">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </div>
             <div class="pioneer-link-content">
-              <span class="pioneer-link-heading">Perfil Oficial no Twitter / X</span>
-              <span class="pioneer-link-caption">@hokage22b · Informações da Open Mainnet</span>
+              <span class="pioneer-link-heading">${twTitle}</span>
+              <span class="pioneer-link-caption">${twSub}</span>
             </div>
             <span class="pioneer-link-chevron">↗</span>
           </a>
@@ -1144,24 +1285,26 @@
         </div>
       `;
 
-      // Produtos com Fotos Reais (Sem cortes no celular)
+      // Produtos com Fotos Reais (Sem cortes nem sobreposição de letras no celular)
       const productsSection = document.getElementById('pioneer-products-section');
       const productsList = document.getElementById('pioneer-products-list');
 
       if (Array.isArray(prof.products) && prof.products.length > 0) {
         productsList.innerHTML = prof.products.map(p => `
           <div class="product-mini-card">
-            ${p.image_url 
-              ? `<img src="${p.image_url}" alt="${p.title}" class="product-thumb" />` 
-              : `<div class="product-thumb-fallback">🛍️</div>`}
-            <div class="product-info">
-              <strong class="product-title">${p.title || 'Produto / Oferta'}</strong>
-              <div class="product-meta-row">
-                <span class="product-price">${p.price || 'Sob Consulta'}</span>
-                ${p.badge ? `<span class="product-badge-pill">${p.badge}</span>` : ''}
+            <div class="product-card-top">
+              ${p.image_url 
+                ? `<img src="${p.image_url}" alt="${p.title}" class="product-thumb" />` 
+                : `<div class="product-thumb-fallback">🛍️</div>`}
+              <div class="product-info">
+                <strong class="product-title">${p.title || 'Produto / Oferta'}</strong>
+                <div class="product-meta-row">
+                  <span class="product-price">${p.price || 'Sob Consulta'}</span>
+                  ${p.badge ? `<span class="product-badge-pill">${p.badge}</span>` : ''}
+                </div>
               </div>
             </div>
-            ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="flex-shrink:0;white-space:nowrap">${p.cta || 'Acessar →'}</a>` : ''}
+            ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" class="btn btn-primary btn-sm product-action-btn">${p.cta || 'Acessar →'}</a>` : ''}
           </div>
         `).join('');
         productsSection.style.display = 'block';
@@ -1260,7 +1403,31 @@
       } else {
         if (previewBtn) previewBtn.style.display = 'none';
         if (saveBtn) saveBtn.textContent = '💾 Salvar Oficialmente na Pi Network';
-        if (subTitle) subTitle.textContent = 'Configure sua bio, carteira Pi, links de contato e produtos com fotos.';
+        if (subTitle) subTitle.textContent = 'Configure sua bio, foto de perfil, carteira Pi, contatos e produtos.';
+      }
+
+      // Foto de Perfil no Modal
+      const modalAvatarPrev = document.getElementById('modal-avatar-preview');
+      const modalAvatarPlaceholder = document.getElementById('modal-avatar-placeholder');
+      const btnRemoveAvatar = document.getElementById('btn-remove-avatar');
+      const inputAvatar = document.getElementById('prof-input-avatar');
+
+      const existingAvatar = (currentProfileData && currentProfileData.avatar_url) ? currentProfileData.avatar_url : '';
+      if (inputAvatar) inputAvatar.value = existingAvatar;
+
+      if (existingAvatar && modalAvatarPrev) {
+        modalAvatarPrev.src = existingAvatar;
+        modalAvatarPrev.style.display = 'block';
+        if (modalAvatarPlaceholder) modalAvatarPlaceholder.style.display = 'none';
+        if (btnRemoveAvatar) btnRemoveAvatar.style.display = 'inline-block';
+      } else if (modalAvatarPrev) {
+        modalAvatarPrev.src = '';
+        modalAvatarPrev.style.display = 'none';
+        if (modalAvatarPlaceholder) {
+          modalAvatarPlaceholder.style.display = 'flex';
+          modalAvatarPlaceholder.textContent = activeUser.replace('@', '').charAt(0).toUpperCase() || 'π';
+        }
+        if (btnRemoveAvatar) btnRemoveAvatar.style.display = 'none';
       }
 
       if (currentProfileData) {
@@ -1271,6 +1438,12 @@
         document.getElementById('prof-input-instagram').value = currentProfileData.instagram_url || '';
         document.getElementById('prof-input-twitter').value = currentProfileData.twitter_url || '';
       }
+
+      // Checkboxes de Destaque da Comunidade (Qualquer Pioneiro pode ativar/desativar)
+      const checkZero = document.getElementById('prof-check-zero');
+      const checkMural = document.getElementById('prof-check-mural');
+      if (checkZero) checkZero.checked = (!currentProfileData || currentProfileData.showcase_zero !== false);
+      if (checkMural) checkMural.checked = (!currentProfileData || currentProfileData.showcase_mural !== false);
 
       // Preenche produtos com suporte a fotos
       const container = document.getElementById('prof-products-container');
@@ -1356,6 +1529,10 @@
       const instagram = document.getElementById('prof-input-instagram').value.trim();
       const twitter = document.getElementById('prof-input-twitter').value.trim();
 
+      const avatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
+      const showcaseZero = document.getElementById('prof-check-zero') ? document.getElementById('prof-check-zero').checked : true;
+      const showcaseMural = document.getElementById('prof-check-mural') ? document.getElementById('prof-check-mural').checked : true;
+
       const productElements = document.querySelectorAll('#prof-products-container .product-edit-item');
       const products = [];
       productElements.forEach(el => {
@@ -1371,11 +1548,14 @@
       currentProfileData = {
         username: username,
         bio: bio,
+        avatar_url: avatarUrl,
         wallet_address: wallet,
         whatsapp_url: whatsapp,
         youtube_url: social,
         instagram_url: instagram,
         twitter_url: twitter,
+        showcase_zero: showcaseZero,
+        showcase_mural: showcaseMural,
         products: products
       };
 
@@ -1439,6 +1619,10 @@
       const instagram = document.getElementById('prof-input-instagram').value.trim();
       const twitter = document.getElementById('prof-input-twitter').value.trim();
 
+      const avatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
+      const showcaseZero = document.getElementById('prof-check-zero') ? document.getElementById('prof-check-zero').checked : true;
+      const showcaseMural = document.getElementById('prof-check-mural') ? document.getElementById('prof-check-mural').checked : true;
+
       const productElements = document.querySelectorAll('#prof-products-container .product-edit-item');
       const products = [];
       productElements.forEach(el => {
@@ -1459,11 +1643,14 @@
         if (window.IsarDB && window.IsarDB.savePioneerProfile) {
           await window.IsarDB.savePioneerProfile(username, {
             bio: bio,
+            avatar_url: avatarUrl,
             wallet_address: wallet,
             whatsapp_url: whatsapp,
             youtube_url: social,
             instagram_url: instagram,
             twitter_url: twitter,
+            showcase_zero: showcaseZero,
+            showcase_mural: showcaseMural,
             products: products
           });
 
@@ -1483,6 +1670,278 @@
       } finally {
         btn.disabled = false;
         btn.textContent = '💾 Salvar Oficialmente na Pi Network';
+      }
+    }
+
+    // ==========================================
+    // CORTADOR DE FOTO DE PERFIL (HTML5 CANVAS)
+    // ==========================================
+    let cropImg = new Image();
+    let cropState = {
+      x: 0,
+      y: 0,
+      zoom: 1,
+      minZoom: 0.5,
+      maxZoom: 3,
+      isDragging: false,
+      startX: 0,
+      startY: 0,
+      lastX: 0,
+      lastY: 0
+    };
+
+    function triggerAvatarUpload() {
+      const input = document.getElementById('avatar-file-input');
+      if (input) {
+        input.value = '';
+        input.click();
+      }
+    }
+
+    function handleAvatarFileSelect(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione um arquivo de imagem válido (JPG, PNG ou WEBP).');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        cropImg = new Image();
+        cropImg.onload = function() {
+          openAvatarCropModal();
+        };
+        cropImg.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function openAvatarCropModal() {
+      const modal = document.getElementById('avatar-crop-modal');
+      const canvas = document.getElementById('crop-canvas');
+      const zoomRange = document.getElementById('crop-zoom-range');
+      if (!modal || !canvas) return;
+
+      // Calcula zoom inicial ideal para preencher o canvas de 240x240
+      const side = Math.min(cropImg.width, cropImg.height);
+      const baseScale = 240 / side;
+      cropState.zoom = Math.max(baseScale, 1);
+      cropState.x = (240 - cropImg.width * cropState.zoom) / 2;
+      cropState.y = (240 - cropImg.height * cropState.zoom) / 2;
+      cropState.isDragging = false;
+
+      if (zoomRange) {
+        zoomRange.min = (baseScale * 0.7).toFixed(2);
+        zoomRange.max = (baseScale * 3.5).toFixed(2);
+        zoomRange.value = cropState.zoom.toFixed(2);
+      }
+
+      setupCropCanvasEvents();
+      drawCropCanvas();
+      modal.style.display = 'flex';
+    }
+
+    function closeAvatarCropModal() {
+      const modal = document.getElementById('avatar-crop-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function drawCropCanvas() {
+      const canvas = document.getElementById('crop-canvas');
+      if (!canvas || !cropImg.complete) return;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      // Fundo escuro
+      ctx.fillStyle = '#09090b';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Desenha imagem com transformações
+      ctx.drawImage(
+        cropImg,
+        cropState.x,
+        cropState.y,
+        cropImg.width * cropState.zoom,
+        cropImg.height * cropState.zoom
+      );
+      ctx.restore();
+    }
+
+    function onCropZoomChange(val) {
+      const newZoom = parseFloat(val);
+      const canvas = document.getElementById('crop-canvas');
+      if (!canvas) return;
+
+      // Faz zoom mantendo o centro do canvas
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      const prevZoom = cropState.zoom;
+      cropState.x = centerX - ((centerX - cropState.x) / prevZoom) * newZoom;
+      cropState.y = centerY - ((centerY - cropState.y) / prevZoom) * newZoom;
+      cropState.zoom = newZoom;
+
+      drawCropCanvas();
+    }
+
+    function adjustCropZoom(delta) {
+      const zoomRange = document.getElementById('crop-zoom-range');
+      if (!zoomRange) return;
+      let next = parseFloat(zoomRange.value) + delta;
+      next = Math.max(parseFloat(zoomRange.min), Math.min(parseFloat(zoomRange.max), next));
+      zoomRange.value = next.toFixed(2);
+      onCropZoomChange(next);
+    }
+
+    let isCropEventsInitialized = false;
+    function setupCropCanvasEvents() {
+      if (isCropEventsInitialized) return;
+      const viewport = document.getElementById('crop-viewport');
+      if (!viewport) return;
+
+      function getPointerPos(e) {
+        if (e.touches && e.touches.length > 0) {
+          return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+        return { x: e.clientX, y: e.clientY };
+      }
+
+      function onStart(e) {
+        e.preventDefault();
+        cropState.isDragging = true;
+        viewport.style.cursor = 'grabbing';
+        const p = getPointerPos(e);
+        cropState.startX = p.x;
+        cropState.startY = p.y;
+        cropState.lastX = cropState.x;
+        cropState.lastY = cropState.y;
+      }
+
+      function onMove(e) {
+        if (!cropState.isDragging) return;
+        e.preventDefault();
+        const p = getPointerPos(e);
+        const dx = p.x - cropState.startX;
+        const dy = p.y - cropState.startY;
+        cropState.x = cropState.lastX + dx;
+        cropState.y = cropState.lastY + dy;
+        drawCropCanvas();
+      }
+
+      function onEnd(e) {
+        if (!cropState.isDragging) return;
+        cropState.isDragging = false;
+        viewport.style.cursor = 'grab';
+      }
+
+      // Mouse events
+      viewport.addEventListener('mousedown', onStart);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+
+      // Touch events (Mobile friendly)
+      viewport.addEventListener('touchstart', onStart, { passive: false });
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('touchend', onEnd);
+      window.addEventListener('touchcancel', onEnd);
+
+      // Mouse wheel zoom
+      viewport.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 0.08 : -0.08;
+        adjustCropZoom(delta);
+      }, { passive: false });
+
+      isCropEventsInitialized = true;
+    }
+
+    function confirmAvatarCrop() {
+      const canvas = document.getElementById('crop-canvas');
+      if (!canvas) return;
+
+      // Gera um canvas limpo 256x256 de alta resolução para salvar
+      const outCanvas = document.createElement('canvas');
+      outCanvas.width = 256;
+      outCanvas.height = 256;
+      const outCtx = outCanvas.getContext('2d');
+
+      // Desenha com proporção exata escalada de 240 para 256
+      outCtx.drawImage(
+        canvas,
+        0, 0, 240, 240,
+        0, 0, 256, 256
+      );
+
+      // Converte para JPEG com qualidade 0.85 (leve, ~15KB)
+      const croppedDataUrl = outCanvas.toDataURL('image/jpeg', 0.85);
+
+      // Atualiza input escondido do modal de edição
+      const inputAvatar = document.getElementById('prof-input-avatar');
+      if (inputAvatar) inputAvatar.value = croppedDataUrl;
+
+      // Atualiza prévia no modal de edição
+      const modalAvatarPrev = document.getElementById('modal-avatar-preview');
+      const modalAvatarPlaceholder = document.getElementById('modal-avatar-placeholder');
+      const btnRemoveAvatar = document.getElementById('btn-remove-avatar');
+      if (modalAvatarPrev) {
+        modalAvatarPrev.src = croppedDataUrl;
+        modalAvatarPrev.style.display = 'block';
+        if (modalAvatarPlaceholder) modalAvatarPlaceholder.style.display = 'none';
+        if (btnRemoveAvatar) btnRemoveAvatar.style.display = 'inline-block';
+      }
+
+      // Aplica imediatamente na vitrine
+      applyAvatarOnScreen(croppedDataUrl, currentPioneerUser);
+      if (currentProfileData) {
+        currentProfileData.avatar_url = croppedDataUrl;
+      }
+
+      closeAvatarCropModal();
+
+      // Se o modal de edição não estiver aberto, abre para o usuário ver e salvar oficialmente
+      const editModal = document.getElementById('edit-profile-modal');
+      if (editModal && !editModal.classList.contains('active')) {
+        openProfileEditModal();
+      }
+    }
+
+    function removeAvatar() {
+      const inputAvatar = document.getElementById('prof-input-avatar');
+      if (inputAvatar) inputAvatar.value = '';
+
+      const modalAvatarPrev = document.getElementById('modal-avatar-preview');
+      const modalAvatarPlaceholder = document.getElementById('modal-avatar-placeholder');
+      const btnRemoveAvatar = document.getElementById('btn-remove-avatar');
+
+      if (modalAvatarPrev) {
+        modalAvatarPrev.src = '';
+        modalAvatarPrev.style.display = 'none';
+      }
+      if (modalAvatarPlaceholder) {
+        modalAvatarPlaceholder.style.display = 'flex';
+        modalAvatarPlaceholder.textContent = (currentPioneerUser || '@p').replace('@', '').charAt(0).toUpperCase() || 'π';
+      }
+      if (btnRemoveAvatar) btnRemoveAvatar.style.display = 'none';
+
+      applyAvatarOnScreen('', currentPioneerUser);
+      if (currentProfileData) {
+        currentProfileData.avatar_url = '';
+      }
+    }
+
+    function applyAvatarOnScreen(avatarUrl, username) {
+      const avatarEl = document.getElementById('pioneer-avatar');
+      if (!avatarEl) return;
+
+      if (avatarUrl) {
+        avatarEl.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" />`;
+      } else {
+        const clean = cleanUsername(username || currentPioneerUser || '@p');
+        const initial = clean.replace('@', '').charAt(0).toUpperCase() || 'π';
+        avatarEl.innerHTML = `<span style="font-size:2.4rem;font-weight:800;color:var(--accent-light)">${initial}</span>`;
       }
     }
 
