@@ -123,7 +123,7 @@
 
         <nav class="portal-nav-desktop" aria-label="Navegação Principal">
           <li><a href="#hero">Início</a></li>
-          <li><a href="#diferencial-kyc" style="color:#10b981;font-weight:700">🛡️ 100% Anti-Bot</a></li>
+          <li><a href="zero" style="color:var(--amber-light);font-weight:700">📘 Pi do Zero</a></li>
           <li><a href="pioneiro" style="color:var(--accent-light);font-weight:700">👤 Vitrine (Grátis)</a></li>
           <li><a href="mural" style="color:var(--amber-light);font-weight:700">📢 Mural dos Pioneiros</a></li>
           <li><a href="#comece-aqui">Comece Aqui</a></li>
@@ -173,6 +173,10 @@
 
     <div class="portal-drawer__nav">
       <a href="#hero">Início</a>
+      <a href="zero" style="color:var(--amber-light);font-weight:700;display:flex;align-items:center;justify-content:space-between">
+        <span>📘 Pi Network do Zero (Guia Iniciante)</span>
+        <span style="font-size:0.75rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);padding:2px 8px;border-radius:12px;color:var(--amber-light)">Aprenda</span>
+      </a>
       <a href="#diferencial-kyc" style="color:#10b981;font-weight:700">🛡️ 100% Anti-Bot (Pi KYC)</a>
       <a href="pioneiro" style="color:var(--accent-light);font-weight:700;display:flex;align-items:center;justify-content:space-between">
         <span>👤 Vitrine do Pioneiro (Linktree Web3)</span>
@@ -230,8 +234,11 @@
             <a href="pioneiro" class="portal-btn portal-btn--primary" style="padding:14px 28px;font-size:1rem;font-weight:700">
               👤 Criar Minha Vitrine Grátis →
             </a>
-            <a href="mural" class="portal-btn portal-btn--amber" style="padding:14px 26px;font-size:1rem;font-weight:700">
-              📢 Gazeta dos Pioneiros (Mural) ↗
+            <a href="zero" class="portal-btn portal-btn--amber" style="padding:14px 24px;font-size:1rem;font-weight:700">
+              📘 Pi do Zero (Guia Iniciante) →
+            </a>
+            <a href="mural" class="portal-btn portal-btn--outline" style="padding:14px 20px;font-size:0.95rem">
+              📢 Gazeta dos Pioneiros ↗
             </a>
             <a href="#diferencial-kyc" class="portal-btn portal-btn--outline" style="padding:14px 20px;font-size:0.95rem">
               🛡️ Por que é Seguro?
@@ -412,6 +419,37 @@
         </div>
 
         <div class="portal-start-grid">
+          <!-- CARD 0: PI NETWORK DO ZERO (NOVO / DESTAQUE PRINCIPAL PARA INICIANTES) -->
+          <article class="start-card start-card--featured" style="display:flex;flex-direction:column;justify-content:space-between;border-color:rgba(245,158,11,0.5);background:linear-gradient(180deg, rgba(35,22,10,0.95), rgba(13,13,20,0.98))">
+            <div>
+              <div style="background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(139,92,246,0.15));border-radius:var(--radius-sm);padding:24px 14px;text-align:center;margin-bottom:16px;border:1px solid rgba(245,158,11,0.35)">
+                <span style="font-size:2.8rem;display:block;margin-bottom:6px">📘</span>
+                <span style="font-size:0.75rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:3px 10px;border-radius:12px;font-weight:700">Trilha Gratuita · 6 Módulos</span>
+              </div>
+              <div class="start-card__top">
+                <div class="start-card__icon" aria-hidden="true" style="color:var(--amber-light)">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                </div>
+                <span class="start-card__badge start-card__badge--amber">Iniciantes</span>
+              </div>
+              <h3 class="start-card__title">Pi Network do Zero</h3>
+              <p class="start-card__desc">
+                Nunca mexeu com cripto? Aprenda o que é Pi, como funciona a Pi Wallet, proteção de senhas, blockchain e como participar com segurança.
+              </p>
+              <ul class="start-card__meta-list">
+                <li>✓ Didática 100% simples sem jargões confusos</li>
+                <li>✓ Guia completo da Pi Wallet &amp; Passphrase</li>
+                <li>✓ Checklist de proteção contra golpes</li>
+              </ul>
+            </div>
+            <a href="zero" class="portal-btn portal-btn--amber portal-btn--sm" style="width:100%;margin-top:14px;text-align:center;font-weight:700">
+              Aprender Pi do Zero →
+            </a>
+          </article>
+
           <!-- CARD 1: VITRINE DO PIONEIRO (LINKTREE WEB3) -->
           <article class="start-card start-card--featured" style="display:flex;flex-direction:column;justify-content:space-between;border-color:rgba(139,92,246,0.45);background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98))">
             <div>
@@ -1203,11 +1241,13 @@
           <h4>Navegação</h4>
           <ul class="footer-links">
             <li><a href="#hero">Início</a></li>
+            <li><a href="zero" style="color:var(--amber-light);font-weight:700">📘 Pi Network do Zero</a></li>
+            <li><a href="pioneiro">Vitrine do Pioneiro</a></li>
+            <li><a href="mural">Mural de Anúncios</a></li>
             <li><a href="#comece-aqui">Comece Aqui</a></li>
             <li><a href="#produtos">Produtos Digitais</a></li>
             <li><a href="#universo">Universo Digital</a></li>
             <li><a href="#conteudo">Conteúdo Recente</a></li>
-            <li><a href="mural">Mural de Anúncios</a></li>
           </ul>
         </div>
 

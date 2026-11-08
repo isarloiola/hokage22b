@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pi Network do Zero — O Guia Definitivo e Descomplicado | HOKAGE22B</title>
+  <meta name="description" content="Aprenda do zero como funciona a Pi Network, como criar e proteger sua Pi Wallet, o que é passphrase e como participar da economia descentralizada com segurança." />
+  <link rel="canonical" href="https://hokage22b.com/zero" />
+
+  <!-- Open Graph / WhatsApp / Facebook -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://hokage22b.com/zero" />
+  <meta property="og:title" content="Pi Network do Zero — Guia Prático para Iniciantes | HOKAGE22B" />
+  <meta property="og:description" content="Entenda de forma simples o que é Pi, como funciona a Pi Wallet, proteção da sua passphrase e como usar Pi no comércio real." />
+  <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png" />
+  <meta property="og:site_name" content="HOKAGE22B" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@hokage22b" />
+  <meta name="twitter:title" content="Pi Network do Zero — Guia Educativo Oficial" />
+  <meta name="twitter:description" content="Trilha de aprendizado progressiva: do que é Pi Network até o domínio da sua Pi Wallet e segurança anti-golpes." />
+  <meta name="twitter:image" content="https://hokage22b.com/assets/img/og-image.png" />
+
+  <!-- Security Hardening Headers (Client-Side) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
+
+  <!-- Clean URLs (Remove .html da barra de endereços) -->
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
+  <link rel="stylesheet" href="assets/css/style.css?v=4.2" />
+
+  <style>
+    /* Estilos Específicos para o Hub Educativo Pi do Zero */
+    .zero-hero {
+      padding: 110px 0 60px;
+      background: radial-gradient(circle at 50% 15%, rgba(139, 92, 246, 0.12) 0%, transparent 65%);
+      border-bottom: 1px solid var(--border-subtle);
+      text-align: center;
+      position: relative;
+    }
+    .zero-progress-bar-container {
+      position: sticky;
+      top: 60px;
+      z-index: 90;
+      background: rgba(9, 9, 11, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 16px;
+    }
+    .zero-progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .zero-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--amber));
+      transition: width 0.3s ease;
+    }
+    .modules-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin: 28px 0;
+    }
+    .module-nav-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 16px 18px;
+      text-decoration: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.25s ease;
+    }
+    .module-nav-card:hover {
+      border-color: var(--accent);
+      background: rgba(139, 92, 246, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.25);
+    }
+    .module-nav-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--accent-light);
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .edu-content-block {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 36px 32px;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    @media (max-width: 640px) {
+      .edu-content-block {
+        padding: 24px 18px;
+      }
+    }
+    .edu-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .edu-alert-box {
+      border-radius: 14px;
+      padding: 20px;
+      margin: 24px 0;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .edu-alert-danger {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fff;
+    }
+    .edu-alert-info {
+      background: rgba(139, 92, 246, 0.08);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      color: #fff;
+    }
+    .edu-alert-tip {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #fff;
+    }
+    .concept-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .concept-mini-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
+    }
+    .comparison-table th {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--accent-light);
+      font-weight: 700;
+    }
+    .faq-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+    .faq-question {
+      padding: 18px 20px;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .faq-question:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .faq-answer {
+      padding: 0 20px 18px;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      display: none;
+    }
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+    .faq-item.active .faq-toggle-icon {
+      transform: rotate(45deg);
+    }
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .glossary-card {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .security-checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+    .security-checklist-item:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .security-checklist-item input {
+      margin-top: 3px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: #10b981;
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-bg" class="particles-bg" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden"></div>
+
+  <!-- Header / Navbar -->
+  <header class="portal-header" id="portal-header">
+    <div class="portal-container">
+      <div class="portal-header__inner">
+        <a href="./" class="portal-brand" aria-label="HOKAGE22B Início">
+          <span>HOKAGE22B</span>
+          <span class="portal-brand__dot" aria-hidden="true"></span>
+        </a>
+
+        <nav class="portal-nav-desktop" aria-label="Navegação Principal">
+          <li><a href="./">Início</a></li>
+          <li><a href="zero" style="color:var(--amber-light);font-weight:700">📘 Pi do Zero</a></li>
+          <li><a href="pioneiro" style="color:var(--accent-light);font-weight:700">👤 Vitrine</a></li>
+          <li><a href="mural">📢 Mural</a></li>
+          <li><a href="./#produtos">E-books</a></li>
+          <li><a href="./#comunidade">Comunidade</a></li>
+        </nav>
+
+        <div class="portal-header__actions">
+          <div class="lang-mount-point"></div>
+          <a href="./" class="portal-btn portal-btn--outline portal-btn--sm">
+            ← Voltar ao Portal
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra Fixa de Progresso de Leitura -->
+  <div class="zero-progress-bar-container">
+    <div class="portal-container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <span style="font-size:0.8rem;color:var(--text-secondary);font-weight:600" id="progress-text">
+        📖 Trilha Educativa: Módulo 1 de 6
+      </span>
+      <span style="font-size:0.75rem;color:var(--amber-light);font-weight:700" id="progress-percent">
+        0% Concluído
+      </span>
+    </div>
+    <div class="portal-container">
+      <div class="zero-progress-track">
+        <div class="zero-progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="zero-hero">
+      <div class="portal-container" style="max-width:840px">
+        <span class="edu-badge-tag" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light)">
+          🎓 Trilha de Formação Oficial · Gratuita &amp; Sem Jargões
+        </span>
+        <h1 style="font-size:clamp(2.1rem, 5vw, 3.6rem);font-weight:800;letter-spacing:-0.03em;color:#fff;margin:12px 0 16px;line-height:1.15">
+          Pi Network do Zero
+        </h1>
+        <p style="font-size:clamp(1.05rem, 2vw, 1.25rem);color:var(--text-secondary);line-height:1.6;margin-bottom:28px">
+          Tudo o que você precisa saber para entender o projeto, dominar a sua <strong>Pi Wallet</strong>, proteger suas <strong>24 palavras secretas</strong> e participar da nova economia digital com total segurança.
+        </p>
+
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:32px">
+          <a href="#modulo-1" class="portal-btn portal-btn--primary">
+            Começar do Módulo 1 ↓
+          </a>
+          <a href="#modulo-3" class="portal-btn portal-btn--amber">
+            🔑 Ir Direto para a Pi Wallet
+          </a>
+          <a href="#glossario" class="portal-btn portal-btn--outline">
+            📖 Glossário de Termos
+          </a>
+        </div>
+
+        <!-- Grade Rápida de Módulos (Menu de Acesso) -->
+        <div class="modules-nav-grid">
+          <a href="#modulo-1" class="module-nav-card">
+            <span class="module-nav-number">1</span>
+            <div style="text-align:left">
+              <strong style="display:block;font-size:0.95rem">O que é Pi Network?</strong>
+              <small style="color:var(--text-muted);font-size:0.75rem">Fundamentos e objetivos</small>
+            </div>
+          </a>
+          <a href="#modulo-2" class="module-nav-card">
+            <span class="module-nav-number">2</span>
+            <div style="text-align:left">
+              <strong style="display:block;font-size:0.95rem">Os 3 Aplicativos</strong>
+              <small style="color:var(--text-muted);font-size:0.75rem">App, Browser e Wallet</small>
+            </div>
+          </a>
+          <a href="#modulo-3" class="module-nav-card" style="border-color:rgba(245,158,11,0.4)">
+            <span class="module-nav-number" style="background:rgba(245,158,11,0.2);color:var(--amber-light);border-color:var(--amber)">3</span>
+            <div style="text-align:left">
+              <strong style="display:block;font-size:0.95rem;color:var(--amber-light)">A Pi Wallet &amp; Senha</strong>
+              <small style="color:var(--text-muted);font-size:0.75rem">Passphrase, saldos e envio</small>
+            </div>
+          </a>
+          <a href="#modulo-4" class="module-nav-card">
+            <span class="module-nav-number">4</span>
+            <div style="text-align:left">
+              <strong style="display:block;font-size:0.95rem">Entendendo a Blockchain</strong>
+              <small style="color:var(--text-muted);font-size:0.75rem">Como funcionam transações</small>
+            </div>
+          </a>
+          <a href="#modulo-5" class="module-nav-card">
+            <span class="module-nav-number">5</span>
+            <div style="text-align:left">
+              <strong style="display:block;font-size:0.95rem">O que fazer com Pi?</strong>
+              <small style="color:var(--text-muted);font-size:0.75rem">Comércio, dApps e P2P</small>
+            </div>
+          </a>
+          <a href="#modulo-6" class="module-nav-card" style="border-color:rgba(239,68,68,0.4)">
+            <span class="module-nav-number" style="background:rgba(239,68,68,0.2);color:#f87171;border-color:#ef4444">6</span>
+            <div style="text-align:left">
+              <strong style="display:block;font-size:0.95rem;color:#f87171">Segurança Anti-Golpes</strong>
+              <small style="color:var(--text-muted);font-size:0.75rem">Blindagem contra fraudes</small>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTAINER PRINCIPAL DO CONTEÚDO -->
+    <div class="portal-container" style="max-width:880px;padding-top:40px">
+
+      <!-- ======================================================== -->
+      <!-- MÓDULO 1: O QUE É PI NETWORK?                            -->
+      <!-- ======================================================== -->
+      <section class="edu-content-block" id="modulo-1">
+        <span class="edu-badge-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-light)">
+          Módulo 1 de 6 · Conceitos Fundamentais
+        </span>
+        <h2 style="font-size:1.8rem;color:#fff;margin-bottom:16px">
+          1. O que é a Pi Network e por que ela existe?
+        </h2>
+        
+        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          Para entender a <strong>Pi Network</strong>, pense em como o dinheiro evoluiu. No passado usávamos ouro; depois, notas de papel emitidas por governos; e recentemente, pagamentos digitais como cartões e o Pix.
+        </p>
+        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+          As criptomoedas como o Bitcoin surgiram para criar um dinheiro que não dependesse de bancos centrais. Porém, o Bitcoin tornou-se inacessível para a maioria das pessoas: minerá-lo exige supercomputadores caríssimos e consome quantidades absurdas de energia elétrica.
+        </p>
+
+        <!-- Box Conceitual -->
+        <div class="concept-card-grid">
+          <div class="concept-mini-card">
+            <div style="font-size:1.8rem;margin-bottom:8px">🎓</div>
+            <strong style="color:#fff;display:block;margin-bottom:6px">Criada em Stanford</strong>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Desenvolvida por doutores da Universidade de Stanford (Dr. Nicolas Kokkalis e Dra. Chengdiao Fan) com o objetivo de tornar a criptoeconomia acessível a qualquer pessoa comum.
+            </p>
+          </div>
+          <div class="concept-mini-card">
+            <div style="font-size:1.8rem;margin-bottom:8px">📱</div>
+            <strong style="color:#fff;display:block;margin-bottom:6px">Mineração pelo Celular</strong>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Não gasta bateria, não consome seu plano de dados móveis e não esquenta o aparelho. Basta um toque a cada 24 horas para comprovar que você é um ser humano ativo.
+            </p>
+          </div>
+        </div>
+
+        <h3 style="font-size:1.25rem;color:#fff;margin:24px 0 12px">
+          Qual a diferença entre a Pi e o dinheiro convencional (Real/Dólar)?
+        </h3>
+
+        <div style="overflow-x:auto">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Característica</th>
+                <th>Dinheiro Convencional (Fiat)</th>
+                <th>Pi Network (Criptomoeda)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Quem controla?</strong></td>
+                <td>Bancos Centrais e Governos</td>
+                <td>Protocolo descentralizado em blockchain</td>
+              </tr>
+              <tr>
+                <td><strong>Emissão</strong></td>
+                <td>Pode ser impresso sem limites (causando inflação)</td>
+                <td>Suprimento finito e programado (regras fixas)</td>
+              </tr>
+              <tr>
+                <td><strong>Fronteiras</strong></td>
+                <td>Preso ao país de origem (taxas de câmbio)</td>
+                <td>Global: enviável para qualquer país em segundos</td>
+              </tr>
+              <tr>
+                <td><strong>Custódia</strong></td>
+                <td>O banco guarda e pode bloquear seu saldo</td>
+                <td>Você é o dono real da carteira (com sua passphrase)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="edu-alert-box edu-alert-tip">
+          <span style="font-size:1.6rem">💡</span>
+          <div>
+            <strong style="display:block;margin-bottom:4px">O que significa "Descentralização"?</strong>
+            <span style="font-size:0.88rem;color:var(--text-secondary);line-height:1.5">
+              Significa que não existe um "servidor central" ou um gerente que possa apertar um botão e confiscar seus fundos. A rede é sustentada por milhares de computadores independentes (nós) espalhados pelo mundo que concordam mutuamente sobre o saldo de cada participante.
+            </span>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:24px">
+          <a href="#modulo-2" class="portal-btn portal-btn--primary portal-btn--sm">
+            Próximo: Conhecendo os 3 Aplicativos →
+          </a>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- MÓDULO 2: OS 3 APLICATIVOS                              -->
+      <!-- ======================================================== -->
+      <section class="edu-content-block" id="modulo-2">
+        <span class="edu-badge-tag" style="background:rgba(245,158,11,0.15);color:var(--amber-light)">
+          Módulo 2 de 6 · Estrutura Prática
+        </span>
+        <h2 style="font-size:1.8rem;color:#fff;margin-bottom:16px">
+          2. Conhecendo os 3 Aplicativos do Ecossistema
+        </h2>
+        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:20px">
+          Muitos iniciantes se confundem porque ouvem falar de vários nomes. Na prática, a experiência da Pi Network é dividida em <strong>três ferramentas complementares</strong>:
+        </p>
+
+        <!-- Grid dos 3 Apps -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:16px;margin-bottom:24px">
+          
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:20px">
+            <div style="width:48px;height:48px;border-radius:12px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:12px">⚡</div>
+            <strong style="color:var(--accent-light);font-size:1.1rem;display:block;margin-bottom:6px">1. Pi Network App</strong>
+            <span style="font-size:0.75rem;background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:10px;color:var(--text-muted);display:inline-block;margin-bottom:10px">O Painel do Pioneiro</span>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              É o aplicativo onde você toca o raio de 24 em 24 horas para minerar, gerencia sua equipe de segurança, consulta a checklist da Mainnet e inicia o processo de KYC.
+            </p>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:20px">
+            <div style="width:48px;height:48px;border-radius:12px;background:rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:12px">🌐</div>
+            <strong style="color:var(--amber-light);font-size:1.1rem;display:block;margin-bottom:6px">2. Pi Browser</strong>
+            <span style="font-size:0.75rem;background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:10px;color:var(--text-muted);display:inline-block;margin-bottom:10px">O Navegador Web3</span>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              É o navegador seguro descentralizado. É por ele que você acessa os dApps oficiais: <code>wallet.pi</code>, <code>kyc.pi</code>, <code>fireside.pi</code> e lojas Web3 como o portal <strong>HOKAGE22B</strong>.
+            </p>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(16,185,129,0.3);border-radius:14px;padding:20px">
+            <div style="width:48px;height:48px;border-radius:12px;background:rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:12px">💼</div>
+            <strong style="color:#34d399;font-size:1.1rem;display:block;margin-bottom:6px">3. Pi Wallet (wallet.pi)</strong>
+            <span style="font-size:0.75rem;background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:10px;color:var(--text-muted);display:inline-block;margin-bottom:10px">Seu Cofre Criptográfico</span>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Fica dentro do Pi Browser. É a carteira não-custodial oficial onde ficam guardadas suas moedas reais da Mainnet, e de onde você envia e recebe transferências.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="edu-alert-box edu-alert-info">
+          <span style="font-size:1.6rem">🔗</span>
+          <div>
+            <strong style="display:block;margin-bottom:4px">Como eles se conectam?</strong>
+            <span style="font-size:0.88rem;color:var(--text-secondary);line-height:1.5">
+              O <strong>Pi Network App</strong> calcula seu saldo minerado. Após aprovação no KYC, suas moedas são transferidas para a blockchain e passam a viver dentro da sua <strong>Pi Wallet</strong> (que você acessa através do <strong>Pi Browser</strong>).
+            </span>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+          <a href="#modulo-1" class="portal-btn portal-btn--outline portal-btn--sm">
+            ← Módulo 1
+          </a>
+          <a href="#modulo-3" class="portal-btn portal-btn--primary portal-btn--sm">
+            Próximo: Entendendo a Pi Wallet →
+          </a>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- MÓDULO 3: ENTENDENDO A PI WALLET (O MAIS IMPORTANTE!)    -->
+      <!-- ======================================================== -->
+      <section class="edu-content-block" id="modulo-3" style="border-color:rgba(245,158,11,0.4)">
+        <span class="edu-badge-tag" style="background:rgba(245,158,11,0.2);color:var(--amber-light);border:1px solid rgba(245,158,11,0.4)">
+          ⭐ Módulo 3 de 6 · Prático &amp; Crucial
+        </span>
+        <h2 style="font-size:1.85rem;color:#fff;margin-bottom:16px">
+          3. Entendendo a Pi Wallet e a Frase Secreta (Passphrase)
+        </h2>
+        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:18px">
+          Em bancos tradicionais, se você esquecer a senha, liga para o gerente ou clica em "esqueci minha senha" e recebe um e-mail. Na Web3 e na blockchain, <strong>não existe gerente</strong>. Você é o seu próprio banco.
+        </p>
+
+        <!-- ALERTA VERMELHO DE SEGURANÇA -->
+        <div class="edu-alert-box edu-alert-danger">
+          <span style="font-size:2rem">🚨</span>
+          <div>
+            <strong style="font-size:1.05rem;color:#f87171;display:block;margin-bottom:6px">REGRA DE OURO INVIOLÁVEL:</strong>
+            <p style="font-size:0.88rem;line-height:1.6;margin:0">
+              <strong>JAMAIS compartilhe suas 24 palavras (Passphrase) com ninguém</strong>. Nenhuma pessoa, moderador, robô, grupo de suporte ou site oficial JAMAIS solicitará suas 24 palavras. Quem tiver sua passphrase tem acesso total e irreversível a todo o seu saldo Pi!
+            </p>
+          </div>
+        </div>
+
+        <h3 style="font-size:1.3rem;color:#fff;margin:28px 0 14px">
+          Chave Pública vs Frase Secreta (Passphrase): A Analogia Perfeita
+        </h3>
+
+        <div class="concept-card-grid">
+          <div class="concept-mini-card" style="border-color:rgba(16,185,129,0.3)">
+            <div style="font-size:1.8rem;margin-bottom:8px">📫</div>
+            <strong style="color:#34d399;font-size:1.05rem;display:block;margin-bottom:6px">Chave Pública (Endereço G...)</strong>
+            <span style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:8px">Pode compartilhar livremente</span>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              É como o número da sua conta ou a sua <strong>Chave Pix</strong>. Começa sempre com a letra <code>G</code> e possui cerca de 56 caracteres. É esse endereço que você coloca na sua vitrine para receber pagamentos de outros pioneiros.
+            </p>
+          </div>
+
+          <div class="concept-mini-card" style="border-color:rgba(239,68,68,0.4)">
+            <div style="font-size:1.8rem;margin-bottom:8px">🗝️</div>
+            <strong style="color:#f87171;font-size:1.05rem;display:block;margin-bottom:6px">Passphrase (24 Palavras)</strong>
+            <span style="font-size:0.75rem;color:#ef4444;font-weight:700;display:block;margin-bottom:8px">SEGREDO ABSOLUTO</span>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              É a chave física mestra do seu cofre. Uma sequência de 24 palavras em inglês gerada na criação da carteira. Anote em um caderno físico a caneta e guarde em local seguro. Nunca tire print de tela nem salve no bloco de notas do celular!
+            </p>
+          </div>
+        </div>
+
+        <h3 style="font-size:1.25rem;color:#fff;margin:28px 0 14px">
+          Entendendo os 3 Tipos de Saldo da Pi Network
+        </h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;margin-bottom:16px">
+          Muitos pioneiros olham para o aplicativo e veem 1.000 Pi, mas não conseguem gastar. Por que isso acontece?
+        </p>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+          <div style="background:rgba(255,255,255,0.03);border-left:4px solid var(--accent);padding:14px 18px;border-radius:0 10px 10px 0">
+            <strong style="color:var(--accent-light);display:block">1. Saldo Não Verificado (Unverified Balance)</strong>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 0">
+              Moedas que você minerou como bônus pela sua equipe de indicação e círculo de segurança. Essas moedas só serão liberadas para você à medida que os membros do seu time forem aprovados no KYC.
+            </p>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border-left:4px solid var(--amber);padding:14px 18px;border-radius:0 10px 10px 0">
+            <strong style="color:var(--amber-light);display:block">2. Saldo Transferível para a Mainnet (Transferable Balance)</strong>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 0">
+              Moedas mineradas diretamente por você que já estão prontas para migrar para a blockchain assim que você concluir todos os passos da checklist da Mainnet.
+            </p>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border-left:4px solid #10b981;padding:14px 18px;border-radius:0 10px 10px 0">
+            <strong style="color:#34d399;display:block">3. Saldo Disponível na Mainnet (Available Balance)</strong>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 0">
+              O saldo real que já está na sua <code>wallet.pi</code> e cujo período de <em>lockup</em> (bloqueio de rendimento) já expirou. <strong>Este é o saldo que você pode usar para comprar produtos, transferir e pagar serviços hoje mesmo!</strong>
+            </p>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+          <a href="#modulo-2" class="portal-btn portal-btn--outline portal-btn--sm">
+            ← Módulo 2
+          </a>
+          <a href="#modulo-4" class="portal-btn portal-btn--primary portal-btn--sm">
+            Próximo: Entendendo a Blockchain →
+          </a>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- MÓDULO 4: ENTENDENDO A BLOCKCHAIN                        -->
+      <!-- ======================================================== -->
+      <section class="edu-content-block" id="modulo-4">
+        <span class="edu-badge-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-light)">
+          Módulo 4 de 6 · Como Funciona a Tecnologia
+        </span>
+        <h2 style="font-size:1.8rem;color:#fff;margin-bottom:16px">
+          4. Como a Blockchain Funciona (Explicado com Simplicidade)
+        </h2>
+        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:18px">
+          Não se assuste com a palavra <strong>blockchain</strong>. A melhor forma de entendê-la é imaginar um <strong>caderno de anotações público e indestrutível</strong>.
+        </p>
+
+        <div class="edu-alert-box edu-alert-info">
+          <span style="font-size:2rem">📖</span>
+          <div>
+            <strong style="font-size:1rem;color:#fff;display:block;margin-bottom:4px">A Analogia da Praça Pública</strong>
+            <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.6;margin:0">
+              Imagine uma cidade onde, toda vez que alguém passa dinheiro para outra pessoa, ela sobe em um palanque na praça e diz em voz alta: <em>"Eu, João, estou transferindo 5 Pi para a Maria"</em>. Centenas de pessoas na praça anotam isso simultaneamente em seus cadernos. Se um golpista tentar fingir que o João não pagou, todos os outros mostram seus cadernos idênticos e provam a verdade. Isso é a blockchain.
+            </p>
+          </div>
+        </div>
+
+        <h3 style="font-size:1.25rem;color:#fff;margin:24px 0 12px">
+          3 Pontos Essenciais sobre Transações em Blockchain:
+        </h3>
+
+        <div class="concept-card-grid">
+          <div class="concept-mini-card">
+            <strong style="color:var(--accent-light);display:block;margin-bottom:6px">1. Transações Irreversíveis</strong>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Uma vez que uma transação de Pi foi confirmada pelos nós validadores, ela é gravada para sempre. Não existe SAC para cancelar uma transferência enviada por engano. Sempre confira o endereço de destino!
+            </p>
+          </div>
+          <div class="concept-mini-card">
+            <strong style="color:var(--amber-light);display:block;margin-bottom:6px">2. Taxas Quase Nulas</strong>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Na rede Pi, cada transferência custa uma fração minúscula de moeda (normalmente <strong>0.01 π</strong> ou menos). Essa taxa simbólica não vai para um banco, ela serve apenas para evitar que computadores spammers sobrecarreguem a rede.
+            </p>
+          </div>
+          <div class="concept-mini-card">
+            <strong style="color:#34d399;display:block;margin-bottom:6px">3. Transparência Pública</strong>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Qualquer pessoa pode olhar o explorador de blocos e auditar se uma transferência realmente foi efetuada, sem expor os dados pessoais dos envolvidos.
+            </p>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+          <a href="#modulo-3" class="portal-btn portal-btn--outline portal-btn--sm">
+            ← Módulo 3
+          </a>
+          <a href="#modulo-5" class="portal-btn portal-btn--primary portal-btn--sm">
+            Próximo: O que Posso Fazer com Pi? →
+          </a>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- MÓDULO 5: O QUE POSSO FAZER COM PI?                      -->
+      <!-- ======================================================== -->
+      <section class="edu-content-block" id="modulo-5">
+        <span class="edu-badge-tag" style="background:rgba(16,185,129,0.15);color:#34d399">
+          Módulo 5 de 6 · Casos de Uso Reais
+        </span>
+        <h2 style="font-size:1.8rem;color:#fff;margin-bottom:16px">
+          5. O que posso fazer com Pi na prática?
+        </h2>
+        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:20px">
+          Diferente de moedas meme que só servem para especulação em corretoras, o objetivo central da Pi Network é criar uma <strong>economia de trocas reais</strong>. O valor da moeda depende da utilidade prática que a comunidade constrói.
+        </p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:16px;margin-bottom:24px">
+          <div class="concept-mini-card">
+            <div style="font-size:1.6rem;margin-bottom:8px">🛍️</div>
+            <strong style="color:#fff;display:block;margin-bottom:6px">Comprar e Vender Produtos</strong>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Roupas, artesanatos, eletrônicos, alimentos, e-books e produtos artesanais negociados diretamente entre pioneiros (P2P).
+            </p>
+          </div>
+          <div class="concept-mini-card">
+            <div style="font-size:1.6rem;margin-bottom:8px">🛠️</div>
+            <strong style="color:#fff;display:block;margin-bottom:6px">Pagar por Serviços</strong>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Consultorias, desenvolvimento de sites, design gráfico, aulas particulares e manutenções aceitando pagamento direto em Pi Wallet.
+            </p>
+          </div>
+          <div class="concept-mini-card">
+            <div style="font-size:1.6rem;margin-bottom:8px">📢</div>
+            <strong style="color:#fff;display:block;margin-bottom:6px">Divulgar na Gazeta</strong>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Pioneiros usam frações de Pi para anunciar seus negócios e produtos no <strong>Mural dos Pioneiros</strong> e alcançar milhares de clientes reais.
+            </p>
+          </div>
+          <div class="concept-mini-card">
+            <div style="font-size:1.6rem;margin-bottom:8px">🌐</div>
+            <strong style="color:#fff;display:block;margin-bottom:6px">Ter sua Vitrine Web3</strong>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+              Criar sua própria página de links oficial no HOKAGE22B para expor sua chave pública e receber transferências sem atravessadores.
+            </p>
+          </div>
+        </div>
+
+        <div class="edu-alert-box edu-alert-tip">
+          <span style="font-size:1.6rem">⚖️</span>
+          <div>
+            <strong style="display:block;margin-bottom:4px">Compromisso Ético HOKAGE22B:</strong>
+            <span style="font-size:0.88rem;color:var(--text-secondary);line-height:1.5">
+              Não fazemos promessas mirabolantes de cotação ou enriquecimento rápido. A Pi Network é um experimento socioeconômico sério. Participe com responsabilidade e foco no comércio real!
+            </span>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+          <a href="#modulo-4" class="portal-btn portal-btn--outline portal-btn--sm">
+            ← Módulo 4
+          </a>
+          <a href="#modulo-6" class="portal-btn portal-btn--primary portal-btn--sm">
+            Próximo: Segurança &amp; Anti-Golpes →
+          </a>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- MÓDULO 6: SEGURANÇA E PROTEÇÃO (BLINDAGEM TOTAL)          -->
+      <!-- ======================================================== -->
+      <section class="edu-content-block" id="modulo-6" style="border-color:rgba(239,68,68,0.4)">
+        <span class="edu-badge-tag" style="background:rgba(239,68,68,0.2);color:#f87171;border:1px solid rgba(239,68,68,0.4)">
+          🛡️ Módulo 6 de 6 · Manual de Sobrevivência
+        </span>
+        <h2 style="font-size:1.8rem;color:#fff;margin-bottom:16px">
+          6. Segurança: Como se Blindar contra Golpes e Roubos
+        </h2>
+        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:20px">
+          Com mais de 60 milhões de pessoas engajadas, a Pi Network atrai golpistas que se aproveitam da desatenção e da falta de conhecimento técnico dos pioneiros. Veja como se proteger:
+        </p>
+
+        <!-- Os 4 Golpes Mais Comuns -->
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px">
+          <div style="background:rgba(0,0,0,0.4);border-left:4px solid #ef4444;padding:14px 18px;border-radius:0 10px 10px 0">
+            <strong style="color:#f87171;display:block">1. O Falso Site que Pede para "Validar a Carteira"</strong>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 0">
+              Golpistas criam sites que imitam a Pi Network e dizem: <em>"Conecte sua carteira para destravar suas moedas"</em> pedindo para digitar as 24 palavras. <strong>É GOLPE!</strong> No momento em que você digita suas palavras em um site, um robô esvazia sua carteira instantaneamente.
+            </p>
+          </div>
+          <div style="background:rgba(0,0,0,0.4);border-left:4px solid #ef4444;padding:14px 18px;border-radius:0 10px 10px 0">
+            <strong style="color:#f87171;display:block">2. Falsos Suportes no WhatsApp e Telegram</strong>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 0">
+              Pessoas mandando mensagem privada dizendo ser "Suporte Oficial da Pi Network" e oferecendo "acelerar seu KYC" ou "aprovar sua migração". O Core Team oficial da Pi NUNCA manda mensagens privadas pedindo informações.
+            </p>
+          </div>
+          <div style="background:rgba(0,0,0,0.4);border-left:4px solid #ef4444;padding:14px 18px;border-radius:0 10px 10px 0">
+            <strong style="color:#f87171;display:block">3. Venda Ilegal de Contas</strong>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 0">
+              Promessas de comprar ou vender contas Pi inteiras. Isso viola gravemente os termos de uso da rede e resulta no banimento definitivo de ambas as contas na Mainnet.
+            </p>
+          </div>
+        </div>
+
+        <!-- Checklist Interativo de Segurança do Pioneiro -->
+        <h3 style="font-size:1.25rem;color:#fff;margin-bottom:14px">
+          Checklist de Auto-Proteção do Pioneiro:
+        </h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px">
+          Marque os itens para verificar se a sua carteira e sua conta estão 100% blindadas:
+        </p>
+
+        <div id="security-checklist">
+          <label class="security-checklist-item">
+            <input type="checkbox" onchange="updateChecklistProgress()" />
+            <span style="font-size:0.88rem;color:var(--text-secondary)">Minhas 24 palavras estão anotadas em um papel físico, guardadas em local seguro fora do celular.</span>
+          </label>
+          <label class="security-checklist-item">
+            <input type="checkbox" onchange="updateChecklistProgress()" />
+            <span style="font-size:0.88rem;color:var(--text-secondary)">Eu nunca tirei print (foto) da tela das minhas 24 palavras nem salvei no WhatsApp ou e-mail.</span>
+          </label>
+          <label class="security-checklist-item">
+            <input type="checkbox" onchange="updateChecklistProgress()" />
+            <span style="font-size:0.88rem;color:var(--text-secondary)">Eu só abro minha carteira dentro do aplicativo oficial Pi Browser digitando <code>wallet.pi</code>.</span>
+          </label>
+          <label class="security-checklist-item">
+            <input type="checkbox" onchange="updateChecklistProgress()" />
+            <span style="font-size:0.88rem;color:var(--text-secondary)">Eu sei que para receber transferências só passo minha chave pública (G...) e NUNCA minha passphrase.</span>
+          </label>
+          <label class="security-checklist-item">
+            <input type="checkbox" onchange="updateChecklistProgress()" />
+            <span style="font-size:0.88rem;color:var(--text-secondary)">Eu configurei minha autenticação por biometria / impressão digital no Pi Browser para evitar digitar a frase todo dia.</span>
+          </label>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+          <a href="#modulo-5" class="portal-btn portal-btn--outline portal-btn--sm">
+            ← Módulo 5
+          </a>
+          <a href="#jornada-final" class="portal-btn portal-btn--primary portal-btn--sm">
+            Concluir &amp; Próximos Passos →
+          </a>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- GLOSSÁRIO INTERATIVO DE TERMOS (A-Z)                     -->
+      <!-- ======================================================== -->
+      <section class="edu-content-block" id="glossario">
+        <span class="edu-badge-tag" style="background:rgba(255,255,255,0.08);color:#fff">
+          📖 Dicionário do Pioneiro
+        </span>
+        <h2 style="font-size:1.8rem;color:#fff;margin-bottom:10px">
+          Glossário de Termos Essenciais
+        </h2>
+        <p style="color:var(--text-secondary);font-size:0.92rem;margin-bottom:20px">
+          Consulte o significado dos principais termos da rede sempre que tiver dúvidas:
+        </p>
+
+        <div class="glossary-grid">
+          <div class="glossary-card">
+            <strong style="color:var(--accent-light);display:block;margin-bottom:4px">KYC (Know Your Customer)</strong>
+            <p style="color:var(--text-secondary);font-size:0.82rem;line-height:1.4;margin:0">
+              Processo de verificação de identidade oficial (documento + biometria) para provar que você é uma pessoa real e não um bot.
+            </p>
+          </div>
+          <div class="glossary-card">
+            <strong style="color:var(--accent-light);display:block;margin-bottom:4px">Passphrase</strong>
+            <p style="color:var(--text-secondary);font-size:0.82rem;line-height:1.4;margin:0">
+              Frase secreta de 24 palavras que dá acesso à sua carteira. Quem tem a passphrase é o dono dos fundos.
+            </p>
+          </div>
+          <div class="glossary-card">
+            <strong style="color:var(--amber-light);display:block;margin-bottom:4px">Mainnet Enclosed</strong>
+            <p style="color:var(--text-secondary);font-size:0.82rem;line-height:1.4;margin:0">
+              Fase com firewall onde os pioneiros podem negociar entre si e em dApps da rede, sem conexão com corretoras externas.
+            </p>
+          </div>
+          <div class="glossary-card">
+            <strong style="color:var(--amber-light);display:block;margin-bottom:4px">Open Mainnet</strong>
+            <p style="color:var(--text-secondary);font-size:0.82rem;line-height:1.4;margin:0">
+              Fase futura em que o firewall da rede é aberto, permitindo conectividade externa livre com outras blockchains e o mundo exterior.
+            </p>
+          </div>
+          <div class="glossary-card">
+            <strong style="color:#34d399;display:block;margin-bottom:4px">P2P (Peer-to-Peer)</strong>
+            <p style="color:var(--text-secondary);font-size:0.82rem;line-height:1.4;margin:0">
+              Transações diretas de pessoa para pessoa, sem intermediação de bancos ou instituições financeiras.
+            </p>
+          </div>
+          <div class="glossary-card">
+            <strong style="color:#34d399;display:block;margin-bottom:4px">Lockup (Bloqueio)</strong>
+            <p style="color:var(--text-secondary);font-size:0.82rem;line-height:1.4;margin:0">
+              Configuração voluntária onde você trava uma porcentagem das suas moedas por um período para aumentar sua taxa de mineração diária.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- PERGUNTAS FREQUENTES (FAQ)                               -->
+      <!-- ======================================================== -->
+      <section class="edu-content-block" id="faq">
+        <span class="edu-badge-tag" style="background:rgba(255,255,255,0.08);color:#fff">
+          ❓ Respostas Rápidas
+        </span>
+        <h2 style="font-size:1.8rem;color:#fff;margin-bottom:16px">
+          Perguntas Frequentes de Pioneiros
+        </h2>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question" onclick="toggleFaq(this)">
+            <span>Posso minerar Pi em mais de um celular com a mesma conta?</span>
+            <span class="faq-toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Não. A regra da Pi Network é estritamente <strong>1 conta por pessoa humana real</strong>. Tentar logar a mesma conta em múltiplos celulares para minerar mais rápido aciona o sistema antifraude e pode resultar na perda das suas moedas no processo de KYC.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question" onclick="toggleFaq(this)">
+            <span>Se eu perder minha passphrase de 24 palavras, consigo recuperá-la?</span>
+            <span class="faq-toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Se você perder suas 24 palavras e suas moedas já tiverem sido transferidas para aquela carteira na Mainnet, <strong>ninguém no mundo consegue recuperá-las</strong>, nem mesmo os fundadores da Pi Network. Se suas moedas ainda não tiverem migrado, você pode criar uma nova carteira no Pi Browser e atualizar a checklist número 3 do app antes da migração.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question" onclick="toggleFaq(this)">
+            <span>A mineração consome internet e bateria do celular?</span>
+            <span class="faq-toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Não! A mineração da Pi não realiza cálculos matemáticos pesados de prova de trabalho (PoW) no processador do seu aparelho. O app apenas registra sua presença e participação no consenso da rede com um único clique a cada 24 horas. Você pode até desligar o celular ou ficar sem sinal que a contagem continuará.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question" onclick="toggleFaq(this)">
+            <span>Como posso usar meu saldo Pi para comprar coisas no Brasil?</span>
+            <span class="faq-toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Você pode acessar o <a href="mural" style="color:var(--amber-light);font-weight:700">Mural de Classificados da Gazeta</a> no portal HOKAGE22B para encontrar lojistas, artesãos e prestadores de serviços verificados que aceitam Pi na Mainnet, ou visitar as <a href="pioneiro" style="color:var(--accent-light);font-weight:700">Vitrines dos Pioneiros</a> para transferências diretas P2P.
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- JORNADA FINAL: PRÓXIMOS PASSOS NO ECOSSISTEMA HOKAGE22B   -->
+      <!-- ======================================================== -->
+      <section class="edu-content-block" id="jornada-final" style="background:radial-gradient(circle at 50% 0%, rgba(139,92,246,0.18) 0%, rgba(17,17,22,0.98) 75%);border-color:rgba(139,92,246,0.5);text-align:center">
+        <span class="edu-badge-tag" style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.45)">
+          🎉 Parabéns! Você concluiu a Trilha Pi do Zero
+        </span>
+        <h2 style="font-size:clamp(1.8rem, 3.5vw, 2.4rem);color:#fff;margin:12px 0 16px">
+          Qual é o seu próximo passo agora?
+        </h2>
+        <p style="color:var(--text-secondary);max-width:620px;margin:0 auto 32px;line-height:1.6">
+          Agora que você domina os fundamentos, explore as ferramentas práticas e a comunidade que construímos no portal <strong>HOKAGE22B</strong>:
+        </p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:16px;text-align:left;margin-bottom:32px">
+          
+          <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <span style="font-size:1.8rem;display:block;margin-bottom:8px">📘</span>
+              <strong style="color:#fff;font-size:1.05rem;display:block;margin-bottom:6px">Manual Pi Network Gratuito</strong>
+              <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+                Aprofunde-se com nosso livro digital oficial de 23 capítulos em PDF e EPUB.
+              </p>
+            </div>
+            <a href="./#comece-aqui" class="portal-btn portal-btn--outline portal-btn--sm" style="margin-top:14px;text-align:center">
+              Baixar Manual Gratuito →
+            </a>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(139,92,246,0.4);border-radius:14px;padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <span style="font-size:1.8rem;display:block;margin-bottom:8px">👤</span>
+              <strong style="color:var(--accent-light);font-size:1.05rem;display:block;margin-bottom:6px">Criar Minha Vitrine Web3</strong>
+              <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+                Monte sua página estilo Linktree gratuita com sua chave Pi para receber transferências.
+              </p>
+            </div>
+            <a href="pioneiro" class="portal-btn portal-btn--primary portal-btn--sm" style="margin-top:14px;text-align:center">
+              Criar Minha Vitrine Grátis →
+            </a>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.4);border-radius:14px;padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <span style="font-size:1.8rem;display:block;margin-bottom:8px">📢</span>
+              <strong style="color:var(--amber-light);font-size:1.05rem;display:block;margin-bottom:6px">Gazeta dos Pioneiros</strong>
+              <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+                Veja o mural de classificados, canais e lojas aceitando Pi em todo o Brasil.
+              </p>
+            </div>
+            <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm" style="margin-top:14px;text-align:center">
+              Ver o Mural dos Pioneiros ↗
+            </a>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(37,211,102,0.4);border-radius:14px;padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+            <div>
+              <span style="font-size:1.8rem;display:block;margin-bottom:8px">💬</span>
+              <strong style="color:#34d399;font-size:1.05rem;display:block;margin-bottom:6px">Comunidade no WhatsApp</strong>
+              <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
+                Conecte-se com pioneiros reais, tire dúvidas e troque experiências diárias.
+              </p>
+            </div>
+            <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="margin-top:14px;text-align:center;border-color:#25d366;color:#25d366">
+              Entrar no Grupo VIP ↗
+            </a>
+          </div>
+
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px">
+          <small style="color:var(--text-muted);font-size:0.8rem">
+            Portal HOKAGE22B — Iniciativa educacional e comunitária independente. Não vinculada institucionalmente à Pi Community Company.
+          </small>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Rodapé Global -->
+  <footer class="portal-footer" style="background:#09090b;border-top:1px solid rgba(255,255,255,0.08);padding:40px 0 30px;text-align:center">
+    <div class="portal-container">
+      <div style="display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:14px">
+        <span class="pi-sym" style="color:var(--accent-light)">✦</span>
+        <strong style="color:#fff;font-size:1.1rem">HOKAGE22B</strong>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.85rem;max-width:540px;margin:0 auto 16px">
+        Tecnologia, Web3, Pi Network, Educação e Economia Descentralizada.
+      </p>
+      <div style="display:flex;justify-content:center;gap:18px;font-size:0.85rem">
+        <a href="./" style="color:var(--text-secondary);text-decoration:none">Início</a>
+        <a href="zero" style="color:var(--amber-light);text-decoration:none">Pi do Zero</a>
+        <a href="pioneiro" style="color:var(--text-secondary);text-decoration:none">Vitrine</a>
+        <a href="mural" style="color:var(--text-secondary);text-decoration:none">Mural</a>
+        <a href="legal/termos" style="color:var(--text-muted);text-decoration:none">Termos de Uso</a>
+        <a href="legal/privacidade" style="color:var(--text-muted);text-decoration:none">Privacidade</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/modules/i18n.js?v=4.0"></script>
+  <script>
+    // FAQ Accordion
+    function toggleFaq(btn) {
+      const parent = btn.parentElement;
+      const isActive = parent.classList.contains('active');
+      
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      if (!isActive) {
+        parent.classList.add('active');
+      }
+    }
+
+    // Atualização da Barra de Progresso com Base no Scroll
+    function updateScrollProgress() {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      
+      const fill = document.getElementById('progress-fill');
+      const percentEl = document.getElementById('progress-percent');
+      const textEl = document.getElementById('progress-text');
+
+      if (fill) fill.style.width = scrolled + '%';
+      if (percentEl) percentEl.textContent = Math.round(scrolled) + '% Concluído';
+
+      // Detecta em qual módulo o usuário está
+      const modules = [
+        { id: 'modulo-1', name: 'Módulo 1: O que é Pi?' },
+        { id: 'modulo-2', name: 'Módulo 2: Os 3 Apps' },
+        { id: 'modulo-3', name: 'Módulo 3: A Pi Wallet' },
+        { id: 'modulo-4', name: 'Módulo 4: Blockchain' },
+        { id: 'modulo-5', name: 'Módulo 5: O que fazer com Pi' },
+        { id: 'modulo-6', name: 'Módulo 6: Segurança' },
+        { id: 'jornada-final', name: '🎉 Parabéns! Trilha Concluída' }
+      ];
+
+      for (let i = modules.length - 1; i >= 0; i--) {
+        const el = document.getElementById(modules[i].id);
+        if (el && el.getBoundingClientRect().top <= 200) {
+          if (textEl) textEl.textContent = `📖 ${modules[i].name}`;
+          break;
+        }
+      }
+    }
+
+    // Progresso do Checklist de Segurança
+    function updateChecklistProgress() {
+      const checkboxes = document.querySelectorAll('#security-checklist input[type="checkbox"]');
+      const checked = document.querySelectorAll('#security-checklist input[type="checkbox"]:checked');
+      if (checkboxes.length > 0 && checked.length === checkboxes.length) {
+        alert('🛡️ Excelente! Sua conta e carteira Pi atendem a 100% dos requisitos de segurança recomendados!');
+      }
+    }
+
+    window.addEventListener('scroll', updateScrollProgress);
+    document.addEventListener('DOMContentLoaded', updateScrollProgress);
+  </script>
+</body>
+</html>
