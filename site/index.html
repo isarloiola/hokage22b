@@ -255,8 +255,8 @@
             </div>
 
             <!-- Avatar + Handle + Badge KYC -->
-            <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg, var(--accent), var(--amber));margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:#fff;box-shadow:0 0 20px rgba(139,92,246,0.5);border:2px solid rgba(255,255,255,0.25)">
-              π
+            <div style="width:68px;height:68px;border-radius:50%;margin:0 auto 10px;overflow:hidden;box-shadow:0 0 20px rgba(139,92,246,0.5);border:2px solid rgba(255,255,255,0.3);background:#0a0113">
+              <img src="assets/img/founder-avatar.svg" id="hero-founder-avatar-img" alt="Avatar @hokage22b" style="width:100%;height:100%;object-fit:cover;display:block" />
             </div>
             <h3 style="font-size:1.25rem;font-weight:800;color:#fff;margin:0 0 4px;display:flex;align-items:center;justify-content:center;gap:6px">
               @hokage22b
@@ -454,7 +454,9 @@
           <article class="start-card start-card--featured" style="display:flex;flex-direction:column;justify-content:space-between;border-color:rgba(139,92,246,0.45);background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98))">
             <div>
               <div style="background:linear-gradient(135deg, rgba(139,92,246,0.18), rgba(245,158,11,0.15));border-radius:var(--radius-sm);padding:24px 14px;text-align:center;margin-bottom:16px;border:1px solid rgba(139,92,246,0.3)">
-                <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg, var(--accent), var(--amber));margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:#fff;box-shadow:0 0 20px rgba(139,92,246,0.4)">π</div>
+                <div style="width:68px;height:68px;border-radius:50%;margin:0 auto 10px;overflow:hidden;box-shadow:0 0 20px rgba(139,92,246,0.4);border:2px solid rgba(255,255,255,0.25);background:#0a0113">
+                  <img src="assets/img/founder-avatar.svg" alt="Avatar Vitrine @hokage22b" style="width:100%;height:100%;object-fit:cover;display:block" />
+                </div>
                 <span style="font-size:0.75rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#10b981;padding:3px 10px;border-radius:12px;font-weight:700">✓ 100% Humano (KYC)</span>
               </div>
               <div class="start-card__top">
@@ -1535,6 +1537,18 @@
   <script src="assets/js/modules/db.js?v=3.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=3.0"></script>
   <script src="assets/js/modules/portal.js?v=3.0"></script>
+  <script>
+    // Sincroniza foto personalizada do fundador no mockup da vitrine caso exista
+    document.addEventListener('DOMContentLoaded', function () {
+      try {
+        const cached = localStorage.getItem('hokage_pioneer_avatar_hokage22b');
+        if (cached) {
+          const img = document.getElementById('hero-founder-avatar-img');
+          if (img) img.src = cached;
+        }
+      } catch (_) {}
+    });
+  </script>
 </body>
 
 </html>
