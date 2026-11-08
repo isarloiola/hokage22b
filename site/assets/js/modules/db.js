@@ -190,9 +190,15 @@
     if (!db) return null;
 
     try {
+      const payload = Object.assign({}, adData, {
+        status: 'pendente',
+        views_count: 0,
+        clicks_count: 0
+      });
+
       const { data, error } = await db
         .from('anuncios')
-        .insert([adData]);
+        .insert([payload]);
 
       if (error) throw error;
       return data;
@@ -555,6 +561,26 @@
       // Validação Criptográfica de Blindagem: se informada, deve ser chave ed25519 válida
       if (cleanWallet && !isValidPiPublicKey(cleanWallet)) {
         throw new Error('Chave pública da Pi Wallet inválida (checksum CRC16 não confere)');
+      }
+
+      // 1. Tenta salvar via Edge Function segura com validação de token na Pi Core Team
+      var token = (window.HokagePi && window.HokagePi.getAccessToken) ? window.HokagePi.getAccessToken() : '';
+      if (token) {
+        try {
+          var edgeRes = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ accessToken: token, profileData: profileData })
+          });
+          if (edgeRes.ok) {
+            var edgeJson = await edgeRes.json();
+            if (edgeJson && edgeJson.profile) {
+              return edgeJson.profile;
+            }
+          }
+        } catch (edgeErr) {
+          console.warn('Tentativa via Edge Function retornou erro, tentando fallback:', edgeErr);
+        }
       }
 
       // Descobre o UID real existente para evitar violação de UNIQUE no username

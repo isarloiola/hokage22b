@@ -314,6 +314,9 @@
 
       try {
         localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
+        if (auth.accessToken) {
+          sessionStorage.setItem('hokage_pi_access_token', auth.accessToken);
+        }
       } catch (_) {}
 
       const cleanAuthName = formatUserHandle(auth.user.username);
@@ -547,6 +550,13 @@
     showManualP2PModal: showManualP2PModal,
     showToast: showToast,
     getUser: function () { return authenticatedUser; },
+    getAccessToken: function () {
+      try {
+        return sessionStorage.getItem('hokage_pi_access_token') || '';
+      } catch (_) {
+        return '';
+      }
+    },
     officialWallet: OFFICIAL_WALLET
   };
 
