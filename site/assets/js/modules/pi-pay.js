@@ -559,7 +559,49 @@
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // 11. Expõe na API global
+  // 12. Smart Banner Deep Link para Pi Browser (Modo Web2 -> Web3 Bridge)
+  function initSmartPiBanner() {
+    if (isPiBrowser()) return;
+    try {
+      if (sessionStorage.getItem('hokage_pi_banner_dismissed')) return;
+    } catch (_) {}
+
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
+    if (!isMobile) return;
+
+    if (document.getElementById('hokage-smart-pi-banner')) return;
+
+    const banner = document.createElement('div');
+    banner.id = 'hokage-smart-pi-banner';
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;width:100%;background:linear-gradient(90deg, #180d2b, #09090b);border-top:1px solid rgba(139,92,246,0.45);z-index:999998;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 -4px 25px rgba(0,0,0,0.85);font-family:system-ui,-apple-system,sans-serif;';
+
+    const cleanHost = window.location.host;
+    const cleanPath = window.location.pathname;
+    const cleanSearch = window.location.search;
+    const piDeepLink = 'pi://' + cleanHost + cleanPath + cleanSearch;
+
+    banner.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
+        <span style="font-size:1.3rem;flex-shrink:0">⚡</span>
+        <div style="min-width:0">
+          <strong style="color:#fff;font-size:0.8rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Abra no Pi Browser Oficial</strong>
+          <span style="color:#a78bfa;font-size:0.72rem;display:block">Conecte sua carteira e pague com 1 clique</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <a href="${piDeepLink}" style="background:linear-gradient(135deg, #8b5cf6, #7c3aed);color:#fff;font-size:0.78rem;font-weight:700;padding:7px 14px;border-radius:20px;text-decoration:none;border:1px solid rgba(255,255,255,0.25);white-space:nowrap;display:inline-block">
+          🚀 Abrir Pi
+        </a>
+        <button type="button" onclick="document.getElementById('hokage-smart-pi-banner').remove();try{sessionStorage.setItem('hokage_pi_banner_dismissed','1')}catch(_){}" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:1.1rem;padding:4px 6px;cursor:pointer" aria-label="Fechar banner">
+          ✕
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(banner);
+  }
+
+  // 13. Expõe na API global
   window.HokagePi = {
     initPiSdk: initPiSdk,
     isPiBrowser: isPiBrowser,
@@ -578,12 +620,14 @@
         return '';
       }
     },
-    officialWallet: OFFICIAL_WALLET
+    officialWallet: OFFICIAL_WALLET,
+    initSmartPiBanner: initSmartPiBanner
   };
 
   // Inicializa bindings e recupera cache
   function autoInit() {
     initPiSdk(false);
+    initSmartPiBanner();
     try {
       const cached = localStorage.getItem('hokage_pi_user');
       if (cached) {

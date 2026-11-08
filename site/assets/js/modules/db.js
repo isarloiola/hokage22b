@@ -678,6 +678,34 @@
     }
   }
 
+  // Busca lista de pioneiros para o Diretório Global Web3
+  async function getPioneersDirectory(options) {
+    var db = getClient();
+    if (!db) return [];
+    options = options || {};
+    var limit = options.limit || 30;
+
+    try {
+      var query = db
+        .from('pioneiros')
+        .select('uid, username, bio, avatar_url, wallet_address, products, whatsapp_url, youtube_url, instagram_url, twitter_url, reputation_score, created_at, updated_at')
+        .order('updated_at', { ascending: false })
+        .limit(limit);
+
+      if (options.search) {
+        var cleanTerm = String(options.search).replace(/@+/g, '').trim();
+        query = query.or('username.ilike.%' + cleanTerm + '%,bio.ilike.%' + cleanTerm + '%');
+      }
+
+      var res = await query;
+      if (res.error) throw res.error;
+      return res.data || [];
+    } catch (err) {
+      console.warn('Erro ao obter diretório de pioneiros:', err);
+      return [];
+    }
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
@@ -697,6 +725,7 @@
     renewMyAd: renewMyAd,
     savePioneerProfile: savePioneerProfile,
     getPioneerFullProfile: getPioneerFullProfile,
+    getPioneersDirectory: getPioneersDirectory,
     // Métodos Admin com Proteção Zero-Trust
     verifyAdminAccess: verifyAdminAccess,
     getAllAnuncios: getAllAnuncios,

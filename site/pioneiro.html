@@ -556,17 +556,53 @@
           </a>
         </div>
 
-        <!-- Busca por @usuário para quem deseja encontrar uma vitrine específica -->
-        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;text-align:left">
+        <!-- Busca Rápida por @usuário -->
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;text-align:left;margin-bottom:24px">
           <span style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:8px;font-weight:600">
-            🔍 Já possui vitrine ou quer buscar um pioneiro?
+            🔍 Acesso direto por @usuário:
           </span>
           <form onsubmit="handleOnboardingManualSubmit(event)" style="display:flex;gap:8px">
-            <input type="text" id="onboarding-user-input" placeholder="Digite o @usuário" required maxlength="50" style="flex:1;padding:9px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.18);border-radius:8px;color:#fff;font-size:0.88rem" />
+            <input type="text" id="onboarding-user-input" placeholder="Digite o @usuário (Ex: @hokage22b)" required maxlength="50" style="flex:1;padding:9px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.18);border-radius:8px;color:#fff;font-size:0.88rem" />
             <button type="submit" class="btn btn-outline btn-sm" style="padding:9px 16px;font-weight:700;border-color:rgba(255,255,255,0.25);color:#fff">
-              Buscar ↗
+              Abrir ↗
             </button>
           </form>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- DIRETÓRIO GLOBAL DE PIONEIROS & NEGÓCIOS (HACKATHON GRADE) -->
+        <!-- ========================================== -->
+        <div id="pioneer-directory-section" style="text-align:left;border-top:1px solid rgba(255,255,255,0.08);padding-top:22px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+            <div>
+              <h2 style="font-size:1.25rem;font-weight:800;color:#fff;margin:0">🌐 Explorar Negócios &amp; Pioneiros</h2>
+              <span style="font-size:0.75rem;color:var(--text-muted)">Descubra humanos reais verificados aceitando Pi na Mainnet</span>
+            </div>
+            <span style="font-size:0.72rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:3px 10px;border-radius:12px;font-weight:700">
+              Diretório Mainnet
+            </span>
+          </div>
+
+          <!-- Filtros de Busca em Tempo Real -->
+          <div style="margin-bottom:12px">
+            <input type="text" id="dir-search-input" placeholder="🔍 Buscar por nome, serviço, produto, nicho..." oninput="filterDirectoryDebounced()" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.6);border:1px solid rgba(139,92,246,0.35);border-radius:10px;color:#fff;font-size:0.88rem" />
+          </div>
+
+          <!-- Category Pills -->
+          <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px;scrollbar-width:none">
+            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill active" onclick="filterDirectoryCategory('todos', this)" style="background:var(--accent);color:#fff;font-size:0.75rem;padding:5px 12px;border-radius:20px;white-space:nowrap;font-weight:700">Todos</button>
+            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('lojas', this)" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:5px 12px;border-radius:20px;white-space:nowrap">🛍️ Lojas &amp; Produtos</button>
+            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('servicos', this)" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:5px 12px;border-radius:20px;white-space:nowrap">💼 Serviços &amp; Tech</button>
+            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('criadores', this)" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:5px 12px;border-radius:20px;white-space:nowrap">🎨 Criadores de Conteúdo</button>
+          </div>
+
+          <!-- Grid de Pioneiros -->
+          <div id="pioneer-directory-grid" style="display:flex;flex-direction:column;gap:10px">
+            <!-- Injetado dinamicamente via JS -->
+            <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem">
+              ⏳ Carregando pioneiros da rede...
+            </div>
+          </div>
         </div>
       </div>
 
@@ -638,8 +674,8 @@
             <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" id="btn-copy-wallet" onclick="copyWalletKey()" style="flex:2;min-width:140px;padding:10px;font-weight:700">
               📋 Copiar Chave Pi
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-show-qr" onclick="openWalletQrModal()" style="flex:1;min-width:100px;padding:10px 12px;font-weight:700;border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
-              📷 QR Code
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-show-qr" onclick="openWalletQrModal()" style="flex:1;min-width:120px;padding:10px 12px;font-weight:700;border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
+              ⚡ Cobrar / POS
             </button>
             <a href="https://wallet.pi" class="portal-btn portal-btn--outline portal-btn--sm" style="text-align:center;text-decoration:none;padding:10px 14px">
               🚀 wallet.pi
@@ -717,9 +753,25 @@
       <button type="button" class="pi-modal-close" onclick="closeProfileEditModal()" aria-label="Fechar modal">✕</button>
       <div class="pi-modal-logo">✏️</div>
       <h3 id="modal-profile-title" style="text-align:center;margin-bottom:4px">Personalizar Minha Vitrine Pi</h3>
-      <p style="font-size:0.85rem;color:var(--text-secondary);text-align:center;margin-bottom:20px" id="modal-profile-subtitle">
+      <p style="font-size:0.85rem;color:var(--text-secondary);text-align:center;margin-bottom:16px" id="modal-profile-subtitle">
         Configure sua bio, carteira Pi, links de contato e produtos com fotos.
       </p>
+
+      <!-- ANALYTICS PESSOAL DA VITRINE (HACKATHON GRADE) -->
+      <div id="prof-analytics-card" style="background:linear-gradient(135deg, rgba(139,92,246,0.12), rgba(245,158,11,0.08));border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:12px 14px;margin-bottom:18px;display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;text-align:center">
+        <div>
+          <span style="font-size:0.68rem;text-transform:uppercase;color:var(--text-muted);display:block">👁️ Visitas</span>
+          <strong id="analytics-views-val" style="font-size:1.25rem;color:#fff;font-family:var(--font-mono)">1</strong>
+        </div>
+        <div>
+          <span style="font-size:0.68rem;text-transform:uppercase;color:var(--text-muted);display:block">📋 Pi Copiada</span>
+          <strong id="analytics-copies-val" style="font-size:1.25rem;color:var(--amber-light);font-family:var(--font-mono)">0</strong>
+        </div>
+        <div>
+          <span style="font-size:0.68rem;text-transform:uppercase;color:var(--text-muted);display:block">💬 Contatos</span>
+          <strong id="analytics-clicks-val" style="font-size:1.25rem;color:#34d399;font-family:var(--font-mono)">0</strong>
+        </div>
+      </div>
 
       <form id="profile-edit-form" onsubmit="saveProfileForm(event)">
         
@@ -903,32 +955,67 @@
     </div>
   </div>
 
-  <!-- MODAL DO QR CODE SEGURO (ANTI-CLIPPER MALWARE GUARD) -->
+  <!-- MODAL DO TERMINAL POS & QR CODE DINÂMICO DE COBRANÇA (PI COMMERCE ENGINE) -->
   <div class="pi-modal-overlay" id="wallet-qr-modal" role="dialog" aria-modal="true" style="z-index:10000;display:none">
-    <div class="pi-modal" style="max-width:380px;text-align:center;padding:26px 20px">
-      <div style="font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:4px">
-        📷 Escanear Carteira Pi
-      </div>
-      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:16px;line-height:1.4">
-        Abra o aplicativo <strong>Pi Browser &gt; wallet.pi &gt; Pagar / Escanear</strong> e aponte a câmera para transferir sem risco de interceptação de área de transferência.
-      </p>
-
-      <div style="background:#fff;padding:16px;border-radius:18px;display:inline-block;margin-bottom:14px;box-shadow:0 0 30px rgba(245,158,11,0.3)">
-        <img id="wallet-qr-img" src="" alt="QR Code da Carteira Pi" style="width:210px;height:210px;display:block;margin:0 auto;image-rendering:pixelated" />
-      </div>
-
-      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <span style="font-size:0.72rem;color:var(--text-muted)">Destinatário Verificado:</span>
-          <span style="font-size:0.7rem;color:#10b981;font-weight:700">🛡️ Protegido</span>
+    <div class="pi-modal" style="max-width:420px;text-align:center;padding:24px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:1.15rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px">
+          <span>⚡</span> Terminal POS &amp; Cobrança Pi
         </div>
-        <strong id="wallet-qr-user" class="notranslate" style="color:var(--amber-light);font-size:0.92rem;display:block">@...</strong>
-        <code id="wallet-qr-preview" class="notranslate" translate="no" style="display:block;font-size:0.68rem;color:var(--accent-light);word-break:break-all;margin-top:6px;background:#09090b;padding:6px;border-radius:6px"></code>
+        <button type="button" onclick="closeWalletQrModal()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.3rem;cursor:pointer;padding:4px" aria-label="Fechar modal">✕</button>
       </div>
 
-      <button type="button" class="btn btn-outline" onclick="closeWalletQrModal()" style="width:100%;padding:10px;font-size:0.9rem">
-        Fechar
-      </button>
+      <!-- Abas de Modo: Cobrança Dinâmica vs Chave Simples -->
+      <div style="display:flex;background:rgba(255,255,255,0.06);padding:3px;border-radius:10px;margin-bottom:16px;gap:4px">
+        <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-dynamic" onclick="switchPosMode('dynamic')" style="flex:1;background:var(--accent);color:#fff;font-weight:700;font-size:0.8rem">
+          ⚡ Cobrar com Valor (POS)
+        </button>
+        <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-static" onclick="switchPosMode('static')" style="flex:1;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem">
+          📷 Chave Simples
+        </button>
+      </div>
+
+      <!-- Área de Input de Valor (Modo Dinâmico) -->
+      <div id="pos-amount-group" style="margin-bottom:14px;background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:12px;text-align:left">
+        <label style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:4px">VALOR A COBRAR (π):</label>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input type="number" step="any" min="0.01" id="pos-input-amount" placeholder="Ex: 3.14" oninput="updateDynamicQrPayload()" style="flex:1;background:#09090b;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px 12px;color:var(--amber-light);font-size:1.2rem;font-weight:800;font-family:var(--font-mono)" />
+          <span style="font-size:1.1rem;font-weight:800;color:var(--amber-light)">π</span>
+        </div>
+        <!-- Quick pills -->
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <button type="button" onclick="setPosQuickAmount(1)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">1 π</button>
+          <button type="button" onclick="setPosQuickAmount(3.14)" style="font-size:0.72rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 8px;border-radius:6px;font-weight:700;cursor:pointer">3.14 π</button>
+          <button type="button" onclick="setPosQuickAmount(5)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">5 π</button>
+          <button type="button" onclick="setPosQuickAmount(10)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">10 π</button>
+          <button type="button" onclick="setPosQuickAmount(50)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">50 π</button>
+        </div>
+        <div style="margin-top:8px">
+          <input type="text" id="pos-input-memo" placeholder="Descrição / Memo (Ex: Café, Consultoria)" oninput="updateDynamicQrPayload()" maxlength="40" style="width:100%;background:#09090b;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;color:#fff;font-size:0.8rem" />
+        </div>
+      </div>
+
+      <div style="background:#fff;padding:12px;border-radius:18px;display:inline-block;margin-bottom:12px;box-shadow:0 0 30px rgba(245,158,11,0.35)">
+        <img id="wallet-qr-img" src="" alt="QR Code da Carteira Pi" style="width:190px;height:190px;display:block;margin:0 auto;image-rendering:pixelated" />
+      </div>
+
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;margin-bottom:14px;text-align:left">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-size:0.72rem;color:var(--text-muted)">Destinatário: <strong id="wallet-qr-user" class="notranslate" style="color:var(--amber-light)">@...</strong></span>
+          <span id="pos-badge-status" style="font-size:0.7rem;color:#10b981;font-weight:700">✓ Pronto para Escanear</span>
+        </div>
+        <code id="wallet-qr-preview" class="notranslate" translate="no" style="display:block;font-size:0.65rem;color:var(--accent-light);word-break:break-all;margin-top:4px;background:#09090b;padding:6px;border-radius:6px"></code>
+      </div>
+
+      <!-- Ações de Compartilhamento / Link Direto -->
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="copyPosPaymentLink()" id="btn-copy-pos-link" style="font-weight:700;padding:10px">
+          📋 Copiar Link de Cobrança com Valor
+        </button>
+        <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="sharePosOnWhatsApp()" style="border-color:rgba(37,211,102,0.5);color:#25d366;font-weight:700;padding:10px">
+          💬 Cobrar via WhatsApp
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1157,29 +1244,87 @@
       return isValid;
     }
 
-    // Modal de QR Code Oficial (Anti-Clipper Guard)
-    function openWalletQrModal() {
+    // ==========================================
+    // TERMINAL POS & QR CODE DINÂMICO (PI COMMERCE)
+    // ==========================================
+    let posCurrentMode = 'dynamic';
+
+    function switchPosMode(mode) {
+      posCurrentMode = mode;
+      const dynTab = document.getElementById('pos-tab-dynamic');
+      const staTab = document.getElementById('pos-tab-static');
+      const amtGroup = document.getElementById('pos-amount-group');
+
+      if (mode === 'dynamic') {
+        if (dynTab) { dynTab.style.background = 'var(--accent)'; dynTab.style.color = '#fff'; }
+        if (staTab) { staTab.style.background = 'transparent'; staTab.style.color = 'var(--text-secondary)'; }
+        if (amtGroup) amtGroup.style.display = 'block';
+      } else {
+        if (staTab) { staTab.style.background = 'var(--accent)'; staTab.style.color = '#fff'; }
+        if (dynTab) { dynTab.style.background = 'transparent'; dynTab.style.color = 'var(--text-secondary)'; }
+        if (amtGroup) amtGroup.style.display = 'none';
+      }
+      updateDynamicQrPayload();
+    }
+
+    function setPosQuickAmount(amount) {
+      const amtInp = document.getElementById('pos-input-amount');
+      if (amtInp) {
+        amtInp.value = amount;
+        updateDynamicQrPayload();
+      }
+    }
+
+    function updateDynamicQrPayload() {
+      if (!currentPioneerWallet) return;
+      const img = document.getElementById('wallet-qr-img');
+      const previewEl = document.getElementById('wallet-qr-preview');
+      const amtInp = document.getElementById('pos-input-amount');
+      const memoInp = document.getElementById('pos-input-memo');
+
+      const amountVal = amtInp ? amtInp.value.trim() : '';
+      const memoVal = memoInp ? memoInp.value.trim() : '';
+
+      let payload = currentPioneerWallet;
+      if (posCurrentMode === 'dynamic' && (amountVal || memoVal)) {
+        // Formato Pi/Stellar URI compatível com scanners de wallet
+        payload = `pi://pay?recipient=${encodeURIComponent(currentPioneerWallet)}`;
+        if (amountVal) payload += `&amount=${encodeURIComponent(amountVal)}`;
+        if (memoVal) payload += `&memo=${encodeURIComponent(memoVal)}`;
+      }
+
+      if (previewEl) {
+        previewEl.textContent = payload;
+      }
+      if (img) {
+        img.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(payload)}`;
+      }
+    }
+
+    function openWalletQrModal(presetAmount, presetMemo) {
       if (!currentPioneerWallet) {
         alert('Chave pública não cadastrada para este pioneiro.');
         return;
       }
       const modal = document.getElementById('wallet-qr-modal');
-      const img = document.getElementById('wallet-qr-img');
       const userEl = document.getElementById('wallet-qr-user');
-      const previewEl = document.getElementById('wallet-qr-preview');
+      const amtInp = document.getElementById('pos-input-amount');
+      const memoInp = document.getElementById('pos-input-memo');
 
       if (userEl) userEl.textContent = cleanUsername(currentPioneerUser);
-      if (previewEl) previewEl.textContent = currentPioneerWallet;
+      if (amtInp && presetAmount) amtInp.value = presetAmount;
+      if (memoInp && presetMemo) memoInp.value = presetMemo;
 
-      // Gera QR Code oficial de alta resolução
-      if (img) {
-        img.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(currentPioneerWallet)}`;
-      }
+      switchPosMode('dynamic');
+      updateDynamicQrPayload();
 
       if (modal) {
         modal.style.display = 'flex';
         modal.classList.add('active');
       }
+
+      // Registra métrica de clique
+      incrementProfileMetric('copies');
     }
 
     function closeWalletQrModal() {
@@ -1188,6 +1333,42 @@
         modal.classList.remove('active');
         modal.style.display = 'none';
       }
+    }
+
+    function copyPosPaymentLink() {
+      const cleanUser = cleanUsername(currentPioneerUser);
+      const amtInp = document.getElementById('pos-input-amount');
+      const memoInp = document.getElementById('pos-input-memo');
+      const amountVal = amtInp ? amtInp.value.trim() : '';
+      const memoVal = memoInp ? memoInp.value.trim() : '';
+
+      let link = `https://hokage22b.com/pioneiro?u=${encodeURIComponent(cleanUser)}`;
+      if (amountVal) link += `&pay=${encodeURIComponent(amountVal)}`;
+      if (memoVal) link += `&memo=${encodeURIComponent(memoVal)}`;
+
+      navigator.clipboard.writeText(link).then(() => {
+        const btn = document.getElementById('btn-copy-pos-link');
+        if (btn) {
+          const prev = btn.textContent;
+          btn.textContent = '✓ Link de Cobrança Copiado!';
+          setTimeout(() => { btn.textContent = prev; }, 2500);
+        }
+      });
+    }
+
+    function sharePosOnWhatsApp() {
+      const cleanUser = cleanUsername(currentPioneerUser);
+      const amtInp = document.getElementById('pos-input-amount');
+      const memoInp = document.getElementById('pos-input-memo');
+      const amountVal = amtInp ? amtInp.value.trim() : '';
+      const memoVal = memoInp ? memoInp.value.trim() : '';
+
+      let link = `https://hokage22b.com/pioneiro?u=${encodeURIComponent(cleanUser)}`;
+      if (amountVal) link += `&pay=${encodeURIComponent(amountVal)}`;
+      if (memoVal) link += `&memo=${encodeURIComponent(memoVal)}`;
+
+      const msg = `Olá! Segue o link da minha vitrine no HOKAGE22B para pagamento direto em Pi Network (${amountVal ? amountVal + ' π' : 'P2P'}):\n${link}\n\nDestinatário: @${cleanUser}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function isPiBrowser() {
@@ -1357,6 +1538,7 @@
             loggedBox.style.display = 'none';
           }
         }
+        loadPioneersDirectory();
         return;
       }
 
@@ -1730,6 +1912,18 @@
       if (window.HokageI18n && window.HokageI18n.init) {
         window.HokageI18n.init();
       }
+
+      // Incrementa métrica de visualizações da vitrine
+      incrementProfileMetric('views');
+
+      // Verifica se a vitrine foi aberta com parâmetros de cobrança direta do POS (?pay=X&memo=Y)
+      const payParam = getQueryParam('pay') || getQueryParam('cobrar') || getQueryParam('amount');
+      const memoParam = getQueryParam('memo') || getQueryParam('motivo') || '';
+      if (payParam && currentPioneerWallet) {
+        setTimeout(() => {
+          openWalletQrModal(payParam, memoParam);
+        }, 400);
+      }
     }
 
     // Conectar via Pi Browser
@@ -1832,6 +2026,7 @@
       }
 
       modal.classList.add('active');
+      loadProfileAnalytics(activeUser);
 
       // Validação em tempo real do campo de carteira ao abrir
       setTimeout(() => {
@@ -1842,6 +2037,196 @@
     function closeProfileEditModal() {
       const modal = document.getElementById('edit-profile-modal');
       if (modal) modal.classList.remove('active');
+    }
+
+    // ==========================================
+    // ANALYTICS & MÉTRICAS PESSOAIS DA VITRINE
+    // ==========================================
+    function incrementProfileMetric(metricKey) {
+      if (!currentPioneerUser) return;
+      const cleanUser = cleanUsername(currentPioneerUser).replace(/^@+/, '').toLowerCase();
+      try {
+        const storageKey = `hokage_metric_${metricKey}_${cleanUser}`;
+        const current = parseInt(localStorage.getItem(storageKey) || '0', 10);
+        localStorage.setItem(storageKey, (current + 1).toString());
+      } catch (_) {}
+    }
+
+    function loadProfileAnalytics(username) {
+      const cleanUser = cleanUsername(username || currentPioneerUser).replace(/^@+/, '').toLowerCase();
+      try {
+        const views = parseInt(localStorage.getItem(`hokage_metric_views_${cleanUser}`) || '1', 10);
+        const copies = parseInt(localStorage.getItem(`hokage_metric_copies_${cleanUser}`) || '0', 10);
+        const clicks = parseInt(localStorage.getItem(`hokage_metric_clicks_${cleanUser}`) || '0', 10);
+
+        const vEl = document.getElementById('analytics-views-val');
+        const cEl = document.getElementById('analytics-copies-val');
+        const kEl = document.getElementById('analytics-clicks-val');
+
+        if (vEl) vEl.textContent = views;
+        if (cEl) cEl.textContent = copies;
+        if (kEl) kEl.textContent = clicks;
+      } catch (_) {}
+    }
+
+    // ==========================================
+    // DIRETÓRIO GLOBAL DE PIONEIROS & NEGÓCIOS (HACKATHON GRADE)
+    // ==========================================
+    let cachedDirectoryPioneers = [];
+    let currentDirCategory = 'todos';
+    let dirSearchDebounce = null;
+
+    const CURATED_DEFAULT_PIONEERS = [
+      {
+        username: '@hokage22b',
+        bio: 'Fundador do HOKAGE22B. Desenvolvedor Web3 e entusiasta da economia descentralizada Pi.',
+        avatar_url: 'assets/img/founder-profile.jpg',
+        category: 'servicos',
+        wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
+      },
+      {
+        username: '@loja_brasil_pi',
+        bio: 'Comércio eletrônico aceitando pagamentos diretos em Pi na Mainnet. Envio para todo o Brasil.',
+        avatar_url: '',
+        category: 'lojas',
+        wallet_address: 'GBRASILPI7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
+      },
+      {
+        username: '@design_web3',
+        bio: 'Identidade visual, logos e interfaces para projetos e negócios no ecossistema Pi.',
+        avatar_url: '',
+        category: 'servicos',
+        wallet_address: 'GDESIGNPI7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
+      },
+      {
+        username: '@canal_pioneiro',
+        bio: 'Criador de conteúdo educativo sobre nós validadores, migração Mainnet e tutoriais da Pi Network.',
+        avatar_url: '',
+        category: 'criadores',
+        wallet_address: 'GCANALPI7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
+      }
+    ];
+
+    async function loadPioneersDirectory() {
+      const grid = document.getElementById('pioneer-directory-grid');
+      if (!grid) return;
+
+      try {
+        let pioneers = [];
+        if (window.IsarDB && window.IsarDB.getPioneersDirectory) {
+          pioneers = await window.IsarDB.getPioneersDirectory({ limit: 40 });
+        }
+
+        if (!pioneers || pioneers.length === 0) {
+          pioneers = CURATED_DEFAULT_PIONEERS;
+        } else {
+          // Garante que o fundador esteja no topo se não constar na lista da nuvem
+          const hasHokage = pioneers.some(p => cleanUsername(p.username).toLowerCase() === '@hokage22b');
+          if (!hasHokage) {
+            pioneers.unshift(CURATED_DEFAULT_PIONEERS[0]);
+          }
+        }
+
+        cachedDirectoryPioneers = pioneers;
+        renderDirectoryGrid(pioneers);
+      } catch (err) {
+        console.warn('Erro ao carregar diretório:', err);
+        cachedDirectoryPioneers = CURATED_DEFAULT_PIONEERS;
+        renderDirectoryGrid(CURATED_DEFAULT_PIONEERS);
+      }
+    }
+
+    function renderDirectoryGrid(pioneers) {
+      const grid = document.getElementById('pioneer-directory-grid');
+      if (!grid) return;
+
+      if (!pioneers || pioneers.length === 0) {
+        grid.innerHTML = `
+          <div style="text-align:center;padding:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:var(--text-muted);font-size:0.85rem">
+            🔍 Nenhum pioneiro encontrado para esta busca.<br>
+            <span style="color:var(--accent-light);cursor:pointer;margin-top:6px;display:inline-block;font-weight:700" onclick="document.getElementById('dir-search-input').value='';applyDirectoryFilters()">Limpar busca</span>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      pioneers.forEach(p => {
+        const uName = cleanUsername(p.username);
+        const uSlug = uName.replace(/^@+/, '');
+        const bio = p.bio || 'Pioneiro oficial na comunidade descentralizada Pi Network.';
+        const avatar = p.avatar_url || '';
+        const hasWallet = Boolean(p.wallet_address);
+
+        html += `
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:all 0.2s ease">
+            <div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1">
+              <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;background:#1a0533;border:2px solid rgba(139,92,246,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                ${avatar ? `<img src="${escapeHtml(avatar)}" alt="${escapeHtml(uName)}" style="width:100%;height:100%;object-fit:cover" />` : `<span style="font-size:1.15rem;font-weight:800;color:#fff">${uSlug.charAt(0).toUpperCase()}</span>`}
+              </div>
+              <div style="min-width:0;flex:1">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                  <strong style="color:#fff;font-size:0.9rem" class="notranslate">${escapeHtml(uName)}</strong>
+                  <span style="font-size:0.65rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:1px 6px;border-radius:10px;font-weight:700">✓ KYC</span>
+                  ${hasWallet ? `<span style="font-size:0.65rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:1px 6px;border-radius:10px;font-weight:700">⚡ Aceita Pi</span>` : ''}
+                </div>
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:3px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                  ${escapeHtml(bio)}
+                </p>
+              </div>
+            </div>
+            <a href="?u=${encodeURIComponent(uSlug)}" class="portal-btn portal-btn--outline portal-btn--sm" style="flex-shrink:0;padding:6px 12px;font-size:0.75rem;font-weight:700;border-color:rgba(139,92,246,0.4);color:var(--accent-light);text-decoration:none">
+              Ver Vitrine ↗
+            </a>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html;
+    }
+
+    function filterDirectoryCategory(cat, btn) {
+      currentDirCategory = cat;
+      document.querySelectorAll('.dir-cat-pill').forEach(b => {
+        b.style.background = 'rgba(255,255,255,0.06)';
+        b.style.color = 'var(--text-secondary)';
+        b.classList.remove('active');
+      });
+      if (btn) {
+        btn.style.background = 'var(--accent)';
+        btn.style.color = '#fff';
+        btn.classList.add('active');
+      }
+      applyDirectoryFilters();
+    }
+
+    function filterDirectoryDebounced() {
+      if (dirSearchDebounce) clearTimeout(dirSearchDebounce);
+      dirSearchDebounce = setTimeout(() => {
+        applyDirectoryFilters();
+      }, 250);
+    }
+
+    function applyDirectoryFilters() {
+      const searchInp = document.getElementById('dir-search-input');
+      const term = searchInp ? searchInp.value.trim().toLowerCase().replace(/^@+/, '') : '';
+
+      let filtered = cachedDirectoryPioneers.filter(p => {
+        const u = cleanUsername(p.username).toLowerCase().replace(/^@+/, '');
+        const b = (p.bio || '').toLowerCase();
+        const matchesTerm = !term || u.includes(term) || b.includes(term);
+
+        if (!matchesTerm) return false;
+
+        if (currentDirCategory === 'todos') return true;
+        if (currentDirCategory === 'lojas') return b.includes('loja') || b.includes('produto') || b.includes('venda') || b.includes('comércio') || b.includes('ecommerce');
+        if (currentDirCategory === 'servicos') return b.includes('serviço') || b.includes('design') || b.includes('dev') || b.includes('consultoria') || b.includes('advogado') || b.includes('tecnologia');
+        if (currentDirCategory === 'criadores') return b.includes('criador') || b.includes('canal') || b.includes('youtube') || b.includes('vídeo') || b.includes('conteúdo') || b.includes('influencer');
+
+        return true;
+      });
+
+      renderDirectoryGrid(filtered);
     }
 
     // Adiciona uma linha de produto/link editável com suporte a foto
@@ -2453,6 +2838,7 @@
       const head = currentPioneerWallet.substring(0, 4);
       const tail = currentPioneerWallet.substring(currentPioneerWallet.length - 4);
 
+      incrementProfileMetric('copies');
       navigator.clipboard.writeText(currentPioneerWallet).then(() => {
         const btn = document.getElementById('btn-copy-wallet');
         btn.innerHTML = `✓ Copiado: <span class="notranslate" style="color:var(--amber-light)">${head}...${tail}</span>`;

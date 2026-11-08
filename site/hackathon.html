@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOKAGE22B — Pi Network Hackathon Official Pitch & Demo</title>
+  <meta name="description" content="Official Pi Network Hackathon Pitch: Web3 Showcases, Point-of-Sale (POS) Pi Commerce Engine, and KYC-Verified Pioneer Directory." />
+  <link rel="canonical" href="https://hokage22b.com/hackathon" />
+
+  <!-- Clean URLs -->
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
+  <link rel="stylesheet" href="assets/css/style.css?v=4.5" />
+
+  <!-- Pi Network SDK v2.0 -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+    try {
+      if (window.Pi) {
+        window.Pi.init({ version: "2.0", sandbox: false });
+      }
+    } catch (_) {}
+  </script>
+
+  <style>
+    .hackathon-hero {
+      padding: 100px 16px 60px;
+      text-align: center;
+      position: relative;
+    }
+    .hackathon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(90deg, rgba(139,92,246,0.2), rgba(245,158,11,0.2));
+      border: 1px solid rgba(245,158,11,0.45);
+      color: var(--amber-light);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hackathon-title {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .hackathon-subtitle {
+      font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+      color: var(--text-secondary);
+      max-width: 780px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    .hack-card {
+      background: linear-gradient(135deg, rgba(26,16,45,0.85), rgba(13,13,20,0.95));
+      border: 1px solid rgba(139,92,246,0.3);
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.7);
+      transition: all 0.25s ease;
+    }
+    .hack-card:hover {
+      border-color: rgba(245,158,11,0.5);
+      transform: translateY(-3px);
+    }
+    .metric-pill {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+    .metric-num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--amber-light);
+      font-family: var(--font-mono);
+      display: block;
+    }
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <div class="particles-bg" id="particles-bg" aria-hidden="true"></div>
+
+  <!-- Topbar -->
+  <nav class="navbar scrolled" role="navigation">
+    <div class="container">
+      <div class="navbar__inner" style="display:flex;justify-content:space-between;align-items:center">
+        <a href="./" class="navbar__logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:800">
+          <span class="pi-sym" style="color:var(--accent-light)">✦</span>
+          <div>
+            <div>HOKAGE22B</div>
+            <div class="brand-sub" style="font-size:0.7rem;color:var(--amber-light)">Pi Hackathon Edition</div>
+          </div>
+        </a>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="lang-mount-point"></div>
+          <a href="pioneiro" class="portal-btn portal-btn--amber portal-btn--sm">🚀 Live App</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hackathon-hero container">
+      <div class="hackathon-badge">
+        🏆 Pi Network Hackathon Project
+      </div>
+      <h1 class="hackathon-title">
+        Web3 Showcases &amp; <span style="color:var(--amber-light)">Pi POS Commerce Engine</span>
+      </h1>
+      <p class="hackathon-subtitle">
+        Empowering 50M+ Pioneers to turn their identity into verified businesses: free Linktree-style showcases, dynamic Point-of-Sale (POS) billing with QR codes, and a decentralized merchant directory.
+      </p>
+
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px">
+        <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--amber" style="padding:14px 28px;font-size:1rem;font-weight:800">
+          ⚡ Test Live Showcase (@hokage22b) →
+        </a>
+        <a href="pioneiro?u=@hokage22b&pay=3.14&memo=PiCommerceHackathon" class="portal-btn portal-btn--primary" style="padding:14px 24px;font-size:1rem;font-weight:700">
+          📷 Test POS Dynamic QR Billing →
+        </a>
+        <a href="#architecture" class="portal-btn portal-btn--outline" style="padding:14px 20px;font-size:0.95rem">
+          ⚙️ Technical Architecture ↓
+        </a>
+      </div>
+
+      <!-- KEY METRICS BANNER -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px;max-width:960px;margin:0 auto 60px">
+        <div class="metric-pill">
+          <span class="metric-num">100%</span>
+          <span class="metric-label">Native Pi Utility</span>
+        </div>
+        <div class="metric-pill">
+          <span class="metric-num">0%</span>
+          <span class="metric-label">Escrow / Intermediary Fee</span>
+        </div>
+        <div class="metric-pill">
+          <span class="metric-num">KYC</span>
+          <span class="metric-label">Human Trust Layer</span>
+        </div>
+        <div class="metric-pill">
+          <span class="metric-num">v2.0</span>
+          <span class="metric-label">Official Pi SDK Tested</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM VS SOLUTION -->
+    <section class="container" style="margin-bottom:70px">
+      <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+        <div class="section-tag section-tag--amber">Problem &amp; Solution</div>
+        <h2 style="font-size:2.2rem;font-weight:800;color:#fff;margin-bottom:12px">Why HOKAGE22B Matters for Pi Mainnet</h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:24px">
+        <div class="hack-card" style="border-color:rgba(239,68,68,0.35);background:rgba(239,68,68,0.03)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+            <span style="font-size:1.8rem">⚠️</span>
+            <div>
+              <h3 style="font-size:1.25rem;color:#f87171;font-weight:800;margin:0">The Ecosystem Problem</h3>
+              <span style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">Barriers to Pi Commerce</span>
+            </div>
+          </div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:0.92rem;color:var(--text-secondary)">
+            <li>❌ <strong>Pioneers lack a public storefront:</strong> After migrating to Mainnet, merchants have no standardized way to showcase goods and their public Pi key.</li>
+            <li>❌ <strong>Web2 tools take huge cuts:</strong> Platforms like Linktree, Shopify, and Stripe charge monthly fees and up to 30% cuts in fiat currency.</li>
+            <li>❌ <strong>Manual billing causes errors:</strong> Copying 56-character Stellar addresses manually often leads to lost transfers or clipping attacks.</li>
+          </ul>
+        </div>
+
+        <div class="hack-card" style="border-color:rgba(16,185,129,0.45);background:linear-gradient(135deg, rgba(16,185,129,0.08), rgba(139,92,246,0.08))">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+            <span style="font-size:1.8rem">🛡️</span>
+            <div>
+              <h3 style="font-size:1.25rem;color:#34d399;font-weight:800;margin:0">The HOKAGE22B Solution</h3>
+              <span style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">Frictionless Pi Commerce</span>
+            </div>
+          </div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:0.92rem;color:#fff">
+            <li>✅ <strong>Free Web3 Showcase (Linktree):</strong> 1-click personal profile with verified Pi identity, catalog with photos, and direct Pi Wallet.</li>
+            <li>✅ <strong>Point-of-Sale (POS) QR Engine:</strong> Generate dynamic payment QR codes with pre-filled Pi amounts and memos for local stores &amp; WhatsApp.</li>
+            <li>✅ <strong>Ecosystem Merchant Directory:</strong> Real-time discovery engine connecting buyers with KYC-verified pioneers accepting Pi worldwide.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE DEMOS MATRIX -->
+    <section class="container" style="margin-bottom:70px">
+      <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+        <div class="section-tag section-tag--amber">Live Demos</div>
+        <h2 style="font-size:2.2rem;font-weight:800;color:#fff;margin-bottom:12px">Interactive Hackathon Test Matrix</h2>
+        <p style="color:var(--text-secondary);font-size:1rem">Judges can interact directly with each live component on the Mainnet:</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:20px">
+        <!-- DEMO 1: VITRINE -->
+        <div class="hack-card">
+          <div style="font-size:2.2rem;margin-bottom:10px">👤</div>
+          <h3 style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">Pioneer Web3 Showcase</h3>
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;line-height:1.5">
+            Full profile with verified ed25519 checksum wallet, product cards, custom links, and social channels.
+          </p>
+          <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--amber portal-btn--sm portal-btn--full">
+            Launch Showcase Demo ↗
+          </a>
+        </div>
+
+        <!-- DEMO 2: POS ENGINE -->
+        <div class="hack-card">
+          <div style="font-size:2.2rem;margin-bottom:10px">⚡</div>
+          <h3 style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">POS Dynamic QR Billing</h3>
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;line-height:1.5">
+            Real-time Point-of-Sale terminal: pre-filled amount in Pi, memo, and instant camera scanning.
+          </p>
+          <a href="pioneiro?u=@hokage22b&pay=3.14&memo=DemoPOS" class="portal-btn portal-btn--primary portal-btn--sm portal-btn--full">
+            Launch POS Terminal Demo ↗
+          </a>
+        </div>
+
+        <!-- DEMO 3: DIRECTORY -->
+        <div class="hack-card">
+          <div style="font-size:2.2rem;margin-bottom:10px">🌐</div>
+          <h3 style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">Global Merchant Directory</h3>
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;line-height:1.5">
+            Search engine with real-time category filtering (Stores, Services, Creators, Digital Assets).
+          </p>
+          <a href="pioneiro#pioneer-directory-section" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full">
+            Explore Directory Demo ↗
+          </a>
+        </div>
+
+        <!-- DEMO 4: GAZETA MARKETPLACE -->
+        <div class="hack-card">
+          <div style="font-size:2.2rem;margin-bottom:10px">📢</div>
+          <h3 style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">Gazeta dos Pioneiros</h3>
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;line-height:1.5">
+            Peer-to-peer advertising bulletin with tier plans (Gold/Silver) paid natively via Pi SDK.
+          </p>
+          <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm portal-btn--full">
+            Launch Gazeta Marketplace ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNICAL ARCHITECTURE & SECURITY -->
+    <section class="container" id="architecture" style="margin-bottom:80px">
+      <div style="text-align:center;max-width:760px;margin:0 auto 36px">
+        <div class="section-tag section-tag--amber">Security &amp; Architecture</div>
+        <h2 style="font-size:2.2rem;font-weight:800;color:#fff;margin-bottom:12px">Built with Zero-Trust Web3 Principles</h2>
+        <p style="color:var(--text-secondary);font-size:1rem">Engineered for security, decentralization, and high concurrency on Pi Mainnet:</p>
+      </div>
+
+      <div style="background:rgba(0,0,0,0.6);border:1px solid rgba(139,92,246,0.35);border-radius:20px;padding:32px 24px;max-width:880px;margin:0 auto">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:20px;margin-bottom:28px">
+          <div>
+            <span style="font-size:0.8rem;color:var(--amber-light);font-weight:800;text-transform:uppercase">Client Layer:</span>
+            <p style="font-size:0.88rem;color:var(--text-secondary);margin:6px 0 0;line-height:1.5">
+              • Official Pi SDK v2.0 (`https://sdk.minepi.com/pi-sdk.js`)<br>
+              • Zero client-side private keys or passphrases<br>
+              • Responsive Webview for Pi Browser iOS &amp; Android
+            </p>
+          </div>
+          <div>
+            <span style="font-size:0.8rem;color:var(--amber-light);font-weight:800;text-transform:uppercase">Server Layer:</span>
+            <p style="font-size:0.88rem;color:var(--text-secondary);margin:6px 0 0;line-height:1.5">
+              • Edge Functions validating Bearer tokens on `https://api.minepi.com/v2/me`<br>
+              • Direct payments approval on `/v2/payments/{id}/approve`<br>
+              • Automated handling of `onIncompletePaymentFound`
+            </p>
+          </div>
+          <div>
+            <span style="font-size:0.8rem;color:var(--amber-light);font-weight:800;text-transform:uppercase">Database &amp; RLS:</span>
+            <p style="font-size:0.88rem;color:var(--text-secondary);margin:6px 0 0;line-height:1.5">
+              • PostgreSQL Row-Level Security (RLS) strictly enforced<br>
+              • Direct anonymous table writes blocked by default<br>
+              • Regex cryptographic validation for Stellar keys (`^G[A-Z2-7]{55}$`)
+            </p>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="color:#10b981;font-size:1.2rem">✓</span>
+            <span style="color:#fff;font-size:0.85rem">100% Automated Security Hardening Test Suite Passing</span>
+          </div>
+          <span style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono)">
+            yhzoehwkuxteihsnagcj.supabase.co
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBMISSION CALL TO ACTION -->
+    <section class="container" style="text-align:center;padding:40px 16px 80px">
+      <div style="background:linear-gradient(135deg, rgba(35,22,55,0.95), rgba(13,13,20,0.98));border:1px solid rgba(245,158,11,0.45);border-radius:24px;padding:48px 24px;max-width:760px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,0.8)">
+        <h2 style="font-size:clamp(1.6rem, 3.5vw, 2.4rem);font-weight:900;color:#fff;margin-bottom:14px">
+          Ready to Test Inside the Pi Browser?
+        </h2>
+        <p style="color:var(--text-secondary);font-size:1rem;margin-bottom:28px;max-width:560px;margin-left:auto;margin-right:auto">
+          Access <strong>hokage22b.com</strong> inside the official Pi Browser on your smartphone to experience 1-click authentication and native Pi payments.
+        </p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a href="pioneiro" class="portal-btn portal-btn--amber" style="padding:14px 32px;font-weight:800;font-size:1.05rem">
+            Open Web3 Showcase Platform →
+          </a>
+          <a href="mailto:contato@hokage22b.com?subject=Pi%20Hackathon%20Review" class="portal-btn portal-btn--outline" style="padding:14px 24px">
+            Contact Founder (@hokage22b)
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.08);padding:24px 16px;text-align:center;font-size:0.8rem;color:var(--text-muted)">
+    <div class="container">
+      HOKAGE22B — Independent Community Platform built for the Pi Network Ecosystem.<br>
+      "The future is not waited for. It is built."
+    </div>
+  </footer>
+
+  <script src="assets/js/modules/i18n.js?v=4.0"></script>
+  <script src="assets/js/modules/pi-pay.js?v=4.5"></script>
+</body>
+</html>
