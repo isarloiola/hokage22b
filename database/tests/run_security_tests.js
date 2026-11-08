@@ -196,6 +196,46 @@ async function runTests() {
     results.push({ id: 'TESTE_08_NEGATIVO', descricao: 'PATCH em anuncios', resultado: 'ERRO', detalhe: e.message });
   }
 
+  // TESTE 9 (Positivo): Leitura pública transparente do ledger transacoes_pi
+  try {
+    const res = await fetch(`${sbUrl}/rest/v1/transacoes_pi?select=payment_id,amount,status&limit=5`, { headers });
+    const data = await res.json().catch(() => null);
+    const ok = res.status === 200 && Array.isArray(data);
+    results.push({
+      id: 'TESTE_09_POSITIVO',
+      descricao: 'Leitura pública transparente do ledger transacoes_pi (Transparência Web3)',
+      resultado: ok ? 'PASSOU (Aprovado)' : 'FALHOU',
+      httpCode: res.status,
+      detalhe: ok ? `Consulta pública realizada com sucesso (${data.length} registros)` : JSON.stringify(data)
+    });
+  } catch (e) {
+    results.push({ id: 'TESTE_09_POSITIVO', descricao: 'Leitura de transacoes_pi', resultado: 'ERRO', detalhe: e.message });
+  }
+
+  // TESTE 10 (Negativo): Tentativa de forjar transação no ledger via anon key
+  try {
+    const res = await fetch(`${sbUrl}/rest/v1/transacoes_pi`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        payment_id: 'fraud_audit_test_' + Date.now(),
+        amount: 314.0,
+        status: 'completed'
+      })
+    });
+    const data = await res.json().catch(() => null);
+    const ok = res.status === 401 || res.status === 403 || (data && data.code === '42501');
+    results.push({
+      id: 'TESTE_10_NEGATIVO',
+      descricao: 'Tentativa de forjar registro no ledger transacoes_pi via chave anônima',
+      resultado: ok ? 'PASSOU (Bloqueado com Sucesso)' : 'FALHOU',
+      httpCode: res.status,
+      detalhe: ok ? 'Acesso negado por RLS / REVOKE (HTTP ' + res.status + ')' : JSON.stringify(data)
+    });
+  } catch (e) {
+    results.push({ id: 'TESTE_10_NEGATIVO', descricao: 'Escrita em transacoes_pi', resultado: 'ERRO', detalhe: e.message });
+  }
+
   console.log(JSON.stringify(results, null, 2));
 }
 
