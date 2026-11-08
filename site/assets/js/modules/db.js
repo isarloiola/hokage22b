@@ -512,22 +512,22 @@
       }
     }
 
-    // Se for o @hokage22b e não houver anúncio gravado no Supabase, fornece o anúncio oficial do canal YouTube
+    // Se for o @hokage22b e não houver anúncio gravado no Supabase, fornece a mensagem oficial de Boas-Vindas
     if (list.length === 0 && cleanUser === 'hokage22b') {
       list = [{
-        id: 'ad_official_hokage22b_yt',
-        title: 'Canal @justhokage22b no YouTube',
-        description: 'Análises semanais sérias e sem hype sobre Pi Network, Web3, nós validadores e finanças descentralizadas no Brasil. Conteúdo com embasamento técnico e foco na Open Mainnet.',
+        id: 'ad_official_hokage22b_welcome',
+        title: 'Bem-vindo ao HOKAGE22B: A Economia Real na Pi Network 🌐',
+        description: 'Seja muito bem-vindo, pioneiro! Este é o seu espaço descentralizado para criar vitrines, aceitar Pi no seu negócio, conectar-se com pioneiros verificados e construir a utilidade real da moeda. Juntos rumo à Open Mainnet!',
         link_url: 'https://www.youtube.com/@justhokage22b',
         image_url: 'assets/img/ebook-pago-negocios.jpg',
-        category: 'youtube',
+        category: 'geral',
         pioneer_username: '@hokage22b',
         pioneer_name: 'HOKAGE22B',
         plan_tier: 'ouro',
         price_pi: 3.14,
         status: 'ativo',
-        views_count: 314,
-        clicks_count: 88
+        views_count: 777,
+        clicks_count: 142
       }];
     }
 
