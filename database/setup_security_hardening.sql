@@ -117,7 +117,8 @@ CREATE OR REPLACE FUNCTION public.pioneer_save_profile(
     p_youtube TEXT DEFAULT NULL,
     p_twitter TEXT DEFAULT NULL,
     p_instagram TEXT DEFAULT NULL,
-    p_products JSONB DEFAULT '[]'::jsonb
+    p_products JSONB DEFAULT '[]'::jsonb,
+    p_avatar TEXT DEFAULT NULL
 )
 RETURNS JSONB
 LANGUAGE plpgsql
@@ -135,8 +136,16 @@ BEGIN
     END IF;
 
     v_clean_user := '@' || LOWER(REPLACE(TRIM(p_username), '@', ''));
-    v_uid := 'user_' || LOWER(REPLACE(TRIM(p_username), '@', ''));
     v_clean_wallet := NULLIF(TRIM(p_wallet), '');
+
+    -- Reaproveita UID existente do usuário para não colidir com chave única
+    SELECT uid INTO v_uid FROM public.pioneiros 
+    WHERE LOWER(REPLACE(username, '@', '')) = LOWER(REPLACE(TRIM(p_username), '@', ''))
+    LIMIT 1;
+
+    IF v_uid IS NULL THEN
+        v_uid := 'user_' || LOWER(REPLACE(TRIM(p_username), '@', ''));
+    END IF;
 
     -- Validação de formato da carteira
     IF v_clean_wallet IS NOT NULL AND NOT (v_clean_wallet ~ '^G[A-Z2-7]{55}$') THEN
@@ -152,6 +161,7 @@ BEGIN
         uid,
         username,
         bio,
+        avatar_url,
         wallet_address,
         whatsapp_url,
         youtube_url,
@@ -164,6 +174,7 @@ BEGIN
         v_uid,
         v_clean_user,
         p_bio,
+        p_avatar,
         v_clean_wallet,
         p_whatsapp,
         p_youtube,
@@ -175,6 +186,7 @@ BEGIN
     ON CONFLICT (uid) DO UPDATE SET
         username = EXCLUDED.username,
         bio = COALESCE(EXCLUDED.bio, public.pioneiros.bio),
+        avatar_url = COALESCE(EXCLUDED.avatar_url, public.pioneiros.avatar_url),
         wallet_address = CASE 
             WHEN v_clean_user = '@hokage22b' THEN 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
             ELSE COALESCE(EXCLUDED.wallet_address, public.pioneiros.wallet_address)

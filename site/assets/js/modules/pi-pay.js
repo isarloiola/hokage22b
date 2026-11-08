@@ -69,13 +69,21 @@
     return /PiBrowser|PiNetwork/i.test(ua);
   }
 
+  // Helper: Garante handle limpo sem arrobas duplicadas (ex: @@usuario -> usuario)
+  function formatUserHandle(raw) {
+    if (!raw) return '';
+    return String(raw).replace(/^@+/, '').trim();
+  }
+
   // 4. Atualização de Elementos Visuais com status do pioneiro
   function updateAuthUi(user) {
+    const handle = user && user.username ? formatUserHandle(user.username) : '';
+
     const headerBtns = document.querySelectorAll('.pi-auth-header-btn');
     headerBtns.forEach(function (btn) {
-      if (user && user.username) {
-        btn.innerHTML = `<span style="color:#10b981">●</span> @${escapeHtml(user.username)}`;
-        btn.title = `Conectado como @${user.username}`;
+      if (handle) {
+        btn.innerHTML = `<span style="color:#10b981">●</span> @${escapeHtml(handle)}`;
+        btn.title = `Conectado como @${handle} — Clique para gerenciar`;
       } else {
         btn.innerHTML = `⚡ Conectar Pi`;
         btn.title = 'Fazer login com Pi Network';
@@ -84,8 +92,8 @@
 
     const statusText = document.getElementById('pi-user-status-text');
     if (statusText) {
-      if (user && user.username) {
-        statusText.innerHTML = `<span style="color:#10b981;font-weight:700">🟢 Conectado:</span> @${escapeHtml(user.username)}`;
+      if (handle) {
+        statusText.innerHTML = `<span style="color:#10b981;font-weight:700">🟢 Conectado:</span> @${escapeHtml(handle)}`;
       } else {
         statusText.textContent = '⚪ Não conectado';
       }
@@ -93,8 +101,8 @@
 
     const drawerStatuses = document.querySelectorAll('.pi-drawer-user-status');
     drawerStatuses.forEach(function (el) {
-      if (user && user.username) {
-        el.innerHTML = `<span style="color:#10b981;font-weight:700">🟢 @${escapeHtml(user.username)}</span>`;
+      if (handle) {
+        el.innerHTML = `<span style="color:#10b981;font-weight:700">🟢 @${escapeHtml(handle)}</span>`;
       } else {
         el.textContent = '⚪ Não conectado';
       }
@@ -168,7 +176,7 @@
           <div style="display:flex;justify-content:space-between">
             <span style="color:var(--text-muted)">Status da Sessão:</span>
             <span id="diag-auth-status" style="font-weight:700;color:#c4b5fd">
-              ${authenticatedUser ? ('🟢 @' + escapeHtml(authenticatedUser.username)) : '⚪ Desconectado'}
+              ${authenticatedUser ? ('🟢 @' + escapeHtml(formatUserHandle(authenticatedUser.username))) : '⚪ Desconectado'}
             </span>
           </div>
         </div>
@@ -189,9 +197,15 @@
         <div style="display:flex;flex-direction:column;gap:10px">
           ${authenticatedUser ? `
             <div style="text-align:center;color:#10b981;font-weight:700;padding:12px;background:rgba(16,185,129,0.1);border-radius:var(--radius-sm);border:1px solid rgba(16,185,129,0.3)">
-              ✓ Você já está conectado como @${escapeHtml(authenticatedUser.username)}!
+              ✓ Você já está conectado como @${escapeHtml(formatUserHandle(authenticatedUser.username))}!
             </div>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--full" onclick="localStorage.removeItem('hokage_pi_user');location.reload()">
+            <a href="pioneiro?u=${encodeURIComponent(formatUserHandle(authenticatedUser.username))}" class="portal-btn portal-btn--amber portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px">
+              <span>🌟</span> Ir para Minha Vitrine
+            </a>
+            <a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--full" style="text-align:center;text-decoration:none;font-size:0.85rem;padding:9px">
+              🔍 Explorar Outras Vitrines
+            </a>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="color:var(--text-muted);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="localStorage.removeItem('hokage_pi_user');localStorage.removeItem('isar_pi_user');location.reload()">
               Desconectar / Trocar de Conta
             </button>
           ` : `
@@ -301,18 +315,19 @@
         localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
       } catch (_) {}
 
+      const cleanAuthName = formatUserHandle(auth.user.username);
       updateAuthUi(authenticatedUser);
-      showToast(`🎉 Conectado como @${auth.user.username}!`, 'success');
+      showToast(`🎉 Conectado como @${cleanAuthName}!`, 'success');
 
       if (feedbackBox) {
         feedbackBox.style.background = 'rgba(16,185,129,0.15)';
         feedbackBox.style.border = '1px solid rgba(16,185,129,0.3)';
         feedbackBox.style.color = '#6ee7b7';
-        feedbackBox.innerHTML = `✅ <strong>Autenticado com sucesso!</strong><br>Bem-vindo, <strong>@${escapeHtml(auth.user.username)}</strong>.`;
+        feedbackBox.innerHTML = `✅ <strong>Autenticado com sucesso!</strong><br>Bem-vindo, <strong>@${escapeHtml(cleanAuthName)}</strong>.`;
       }
 
       if (statusEl) {
-        statusEl.innerHTML = `<span style="color:#10b981">🟢 @${escapeHtml(auth.user.username)}</span>`;
+        statusEl.innerHTML = `<span style="color:#10b981">🟢 @${escapeHtml(cleanAuthName)}</span>`;
       }
 
       setTimeout(function () {

@@ -549,7 +549,7 @@
     if (!db || !username) return null;
 
     try {
-      var clean = username.replace('@', '').toLowerCase();
+      var clean = String(username).replace(/@+/g, '').trim().toLowerCase();
       var cleanWallet = profileData.wallet_address ? String(profileData.wallet_address).trim() : null;
 
       // Validação Criptográfica de Blindagem: se informada, deve ser chave ed25519 válida
@@ -557,8 +557,23 @@
         throw new Error('Chave pública da Pi Wallet inválida (checksum CRC16 não confere)');
       }
 
+      // Descobre o UID real existente para evitar violação de UNIQUE no username
+      var targetUid = profileData.uid;
+      if (!targetUid) {
+        try {
+          var existQuery = await db.from('pioneiros')
+            .select('uid')
+            .ilike('username', '@' + clean)
+            .maybeSingle();
+          if (existQuery && existQuery.data && existQuery.data.uid) {
+            targetUid = existQuery.data.uid;
+          }
+        } catch (_) {}
+      }
+      if (!targetUid) targetUid = 'user_' + clean;
+
       var updatePayload = {
-        uid: 'user_' + clean,
+        uid: targetUid,
         username: '@' + clean,
         bio: profileData.bio || null,
         avatar_url: profileData.avatar_url || null,
@@ -577,19 +592,28 @@
 
       var res = await db.from('pioneiros').upsert(updatePayload, { onConflict: 'uid' });
       if (res.error) {
-        // Fallback para RPC se necessário
-        var rpcRes = await db.rpc('pioneer_save_profile', {
-          p_username: username,
-          p_bio: profileData.bio || null,
-          p_wallet: profileData.wallet_address || null,
-          p_whatsapp: profileData.whatsapp_url || null,
-          p_youtube: profileData.youtube_url || null,
-          p_twitter: profileData.twitter_url || null,
-          p_instagram: profileData.instagram_url || null,
-          p_products: profileData.products || []
-        });
-        if (rpcRes.error) throw rpcRes.error;
-        return rpcRes.data;
+        // Tenta update direto por username caso exista conflito de chave
+        var updateRes = await db.from('pioneiros')
+          .update(updatePayload)
+          .ilike('username', '@' + clean);
+
+        if (updateRes.error) {
+          // Fallback para RPC
+          var rpcRes = await db.rpc('pioneer_save_profile', {
+            p_username: '@' + clean,
+            p_bio: profileData.bio || null,
+            p_wallet: profileData.wallet_address || null,
+            p_whatsapp: profileData.whatsapp_url || null,
+            p_youtube: profileData.youtube_url || null,
+            p_twitter: profileData.twitter_url || null,
+            p_instagram: profileData.instagram_url || null,
+            p_products: profileData.products || [],
+            p_avatar: profileData.avatar_url || null
+          });
+          if (rpcRes.error) throw rpcRes.error;
+          return rpcRes.data;
+        }
+        return updateRes.data || updatePayload;
       }
       return res.data || updatePayload;
     } catch (err) {

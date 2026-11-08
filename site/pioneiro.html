@@ -533,6 +533,9 @@
           O seu <strong>Linktree descentralizado</strong> e seguro: receba pagamentos diretamente na sua <strong>Pi Wallet</strong>, reúna produtos com fotos, WhatsApp e redes sem risco de robôs ou contas falsas.
         </p>
 
+        <!-- Atalho Rápido para Usuário Conectado -->
+        <div id="onboarding-logged-box" style="display:none"></div>
+
         <!-- Ação Principal: Pi Browser -->
         <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.35);border-radius:18px;padding:22px;margin-bottom:20px;box-shadow:0 8px 30px rgba(139,92,246,0.15)">
           <button type="button" class="btn btn-primary" onclick="connectPiBrowserAndStart()" style="width:100%;padding:14px;font-size:1.02rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">
@@ -1319,13 +1322,36 @@
         username = loggedUser.username;
       }
 
-      // Se NÃO tem parâmetro E NÃO está logado: tela de onboarding
+      // Se NÃO tem parâmetro: tela de onboarding
       if (!username) {
         document.getElementById('onboarding-navbar').style.display = 'block';
         document.getElementById('vitrine-topbar').style.display = 'none';
         document.getElementById('onboarding-view').style.display = 'block';
         document.getElementById('pioneer-card').style.display = 'none';
         document.getElementById('pioneer-footer').style.display = 'none';
+
+        // Mostra atalho de 1 clique caso já esteja logado
+        const logged = getLoggedUser();
+        const loggedBox = document.getElementById('onboarding-logged-box');
+        if (loggedBox) {
+          if (logged && logged.username) {
+            const cleanLogged = cleanUsername(logged.username).replace(/^@+/, '');
+            loggedBox.innerHTML = `
+              <div style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.35);border-radius:14px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left">
+                <div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600">Sua Sessão Pi Conectada:</div>
+                  <div style="font-size:0.95rem;color:#10b981;font-weight:800">🟢 @${escapeHtml(cleanLogged)}</div>
+                </div>
+                <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="padding:9px 16px;font-size:0.86rem;font-weight:700;text-decoration:none">
+                  🌟 Ir para Minha Vitrine →
+                </a>
+              </div>
+            `;
+            loggedBox.style.display = 'block';
+          } else {
+            loggedBox.style.display = 'none';
+          }
+        }
         return;
       }
 
@@ -1333,9 +1359,34 @@
       currentPioneerUser = username;
       isSimulatorMode = false;
 
-      // Se for @hokage22b: Perfil Oficial do Fundador
+      // Se for @hokage22b: Perfil Oficial do Fundador com merge dinâmico (avatar, bio customizada, produtos)
       if (username === '@hokage22b') {
         currentProfileData = JSON.parse(JSON.stringify(HOKAGE22B_OFFICIAL_PROFILE));
+
+        // 1. Merge com cache local instantâneo
+        try {
+          const cachedAvatar = localStorage.getItem('hokage_pioneer_avatar_hokage22b');
+          if (cachedAvatar) currentProfileData.avatar_url = cachedAvatar;
+        } catch (_) {}
+
+        // 2. Merge com dados salvos no Supabase
+        if (window.IsarDB && window.IsarDB.getPioneerFullProfile) {
+          try {
+            const dbProf = await window.IsarDB.getPioneerFullProfile('@hokage22b');
+            if (dbProf) {
+              if (dbProf.avatar_url) {
+                currentProfileData.avatar_url = dbProf.avatar_url;
+                try { localStorage.setItem('hokage_pioneer_avatar_hokage22b', dbProf.avatar_url); } catch (_) {}
+              }
+              if (dbProf.bio) currentProfileData.bio = dbProf.bio;
+              if (Array.isArray(dbProf.products) && dbProf.products.length > 0) {
+                currentProfileData.products = dbProf.products;
+              }
+            }
+          } catch (e) {
+            console.warn('Erro ao mesclar dados do fundador do Supabase:', e);
+          }
+        }
         
         // Busca anúncios reais do @hokage22b se houver
         let ads = [];
@@ -1346,7 +1397,7 @@
         return;
       }
 
-      // Perfil de qualquer outro pioneiro: Busca dados no Supabase
+      // Perfil de qualquer outro pioneiro: Busca dados no Supabase + Cache Local
       if (window.IsarDB && window.IsarDB.getPioneerFullProfile) {
         try {
           const prof = await window.IsarDB.getPioneerFullProfile(username);
@@ -1356,6 +1407,15 @@
             wallet_address: '',
             products: []
           };
+
+          // Fallback de cache local caso o upload de avatar seja recente
+          const cleanSlug = username.replace(/^@+/, '');
+          try {
+            const cachedAvatar = localStorage.getItem('hokage_pioneer_avatar_' + cleanSlug);
+            if (cachedAvatar && !currentProfileData.avatar_url) {
+              currentProfileData.avatar_url = cachedAvatar;
+            }
+          } catch (_) {}
 
           const ads = (window.IsarDB.getMyAds) ? await window.IsarDB.getMyAds(username) : [];
           renderShowcaseData(currentProfileData, ads);
@@ -1405,11 +1465,21 @@
             </button>
           `;
         } else {
-          topbarActions.innerHTML = `
-            <a href="pioneiro" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;text-decoration:none">
-              Criar Minha Vitrine Grátis →
-            </a>
-          `;
+          const logged = getLoggedUser();
+          const cleanLogged = logged && logged.username ? cleanUsername(logged.username).replace(/^@+/, '') : '';
+          if (cleanLogged) {
+            topbarActions.innerHTML = `
+              <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="font-size:0.75rem;padding:6px 12px;font-weight:700;text-decoration:none">
+                🌟 Minha Vitrine (@${cleanLogged})
+              </a>
+            `;
+          } else {
+            topbarActions.innerHTML = `
+              <a href="pioneiro" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;text-decoration:none">
+                Criar Minha Vitrine Grátis →
+              </a>
+            `;
+          }
         }
       }
 
@@ -1982,9 +2052,23 @@
             products: products
           });
 
+          // Salva no cache imediato do navegador para persistência instantânea
+          const cleanSlug = cleanUsername(username).replace('@', '');
+          try {
+            if (avatarUrl) {
+              localStorage.setItem('hokage_pioneer_avatar_' + cleanSlug, avatarUrl);
+            } else {
+              localStorage.removeItem('hokage_pioneer_avatar_' + cleanSlug);
+            }
+          } catch (_) {}
+
           setLoggedUser(username, null, 'pi-sdk');
           currentPioneerUser = username;
-          window.history.replaceState(null, '', `?u=${encodeURIComponent(username)}`);
+          if (currentProfileData) {
+            currentProfileData.avatar_url = avatarUrl;
+          }
+          applyAvatarOnScreen(avatarUrl, username);
+          window.history.replaceState(null, '', `?u=${encodeURIComponent(cleanSlug)}`);
 
           alert('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!');
           closeProfileEditModal();
