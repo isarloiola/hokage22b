@@ -82,10 +82,11 @@
     const headerBtns = document.querySelectorAll('.pi-auth-header-btn');
     headerBtns.forEach(function (btn) {
       if (handle) {
-        btn.innerHTML = `<span style="color:#10b981">●</span> @${escapeHtml(handle)}`;
+        const shortHandle = handle.length > 7 ? handle.slice(0, 6) + '…' : handle;
+        btn.innerHTML = `<span style="color:#10b981">●</span> <span class="pi-btn-full">@${escapeHtml(handle)}</span><span class="pi-btn-short">@${escapeHtml(shortHandle)}</span>`;
         btn.title = `Conectado como @${handle} — Clique para gerenciar`;
       } else {
-        btn.innerHTML = `⚡ Conectar Pi`;
+        btn.innerHTML = `<span class="pi-btn-full">⚡ Conectar Pi</span><span class="pi-btn-short">⚡ Pi</span>`;
         btn.title = 'Fazer login com Pi Network';
       }
     });

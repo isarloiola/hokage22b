@@ -208,18 +208,30 @@ body {
 
 /* Ajustes no Mobile */
 @media (max-width: 768px) {
+  .lang-selector {
+    flex-shrink: 0;
+  }
   .lang-btn-trigger {
-    padding: 5px 8px;
+    padding: 4px 6px;
     font-size: 0.72rem;
-    gap: 4px;
+    gap: 3px;
+    flex-shrink: 0;
   }
   .lang-btn-trigger .lang-arrow {
-    display: none;
+    display: none !important;
   }
   .lang-dropdown {
     right: 0;
     width: 220px;
     max-height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lang-btn-trigger {
+    padding: 3px 5px;
+    font-size: 0.68rem;
+    gap: 2px;
   }
 }
 

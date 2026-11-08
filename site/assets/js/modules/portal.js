@@ -52,6 +52,13 @@
     drawerLinks.forEach(function (link) {
       link.addEventListener('click', closeMobileDrawer);
     });
+
+    // Fecha ao clicar fora do drawer
+    document.addEventListener('click', function (e) {
+      if (drawer.classList.contains('active') && !drawer.contains(e.target) && !burger.contains(e.target)) {
+        closeMobileDrawer();
+      }
+    });
   }
 
   // ─── 2. Modais (Manual, Proposta Comercial, Parceria) ─────
