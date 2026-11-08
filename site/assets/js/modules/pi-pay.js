@@ -211,11 +211,12 @@
             </button>
           ` : `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow(false)" style="padding:14px;font-weight:700">
-              ⚡ Conectar no Pi Browser (Mainnet)
+              ⚡ Conectar no Pi Browser
             </button>
+            ${window.location.search.includes('sandbox=1') ? `
             <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="HokagePi.triggerAuthFlow(true)" style="font-size:0.78rem;opacity:0.85">
-              🧪 Testar em Modo Sandbox (Testnet)
-            </button>
+              🧪 Testar em Modo Sandbox (Debug)
+            </button>` : ''}
           `}
         </div>
 
@@ -295,8 +296,14 @@
 
     function onIncompletePaymentFound(payment) {
       console.log('Pagamento incompleto detectado:', payment);
-      if (payment && payment.identifier && payment.transaction && payment.transaction.txid) {
+      if (!payment || !payment.identifier) return;
+      const st = payment.status || {};
+      if (st.developer_completed) return;
+
+      if (payment.transaction && payment.transaction.txid) {
         completePaymentOnServer(payment.identifier, payment.transaction.txid);
+      } else if (st.developer_approved === false) {
+        cancelPaymentOnServer(payment.identifier);
       }
     }
 
@@ -406,6 +413,20 @@
       return await res.json();
     } catch (err) {
       console.error('Erro ao completar no servidor:', err);
+      return null;
+    }
+  }
+
+  async function cancelPaymentOnServer(paymentId) {
+    try {
+      const res = await fetch(SUPABASE_FUNCTIONS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'cancel', paymentId: paymentId })
+      });
+      return await res.json();
+    } catch (err) {
+      console.error('Erro ao cancelar no servidor:', err);
       return null;
     }
   }

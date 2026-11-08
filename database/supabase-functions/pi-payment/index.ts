@@ -88,6 +88,23 @@ serve(async (req) => {
       });
     }
 
+    // 3. CANCELAMENTO DO PAGAMENTO (onCancel ou limpeza de pendência)
+    if (action === "cancel") {
+      const response = await fetch(`${piApiBase}/payments/${paymentId}/cancel`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Key ${PI_SERVER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: response.status,
+      });
+    }
+
     return new Response(JSON.stringify({ error: "Ação inválida." }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 400,

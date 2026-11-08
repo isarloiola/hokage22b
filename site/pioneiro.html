@@ -1263,7 +1263,7 @@
       return cleanUsername(logged.username) === cleanUsername(currentPioneerUser);
     }
 
-    function setLoggedUser(username, uid, authType) {
+    function setLoggedUser(username, uid, authType, accessToken) {
       const clean = cleanUsername(username);
       const userObj = { 
         username: clean, 
@@ -1273,6 +1273,9 @@
       try {
         localStorage.setItem('hokage_pi_user', JSON.stringify(userObj));
         localStorage.setItem('isar_pi_user', JSON.stringify(userObj));
+        if (accessToken) {
+          sessionStorage.setItem('hokage_pi_access_token', accessToken);
+        }
       } catch (_) {}
     }
 
@@ -1280,6 +1283,7 @@
       try {
         localStorage.removeItem('hokage_pi_user');
         localStorage.removeItem('isar_pi_user');
+        sessionStorage.removeItem('hokage_pi_access_token');
       } catch (_) {}
       window.location.href = 'pioneiro';
     }
@@ -1736,7 +1740,7 @@
           .then(function(auth) {
             if (auth && auth.user && auth.user.username) {
               const clean = cleanUsername(auth.user.username);
-              setLoggedUser(clean, auth.user.uid, 'pi-sdk');
+              setLoggedUser(clean, auth.user.uid, 'pi-sdk', auth.accessToken || '');
               window.history.replaceState(null, '', `?u=${encodeURIComponent(clean)}`);
               loadPioneerProfile().then(() => {
                 openProfileEditModal();
@@ -1995,7 +1999,7 @@
           const auth = await window.Pi.authenticate(['username', 'payments', 'wallet_address'], function(p) { console.log('Pendência:', p); });
           if (auth && auth.user && auth.user.username) {
             username = cleanUsername(auth.user.username);
-            setLoggedUser(username, auth.user.uid, 'pi-sdk');
+            setLoggedUser(username, auth.user.uid, 'pi-sdk', auth.accessToken || '');
           }
         } catch (err) {
           alert('Falha na autenticação Pi. Confirme o acesso dentro do Pi Browser.');
