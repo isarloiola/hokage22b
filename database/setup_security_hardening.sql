@@ -4,6 +4,23 @@
 -- https://supabase.com/dashboard/project/yhzoehwkuxteihsnagcj/sql/new
 -- ============================================================
 
+-- 0. Higienização e Limpeza de Registros Antigos de Teste
+-- Remove chaves inválidas ou testes antigos já existentes no banco para não conflitar com a trava
+UPDATE public.pioneiros
+SET wallet_address = TRIM(wallet_address)
+WHERE wallet_address IS NOT NULL;
+
+UPDATE public.pioneiros
+SET wallet_address = NULL
+WHERE wallet_address IS NOT NULL 
+  AND (wallet_address = '' OR NOT (wallet_address ~ '^G[A-Z2-7]{55}$'));
+
+-- Garante que o perfil do fundador @hokage22b esteja com a chave oficial
+UPDATE public.pioneiros
+SET wallet_address = 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
+WHERE LOWER(REPLACE(username, '@', '')) = 'hokage22b';
+
+
 -- 1. Constraint de Integridade Criptográfica de Chave Pública Pi Network (Stellar ed25519)
 -- Garante que o PostgreSQL rejeite qualquer chave que não comece com 'G' e não tenha 56 caracteres Base32
 ALTER TABLE public.pioneiros
@@ -11,7 +28,7 @@ DROP CONSTRAINT IF EXISTS chk_pioneiro_wallet_format;
 
 ALTER TABLE public.pioneiros
 ADD CONSTRAINT chk_pioneiro_wallet_format 
-CHECK (wallet_address IS NULL OR wallet_address = '' OR wallet_address ~ '^G[A-Z2-7]{55}$');
+CHECK (wallet_address IS NULL OR wallet_address ~ '^G[A-Z2-7]{55}$');
 
 
 -- 2. Trigger de Proteção Imutável para Contas do Fundador e Oficiais
@@ -173,3 +190,4 @@ BEGIN
     RETURN to_jsonb(v_res);
 END;
 $$;
+
