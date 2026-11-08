@@ -28,3 +28,4 @@ USING (true);
 -- 2. Escrita estritamente bloqueada para clientes diretos (anon / authenticated)
 -- Somente o backend (service_role das Edge Functions) pode gravar ou alterar
 REVOKE INSERT, UPDATE, DELETE ON public.transacoes_pi FROM public, anon, authenticated;
+
