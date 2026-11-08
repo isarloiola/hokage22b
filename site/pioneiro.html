@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@hokage22b" />
   <meta name="twitter:title" content="Vitrine Oficial do Pioneiro — Pi Network" />
-  <meta name="twitter:description" content="Mini-página oficial, fotos de produtos e anúncios verificados na Gazeta dos Pioneiros." />
+  <meta name="twitter:description" content="Mini-página oficial, fotos de produtos e chave pública verificada para pagamentos em Pi." />
   <meta name="twitter:image" content="https://hokage22b.com/assets/img/og-image.png" />
 
   <!-- Security Hardening -->
@@ -49,7 +49,7 @@
   </script>
 
   <style>
-    /* Barra Minimalista de Controle da Vitrine */
+    /* Topbar Fixa e Minimalista */
     .vitrine-topbar {
       position: fixed;
       top: 0;
@@ -57,7 +57,7 @@
       width: 100%;
       background: rgba(9, 9, 11, 0.94);
       backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       z-index: 100;
       padding: 10px 16px;
       display: flex;
@@ -65,42 +65,37 @@
       justify-content: space-between;
       gap: 12px;
     }
-    .mode-segmented-control {
-      display: inline-flex;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 30px;
-      padding: 3px;
-    }
-    .mode-tab-btn {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.2s ease;
+    .vitrine-brand-link {
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-    .mode-tab-btn.active {
-      background: var(--accent);
+      gap: 8px;
       color: #fff;
-      box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
+      font-weight: 800;
+      text-decoration: none;
+      font-size: 0.92rem;
     }
-    .mode-tab-btn:hover:not(.active) {
-      color: #fff;
+
+    /* Banner do Modo Simulador */
+    .simulator-alert-banner {
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.25), rgba(245, 158, 11, 0.25));
+      border: 1px solid rgba(139, 92, 246, 0.45);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      text-align: left;
     }
 
     /* Hero de Onboarding */
     .onboarding-hero {
       background: linear-gradient(135deg, rgba(26, 16, 45, 0.96), rgba(13, 13, 20, 0.98));
       border: 1px solid rgba(139, 92, 246, 0.35);
-      border-radius: 20px;
-      padding: 36px 24px;
+      border-radius: 24px;
+      padding: 40px 24px;
       text-align: center;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(139, 92, 246, 0.2);
       max-width: 620px;
@@ -113,7 +108,7 @@
       background: linear-gradient(135deg, rgba(26, 16, 45, 0.96), rgba(13, 13, 20, 0.98));
       border: 1px solid rgba(139, 92, 246, 0.35);
       border-radius: 24px;
-      padding: 32px 22px;
+      padding: 34px 22px;
       text-align: center;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(139, 92, 246, 0.25);
       max-width: 520px;
@@ -147,6 +142,7 @@
       justify-content: center;
       gap: 8px;
       flex-wrap: wrap;
+      margin: 0 0 6px;
     }
     .pioneer-badge-verified {
       display: inline-flex;
@@ -161,6 +157,19 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+    }
+
+    /* Badge do Link Curto (Estilo Linktree) */
+    .short-link-pill {
+      margin: 12px auto 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
     }
 
     /* Botões de Link (Estilo Linktree Web3) */
@@ -201,6 +210,22 @@
       background: rgba(239, 68, 68, 0.2);
       border-color: #ef4444;
       box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+    }
+    .pioneer-link-btn--instagram {
+      border-color: rgba(225, 48, 108, 0.4);
+    }
+    .pioneer-link-btn--instagram:hover {
+      background: rgba(225, 48, 108, 0.2);
+      border-color: #e1306c;
+      box-shadow: 0 6px 20px rgba(225, 48, 108, 0.3);
+    }
+    .pioneer-link-btn--twitter {
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+    .pioneer-link-btn--twitter:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #fff;
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
     }
 
     /* Cards de Produtos com Foto Real */
@@ -270,29 +295,15 @@
 <body>
   <div id="particles-bg" class="particles-bg" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden"></div>
 
-  <!-- BARRA DE CONTROLE DA VITRINE (SUBSTITUI NAVBAR PADRÃO EM MODO FOCO) -->
+  <!-- BARRA DE TOPO DA VITRINE (LIMPA & PROFISSIONAL) -->
   <header class="vitrine-topbar" id="vitrine-topbar" style="display:none">
-    <button type="button" class="btn btn-outline btn-sm" onclick="resetToOnboarding()" style="padding:6px 14px;font-size:0.8rem">
-      ← Início
-    </button>
+    <a href="./" class="vitrine-brand-link" aria-label="HOKAGE22B — Início">
+      <span class="pi-sym" style="color:var(--accent-light)">✦</span>
+      <span>HOKAGE22B</span>
+    </a>
 
-    <!-- Alternador: Visão do Cliente vs Visão do Dono -->
-    <div class="mode-segmented-control" id="mode-selector">
-      <button type="button" class="mode-tab-btn active" id="tab-client" onclick="setViewMode('client')">
-        👁️ Visão do Cliente
-      </button>
-      <button type="button" class="mode-tab-btn" id="tab-owner" onclick="setViewMode('owner')">
-        ✏️ Visão do Dono
-      </button>
-    </div>
-
-    <div style="display:flex;align-items:center;gap:8px">
-      <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="padding:6px 14px;font-size:0.8rem;font-weight:700">
-        🚀 Criar / Editar
-      </button>
-      <button type="button" class="btn btn-outline btn-sm" id="btn-logout-header" onclick="logoutPioneer()" style="padding:6px 10px;font-size:0.75rem;border-color:rgba(255,255,255,0.25);color:var(--text-muted);display:none" title="Limpar sessão ativa">
-        Sair
-      </button>
+    <div style="display:flex;align-items:center;gap:8px" id="topbar-actions">
+      <!-- Injetado dinamicamente: Modo Dono (Editar), Modo Simulador (Editar/Sair) ou Modo Visitante (Criar Vitrine) -->
     </div>
   </header>
 
@@ -309,13 +320,13 @@
         </a>
         <div style="display:flex;align-items:center;gap:10px">
           <div class="lang-mount-point"></div>
-          <a href="mural" class="btn btn-outline btn-sm">← Gazeta dos Pioneiros</a>
+          <a href="mural" class="btn btn-outline btn-sm">📢 Mural dos Pioneiros</a>
         </div>
       </div>
     </div>
   </nav>
 
-  <main style="padding:80px 16px 60px;position:relative;z-index:1;min-height:90vh">
+  <main style="padding:75px 16px 60px;position:relative;z-index:1;min-height:90vh">
     <div class="container" style="max-width:680px;margin:0 auto">
       
       <!-- ========================================== -->
@@ -327,7 +338,7 @@
           Sua Vitrine Web3 Oficial na Pi Network
         </h1>
         <p style="color:var(--text-secondary);font-size:0.95rem;line-height:1.6;margin-bottom:26px">
-          O seu <strong>Linktree descentralizado</strong> e seguro: receba pagamentos diretamente na sua <strong>Pi Wallet</strong>, reúna produtos com fotos, WhatsApp e redes sem risco de robôs ou contas fakes.
+          O seu <strong>Linktree descentralizado</strong> e seguro: receba pagamentos diretamente na sua <strong>Pi Wallet</strong>, reúna produtos com fotos, WhatsApp e redes sem risco de robôs ou contas falsas.
         </p>
 
         <!-- Ação Principal: Pi Browser -->
@@ -350,54 +361,47 @@
         <form onsubmit="handleOnboardingManualSubmit(event)" style="display:flex;gap:8px;margin-bottom:24px">
           <input type="text" id="onboarding-user-input" placeholder="Ex: @seunome" required maxlength="50" style="flex:1;padding:12px 16px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:10px;color:#fff;font-size:0.95rem" />
           <button type="submit" class="btn btn-outline" style="padding:12px 20px;font-weight:700;border-color:var(--amber);color:var(--amber-light)">
-            Criar / Ver Vitrine →
+            Ver Vitrine →
           </button>
         </form>
 
-        <!-- Demonstração Realista -->
+        <!-- Simulador Interativo Totalmente Separado -->
         <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:20px">
-          <button type="button" onclick="loadRealisticDemoShowcase()" class="btn btn-outline" style="width:100%;padding:12px;font-size:0.9rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
-            👀 Ver Exemplo de Vitrine Pronta &amp; Testar Agora →
+          <button type="button" onclick="startSimulatorMode()" class="btn btn-outline" style="width:100%;padding:12px;font-size:0.9rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
+            🧪 Abrir Simulador Interativo (Testar sem Login) →
           </button>
         </div>
       </div>
 
       <!-- ========================================== -->
-      <!-- ESTADO 2: VITRINE DO PIONEIRO (SHOWCASE)   -->
+      <!-- ESTADO 2: VITRINE DO PIONEIRO (LINKTREE PURO) -->
       <!-- ========================================== -->
       <div class="pioneer-hero-card" id="pioneer-card" style="display:none">
         
-        <!-- BANNER DE PLAYGROUND (APARECE APENAS NO MODO DONO) -->
-        <div id="owner-banner" style="background:rgba(139,92,246,0.15);border:1px dashed rgba(139,92,246,0.5);border-radius:14px;padding:12px 14px;margin-bottom:20px;display:none;text-align:left">
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-            <div>
-              <strong style="color:var(--accent-light);font-size:0.85rem;display:block">🎨 Modo Dono Ativo (Playground)</strong>
-              <span style="color:var(--text-secondary);font-size:0.75rem">Você pode alterar fotos, bio, produtos e ver o resultado em tempo real.</span>
-            </div>
-            <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="font-size:0.75rem;padding:6px 12px;font-weight:700">
-              ✏️ Personalizar Vitrine
-            </button>
+        <!-- BANNER DE SIMULADOR (APARECE APENAS QUANDO O SIMULADOR ESTÁ ATIVO) -->
+        <div id="simulator-banner" class="simulator-alert-banner" style="display:none">
+          <div>
+            <strong style="color:var(--amber-light);font-size:0.85rem;display:block">🧪 Simulador Interativo Ativo</strong>
+            <span style="color:var(--text-secondary);font-size:0.75rem">Você pode alterar fotos, bio e produtos para testar. Nada é gravado publicamente.</span>
           </div>
+          <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="font-size:0.75rem;padding:6px 12px;font-weight:700">
+            ✏️ Personalizar no Teste
+          </button>
         </div>
-
-        <!-- Botão de Edição Superior (visível apenas em Modo Dono) -->
-        <button type="button" class="btn btn-outline btn-sm" id="btn-edit-showcase" onclick="openProfileEditModal()" style="position:absolute;top:16px;right:16px;font-size:0.75rem;padding:6px 12px;border-color:rgba(139,92,246,0.5);color:var(--accent-light);font-weight:700;display:none">
-          ✏️ Editar
-        </button>
 
         <!-- Avatar do Pioneiro -->
         <div class="pioneer-avatar" id="pioneer-avatar">π</div>
         
         <!-- Handle & Badges -->
         <h1 class="pioneer-handle" id="pioneer-handle">@carregando...</h1>
-        <p style="color:var(--text-secondary);font-size:0.95rem;margin-top:8px;margin-bottom:16px;line-height:1.5" id="pioneer-bio">
+        <p style="color:var(--text-secondary);font-size:0.95rem;margin-top:8px;margin-bottom:14px;line-height:1.5" id="pioneer-bio">
           Pioneiro Verificado na comunidade independente HOKAGE22B.
         </p>
         <span class="pioneer-badge-verified" id="pioneer-badge">🛡️ Humano Verificado via Pi KYC</span>
 
         <!-- Link Curto Oficial da Vitrine (Estilo Linktree) -->
-        <div style="margin:14px auto 0;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:20px;font-size:0.8rem">
-          <span style="color:var(--text-muted)">Seu Link:</span>
+        <div class="short-link-pill">
+          <span style="color:var(--text-muted)">Link:</span>
           <span id="pioneer-short-url" style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@...</span>
           <button type="button" onclick="shareProfile()" style="background:transparent;border:none;color:var(--accent-light);cursor:pointer;font-size:0.75rem;padding:2px 6px;text-decoration:underline">Copiar</button>
         </div>
@@ -406,9 +410,9 @@
         <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:16px;padding:18px;margin-top:24px;text-align:left">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
             <span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--amber-light);font-weight:700">
-              ⚡ Pagar ou Transferir Pi para este Pioneiro
+              ⚡ Pagar ou Transferir Pi (Mainnet P2P)
             </span>
-            <span style="font-size:0.7rem;color:var(--text-muted)">Pi Mainnet</span>
+            <span style="font-size:0.7rem;color:var(--text-muted)">Sem Taxas do App</span>
           </div>
           
           <div id="pioneer-wallet-box" style="margin-bottom:12px;display:none">
@@ -417,19 +421,16 @@
           </div>
 
           <div id="pioneer-wallet-empty" style="margin-bottom:12px;display:none;font-size:0.82rem;color:var(--text-muted)">
-            Chave pública ainda não cadastrada. Clique em <em>"Visão do Dono"</em> para adicionar sua carteira Pi.
+            Chave pública ainda não cadastrada. O pioneiro pode adicioná-la editando sua vitrine no Pi Browser.
           </div>
 
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;gap:8px">
             <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" id="btn-copy-wallet" onclick="copyWalletKey()" style="flex:1;padding:10px;font-weight:700">
-              📋 Copiar Chave Pública
+              📋 Copiar Chave Pi
             </button>
             <a href="https://wallet.pi" class="portal-btn portal-btn--outline portal-btn--sm" style="text-align:center;text-decoration:none;padding:10px 14px">
               🚀 Abrir wallet.pi
             </a>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-share-profile" onclick="shareProfile()" style="padding:10px 14px">
-              📢 Compartilhar
-            </button>
           </div>
         </div>
 
@@ -456,8 +457,8 @@
           </div>
         </div>
 
-        <!-- Seção: Anúncios & Boosts Ativos na Gazeta -->
-        <div style="margin-top:28px;text-align:left">
+        <!-- Seção: Anúncios Reais na Gazeta (Só aparece se o pioneiro tiver anúncios) -->
+        <div id="pioneer-ads-section" style="margin-top:28px;text-align:left;display:none">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
             <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700">
               📢 Anúncios na Gazeta dos Pioneiros
@@ -465,8 +466,15 @@
             <a href="mural" style="font-size:0.75rem;color:var(--accent-light);text-decoration:none">Ver todos no Mural →</a>
           </div>
           <div id="pioneer-ads-list" style="display:flex;flex-direction:column;gap:12px">
-            <!-- Anúncios carregados -->
+            <!-- Anúncios reais carregados -->
           </div>
+        </div>
+
+        <!-- Botão Único de Compartilhamento no Rodapé do Card -->
+        <div style="margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08)">
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="shareProfile()" style="width:100%;padding:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">
+            <span>📢</span> Compartilhar esta Vitrine
+          </button>
         </div>
 
       </div>
@@ -475,7 +483,7 @@
       <div id="pioneer-footer" style="text-align:center;color:var(--text-muted);font-size:0.82rem;margin-top:24px;display:none">
         <p>✦ Vitrine Web3 Oficial criada com a plataforma <a href="./" style="color:var(--accent-light);font-weight:600">HOKAGE22B</a>.</p>
         <p style="margin-top:8px">
-          <a href="javascript:void(0)" onclick="openProfileEditModal()" style="color:var(--amber-light);font-weight:700;text-decoration:none">
+          <a href="pioneiro" style="color:var(--amber-light);font-weight:700;text-decoration:none">
             🚀 Crie sua vitrine grátis com seu @usuário Pi ↗
           </a>
         </p>
@@ -485,15 +493,15 @@
   </main>
 
   <!-- ======================================================= -->
-  <!-- MODAL: PLAYGROUND / EDITAR MINHA VITRINE (COM FOTOS)   -->
+  <!-- MODAL ÚNICO: PERSONALIZAR VITRINE (COM FOTOS)          -->
   <!-- ======================================================= -->
   <div class="pi-modal-overlay" id="edit-profile-modal" role="dialog" aria-modal="true" aria-labelledby="modal-profile-title">
     <div class="pi-modal ad-modal" style="max-width:580px;text-align:left">
       <button type="button" class="pi-modal-close" onclick="closeProfileEditModal()" aria-label="Fechar modal">✕</button>
       <div class="pi-modal-logo">✏️</div>
       <h3 id="modal-profile-title" style="text-align:center;margin-bottom:4px">Personalizar Minha Vitrine Pi</h3>
-      <p style="font-size:0.85rem;color:var(--text-secondary);text-align:center;margin-bottom:20px">
-        Faça o teste agora mesmo: adicione fotos, links e veja a prévia mudar em tempo real.
+      <p style="font-size:0.85rem;color:var(--text-secondary);text-align:center;margin-bottom:20px" id="modal-profile-subtitle">
+        Configure sua bio, carteira Pi, links de contato e produtos com fotos.
       </p>
 
       <form id="profile-edit-form" onsubmit="saveProfileForm(event)">
@@ -515,7 +523,7 @@
           <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Sua Chave Pública Pi Wallet (Endereço G...)</label>
           <input type="text" id="prof-input-wallet" placeholder="G..." maxlength="70" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-family:var(--font-mono);font-size:0.8rem" />
           <small style="color:var(--text-muted);font-size:0.72rem;display:block;margin-top:3px">
-            Chave oficial para transferências diretas P2P.
+            Chave pública oficial para transferências diretas P2P. Jamais coloque sua senha de 24 palavras.
           </small>
         </div>
 
@@ -560,31 +568,27 @@
 
         <!-- Botões de Ação do Modal -->
         <div style="display:flex;gap:10px;flex-direction:column">
-          <button type="button" class="btn btn-outline" onclick="applyLivePreviewFromForm()" style="width:100%;padding:12px;font-size:0.9rem;font-weight:700;border-color:var(--accent);color:var(--accent-light)">
-            👀 Atualizar Prévia ao Vivo (Testar na Tela)
-          </button>
           <button type="submit" id="btn-save-profile" class="btn btn-primary" style="width:100%;padding:12px;font-size:0.95rem;font-weight:700">
             💾 Salvar Oficialmente na Pi Network
+          </button>
+          <button type="button" id="btn-preview-simulator" class="btn btn-outline" onclick="applyLivePreviewFromForm()" style="width:100%;padding:10px;font-size:0.85rem;border-color:var(--accent);color:var(--accent-light);display:none">
+            👀 Atualizar Prévia no Simulador
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Scripts -->
   <script src="assets/js/modules/i18n.js?v=4.0"></script>
-  <script src="assets/js/modules/db.js?v=4.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/modules/db.js?v=4.2"></script>
 
   <script>
-    let currentPioneerUser = '';
-    let currentPioneerWallet = '';
-    let currentProfileData = null;
-    let currentViewMode = 'client'; // 'client' | 'owner'
-    let isDemoMode = false;
-
-    // Perfil de Exemplo Realista
-    const DEMO_PROFILE = {
+    // =========================================================================
+    // PERFIL OFICIAL E REAL DO HOKAGE22B (FUNDADOR / PLATAFORMA)
+    // =========================================================================
+    const HOKAGE22B_OFFICIAL_PROFILE = {
       username: '@hokage22b',
       bio: 'Criador de conteúdo Web3, desenvolvedor e comerciante pioneiro. Aceitando pagamentos 100% em Pi na Mainnet com envio para todo o Brasil.',
       wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR',
@@ -611,18 +615,40 @@
           link: 'https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2',
           image_url: ''
         }
-      ],
-      ads: [
+      ]
+    };
+
+    // =========================================================================
+    // PERFIL DE TESTE / SIMULADOR (PLAYGROUND)
+    // =========================================================================
+    const SIMULATOR_DEMO_PROFILE = {
+      username: '@pioneiro_teste',
+      bio: '🧪 Esta é uma vitrine de simulação. Experimente trocar fotos, links e produtos no botão "Personalizar no Teste"!',
+      wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR',
+      whatsapp_url: 'https://wa.me/5500000000000',
+      youtube_url: 'https://youtube.com',
+      instagram_url: 'https://instagram.com',
+      twitter_url: 'https://x.com',
+      products: [
         {
-          title: 'Canal @justhokage22b no YouTube — Análises Técnicas Web3',
-          description: 'Vídeos semanais desmistificando o KYC, nós validadores e comércio na Open Mainnet sem sensacionalismo.',
-          link_url: 'https://www.youtube.com/@justhokage22b',
-          plan_tier: 'ouro',
-          views_count: 1420,
-          clicks_count: 184
+          title: 'Exemplo: Camiseta Oficial Pi Network',
+          price: '2.50 π',
+          link: '#',
+          image_url: 'assets/img/ebook-cover.png'
+        },
+        {
+          title: 'Exemplo: Café Especial Aceitando Pi',
+          price: '0.50 π',
+          link: '#',
+          image_url: ''
         }
       ]
     };
+
+    let currentPioneerUser = '';
+    let currentPioneerWallet = '';
+    let currentProfileData = null;
+    let isSimulatorMode = false;
 
     function cleanUsername(raw) {
       if (!raw) return '';
@@ -656,6 +682,13 @@
       return Boolean(user && user.authType === 'pi-sdk' && user.uid && !user.uid.startsWith('demo-'));
     }
 
+    function isOwnerOfCurrentPage() {
+      if (isSimulatorMode) return true;
+      const logged = getLoggedUser();
+      if (!logged || !logged.username || !currentPioneerUser) return false;
+      return cleanUsername(logged.username) === cleanUsername(currentPioneerUser);
+    }
+
     function setLoggedUser(username, uid, authType) {
       const clean = cleanUsername(username);
       const userObj = { 
@@ -677,43 +710,23 @@
       window.location.href = 'pioneiro';
     }
 
-    // Alternar entre Visão do Cliente e Visão do Dono
-    function setViewMode(mode) {
-      currentViewMode = mode;
-      
-      const tabClient = document.getElementById('tab-client');
-      const tabOwner = document.getElementById('tab-owner');
-      const ownerBanner = document.getElementById('owner-banner');
-      const btnEdit = document.getElementById('btn-edit-showcase');
-
-      if (mode === 'owner') {
-        tabOwner.classList.add('active');
-        tabClient.classList.remove('active');
-        ownerBanner.style.display = 'block';
-        btnEdit.style.display = 'inline-block';
-      } else {
-        tabClient.classList.add('active');
-        tabOwner.classList.remove('active');
-        ownerBanner.style.display = 'none';
-        btnEdit.style.display = 'none';
-      }
-    }
-
-    // Carrega a Vitrine de Demonstração Realista e Imediata
-    function loadRealisticDemoShowcase() {
-      isDemoMode = true;
-      currentProfileData = JSON.parse(JSON.stringify(DEMO_PROFILE));
-      currentPioneerUser = DEMO_PROFILE.username;
-
-      renderShowcaseData(currentProfileData, DEMO_PROFILE.ads);
-      
-      // Abre por padrão na Visão do Cliente (focada e limpa)
-      setViewMode('client');
+    // Inicia o Modo Simulador Interativo
+    function startSimulatorMode() {
+      isSimulatorMode = true;
+      currentPioneerUser = SIMULATOR_DEMO_PROFILE.username;
+      currentProfileData = JSON.parse(JSON.stringify(SIMULATOR_DEMO_PROFILE));
+      renderShowcaseData(currentProfileData, []);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Carrega Perfil Real do Supabase ou Demonstração
+    // Carrega Perfil Real (Supabase) ou Oficial do Hokage22b
     async function loadPioneerProfile() {
+      // 1. Verifica se foi chamado explicitamente modo teste
+      if (getQueryParam('teste') === '1' || getQueryParam('simulador') === '1') {
+        startSimulatorMode();
+        return;
+      }
+
       let username = getQueryParam('u') || getQueryParam('user');
 
       // Fallback de caminho caso venha por /pioneiro/@usuario ou /@usuario
@@ -736,7 +749,7 @@
         username = loggedUser.username;
       }
 
-      // Se NÃO tem parâmetro E NÃO está logado: tela de boas-vindas
+      // Se NÃO tem parâmetro E NÃO está logado: tela de onboarding
       if (!username) {
         document.getElementById('onboarding-navbar').style.display = 'block';
         document.getElementById('vitrine-topbar').style.display = 'none';
@@ -748,16 +761,22 @@
 
       username = cleanUsername(username);
       currentPioneerUser = username;
+      isSimulatorMode = false;
 
-      // Se for @hokage22b ou demo explícita, carrega demo completa
-      if (username === '@hokage22b' || username === '@exemplo') {
-        loadRealisticDemoShowcase();
+      // Se for @hokage22b: Perfil Oficial do Fundador
+      if (username === '@hokage22b') {
+        currentProfileData = JSON.parse(JSON.stringify(HOKAGE22B_OFFICIAL_PROFILE));
+        
+        // Busca anúncios reais do @hokage22b se houver
+        let ads = [];
+        if (window.IsarDB && window.IsarDB.getMyAds) {
+          try { ads = await window.IsarDB.getMyAds('@hokage22b'); } catch (_) {}
+        }
+        renderShowcaseData(currentProfileData, ads);
         return;
       }
 
-      isDemoMode = false;
-
-      // Busca dados no Supabase
+      // Perfil de qualquer outro pioneiro: Busca dados no Supabase
       if (window.IsarDB && window.IsarDB.getPioneerFullProfile) {
         try {
           const prof = await window.IsarDB.getPioneerFullProfile(username);
@@ -770,22 +789,19 @@
 
           const ads = (window.IsarDB.getMyAds) ? await window.IsarDB.getMyAds(username) : [];
           renderShowcaseData(currentProfileData, ads);
-
-          // Verifica se é o dono da conta logada
-          if (loggedUser && cleanUsername(loggedUser.username) === username) {
-            setViewMode('owner');
-          } else {
-            setViewMode('client');
-          }
-
         } catch (err) {
-          console.warn('Erro ao carregar perfil:', err);
-          loadRealisticDemoShowcase();
+          console.warn('Erro ao carregar perfil do pioneiro:', err);
+          renderShowcaseData({
+            username: username,
+            bio: 'Pioneiro Verificado na comunidade independente HOKAGE22B.',
+            wallet_address: '',
+            products: []
+          }, []);
         }
       }
     }
 
-    // Renderiza os Dados Visuais da Vitrine
+    // Renderiza a Vitrine (Linktree Puro)
     function renderShowcaseData(prof, ads) {
       document.getElementById('onboarding-navbar').style.display = 'none';
       document.getElementById('vitrine-topbar').style.display = 'flex';
@@ -793,16 +809,44 @@
       document.getElementById('pioneer-card').style.display = 'block';
       document.getElementById('pioneer-footer').style.display = 'block';
 
-      const logged = getLoggedUser();
-      const logoutBtn = document.getElementById('btn-logout-header');
-      if (logoutBtn) {
-        logoutBtn.style.display = logged ? 'inline-block' : 'none';
+      // Configura ações da barra de topo de forma limpa
+      const topbarActions = document.getElementById('topbar-actions');
+      const isOwner = isOwnerOfCurrentPage();
+
+      if (isSimulatorMode) {
+        document.getElementById('simulator-banner').style.display = 'flex';
+        topbarActions.innerHTML = `
+          <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="font-size:0.75rem;padding:6px 14px;font-weight:700">
+            ✏️ Editar no Simulador
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="resetToOnboarding()" style="font-size:0.75rem;padding:6px 10px">
+            ✕ Sair do Teste
+          </button>
+        `;
+      } else {
+        document.getElementById('simulator-banner').style.display = 'none';
+        if (isOwner) {
+          topbarActions.innerHTML = `
+            <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="font-size:0.75rem;padding:6px 14px;font-weight:700">
+              ⚙️ Editar Minha Vitrine
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="logoutPioneer()" style="font-size:0.75rem;padding:6px 10px;border-color:rgba(255,255,255,0.2);color:var(--text-muted)">
+              Sair
+            </button>
+          `;
+        } else {
+          topbarActions.innerHTML = `
+            <a href="pioneiro" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;text-decoration:none">
+              Criar Minha Vitrine Grátis →
+            </a>
+          `;
+        }
       }
 
       const username = cleanUsername(prof.username || currentPioneerUser || '@pioneiro');
       document.getElementById('pioneer-handle').textContent = username;
       document.getElementById('pioneer-avatar').textContent = username.replace('@', '').charAt(0).toUpperCase() || 'π';
-      document.title = `${username} — Vitrine Oficial de Pioneiro | HOKAGE22B`;
+      document.title = `${username} — Vitrine Oficial na Pi Network | HOKAGE22B`;
 
       const shortUrl = `hokage22b.com/@${username.replace(/^@+/, '')}`;
       const shortUrlEl = document.getElementById('pioneer-short-url');
@@ -839,7 +883,7 @@
 
       if (prof.youtube_url) {
         customLinks.push({
-          title: '📺 Canal no YouTube Oficial',
+          title: '📺 Canal Oficial no YouTube',
           url: prof.youtube_url,
           cssClass: 'pioneer-link-btn--youtube'
         });
@@ -847,28 +891,34 @@
 
       if (prof.instagram_url) {
         customLinks.push({
-          title: '📸 Seguir no Instagram',
-          url: prof.instagram_url
+          title: '📷 Perfil no Instagram',
+          url: prof.instagram_url,
+          cssClass: 'pioneer-link-btn--instagram'
         });
       }
 
       if (prof.twitter_url) {
         customLinks.push({
-          title: '🐦 Perfil no X (Twitter)',
-          url: prof.twitter_url
+          title: '𝕏 Conectar no Twitter / X',
+          url: prof.twitter_url,
+          cssClass: 'pioneer-link-btn--twitter'
         });
       }
 
-      customLinks.push({
-        title: `⛏️ Baixar Pi Network com ${username}`,
-        url: `https://minepi.com/${encodeURIComponent(username.replace('@', ''))}`
-      });
-
-      linksList.innerHTML = customLinks.map(link => `
-        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn ${link.cssClass || ''}">
-          <span>${link.title}</span> <span>↗</span>
-        </a>
-      `).join('');
+      if (customLinks.length === 0) {
+        linksList.innerHTML = `
+          <div style="background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;padding:14px;color:var(--text-muted);font-size:0.85rem">
+            Nenhum link externo cadastrado no momento.
+          </div>
+        `;
+      } else {
+        linksList.innerHTML = customLinks.map(l => `
+          <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn ${l.cssClass || ''}">
+            <span>${l.title}</span>
+            <span style="font-size:1.1rem;opacity:0.8">↗</span>
+          </a>
+        `).join('');
+      }
 
       // Produtos com Fotos Reais
       const productsSection = document.getElementById('pioneer-products-section');
@@ -892,8 +942,10 @@
         productsSection.style.display = 'none';
       }
 
-      // Anúncios da Gazeta
+      // Anúncios Reais da Gazeta (Apenas se existirem de verdade)
+      const adsSection = document.getElementById('pioneer-ads-section');
       const adsList = document.getElementById('pioneer-ads-list');
+
       if (Array.isArray(ads) && ads.length > 0) {
         adsList.innerHTML = ads.map(ad => `
           <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;text-align:left">
@@ -906,27 +958,21 @@
             ${ad.link_url ? `<a href="${ad.link_url}" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--primary portal-btn--sm" style="display:inline-block;text-decoration:none">Acessar Oferta →</a>` : ''}
           </div>
         `).join('');
+        adsSection.style.display = 'block';
       } else {
-        adsList.innerHTML = `
-          <div style="background:rgba(0,0,0,0.3);border:1px dashed rgba(255,255,255,0.15);border-radius:14px;padding:16px;text-align:center">
-            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:8px">Nenhum anúncio ativo na Gazeta no momento.</p>
-            <a href="mural" class="btn btn-outline btn-sm" style="font-size:0.78rem;border-color:var(--amber);color:var(--amber-light)">
-              🚀 Anunciar no Mural (+Visibilidade)
-            </a>
-          </div>
-        `;
+        adsSection.style.display = 'none';
       }
     }
 
-    // Ação: Conectar via Pi Browser
+    // Conectar via Pi Browser
     function connectPiBrowserAndStart() {
-      if (window.Pi && isPiBrowser()) {
+      if (window.Pi) {
         window.Pi.authenticate(['username', 'payments', 'wallet_address'], function(p) { console.log('Pendência:', p); })
           .then(function(auth) {
             if (auth && auth.user && auth.user.username) {
-              const u = cleanUsername(auth.user.username);
-              setLoggedUser(u, auth.user.uid, 'pi-sdk');
-              window.history.replaceState(null, '', `?u=${encodeURIComponent(u)}`);
+              const clean = cleanUsername(auth.user.username);
+              setLoggedUser(clean, auth.user.uid, 'pi-sdk');
+              window.history.replaceState(null, '', `?u=${encodeURIComponent(clean)}`);
               loadPioneerProfile().then(() => {
                 openProfileEditModal();
               });
@@ -938,15 +984,15 @@
       } else {
         alert(
           '💡 Dica Importante:\n\n' +
-          'A autenticação criptográfica oficial da Pi Network só existe dentro do aplicativo Pi Browser (onde sua carteira e KYC estão integrados).\n\n' +
-          'Aqui no navegador comum, você pode navegar, ver vitrines e testar a prévia ao vivo.\n\n' +
+          'A autenticação criptográfica oficial da Pi Network só existe dentro do aplicativo Pi Browser.\n\n' +
+          'Aqui no navegador comum, você pode navegar nas vitrines e testar o Simulador.\n\n' +
           'Para publicar oficialmente sua vitrine na rede, abra este site dentro do Pi Browser!'
         );
         document.getElementById('onboarding-user-input').focus();
       }
     }
 
-    // Submissão Manual na Onboarding (Visualização ou Simulação)
+    // Submissão Manual na Onboarding
     function handleOnboardingManualSubmit(e) {
       if (e) e.preventDefault();
       let inputVal = document.getElementById('onboarding-user-input').value.trim();
@@ -959,13 +1005,13 @@
 
     // Volta para o Onboarding
     function resetToOnboarding() {
-      isDemoMode = false;
+      isSimulatorMode = false;
       window.history.replaceState(null, '', 'pioneiro');
       loadPioneerProfile();
     }
 
     // ==========================================
-    // MODAL DE EDIÇÃO / PLAYGROUND COM FOTOS
+    // MODAL DE EDIÇÃO
     // ==========================================
     function openProfileEditModal() {
       const modal = document.getElementById('edit-profile-modal');
@@ -975,6 +1021,20 @@
       const activeUser = currentPioneerUser || (loggedUser ? loggedUser.username : '@meu_usuario');
 
       document.getElementById('prof-input-user').value = activeUser;
+
+      const previewBtn = document.getElementById('btn-preview-simulator');
+      const saveBtn = document.getElementById('btn-save-profile');
+      const subTitle = document.getElementById('modal-profile-subtitle');
+
+      if (isSimulatorMode) {
+        if (previewBtn) previewBtn.style.display = 'block';
+        if (saveBtn) saveBtn.textContent = '👀 Atualizar Prévia no Simulador';
+        if (subTitle) subTitle.textContent = 'Modo Simulador: adicione fotos e links para testar a prévia na sua tela.';
+      } else {
+        if (previewBtn) previewBtn.style.display = 'none';
+        if (saveBtn) saveBtn.textContent = '💾 Salvar Oficialmente na Pi Network';
+        if (subTitle) subTitle.textContent = 'Configure sua bio, carteira Pi, links de contato e produtos com fotos.';
+      }
 
       if (currentProfileData) {
         document.getElementById('prof-input-bio').value = currentProfileData.bio || '';
@@ -1059,7 +1119,7 @@
       reader.readAsDataURL(file);
     }
 
-    // Atualização da Prévia ao Vivo (Modo Brincar / Playground)
+    // Atualização da Prévia no Modo Simulador
     function applyLivePreviewFromForm() {
       const username = document.getElementById('prof-input-user').value.trim() || '@pioneiro';
       const bio = document.getElementById('prof-input-bio').value.trim();
@@ -1093,16 +1153,21 @@
       };
 
       currentPioneerUser = username;
-      renderShowcaseData(currentProfileData, (DEMO_PROFILE && DEMO_PROFILE.ads) ? DEMO_PROFILE.ads : []);
+      renderShowcaseData(currentProfileData, []);
       closeProfileEditModal();
-      setViewMode('owner');
 
-      alert('✨ Prévia atualizada ao vivo na sua tela! Você pode ver como seus clientes enxergarão clicando em "Visão do Cliente" no topo.');
+      alert('✨ Prévia atualizada com sucesso no Simulador!');
     }
 
     // Salvar Oficialmente na Pi Network (Exige Pi Browser para Validar Identidade KYC)
     async function saveProfileForm(e) {
       if (e) e.preventDefault();
+
+      // Se estiver no Simulador, apenas atualiza a prévia
+      if (isSimulatorMode) {
+        applyLivePreviewFromForm();
+        return;
+      }
 
       let rawUser = document.getElementById('prof-input-user').value.trim();
       if (!rawUser) {
@@ -1112,19 +1177,16 @@
       let username = cleanUsername(rawUser);
 
       // Verificação de Segurança Anti-Fraude:
-      // Se estiver em navegador comum (fora do Pi Browser) e sem sessão do Pi SDK:
       const inPi = isPiBrowser();
       const isAuth = isPiSdkAuthenticated();
 
       if (!inPi && !isAuth) {
-        // Atualiza como simulação local na tela
         applyLivePreviewFromForm();
         alert(
           '💡 Modo Simulação (Navegador Comum)\n\n' +
           'Sua prévia foi atualizada na sua tela com sucesso!\n\n' +
-          '🔒 Por que não salvou no banco público?\n' +
-          'Como o HOKAGE22B é uma rede 100% verificada (Anti-Bot / KYC), a gravação definitiva de uma vitrine no banco de dados exige autenticação pelo Pi Browser para comprovar que você é o verdadeiro dono deste @usuário.\n\n' +
-          '👉 Para publicar definitivamente na rede mundial, abra esta página dentro do Pi Browser e clique em "Salvar Oficialmente"!'
+          '🔒 Como publicar definitivamente na rede mundial?\n' +
+          'Abra este site dentro do aplicativo Pi Browser para autenticar que você é o verdadeiro dono do @usuário.'
         );
         return;
       }
@@ -1186,28 +1248,31 @@
           closeProfileEditModal();
           loadPioneerProfile();
         } else {
-          applyLivePreviewFromForm();
+          throw new Error('Banco de dados não disponível.');
         }
       } catch (err) {
-        alert('Erro ao salvar vitrine: ' + err.message);
+        console.error('Erro ao salvar vitrine:', err);
+        alert('Erro ao gravar dados no Supabase. Por favor, tente novamente no Pi Browser.');
       } finally {
         btn.disabled = false;
         btn.textContent = '💾 Salvar Oficialmente na Pi Network';
       }
     }
 
+    // Copiar Chave Pública com Feedback Imediato
     function copyWalletKey() {
       if (!currentPioneerWallet) {
-        alert('Chave pública não configurada para este pioneiro. Clique em "Visão do Dono" para cadastrar.');
+        alert('Chave pública não cadastrada para este pioneiro.');
         return;
       }
       navigator.clipboard.writeText(currentPioneerWallet).then(() => {
         const btn = document.getElementById('btn-copy-wallet');
         btn.textContent = '✓ Chave Copiada!';
-        setTimeout(() => { btn.textContent = '📋 Copiar Chave Pública'; }, 2000);
+        setTimeout(() => { btn.textContent = '📋 Copiar Chave Pi'; }, 2000);
       });
     }
 
+    // Compartilhar Vitrine (Link Curto Oficial)
     function shareProfile() {
       const cleanUser = currentPioneerUser ? currentPioneerUser.replace(/^@+/, '') : 'hokage22b';
       const shareUrl = `https://hokage22b.com/@${cleanUser}`;

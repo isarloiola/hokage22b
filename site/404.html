@@ -20,6 +20,12 @@
         return;
       }
 
+      // Atalhos especiais para o Simulador Interativo
+      if (first.toLowerCase() === 'simulador' || first.toLowerCase() === 'teste') {
+        window.location.replace('/pioneiro.html?teste=1' + window.location.hash);
+        return;
+      }
+
       // Caso 1: hokage22b.com/@usuario ou hokage22b.com/@usuario/
       if (first.startsWith('@')) {
         window.location.replace('/pioneiro.html?u=' + encodeURIComponent(first) + window.location.hash);
@@ -53,3 +59,4 @@
   </div>
 </body>
 </html>
+
