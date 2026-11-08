@@ -73,6 +73,17 @@
       font-weight: 800;
       text-decoration: none;
       font-size: 0.92rem;
+      flex-shrink: 0;
+    }
+    @media (max-width: 480px) {
+      .vitrine-topbar {
+        padding: 8px 10px;
+        gap: 6px;
+      }
+      .vitrine-brand-link {
+        font-size: 0.82rem;
+        gap: 5px;
+      }
     }
 
     /* Banner do Modo Simulador */
@@ -477,8 +488,14 @@
       <span>HOKAGE22B</span>
     </a>
 
-    <div style="display:flex;align-items:center;gap:8px" id="topbar-actions">
-      <!-- Injetado dinamicamente: Modo Dono (Editar), Modo Simulador (Editar/Sair) ou Modo Visitante (Criar Vitrine) -->
+    <div style="display:flex;align-items:center;gap:8px">
+      <!-- Seletor de Idioma da Comunidade Global -->
+      <div class="lang-mount-point" id="topbar-lang-mount"></div>
+
+      <!-- Ações da Vitrine (Editar / Sair / Criar) -->
+      <div style="display:flex;align-items:center;gap:6px" id="topbar-actions">
+        <!-- Injetado dinamicamente: Modo Dono (Editar), Modo Simulador (Editar/Sair) ou Modo Visitante (Criar Vitrine) -->
+      </div>
     </div>
   </header>
 
@@ -576,7 +593,7 @@
         </div>
         
         <!-- Handle & Badges -->
-        <h1 class="pioneer-handle" id="pioneer-handle">@carregando...</h1>
+        <h1 class="pioneer-handle notranslate" id="pioneer-handle" translate="no">@carregando...</h1>
         <p style="color:var(--text-secondary);font-size:0.95rem;margin-top:8px;margin-bottom:14px;line-height:1.5" id="pioneer-bio">
           Pioneiro Verificado na comunidade independente HOKAGE22B.
         </p>
@@ -585,7 +602,7 @@
         <!-- Link Curto Oficial da Vitrine (Estilo Linktree) -->
         <div class="short-link-pill">
           <span style="color:var(--text-muted)">Link:</span>
-          <span id="pioneer-short-url" style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@...</span>
+          <span id="pioneer-short-url" class="notranslate" translate="no" style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@...</span>
           <button type="button" onclick="shareProfile()" style="background:transparent;border:none;color:var(--accent-light);cursor:pointer;font-size:0.75rem;padding:2px 6px;text-decoration:underline">Copiar</button>
         </div>
 
@@ -600,7 +617,7 @@
           
           <div id="pioneer-wallet-box" style="margin-bottom:12px;display:none">
             <span style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:4px">Chave Pública Oficial (Carteira):</span>
-            <code id="pioneer-wallet-key" style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);color:var(--accent-light);user-select:all"></code>
+            <code id="pioneer-wallet-key" class="notranslate" translate="no" style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);color:var(--accent-light);user-select:all"></code>
           </div>
 
           <div id="pioneer-wallet-empty" style="margin-bottom:12px;display:none;font-size:0.82rem;color:var(--text-muted)">
@@ -670,6 +687,10 @@
             🚀 Crie sua vitrine grátis com seu @usuário Pi ↗
           </a>
         </p>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:0.75rem;color:var(--text-muted)">🌐 Comunidade Global / Languages:</span>
+          <div class="lang-mount-point"></div>
+        </div>
       </div>
 
     </div>
@@ -1331,6 +1352,11 @@
         adsSection.style.display = 'block';
       } else {
         adsSection.style.display = 'none';
+      }
+
+      // Inicializa/sincroniza o seletor de idiomas nos pontos de montagem da vitrine
+      if (window.HokageI18n && window.HokageI18n.init) {
+        window.HokageI18n.init();
       }
     }
 
