@@ -502,7 +502,7 @@
 
     <div class="admin-nav-actions" id="nav-actions-auth" style="display:none">
       <span id="admin-user-tag" style="font-size:0.8rem;color:var(--text-muted);font-family:var(--font-mono);background:rgba(255,255,255,0.05);padding:4px 10px;border-radius:6px"></span>
-      <a href="mural" class="btn btn-outline btn-sm" target="_blank">👁️ Ver Mural</a>
+      <a href="mural" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">👁️ Ver Mural</a>
       <button type="button" class="btn btn-outline btn-sm" onclick="logoutAdmin()">🔒 Bloquear Console</button>
     </div>
   </header>
@@ -1050,7 +1050,7 @@
                 ${linkHtml}
               </td>
               <td>
-                <a href="pioneiro?u=${encodeURIComponent(author)}" target="_blank" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do pioneiro">
+                <a href="pioneiro?u=${encodeURIComponent(author)}" target="_blank" rel="noopener noreferrer" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do pioneiro">
                   ${author} ↗
                 </a>
               </td>
