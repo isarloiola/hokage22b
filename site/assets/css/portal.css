@@ -188,6 +188,11 @@ a {
   transition: all var(--transition);
 }
 
+.portal-header .portal-container {
+  max-width: 1420px;
+  padding: 0 20px;
+}
+
 .portal-header__inner {
   display: flex;
   align-items: center;
@@ -195,6 +200,7 @@ a {
   height: 72px;
   flex-wrap: nowrap;
   width: 100%;
+  gap: 16px;
 }
 
 .portal-brand {
@@ -220,7 +226,7 @@ a {
 .portal-nav-desktop {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   list-style: none;
   flex-wrap: nowrap;
   margin: 0;
@@ -228,11 +234,12 @@ a {
 }
 
 .portal-nav-desktop a {
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.82rem;
+  font-weight: 600;
   color: var(--text-secondary);
   white-space: nowrap;
   transition: color 0.15s ease;
+  padding: 4px 6px;
 }
 
 .portal-nav-desktop a:hover {
@@ -242,7 +249,12 @@ a {
 .portal-header__actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.portal-btn--desktop-only {
+  white-space: nowrap;
   flex-shrink: 0;
 }
 
@@ -1243,7 +1255,7 @@ a {
   }
 }
 
-@media (max-width: 1140px) {
+@media (max-width: 1060px) {
   .portal-nav-desktop,
   .portal-btn--desktop-only {
     display: none !important;
