@@ -13,6 +13,7 @@
 
   let authenticatedUser = null;
   let isAuthenticating = false;
+  let isSdkSessionAuthenticated = false;
 
   // 1. Toast Flutuante na Base da Tela (100% visível no celular)
   function showToast(msg, type) {
@@ -329,6 +330,7 @@
 
       const auth = await Promise.race([authPromise, timeoutPromise]);
       authenticatedUser = auth.user;
+      isSdkSessionAuthenticated = true;
 
       try {
         localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
@@ -449,29 +451,27 @@
     const memo = options.memo || 'Pagamento HOKAGE22B';
     const metadata = options.metadata || {};
 
-    let user = authenticatedUser;
-    if (!user) {
-      try {
-        const stored = localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user');
-        if (stored) {
-          user = JSON.parse(stored);
-          authenticatedUser = user;
-        }
-      } catch (_) {}
-    }
-
-    if (!user) {
-      showToast('Autenticando com a Pi Network...', 'info');
+    // O Pi SDK oficial exige que window.Pi.authenticate(['username', 'payments'], ...)
+    // tenha sido aprovado nesta sessão de navegador para carregar o escopo 'payments' na memória do SDK.
+    if (!isSdkSessionAuthenticated || !authenticatedUser) {
+      showToast('Conectando escopo de pagamentos...', 'info');
       try {
         const logged = await triggerAuthFlow(false);
         if (logged) {
-          user = logged;
+          authenticatedUser = logged;
+          isSdkSessionAuthenticated = true;
+        } else {
+          openPiConnectModal();
+          return;
         }
       } catch (err) {
-        console.warn('Tentativa de autenticação automática:', err);
+        console.warn('Tentativa de autenticação de pagamentos:', err);
+        openPiConnectModal();
+        return;
       }
     }
 
+    let user = authenticatedUser;
     if (!user) {
       openPiConnectModal();
       return;
@@ -741,6 +741,15 @@
         if (parsed && parsed.username) {
           authenticatedUser = parsed;
           updateAuthUi(authenticatedUser);
+
+          // Se estiver no Pi Browser, pré-autoriza a sessão em background para carregar o escopo 'payments'
+          if (isPiBrowser() && window.Pi) {
+            setTimeout(function () {
+              if (!isSdkSessionAuthenticated && !isAuthenticating) {
+                triggerAuthFlow(false).catch(function () {});
+              }
+            }, 450);
+          }
         }
       }
     } catch (_) {}
