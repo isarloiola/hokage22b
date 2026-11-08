@@ -671,13 +671,13 @@
           </div>
 
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" id="btn-copy-wallet" onclick="copyWalletKey()" style="flex:2;min-width:140px;padding:10px;font-weight:700">
-              📋 Copiar Chave Pi
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" id="btn-show-qr" onclick="openWalletQrModal()" style="flex:2;min-width:140px;padding:10px 12px;font-weight:700">
+              ⚡ Cobrar / POS Pi
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-show-qr" onclick="openWalletQrModal()" style="flex:1;min-width:120px;padding:10px 12px;font-weight:700;border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
-              ⚡ Cobrar / POS
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-copy-wallet" onclick="copyWalletKey()" style="flex:1;min-width:110px;padding:10px;font-size:0.82rem;font-weight:600">
+              📋 Chave Pública
             </button>
-            <a href="https://wallet.pi" class="portal-btn portal-btn--outline portal-btn--sm" style="text-align:center;text-decoration:none;padding:10px 14px">
+            <a href="https://wallet.pi" class="portal-btn portal-btn--outline portal-btn--sm" style="text-align:center;text-decoration:none;padding:10px 14px;font-size:0.82rem">
               🚀 wallet.pi
             </a>
           </div>
@@ -2869,7 +2869,7 @@
       navigator.clipboard.writeText(currentPioneerWallet).then(() => {
         const btn = document.getElementById('btn-copy-wallet');
         btn.innerHTML = `✓ Copiado: <span class="notranslate" style="color:var(--amber-light)">${head}...${tail}</span>`;
-        setTimeout(() => { btn.innerHTML = '📋 Copiar Chave Pi'; }, 3500);
+        setTimeout(() => { btn.innerHTML = '📋 Chave Pública'; }, 3500);
       }).catch(() => {
         prompt('Copie a chave pública abaixo:', currentPioneerWallet);
       });

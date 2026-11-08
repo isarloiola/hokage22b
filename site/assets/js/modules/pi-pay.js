@@ -220,18 +220,13 @@
           `}
         </div>
 
-        <!-- Opção Direta de Carteira P2P -->
-        <div style="background:rgba(245, 158, 11, 0.08);border:1px solid rgba(245, 158, 11, 0.25);border-radius:var(--radius-sm);padding:14px;margin-top:16px;font-size:0.82rem">
-          <div style="font-weight:700;color:var(--amber-light);margin-bottom:4px">💰 Pagamento Direto via Pi Wallet:</div>
-          <div style="color:var(--text-secondary);margin-bottom:8px">Envie Pi para a carteira oficial HOKAGE22B:</div>
-          <code style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:8px;border-radius:4px;color:var(--accent-light);user-select:all;margin-bottom:8px">${OFFICIAL_WALLET}</code>
-          <div style="display:flex;gap:8px">
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" onclick="navigator.clipboard.writeText('${OFFICIAL_WALLET}');this.textContent='✓ Carteira Copiada!';setTimeout(()=>this.textContent='📋 Copiar Carteira',2000)">
-              📋 Copiar Carteira
-            </button>
-            <a href="https://wallet.pi" class="portal-btn portal-btn--amber portal-btn--sm portal-btn--full" style="text-align:center;text-decoration:none">
-              🚀 Abrir wallet.pi
-            </a>
+        <!-- Garantia de Segurança Oficial Pi SDK -->
+        <div style="background:rgba(16, 185, 129, 0.08);border:1px solid rgba(16, 185, 129, 0.25);border-radius:var(--radius-sm);padding:14px;margin-top:16px;font-size:0.82rem">
+          <div style="font-weight:700;color:#34d399;margin-bottom:4px;display:flex;align-items:center;gap:6px">
+            <span>🔒</span> Protocolo Nativo Pi Platform SDK
+          </div>
+          <div style="color:var(--text-secondary);line-height:1.45">
+            Todas as transações do HOKAGE22B são autenticadas diretamente no <strong>Pi Browser</strong> com validação biométrica e confirmação descentralizada pela Pi Core Team.
           </div>
         </div>
       </div>
@@ -505,7 +500,7 @@
     }
   }
 
-  // 10. Modal de Pagamento P2P (quando fora do Pi Browser)
+  // 10. Modal de Orientação Pi SDK (quando aberto fora do Pi Browser)
   function showManualP2PModal(data) {
     let modal = document.getElementById('pi-p2p-checkout-modal');
     if (!modal) {
@@ -520,34 +515,30 @@
     modal.innerHTML = `
       <div class="portal-modal">
         <button type="button" class="portal-modal-close" onclick="document.getElementById('pi-p2p-checkout-modal').classList.remove('active')">✕</button>
-        <div class="section-tag section-tag--amber">Pagamento em Pi Network</div>
+        <div class="section-tag section-tag--amber">Pagamento Seguro Pi SDK</div>
         <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">${escapeHtml(data.memo || 'Pagamento')}</h3>
         
-        <div style="background:rgba(245, 158, 11, 0.08);border:1px solid rgba(245, 158, 11, 0.25);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.88rem;color:var(--text-secondary)">
-          💡 <strong>Dica de agilidade:</strong> Para pagar e validar com 1 clique, abra este site diretamente no aplicativo <strong>Pi Browser</strong> no seu celular!
+        <div style="background:rgba(245, 158, 11, 0.1);border:1px solid rgba(245, 158, 11, 0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.86rem;color:var(--text-secondary);line-height:1.5">
+          💡 <strong>Navegador Externo Detectado:</strong><br>
+          Para sua segurança e autenticação biométrica via Pi Platform SDK, os pagamentos são processados exclusivamente dentro do aplicativo <strong>Pi Browser</strong>.
         </div>
 
-        <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:18px;margin-bottom:18px">
-          <div style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase">Valor a transferir:</div>
-          <div style="font-size:1.8rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono);margin:4px 0 14px">
-            ${data.amount || '3.14'} π
+        <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px;text-align:center">
+          <div style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase">Valor em Pi Network:</div>
+          <div style="font-size:2rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono);margin:4px 0">
+            ${data.amount || '1.0'} π
           </div>
-          
-          <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:6px">Endereço da Carteira Oficial HOKAGE22B:</div>
-          <code style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:10px;border-radius:4px;color:var(--accent-light);border:1px solid rgba(255,255,255,0.1);user-select:all" id="p2p-wallet-code">${OFFICIAL_WALLET}</code>
+          <span style="font-size:0.75rem;color:#34d399;font-weight:700">✓ Transação Oficial Pi SDK v2.0</span>
+        </div>
 
-          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" style="margin-top:10px" onclick="navigator.clipboard.writeText('${OFFICIAL_WALLET}');this.textContent='✓ Endereço Copiado!';setTimeout(()=>this.textContent='📋 Copiar Endereço da Carteira',2000)">
-            📋 Copiar Endereço da Carteira
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <a href="pi://hokage22b.com" class="portal-btn portal-btn--amber portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px">
+            🚀 Abrir Diretamente no Pi Browser
+          </a>
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" onclick="navigator.clipboard.writeText('https://hokage22b.com');this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link para o Pi Browser',2500)">
+            📋 Copiar Link do App
           </button>
         </div>
-
-        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:18px;line-height:1.5">
-          Após enviar a transferência no seu Pi Wallet, envie o comprovante ou hash para <strong>contato@hokage22b.com</strong> para ativação imediata.
-        </p>
-
-        <a href="mailto:contato@hokage22b.com?subject=Pagamento%20Pi%20Network%20-%20${encodeURIComponent(data.memo || '')}&body=Enviei%20${data.amount}%20Pi%20para%20a%20sua%20carteira.%20Seguem%20meus%20dados:" class="portal-btn portal-btn--amber portal-btn--full">
-          Enviar Comprovante por E-mail
-        </a>
       </div>
     `;
 
