@@ -1422,7 +1422,14 @@
 
     function isPiBrowser() {
       const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-      return /PiBrowser|PiNetwork/i.test(ua);
+      if (/PiBrowser|PiNetwork|minepi/i.test(ua)) return true;
+      if (typeof window !== 'undefined') {
+        if (window.flutter_inappwebview || window.PiNetwork || window.isPiBrowser) return true;
+        if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
+        if (localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user') || localStorage.getItem('pioneer_auth_type') === 'pi-sdk') return true;
+        if (window.Pi && (/Android/i.test(ua) || /iPhone|iPad|iPod/i.test(ua))) return true;
+      }
+      return false;
     }
 
     function openExternalBrowserModal() {
@@ -2001,7 +2008,7 @@
 
     // Conectar via Pi Browser
     function connectPiBrowserAndStart() {
-      const inPi = isPiBrowser();
+      const inPi = isPiBrowser() || Boolean(window.Pi);
       if (inPi && window.Pi) {
         window.Pi.authenticate(['username', 'payments', 'wallet_address'], function(p) { console.log('Pendência:', p); })
           .then(function(auth) {
@@ -2437,7 +2444,7 @@
       let username = cleanUsername(rawUser);
 
       // Verificação de Segurança Anti-Fraude:
-      const inPi = isPiBrowser();
+      const inPi = isPiBrowser() || Boolean(window.Pi);
       const isAuth = isPiSdkAuthenticated();
 
       if (!inPi && !isAuth) {

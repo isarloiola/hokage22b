@@ -507,8 +507,9 @@
       submitBtn.textContent = 'Processando…';
     }
 
-    // ── FLUXO A: Dentro do Pi Browser (Pagamento Nativo com Pi SDK) ──
-    if (window.HokagePi && window.HokagePi.isPiBrowser()) {
+    // ── FLUXO A: Dentro do Pi Browser ou com Pi SDK Carregado (Pagamento Nativo) ──
+    const canUsePi = window.HokagePi && (window.HokagePi.isPiBrowser() || Boolean(window.Pi));
+    if (canUsePi) {
       window.HokagePi.requestPiPayment({
         amount: priceInfo.pi,
         memo: `Mural HOKAGE22B: ${title.substring(0, 24)}`,
@@ -549,6 +550,16 @@
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
+          }
+          if (err && (err === 'USER_CANCELLED' || (err.message && err.message.includes('cancel')))) {
+            return;
+          }
+          if (window.HokagePi && window.HokagePi.showManualP2PModal) {
+            window.HokagePi.showManualP2PModal({
+              amount: priceInfo.pi,
+              memo: `Anúncio ${selectedTier.toUpperCase()}: ${title}`,
+              metadata: { adId: adId, plan: selectedTier }
+            });
           }
         },
         onCancel: function () {

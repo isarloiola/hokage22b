@@ -514,8 +514,9 @@
       submitBtn.textContent = 'Processando…';
     }
 
-    // ── FLUXO A: Dentro do Pi Browser (Pagamento Nativo com Pi SDK) ──
-    if (window.HokagePi && window.HokagePi.isPiBrowser()) {
+    // ── FLUXO A: Dentro do Pi Browser ou com Pi SDK Carregado (Pagamento Nativo) ──
+    const canUsePi = window.HokagePi && (window.HokagePi.isPiBrowser() || Boolean(window.Pi));
+    if (canUsePi) {
       window.HokagePi.requestPiPayment({
         amount: priceInfo.pi,
         memo: `Mural HOKAGE22B: ${title.substring(0, 24)}`,

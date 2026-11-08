@@ -63,10 +63,26 @@
     }
   }
 
-  // 3. Detecção Real e Precisa do Ambiente Pi Browser
+  // 3. Detecção Real e Precisa do Ambiente Pi Browser (Multicamadas)
   function isPiBrowser() {
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-    return /PiBrowser|PiNetwork/i.test(ua);
+    // 1. Identificadores explícitos no User Agent
+    if (/PiBrowser|PiNetwork|minepi/i.test(ua)) return true;
+    
+    // 2. Pontes e objetos nativos injetados pelo app oficial Pi Browser (Flutter InAppWebView / Bridge)
+    if (typeof window !== 'undefined') {
+      if (window.flutter_inappwebview || window.PiNetwork || window.isPiBrowser) return true;
+      if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
+      
+      // 3. Usuário autenticado anteriormente com Pi SDK neste dispositivo/sessão
+      if (localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user') || localStorage.getItem('pioneer_auth_type') === 'pi-sdk') return true;
+      
+      // 4. Se o script oficial do Pi SDK está presente e o ambiente é mobile WebView
+      if (window.Pi && (/Android/i.test(ua) || /iPhone|iPad|iPod/i.test(ua))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // Helper: Garante handle limpo sem arrobas duplicadas (ex: @@usuario -> usuario)
@@ -303,12 +319,12 @@
     }
 
     try {
-      // Cria promessa com timeout de 6.5s caso esteja aberto diretamente fora do container do develop.pi
+      // Cria promessa com timeout de 25s para dar tempo ao pioneiro de aceitar no modal nativo
       const authPromise = window.Pi.authenticate(scopes, onIncompletePaymentFound);
       const timeoutPromise = new Promise(function (_, reject) {
         setTimeout(function () {
           reject(new Error('TIMEOUT_STANDALONE'));
-        }, 6500);
+        }, 25000);
       });
 
       const auth = await Promise.race([authPromise, timeoutPromise]);
@@ -435,6 +451,28 @@
 
     let user = authenticatedUser;
     if (!user) {
+      try {
+        const stored = localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user');
+        if (stored) {
+          user = JSON.parse(stored);
+          authenticatedUser = user;
+        }
+      } catch (_) {}
+    }
+
+    if (!user) {
+      showToast('Autenticando com a Pi Network...', 'info');
+      try {
+        const logged = await triggerAuthFlow(false);
+        if (logged) {
+          user = logged;
+        }
+      } catch (err) {
+        console.warn('Tentativa de autenticação automática:', err);
+      }
+    }
+
+    if (!user) {
       openPiConnectModal();
       return;
     }
@@ -500,8 +538,9 @@
     }
   }
 
-  // 10. Modal de Orientação Pi SDK (quando aberto fora do Pi Browser)
+  // 10. Modal de Orientação e Checkout Pi SDK
   function showManualP2PModal(data) {
+    data = data || {};
     let modal = document.getElementById('pi-p2p-checkout-modal');
     if (!modal) {
       modal = document.createElement('div');
@@ -512,37 +551,69 @@
       document.body.appendChild(modal);
     }
 
+    const inPi = isPiBrowser() || Boolean(window.Pi);
+
     modal.innerHTML = `
       <div class="portal-modal">
         <button type="button" class="portal-modal-close" onclick="document.getElementById('pi-p2p-checkout-modal').classList.remove('active')">✕</button>
         <div class="section-tag section-tag--amber">Pagamento Seguro Pi SDK</div>
         <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">${escapeHtml(data.memo || 'Pagamento')}</h3>
         
-        <div style="background:rgba(245, 158, 11, 0.1);border:1px solid rgba(245, 158, 11, 0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.86rem;color:var(--text-secondary);line-height:1.5">
-          💡 <strong>Navegador Externo Detectado:</strong><br>
-          Para sua segurança e autenticação biométrica via Pi Platform SDK, os pagamentos são processados exclusivamente dentro do aplicativo <strong>Pi Browser</strong>.
-        </div>
+        ${inPi ? `
+          <div style="background:rgba(16, 185, 129, 0.1);border:1px solid rgba(16, 185, 129, 0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.86rem;color:#a7f3d0;line-height:1.5">
+            ✓ <strong>Ambiente Pi Network Detectado:</strong><br>
+            Toque no botão abaixo para autorizar a transação diretamente na sua Pi Wallet oficial.
+          </div>
+        ` : `
+          <div style="background:rgba(245, 158, 11, 0.1);border:1px solid rgba(245, 158, 11, 0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.86rem;color:var(--text-secondary);line-height:1.5">
+            💡 <strong>Navegador Externo Detectado:</strong><br>
+            Para sua segurança e autenticação biométrica via Pi Platform SDK, os pagamentos são processados com 1 clique dentro do aplicativo oficial <strong>Pi Browser</strong>.
+          </div>
+        `}
 
         <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px;text-align:center">
           <div style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase">Valor em Pi Network:</div>
           <div style="font-size:2rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono);margin:4px 0">
-            ${data.amount || '1.0'} π
+            ${data.amount || '0.314'} π
           </div>
           <span style="font-size:0.75rem;color:#34d399;font-weight:700">✓ Transação Oficial Pi SDK v2.0</span>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:10px">
-          <a href="pi://hokage22b.com" class="portal-btn portal-btn--amber portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px">
-            🚀 Abrir Diretamente no Pi Browser
-          </a>
-          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" onclick="navigator.clipboard.writeText('https://hokage22b.com');this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link para o Pi Browser',2500)">
-            📋 Copiar Link do App
-          </button>
+          ${inPi ? `
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" style="padding:14px;font-weight:700" onclick="document.getElementById('pi-p2p-checkout-modal').classList.remove('active'); HokagePi.requestPiPayment({ amount: ${Number(data.amount) || 0.314}, memo: '${escapeHtml(data.memo || 'Pagamento HOKAGE22B')}', metadata: ${JSON.stringify(data.metadata || {})} })">
+              ⚡ Autorizar Pagamento na Pi Wallet
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" onclick="document.getElementById('pi-p2p-checkout-modal').classList.remove('active'); HokagePi.openPiConnectModal()">
+              🔍 Status da Conexão Pi
+            </button>
+          ` : `
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" style="padding:14px;font-weight:700" onclick="HokagePi.openExternalDeepLink()">
+              🚀 Abrir no Pi Browser
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" onclick="navigator.clipboard.writeText(window.location.href);this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link do App',2500)">
+              📋 Copiar Link do App
+            </button>
+          `}
         </div>
       </div>
     `;
 
     modal.classList.add('active');
+  }
+
+  function openExternalDeepLink() {
+    const currentUrl = window.location.href;
+    const cleanUrl = currentUrl.replace(/^https?:\/\//, '');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(currentUrl);
+      showToast('Link copiado! Redirecionando para o Pi Browser...', 'info');
+    }
+    // Deep link padrão para o Pi Browser
+    window.location.href = 'pi://' + cleanUrl;
+    setTimeout(function () {
+      showToast('Se o Pi Browser não abrir automaticamente, cole o link na barra dele.', 'info');
+    }, 1800);
   }
 
   function escapeHtml(str) {
@@ -602,6 +673,7 @@
     triggerAuthFlow: triggerAuthFlow,
     requestPiPayment: requestPiPayment,
     showManualP2PModal: showManualP2PModal,
+    openExternalDeepLink: openExternalDeepLink,
     showToast: showToast,
     getUser: function () { return authenticatedUser; },
     getAccessToken: function () {
