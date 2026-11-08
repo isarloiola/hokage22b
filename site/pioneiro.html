@@ -1146,14 +1146,30 @@
         .replace(/'/g, '&#39;');
     }
 
-    // Sanitização de URLs para bloquear esquemas maliciosos como javascript:
+    // Sanitização de URLs para certificar esquemas válidos e bloquear vetores maliciosos
     function sanitizeUrl(url) {
       if (!url) return '';
       const clean = String(url).trim();
       if (/^(https?:\/\/|mailto:|tel:|\/|\?|#)/i.test(clean)) {
         return clean;
       }
-      return '#';
+      return '';
+    }
+
+    // Sanitização rigorosa de imagens e avatares (permite URLs remotas, assets locais e data:image seguros)
+    function sanitizeImageUrl(url) {
+      if (!url) return '';
+      const clean = String(url).trim();
+      if (/^https?:\/\/[^\s<>"'`]+$/i.test(clean)) {
+        return clean;
+      }
+      if (/^assets\/img\/[a-zA-Z0-9_\-\.]+\.(jpg|jpeg|png|webp|svg)$/i.test(clean)) {
+        return clean;
+      }
+      if (/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(clean)) {
+        return clean;
+      }
+      return '';
     }
 
     // Validador Criptográfico estrito de Chave Pública Pi Network (Stellar ed25519)
@@ -1855,12 +1871,12 @@
           const safeBadge = p.badge ? escapeHtml(p.badge) : '';
           const safeLink = sanitizeUrl(p.link);
           const safeCta = escapeHtml(p.cta || 'Acessar →');
-          const safeImg = sanitizeUrl(p.image_url);
+          const safeImg = sanitizeImageUrl(p.image_url);
 
           return `
             <div class="product-mini-card">
               <div class="product-card-top">
-                ${safeImg && safeImg !== '#' 
+                ${safeImg 
                   ? `<img src="${safeImg}" alt="${safeTitle}" class="product-thumb" />` 
                   : `<div class="product-thumb-fallback">🛍️</div>`}
                 <div class="product-info">
@@ -2155,14 +2171,14 @@
         const uName = cleanUsername(p.username);
         const uSlug = uName.replace(/^@+/, '');
         const bio = p.bio || 'Pioneiro oficial na comunidade descentralizada Pi Network.';
-        const avatar = p.avatar_url || '';
+        const avatar = sanitizeImageUrl(p.avatar_url || '');
         const hasWallet = Boolean(p.wallet_address);
 
         html += `
           <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:all 0.2s ease">
             <div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1">
               <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;background:#1a0533;border:2px solid rgba(139,92,246,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                ${avatar ? `<img src="${escapeHtml(avatar)}" alt="${escapeHtml(uName)}" style="width:100%;height:100%;object-fit:cover" />` : `<span style="font-size:1.15rem;font-weight:800;color:#fff">${uSlug.charAt(0).toUpperCase()}</span>`}
+                ${avatar ? `<img src="${avatar}" alt="${escapeHtml(uName)}" style="width:100%;height:100%;object-fit:cover" />` : `<span style="font-size:1.15rem;font-weight:800;color:#fff">${uSlug.charAt(0).toUpperCase()}</span>`}
               </div>
               <div style="min-width:0;flex:1">
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
@@ -2484,11 +2500,13 @@
       const removeBtn = document.getElementById('btn-remove-avatar');
       const hiddenInp = document.getElementById('prof-input-avatar');
 
-      if (hiddenInp) hiddenInp.value = dataUrl || '';
+      const safeDataUrl = sanitizeImageUrl(dataUrl);
 
-      if (dataUrl) {
+      if (hiddenInp) hiddenInp.value = safeDataUrl || '';
+
+      if (safeDataUrl) {
         if (imgEl) {
-          imgEl.src = dataUrl;
+          imgEl.src = safeDataUrl;
           imgEl.style.display = 'block';
         }
         if (phEl) phEl.style.display = 'none';
@@ -2820,12 +2838,21 @@
       const avatarEl = document.getElementById('pioneer-avatar');
       if (!avatarEl) return;
 
-      if (avatarUrl) {
-        avatarEl.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" />`;
+      const safeUrl = sanitizeImageUrl(avatarUrl);
+      if (safeUrl) {
+        avatarEl.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = safeUrl;
+        img.alt = 'Avatar de ' + escapeHtml(cleanUsername(username || currentPioneerUser || 'Pioneiro'));
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
+        img.onerror = () => {
+          applyAvatarOnScreen('', username);
+        };
+        avatarEl.appendChild(img);
       } else {
         const clean = cleanUsername(username || currentPioneerUser || '@p');
         const initial = clean.replace('@', '').charAt(0).toUpperCase() || 'π';
-        avatarEl.innerHTML = `<span style="font-size:2.4rem;font-weight:800;color:var(--accent-light)">${initial}</span>`;
+        avatarEl.innerHTML = `<span style="font-size:2.4rem;font-weight:800;color:var(--accent-light)">${escapeHtml(initial)}</span>`;
       }
     }
 

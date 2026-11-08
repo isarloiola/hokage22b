@@ -1,6 +1,6 @@
 // ============================================================
 // HOKAGE22B — Supabase Edge Function: Pi Network Payment Server
-// Endpoint seguro para aprovar e completar pagamentos na Pi Network
+// Endpoint seguro para aprovar, validar montantes e completar pagamentos na Pi Network
 // ============================================================
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -25,6 +25,13 @@ serve(async (req) => {
       throw new Error("PI_SERVER_API_KEY não configurada no Supabase Secrets.");
     }
 
+    if (!paymentId || typeof paymentId !== "string") {
+      return new Response(JSON.stringify({ error: "paymentId é obrigatório." }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400,
+      });
+    }
+
     const piApiBase = "https://api.minepi.com/v2";
 
     // 1. APROVAÇÃO DO PAGAMENTO (onReadyForServerApproval)
@@ -46,6 +53,14 @@ serve(async (req) => {
 
     // 2. CONCLUSÃO DO PAGAMENTO (onReadyForServerCompletion)
     if (action === "complete") {
+      if (!txid || typeof txid !== "string") {
+        return new Response(JSON.stringify({ error: "txid da transação blockchain é obrigatório para conclusão." }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        });
+      }
+
+      // Conclui oficialmente o pagamento na Pi Core Team Platform API
       const response = await fetch(`${piApiBase}/payments/${paymentId}/complete`, {
         method: "POST",
         headers: {
@@ -57,28 +72,68 @@ serve(async (req) => {
 
       const data = await response.json();
 
-      // Atualiza o status no banco de dados Supabase
-      if (response.ok && data.metadata) {
+      // Processamento contábil e ativação de serviços no Supabase
+      if (response.ok && data) {
         const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
         const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        if (data.metadata.adId) {
-          // Ativa o anúncio no Mural dos Pioneiros
-          await supabase
+        const paidAmount = Number(data.amount) || 0;
+        const metadata = data.metadata || {};
+
+        // A. Anti-Tampering: Validação de montante mínimo para anúncios do mural
+        if (metadata.adId) {
+          const { data: ad, error: adErr } = await supabase
             .from("anuncios")
-            .update({ status: "ativo" })
-            .eq("id", data.metadata.adId);
-        } else if (data.metadata.type === "ebook") {
-          // Registra o pedido do e-book pago
+            .select("id, price_pi, status")
+            .eq("id", metadata.adId)
+            .maybeSingle();
+
+          const expectedPrice = (ad && Number(ad.price_pi)) ? Number(ad.price_pi) : 1.0;
+
+          if (paidAmount < expectedPrice) {
+            console.error(`[Security Alert] Montante insuficiente: pago ${paidAmount} Pi, esperado ${expectedPrice} Pi.`);
+          } else {
+            // Ativa o anúncio com verificação de montante aprovada
+            await supabase
+              .from("anuncios")
+              .update({ status: "ativo" })
+              .eq("id", metadata.adId);
+          }
+        } else if (metadata.type === "ebook") {
+          // B. Registro de compra de E-book com verificação de montante (mínimo 3.14 Pi)
+          const expectedEbookPrice = 3.14;
+          if (paidAmount >= expectedEbookPrice) {
+            await supabase
+              .from("doacoes")
+              .insert([{
+                donor_identifier: metadata.pioneer_username || "Pioneiro Pi",
+                currency: "PI",
+                amount: paidAmount,
+                status: "recebido"
+              }]);
+          } else {
+            console.error(`[Security Alert] Montante insuficiente para E-book: pago ${paidAmount} Pi.`);
+          }
+        }
+
+        // C. Ledger Imutável de Transações (Idempotente)
+        try {
           await supabase
-            .from("doacoes")
-            .insert([{
-              donor_identifier: data.metadata.pioneer_username || "Pioneiro Pi",
-              currency: "PI",
-              amount: data.amount || 3.14,
-              status: "recebido"
-            }]);
+            .from("transacoes_pi")
+            .upsert({
+              payment_id: paymentId,
+              txid: txid || (data.transaction && data.transaction.txid) || null,
+              from_address: data.from_address || null,
+              to_address: data.to_address || null,
+              amount: paidAmount,
+              status: "completed",
+              purpose: metadata.type || (metadata.adId ? "anuncio_mural" : "pagamento_geral"),
+              metadata: metadata,
+              created_at: new Date().toISOString()
+            }, { onConflict: "payment_id" });
+        } catch (ledgerErr) {
+          console.warn("[Ledger Warning] Erro ao registrar na tabela transacoes_pi:", ledgerErr);
         }
       }
 
@@ -116,4 +171,3 @@ serve(async (req) => {
     });
   }
 });
-

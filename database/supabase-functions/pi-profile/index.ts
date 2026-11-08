@@ -75,11 +75,19 @@ serve(async (req) => {
       }
     }
 
+    let cleanAvatar: string | null = null;
+    if (safeData.avatar_url) {
+      const a = String(safeData.avatar_url).trim();
+      if (/^https?:\/\/[^\s<>"'`]+$/i.test(a) || /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(a) || /^assets\/img\/[a-zA-Z0-9_\-\.]+\.(jpg|jpeg|png|webp|svg)$/i.test(a)) {
+        cleanAvatar = a;
+      }
+    }
+
     const updatePayload = {
       uid: verifiedUid,
       username: verifiedUsername,
       bio: safeData.bio ? String(safeData.bio).slice(0, 500) : null,
-      avatar_url: safeData.avatar_url || null,
+      avatar_url: cleanAvatar,
       wallet_address: cleanWallet,
       whatsapp_url: safeData.whatsapp_url ? String(safeData.whatsapp_url).slice(0, 300) : null,
       youtube_url: safeData.youtube_url ? String(safeData.youtube_url).slice(0, 300) : null,
