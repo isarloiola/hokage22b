@@ -170,17 +170,28 @@
       letter-spacing: 0.05em;
     }
 
-    /* Badge do Link Curto (Estilo Linktree) */
+    /* Badge do Link Curto (Estilo Linktree com Proteção Anti-Overflow) */
     .short-link-pill {
       margin: 12px auto 0;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 20px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
+      max-width: calc(100% - 24px);
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .short-link-pill #pioneer-short-url {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 175px;
+      display: inline-block;
+      vertical-align: middle;
     }
 
     /* Botões de Link (Estilo Linktree Web3 com Ícones Oficiais) */
@@ -637,11 +648,11 @@
         </p>
         <span class="pioneer-badge-verified" id="pioneer-badge">🛡️ Humano Verificado via Pi KYC</span>
 
-        <!-- Link Curto Oficial da Vitrine (Estilo Linktree) -->
+        <!-- Link Curto Oficial da Vitrine (Estilo Linktree com Proteção Anti-Overflow) -->
         <div class="short-link-pill">
-          <span style="color:var(--text-muted)">Link:</span>
+          <span style="color:var(--text-muted);flex-shrink:0">Link:</span>
           <span id="pioneer-short-url" class="notranslate" translate="no" style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@...</span>
-          <button type="button" onclick="shareProfile()" style="background:transparent;border:none;color:var(--accent-light);cursor:pointer;font-size:0.75rem;padding:2px 6px;text-decoration:underline">Copiar</button>
+          <button type="button" onclick="shareProfile()" style="background:transparent;border:none;color:var(--accent-light);cursor:pointer;font-size:0.75rem;padding:2px 6px;text-decoration:underline;flex-shrink:0">Copiar</button>
         </div>
 
         <!-- Caixa de Pagamento Direto com Pi Wallet (Blindagem Criptográfica) -->
@@ -706,11 +717,11 @@
           </div>
         </div>
 
-        <!-- Seção: Anúncios Reais na Gazeta (Só aparece se o pioneiro tiver anúncios) -->
+        <!-- Seção: Anúncios no Mural dos Pioneiros -->
         <div id="pioneer-ads-section" style="margin-top:28px;text-align:left;display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700">
-              📢 Anúncios na Gazeta dos Pioneiros
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
+            <div id="pioneer-ads-title" style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:700">
+              📢 Anúncios no Mural Pi
             </div>
             <a href="mural" style="font-size:0.75rem;color:var(--accent-light);text-decoration:none">Ver todos no Mural →</a>
           </div>
@@ -959,7 +970,7 @@
   <div class="pi-modal-overlay" id="wallet-qr-modal" role="dialog" aria-modal="true" style="z-index:10000;display:none">
     <div class="pi-modal" style="max-width:420px;text-align:center;padding:24px 20px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-size:1.15rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px">
+        <div id="wallet-qr-modal-title" style="font-size:1.15rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px">
           <span>⚡</span> Terminal POS &amp; Cobrança Pi
         </div>
         <button type="button" onclick="closeWalletQrModal()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.3rem;cursor:pointer;padding:4px" aria-label="Fechar modal">✕</button>
@@ -977,7 +988,7 @@
 
       <!-- Área de Input de Valor (Modo Dinâmico) -->
       <div id="pos-amount-group" style="margin-bottom:14px;background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:12px;text-align:left">
-        <label style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:4px">VALOR A COBRAR (π):</label>
+        <label id="pos-amount-label" style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:4px">VALOR A COBRAR (π):</label>
         <div style="display:flex;align-items:center;gap:8px">
           <input type="number" step="any" min="0.01" id="pos-input-amount" placeholder="Ex: 3.14" oninput="updateDynamicQrPayload()" style="flex:1;background:#09090b;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px 12px;color:var(--amber-light);font-size:1.2rem;font-weight:800;font-family:var(--font-mono)" />
           <span style="font-size:1.1rem;font-weight:800;color:var(--amber-light)">π</span>
@@ -1330,6 +1341,27 @@
       if (userEl) userEl.textContent = cleanUsername(currentPioneerUser);
       if (amtInp && presetAmount) amtInp.value = presetAmount;
       if (memoInp && presetMemo) memoInp.value = presetMemo;
+
+      const isOwner = isOwnerOfCurrentPage();
+      const modalTitle = document.getElementById('wallet-qr-modal-title');
+      const posTabDyn = document.getElementById('pos-tab-dynamic');
+      const amtLabel = document.getElementById('pos-amount-label');
+      const copyBtn = document.getElementById('btn-copy-pos-link');
+
+      if (modalTitle) {
+        modalTitle.innerHTML = isOwner 
+          ? '<span>⚡</span> Meu Terminal POS & Cobrança' 
+          : '<span>⚡</span> Pagar com Pi Network';
+      }
+      if (posTabDyn) {
+        posTabDyn.innerHTML = isOwner ? '⚡ Cobrar com Valor (POS)' : '⚡ Pagar com Valor';
+      }
+      if (amtLabel) {
+        amtLabel.textContent = isOwner ? 'VALOR A COBRAR (π):' : 'VALOR A PAGAR / ENVIAR (π):';
+      }
+      if (copyBtn) {
+        copyBtn.textContent = isOwner ? '📋 Copiar Link de Cobrança com Valor' : '📋 Copiar Link de Pagamento';
+      }
 
       switchPosMode('dynamic');
       updateDynamicQrPayload();
@@ -1733,6 +1765,11 @@
 
         walletBox.style.display = 'block';
         walletEmpty.style.display = 'none';
+
+        const qrBtn = document.getElementById('btn-show-qr');
+        if (qrBtn) {
+          qrBtn.innerHTML = isOwner ? '⚡ Cobrar / Meu POS' : '⚡ Pagar com Pi';
+        }
       } else {
         currentPioneerWallet = '';
         walletBox.style.display = 'none';
@@ -1896,29 +1933,48 @@
         productsSection.style.display = 'none';
       }
 
-      // Anúncios Reais da Gazeta (Apenas se existirem de verdade + Anti-XSS)
+      // Anúncios Reais no Mural Pi (Com fotos, métricas e integração)
       const adsSection = document.getElementById('pioneer-ads-section');
       const adsList = document.getElementById('pioneer-ads-list');
+      const adsTitle = document.getElementById('pioneer-ads-title');
+
+      if (adsTitle) {
+        adsTitle.textContent = isOwner ? '📢 Meus Anúncios no Mural Pi' : '📢 Anúncios em Destaque no Mural Pi';
+      }
 
       if (Array.isArray(ads) && ads.length > 0) {
         adsList.innerHTML = ads.map(ad => {
           const safeAdTitle = escapeHtml(ad.title || '');
           const safeAdDesc = escapeHtml(ad.description || '');
           const safeAdLink = sanitizeUrl(ad.link_url);
-          const safeAdTier = escapeHtml(ad.plan_tier ? ad.plan_tier.toUpperCase() : 'CLASSIFICADO');
+          const safeAdTier = escapeHtml(ad.plan_tier ? ad.plan_tier.toUpperCase() : 'DESTAQUE');
+          const safeAdImg = sanitizeImageUrl(ad.image_url);
 
           return `
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;text-align:left">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
                 <span style="font-size:0.75rem;color:var(--amber-light);font-weight:700">📢 ${safeAdTier}</span>
-                <span style="font-size:0.75rem;color:var(--text-muted)">👁️ ${Number(ad.views_count) || 0} visualizações · 🖱️ ${Number(ad.clicks_count) || 0} cliques</span>
+                <span style="font-size:0.72rem;color:var(--text-muted)">👁️ ${Number(ad.views_count) || 0} visualizações · 🖱️ ${Number(ad.clicks_count) || 0} cliques</span>
               </div>
+              ${safeAdImg ? `<img src="${safeAdImg}" alt="${safeAdTitle}" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:10px;display:block" />` : ''}
               <h4 style="color:#fff;font-size:0.98rem;margin-bottom:4px">${safeAdTitle}</h4>
               <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:10px">${safeAdDesc}</p>
-              ${safeAdLink && safeAdLink !== '#' ? `<a href="${safeAdLink}" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--primary portal-btn--sm" style="display:inline-block;text-decoration:none">Acessar Oferta →</a>` : ''}
+              ${safeAdLink && safeAdLink !== '#' ? `<a href="${safeAdLink}" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--amber portal-btn--sm" style="display:inline-block;text-decoration:none;font-weight:700">Acessar Oferta →</a>` : ''}
             </div>
           `;
         }).join('');
+        adsSection.style.display = 'block';
+      } else if (isOwner) {
+        adsList.innerHTML = `
+          <div style="background:rgba(139,92,246,0.05);border:1px dashed rgba(139,92,246,0.25);border-radius:14px;padding:16px;text-align:center">
+            <span style="font-size:1.4rem;display:block;margin-bottom:4px">📢</span>
+            <strong style="color:#fff;font-size:0.88rem;display:block;margin-bottom:4px">Destaque seu negócio no Mural dos Pioneiros</strong>
+            <p style="font-size:0.78rem;color:var(--text-secondary);margin:0 0 10px;line-height:1.4">Seus anúncios aparecem no Mural global e diretamente aqui na sua vitrine.</p>
+            <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm" style="display:inline-block;text-decoration:none;font-weight:700">
+              + Anunciar no Mural (1.0 π)
+            </a>
+          </div>
+        `;
         adsSection.style.display = 'block';
       } else {
         adsSection.style.display = 'none';
