@@ -90,25 +90,32 @@
     const views = ad.views_count || (tier === 'ouro' ? 142 : 56);
     const clicks = ad.clicks_count || (tier === 'ouro' ? 24 : 7);
 
+    const cleanAuthor = safeAuthor.replace(/^@+/, '');
+
     return `
       <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" id="card-${cardId}">
         ${bannerHtml}
         <div class="pioneer-card__top">
           <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
-          <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" class="pioneer-card__author" style="text-decoration:none" title="Ver perfil e mini-página do pioneiro">${safeAuthor} ↗</a>
+          <a href="pioneiro?u=${encodeURIComponent(cleanAuthor)}" class="pioneer-card__author" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px" title="Ver vitrine oficial do pioneiro">${safeAuthor} ↗</a>
         </div>
         <h3 class="pioneer-card__title">${safeTitle}</h3>
         <p class="pioneer-card__desc">${safeDesc}</p>
-        <div class="pioneer-card__footer">
+        <div class="pioneer-card__footer" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
           ${linkHtml}
-          <span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <a href="pioneiro?u=${encodeURIComponent(cleanAuthor)}" class="portal-btn portal-btn--outline portal-btn--sm" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(139,92,246,0.4);color:var(--accent-light);text-decoration:none;display:inline-flex;align-items:center;gap:4px;font-weight:700" title="Ver Vitrine do Pioneiro">
+              <span>🌟</span> Ver Vitrine
+            </a>
+            ${ad.price_pi ? `<span class="pioneer-card__price-tag">${escapeHtml(String(ad.price_pi))} π</span>` : ''}
+          </div>
         </div>
         <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted)">
           <div style="display:flex;align-items:center;gap:12px">
             <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)">${views}</strong> views</span>
             <span title="Cliques no anúncio">🖱️ <strong style="color:var(--amber-light)" class="ad-clicks-num" data-id="${cardId}">${clicks}</strong> cliques</span>
           </div>
-          <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
+          <a href="pioneiro?u=${encodeURIComponent(cleanAuthor)}" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver vitrine do anunciante">Vitrine ↗</a>
         </div>
       </article>
     `;
