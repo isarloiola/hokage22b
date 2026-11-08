@@ -24,6 +24,47 @@
     return client;
   }
 
+  // Validador Criptográfico de Chave Pública Pi Network (Stellar Ed25519)
+  function isValidPiPublicKey(address) {
+    if (!address || typeof address !== 'string') return false;
+    const clean = address.trim();
+    if (!/^G[A-Z2-7]{55}$/.test(clean)) return false;
+    try {
+      const RFC4648 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      let bits = 0;
+      let value = 0;
+      const bytes = [];
+      for (let i = 0; i < clean.length; i++) {
+        const idx = RFC4648.indexOf(clean[i]);
+        if (idx === -1) return false;
+        value = (value << 5) | idx;
+        bits += 5;
+        if (bits >= 8) {
+          bytes.push((value >>> (bits - 8)) & 255);
+          bits -= 8;
+        }
+      }
+      if (bytes.length !== 35) return false;
+      if (bytes[0] !== 48) return false; // 0x30 = ed25519
+      let crc = 0x0000;
+      for (let i = 0; i < 33; i++) {
+        let code = (crc >>> 8) & 0xff;
+        code ^= bytes[i] & 0xff;
+        code ^= code >>> 4;
+        crc = (crc << 8) & 0xffff;
+        crc ^= code;
+        code = (code << 5) & 0xffff;
+        crc ^= code;
+        code = (code << 7) & 0xffff;
+        crc ^= code;
+      }
+      const expectedCrc = bytes[33] | (bytes[34] << 8);
+      return crc === expectedCrc;
+    } catch (_) {
+      return false;
+    }
+  }
+
   // Sincroniza o perfil do Pioneiro (pontuação, checklist e nível)
   async function syncPioneerProfile(profile) {
     const db = getClient();
@@ -509,12 +550,19 @@
 
     try {
       var clean = username.replace('@', '').toLowerCase();
+      var cleanWallet = profileData.wallet_address ? String(profileData.wallet_address).trim() : null;
+
+      // Validação Criptográfica de Blindagem: se informada, deve ser chave ed25519 válida
+      if (cleanWallet && !isValidPiPublicKey(cleanWallet)) {
+        throw new Error('Chave pública da Pi Wallet inválida (checksum CRC16 não confere)');
+      }
+
       var updatePayload = {
         uid: 'user_' + clean,
         username: '@' + clean,
         bio: profileData.bio || null,
         avatar_url: profileData.avatar_url || null,
-        wallet_address: profileData.wallet_address || null,
+        wallet_address: cleanWallet,
         whatsapp_url: profileData.whatsapp_url || null,
         youtube_url: profileData.youtube_url || null,
         twitter_url: profileData.twitter_url || null,
@@ -591,6 +639,7 @@
     incrementAdClick: incrementAdClick,
     incrementAdView: incrementAdView,
     // Métodos SaaS do Anunciante e Vitrine
+    isValidPiPublicKey: isValidPiPublicKey,
     getMyAds: getMyAds,
     updateMyAd: updateMyAd,
     renewMyAd: renewMyAd,
