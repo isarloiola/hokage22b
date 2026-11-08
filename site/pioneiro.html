@@ -172,68 +172,149 @@
       font-size: 0.8rem;
     }
 
-    /* Botões de Link (Estilo Linktree Web3) */
+    /* Botões de Link (Estilo Linktree Web3 com Ícones Oficiais) */
     .pioneer-link-btn {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.05);
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      padding: 15px 18px;
+      border-radius: 16px;
+      padding: 14px 18px;
       color: #fff;
       text-decoration: none;
       font-weight: 600;
       font-size: 0.95rem;
       margin-bottom: 12px;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
     .pioneer-link-btn:hover {
-      background: rgba(139, 92, 246, 0.22);
+      background: rgba(139, 92, 246, 0.18);
       border-color: var(--accent);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
-      color: #fff;
+      box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
     }
+    .pioneer-link-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.06);
+      transition: transform 0.2s ease;
+    }
+    .pioneer-link-btn:hover .pioneer-link-icon-wrap {
+      transform: scale(1.08);
+    }
+    .pioneer-link-content {
+      flex: 1;
+      min-width: 0;
+      text-align: left;
+    }
+    .pioneer-link-heading {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      line-height: 1.3;
+      margin-bottom: 2px;
+      flex-wrap: wrap;
+    }
+    .pioneer-link-caption {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: block;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pioneer-link-chevron {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      transition: transform 0.2s ease, color 0.2s ease;
+      flex-shrink: 0;
+    }
+    .pioneer-link-btn:hover .pioneer-link-chevron {
+      color: #fff;
+      transform: translate(2px, -2px);
+    }
+
+    /* Variações das Redes Sociais */
     .pioneer-link-btn--whatsapp {
-      border-color: rgba(37, 211, 102, 0.4);
+      border-color: rgba(37, 211, 102, 0.35);
+    }
+    .pioneer-link-btn--whatsapp .pioneer-link-icon-wrap {
+      background: rgba(37, 211, 102, 0.15);
     }
     .pioneer-link-btn--whatsapp:hover {
-      background: rgba(37, 211, 102, 0.2);
+      background: rgba(37, 211, 102, 0.16);
       border-color: #25d366;
-      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.25);
     }
+
     .pioneer-link-btn--youtube {
-      border-color: rgba(239, 68, 68, 0.4);
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+    .pioneer-link-btn--youtube .pioneer-link-icon-wrap {
+      background: rgba(239, 68, 68, 0.15);
     }
     .pioneer-link-btn--youtube:hover {
-      background: rgba(239, 68, 68, 0.2);
+      background: rgba(239, 68, 68, 0.16);
       border-color: #ef4444;
-      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25);
     }
+
     .pioneer-link-btn--instagram {
-      border-color: rgba(225, 48, 108, 0.4);
+      border-color: rgba(225, 48, 108, 0.35);
+    }
+    .pioneer-link-btn--instagram .pioneer-link-icon-wrap {
+      background: linear-gradient(135deg, rgba(225, 48, 108, 0.2), rgba(139, 92, 246, 0.2));
     }
     .pioneer-link-btn--instagram:hover {
-      background: rgba(225, 48, 108, 0.2);
+      background: rgba(225, 48, 108, 0.16);
       border-color: #e1306c;
-      box-shadow: 0 6px 20px rgba(225, 48, 108, 0.3);
+      box-shadow: 0 8px 24px rgba(225, 48, 108, 0.25);
     }
+
     .pioneer-link-btn--twitter {
-      border-color: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .pioneer-link-btn--twitter .pioneer-link-icon-wrap {
+      background: rgba(255, 255, 255, 0.08);
     }
     .pioneer-link-btn--twitter:hover {
       background: rgba(255, 255, 255, 0.1);
       border-color: #fff;
-      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
     }
 
-    /* Cards de Produtos com Foto Real */
+    .pioneer-link-btn--featured {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(139, 92, 246, 0.15));
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.12);
+    }
+    .pioneer-link-btn--featured .pioneer-link-icon-wrap {
+      background: rgba(245, 158, 11, 0.22);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .pioneer-link-btn--featured:hover {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(139, 92, 246, 0.25));
+      border-color: var(--amber);
+      box-shadow: 0 8px 28px rgba(245, 158, 11, 0.3);
+    }
+
+    /* Cards de Produtos com Foto Real (Mobile-Optimized Sem Cortes) */
     .product-mini-card {
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.55);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      padding: 12px;
+      border-radius: 16px;
+      padding: 14px;
       display: flex;
       gap: 14px;
       align-items: center;
@@ -244,28 +325,97 @@
       border-color: rgba(245, 158, 11, 0.5);
       background: rgba(245, 158, 11, 0.08);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
     }
     .product-thumb {
-      width: 58px;
-      height: 58px;
-      border-radius: 10px;
+      width: 62px;
+      height: 62px;
+      border-radius: 12px;
       object-fit: cover;
       background: #18181b;
       border: 1px solid rgba(255, 255, 255, 0.15);
       flex-shrink: 0;
     }
     .product-thumb-fallback {
-      width: 58px;
-      height: 58px;
-      border-radius: 10px;
+      width: 62px;
+      height: 62px;
+      border-radius: 12px;
       background: rgba(245, 158, 11, 0.15);
       border: 1px solid rgba(245, 158, 11, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       flex-shrink: 0;
+    }
+    .product-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .product-title {
+      color: #fff;
+      font-size: 0.94rem;
+      font-weight: 700;
+      display: block;
+      line-height: 1.35;
+      word-break: break-word;
+      white-space: normal;
+      margin-bottom: 4px;
+    }
+    .product-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .product-price {
+      color: var(--amber-light);
+      font-size: 0.88rem;
+      font-weight: 800;
+      font-family: var(--font-mono, monospace);
+    }
+    .product-badge-pill {
+      font-size: 0.7rem;
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: var(--accent-light);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 480px) {
+      .product-mini-card {
+        padding: 12px;
+        gap: 10px;
+      }
+      .product-thumb, .product-thumb-fallback {
+        width: 52px;
+        height: 52px;
+        font-size: 1.5rem;
+      }
+      .product-title {
+        font-size: 0.86rem;
+      }
+      .product-mini-card .btn {
+        padding: 7px 11px;
+        font-size: 0.74rem;
+        white-space: nowrap;
+      }
+      .pioneer-link-btn {
+        padding: 12px 14px;
+        gap: 12px;
+      }
+      .pioneer-link-icon-wrap {
+        width: 36px;
+        height: 36px;
+      }
+      .pioneer-link-heading {
+        font-size: 0.86rem;
+      }
+      .pioneer-link-caption {
+        font-size: 0.72rem;
+      }
     }
 
     /* Editor de Produtos no Modal */
@@ -590,30 +740,52 @@
     // =========================================================================
     const HOKAGE22B_OFFICIAL_PROFILE = {
       username: '@hokage22b',
-      bio: 'Criador de conteúdo Web3, desenvolvedor e comerciante pioneiro. Aceitando pagamentos 100% em Pi na Mainnet com envio para todo o Brasil.',
+      bio: 'Fundador do HOKAGE22B.COM · Educação Web3, ferramentas para pioneiros e comércio seguro na Pi Network. Aceitando 100% Pi na Mainnet.',
       wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR',
       whatsapp_url: 'https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2',
       youtube_url: 'https://www.youtube.com/@justhokage22b',
       instagram_url: 'https://instagram.com/hokage22b',
       twitter_url: 'https://twitter.com/hokage22b',
+      featured_links: [
+        {
+          title: '📘 Pi Network do Zero (Guia Iniciante)',
+          subtitle: 'Aprenda do zero: carteira, blockchain e segurança anti-golpes',
+          badge: 'Trilha Grátis',
+          url: 'zero',
+          type: 'zero'
+        },
+        {
+          title: '📢 Gazeta dos Pioneiros (Mural de Anúncios)',
+          subtitle: 'Divulgue sua loja, canal ou serviço para a comunidade',
+          badge: 'Classificados P2P',
+          url: 'mural',
+          type: 'mural'
+        }
+      ],
       products: [
-        {
-          title: 'E-book Pi para seu Negócio (Edição Comercial)',
-          price: '3.14 π',
-          link: 'https://hokage22b.com/#produtos',
-          image_url: 'assets/img/ebook-pago-negocios.jpg'
-        },
-        {
-          title: 'Manual Oficial Pi Network (PDF Completo)',
-          price: 'Grátis',
-          link: 'https://hokage22b.com/#comece-aqui',
-          image_url: 'assets/img/ebook-cover.png'
-        },
         {
           title: 'Consultoria P2P & Setup de Loja Aceitando Pi',
           price: '10.00 π',
+          badge: 'Mentoria Direta',
           link: 'https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2',
-          image_url: ''
+          image_url: 'assets/img/ebook-cover.png',
+          cta: 'Agendar no WhatsApp →'
+        },
+        {
+          title: 'E-book Pi para seu Negócio (Edição Comercial)',
+          price: '3.14 π',
+          badge: 'Manual Comercial',
+          link: 'https://hokage22b.com/#produtos',
+          image_url: 'assets/img/ebook-pago-negocios.jpg',
+          cta: 'Adquirir (3.14 π) →'
+        },
+        {
+          title: 'Manual Oficial Pi Network (PDF & EPUB)',
+          price: 'Grátis',
+          badge: '100% Gratuito',
+          link: 'https://hokage22b.com/#comece-aqui',
+          image_url: 'assets/img/ebook-cover.png',
+          cta: 'Baixar Manual →'
         }
       ]
     };
@@ -629,18 +801,31 @@
       youtube_url: 'https://youtube.com',
       instagram_url: 'https://instagram.com',
       twitter_url: 'https://x.com',
+      featured_links: [
+        {
+          title: '📘 Pi Network do Zero (Guia Iniciante)',
+          subtitle: 'Aprenda do zero: carteira, blockchain e segurança anti-golpes',
+          badge: 'Trilha Grátis',
+          url: 'zero',
+          type: 'zero'
+        }
+      ],
       products: [
         {
           title: 'Exemplo: Camiseta Oficial Pi Network',
           price: '2.50 π',
+          badge: 'Vestuário',
           link: '#',
-          image_url: 'assets/img/ebook-cover.png'
+          image_url: 'assets/img/ebook-cover.png',
+          cta: 'Ver Detalhes →'
         },
         {
           title: 'Exemplo: Café Especial Aceitando Pi',
           price: '0.50 π',
+          badge: 'Alimentos & Bebidas',
           link: '#',
-          image_url: ''
+          image_url: '',
+          cta: 'Pedir →'
         }
       ]
     };
@@ -869,58 +1054,97 @@
         walletEmpty.style.display = 'block';
       }
 
-      // Links Oficiais (Linktree)
+      // Links Oficiais (Linktree Web3)
       const linksList = document.getElementById('pioneer-links-list');
-      const customLinks = [];
+      let linksHtml = '';
 
-      if (prof.whatsapp_url) {
-        customLinks.push({
-          title: '💬 Conversar no WhatsApp',
-          url: prof.whatsapp_url,
-          cssClass: 'pioneer-link-btn--whatsapp'
-        });
-      }
-
-      if (prof.youtube_url) {
-        customLinks.push({
-          title: '📺 Canal Oficial no YouTube',
-          url: prof.youtube_url,
-          cssClass: 'pioneer-link-btn--youtube'
-        });
-      }
-
-      if (prof.instagram_url) {
-        customLinks.push({
-          title: '📷 Perfil no Instagram',
-          url: prof.instagram_url,
-          cssClass: 'pioneer-link-btn--instagram'
-        });
-      }
-
-      if (prof.twitter_url) {
-        customLinks.push({
-          title: '𝕏 Conectar no Twitter / X',
-          url: prof.twitter_url,
-          cssClass: 'pioneer-link-btn--twitter'
-        });
-      }
-
-      if (customLinks.length === 0) {
-        linksList.innerHTML = `
-          <div style="background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;padding:14px;color:var(--text-muted);font-size:0.85rem">
-            Nenhum link externo cadastrado no momento.
-          </div>
-        `;
-      } else {
-        linksList.innerHTML = customLinks.map(l => `
-          <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn ${l.cssClass || ''}">
-            <span>${l.title}</span>
-            <span style="font-size:1.1rem;opacity:0.8">↗</span>
+      // 1. Links em Destaque da Comunidade (ex: Pi Network do Zero e Mural)
+      if (Array.isArray(prof.featured_links) && prof.featured_links.length > 0) {
+        linksHtml += prof.featured_links.map(f => `
+          <a href="${f.url}" class="pioneer-link-btn pioneer-link-btn--featured">
+            <div class="pioneer-link-icon-wrap">
+              ${f.type === 'zero' ? '<span style="font-size:1.35rem">📘</span>' : '<span style="font-size:1.35rem">📢</span>'}
+            </div>
+            <div class="pioneer-link-content">
+              <span class="pioneer-link-heading">
+                ${f.title}
+                ${f.badge ? `<span style="font-size:0.68rem;background:rgba(245,158,11,0.25);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:2px 8px;border-radius:10px;font-weight:700">${f.badge}</span>` : ''}
+              </span>
+              <span class="pioneer-link-caption">${f.subtitle || ''}</span>
+            </div>
+            <span class="pioneer-link-chevron">↗</span>
           </a>
         `).join('');
       }
 
-      // Produtos com Fotos Reais
+      // 2. Redes Sociais Oficiais com SVGs e Subtítulos
+      if (prof.whatsapp_url) {
+        linksHtml += `
+          <a href="${prof.whatsapp_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--whatsapp">
+            <div class="pioneer-link-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z"/></svg>
+            </div>
+            <div class="pioneer-link-content">
+              <span class="pioneer-link-heading">Comunidade &amp; Suporte no WhatsApp</span>
+              <span class="pioneer-link-caption">Grupo VIP de Pioneiros · Dúvidas e Networking</span>
+            </div>
+            <span class="pioneer-link-chevron">↗</span>
+          </a>
+        `;
+      }
+
+      if (prof.youtube_url) {
+        linksHtml += `
+          <a href="${prof.youtube_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--youtube">
+            <div class="pioneer-link-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </div>
+            <div class="pioneer-link-content">
+              <span class="pioneer-link-heading">Canal Oficial no YouTube</span>
+              <span class="pioneer-link-caption">@justhokage22b · Análises, tutoriais e Web3</span>
+            </div>
+            <span class="pioneer-link-chevron">↗</span>
+          </a>
+        `;
+      }
+
+      if (prof.instagram_url) {
+        linksHtml += `
+          <a href="${prof.instagram_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--instagram">
+            <div class="pioneer-link-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+            </div>
+            <div class="pioneer-link-content">
+              <span class="pioneer-link-heading">Instagram @hokage22b</span>
+              <span class="pioneer-link-caption">Bastidores, novidades e alertas rápidos</span>
+            </div>
+            <span class="pioneer-link-chevron">↗</span>
+          </a>
+        `;
+      }
+
+      if (prof.twitter_url) {
+        linksHtml += `
+          <a href="${prof.twitter_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--twitter">
+            <div class="pioneer-link-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </div>
+            <div class="pioneer-link-content">
+              <span class="pioneer-link-heading">Perfil Oficial no Twitter / X</span>
+              <span class="pioneer-link-caption">@hokage22b · Informações da Open Mainnet</span>
+            </div>
+            <span class="pioneer-link-chevron">↗</span>
+          </a>
+        `;
+      }
+
+      linksList.innerHTML = linksHtml || `
+        <div style="background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;padding:14px;color:var(--text-muted);font-size:0.85rem">
+          Nenhum link cadastrado no momento.
+        </div>
+      `;
+
+      // Produtos com Fotos Reais (Sem cortes no celular)
       const productsSection = document.getElementById('pioneer-products-section');
       const productsList = document.getElementById('pioneer-products-list');
 
@@ -930,11 +1154,14 @@
             ${p.image_url 
               ? `<img src="${p.image_url}" alt="${p.title}" class="product-thumb" />` 
               : `<div class="product-thumb-fallback">🛍️</div>`}
-            <div style="flex:1;min-width:0">
-              <strong style="color:#fff;font-size:0.92rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title || 'Produto / Oferta'}</strong>
-              <span style="color:var(--amber-light);font-size:0.82rem;font-weight:700">${p.price || 'Sob Consulta'}</span>
+            <div class="product-info">
+              <strong class="product-title">${p.title || 'Produto / Oferta'}</strong>
+              <div class="product-meta-row">
+                <span class="product-price">${p.price || 'Sob Consulta'}</span>
+                ${p.badge ? `<span class="product-badge-pill">${p.badge}</span>` : ''}
+              </div>
             </div>
-            ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="padding:7px 14px;font-size:0.8rem;white-space:nowrap">Acessar →</a>` : ''}
+            ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="flex-shrink:0;white-space:nowrap">${p.cta || 'Acessar →'}</a>` : ''}
           </div>
         `).join('');
         productsSection.style.display = 'block';
