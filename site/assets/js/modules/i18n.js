@@ -44,19 +44,28 @@
       expires = '; expires=' + d.toUTCString();
     }
     var domain = window.location.hostname;
-    // Define cookie para o host local e para o domínio raiz se aplicável
     document.cookie = name + '=' + value + expires + '; path=/; SameSite=Lax';
-    if (domain.includes('hokage22b.com')) {
-      document.cookie = name + '=' + value + expires + '; path=/; domain=.hokage22b.com; SameSite=Lax';
+    if (domain.indexOf('.') !== -1) {
+      document.cookie = name + '=' + value + expires + '; path=/; domain=' + domain + '; SameSite=Lax';
+      var parts = domain.split('.');
+      var root = parts.slice(-2).join('.');
+      if (root && root !== domain) {
+        document.cookie = name + '=' + value + expires + '; path=/; domain=.' + root + '; SameSite=Lax';
+      }
     }
   }
 
   function deleteCookie(name) {
     var domain = window.location.hostname;
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax';
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + domain + '; SameSite=Lax';
-    if (domain.includes('hokage22b.com')) {
-      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.hokage22b.com; SameSite=Lax';
+    var past = '; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax';
+    document.cookie = name + '=;' + past;
+    document.cookie = name + '=;' + past + '; domain=' + domain;
+    if (domain.indexOf('.') !== -1) {
+      var parts = domain.split('.');
+      var root = parts.slice(-2).join('.');
+      if (root) {
+        document.cookie = name + '=;' + past + '; domain=.' + root;
+      }
     }
   }
 
@@ -120,14 +129,17 @@
     if (langCode === 'pt') {
       deleteCookie(COOKIE_NAME);
       deleteCookie('googtrans');
-      // Recarrega sem parâmetros para voltar ao original
+      try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+      setCookie(COOKIE_NAME, '/pt/pt', 0);
+      setCookie('googtrans', '/pt/pt', 0);
       window.location.reload();
       return;
     }
 
     // Configura o cookie reconhecido pelo Google Translate
-    setCookie(COOKIE_NAME, '/pt/' + langCode, 30);
-    setCookie('googtrans', '/pt/' + langCode, 30);
+    var cookieVal = '/pt/' + langCode;
+    setCookie(COOKIE_NAME, cookieVal, 30);
+    setCookie('googtrans', cookieVal, 30);
 
     // Tenta disparar evento direto se o elemento do google já existir
     var combo = document.querySelector('.goog-te-combo');
@@ -135,6 +147,12 @@
       combo.value = langCode;
       combo.dispatchEvent(new Event('change'));
       updateUIState(langCode);
+      // Se não traduzir em 500ms, recarrega a página de forma limpa
+      setTimeout(function () {
+        if (!document.body.classList.contains('translated-ltr') && !document.body.classList.contains('translated-rtl')) {
+          window.location.reload();
+        }
+      }, 500);
     } else {
       window.location.reload();
     }
@@ -236,7 +254,50 @@
     }
   }
 
+  // Supressor Ativo Anti-Banner do Google Translate
+  function suppressGoogleBanner() {
+    function resetBodyTop() {
+      if (document.body) {
+        if (document.body.style.top && document.body.style.top !== '0px') {
+          document.body.style.setProperty('top', '0px', 'important');
+        }
+        if (document.body.style.position && document.body.style.position !== 'static') {
+          document.body.style.setProperty('position', 'static', 'important');
+        }
+      }
+      if (document.documentElement && document.documentElement.style.top && document.documentElement.style.top !== '0px') {
+        document.documentElement.style.setProperty('top', '0px', 'important');
+      }
+      var banners = document.querySelectorAll('.goog-te-banner-frame, iframe[id*=":1.container"], iframe[id*=":2.container"], .VIpgJd-ZVi9od-aZ2wEe-wOHMyf, .VIpgJd-ZVi9od-ORHb-OEVmcd');
+      banners.forEach(function (b) {
+        b.style.setProperty('display', 'none', 'important');
+        b.style.setProperty('visibility', 'hidden', 'important');
+        b.style.setProperty('height', '0px', 'important');
+      });
+    }
+
+    resetBodyTop();
+
+    if (window.MutationObserver) {
+      var observer = new MutationObserver(function () {
+        resetBodyTop();
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'], subtree: true });
+    }
+
+    var count = 0;
+    var timer = setInterval(function () {
+      resetBodyTop();
+      count++;
+      if (count > 25) clearInterval(timer);
+    }, 120);
+  }
+
+  var isEventsBound = false;
   function bindEvents() {
+    if (isEventsBound) return;
+    isEventsBound = true;
+
     // Abrir/Fechar Dropdown
     document.addEventListener('click', function (e) {
       var trigger = e.target.closest('.lang-btn-trigger');
@@ -273,6 +334,9 @@
   }
 
   function init() {
+    // Supressão ativa de banner do Google
+    suppressGoogleBanner();
+
     // Detecta automaticamente se for visitante estrangeiro pela primeira vez
     checkAutoDetect();
 

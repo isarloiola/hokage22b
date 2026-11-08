@@ -183,23 +183,68 @@
   background: rgba(139, 92, 246, 0.6);
 }
 
-/* Esconder elementos nativos feios do Google Translate */
+/* ============================================================
+   SUPRESSÃO ABSOLUTA DA BARRA FIXA E ELEMENTOS DO GOOGLE TRADUTOR
+   ============================================================ */
+
+/* 1. Oculta todos os frames e banners injetados pelo Google Translate */
 .goog-te-banner-frame,
-.goog-te-balloon-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+iframe.skiptranslate,
+iframe[id*=":1.container"],
+iframe[id*=":2.container"],
+iframe[class*="VIpgJd"],
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-l4eHX-hSRGPd,
+.VIpgJd-yAWNEb-VIpgJd-ZVi9od-O39Ub,
 #goog-gt-tt,
-.goog-te-banner-frame.skiptranslate {
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-tooltip:hover,
+.goog-te-spinner-pos {
   display: none !important;
   visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  max-height: 0 !important;
+  max-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  z-index: -9999 !important;
+}
+
+/* 2. Força o body e html a NUNCA terem o deslocamento de 40px */
+html {
+  top: 0px !important;
+  margin-top: 0px !important;
+  padding-top: 0px !important;
 }
 
 body {
   top: 0px !important;
   position: static !important;
+  margin-top: 0px !important;
+  padding-top: 0px !important;
 }
 
+/* 3. Previne barras fixas de deslocarem o topo */
+body > .skiptranslate {
+  display: none !important;
+}
+
+/* 4. Remove highlights amarelos que o Google injeta nos textos */
 .goog-text-highlight {
   background: transparent !important;
   box-shadow: none !important;
+  color: inherit !important;
 }
 
 #google_translate_element {
