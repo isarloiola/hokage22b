@@ -52,9 +52,20 @@
     }, 4500);
   }
 
-  // 2. Inicialização segura do Pi SDK
+  // 2. Detecção de Ambiente Sandbox (Testnet) vs Mainnet
+  function isSandboxMode() {
+    if (typeof window === 'undefined') return false;
+    const search = window.location.search || '';
+    if (/sandbox=1|sandbox=true/i.test(search)) return true;
+    try {
+      if (localStorage.getItem('hokage_pi_sandbox') === 'true') return true;
+    } catch (_) {}
+    return false;
+  }
+
+  // Inicialização segura do Pi SDK
   function initPiSdk(useSandbox) {
-    if (useSandbox === undefined) useSandbox = false;
+    if (useSandbox === undefined) useSandbox = isSandboxMode();
     if (window.Pi) {
       try {
         window.Pi.init({ version: '2.0', sandbox: useSandbox });
@@ -228,12 +239,11 @@
             </button>
           ` : `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow(false)" style="padding:14px;font-weight:700">
-              ⚡ Conectar no Pi Browser
+              ⚡ Conectar no Pi Browser (Mainnet)
             </button>
-            ${window.location.search.includes('sandbox=1') ? `
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="HokagePi.triggerAuthFlow(true)" style="font-size:0.78rem;opacity:0.85">
-              🧪 Testar em Modo Sandbox (Debug)
-            </button>` : ''}
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="try{localStorage.setItem('hokage_pi_sandbox','true')}catch(_){};HokagePi.triggerAuthFlow(true)" style="font-size:0.82rem;border-color:var(--amber-light);color:var(--amber-light);font-weight:700;margin-top:2px">
+              🧪 Conectar no Modo Sandbox (Testnet)
+            </button>
           `}
         </div>
 
@@ -261,7 +271,7 @@
 
   // 6. Disparo Real da Autenticação com Pi SDK (com Proteção de Timeout)
   async function triggerAuthFlow(isSandbox) {
-    if (isSandbox === undefined) isSandbox = false;
+    if (isSandbox === undefined) isSandbox = isSandboxMode();
 
     const feedbackBox = document.getElementById('diag-feedback-box');
     const triggerBtn = document.getElementById('diag-auth-trigger-btn');
@@ -518,6 +528,10 @@
       onError: function (error, payment) {
         console.error('Erro na transação Pi:', error, payment);
         const errText = error ? (error.message || JSON.stringify(error)) : 'Erro na transação';
+        if (errText && (errText.includes('payments') || errText.includes('scope'))) {
+          showScopeNoticeModal(options);
+          return;
+        }
         showToast('Erro Pi: ' + errText, 'error');
         if (typeof options.onError === 'function') {
           options.onError(error, payment);
@@ -532,6 +546,13 @@
     } catch (err) {
       console.error('Erro ao chamar window.Pi.createPayment:', err);
       const errMsg = err && (err.message || (typeof err === 'string' ? err : 'Erro no Pi SDK'));
+      
+      // Se for erro de escopo 'payments', abre modal explicativo com opção de alternar para Sandbox
+      if (errMsg && (errMsg.includes('payments') || errMsg.includes('scope'))) {
+        showScopeNoticeModal(options);
+        return;
+      }
+
       showToast('Aviso Pi Wallet: ' + errMsg, 'error');
       if (typeof options.onError === 'function') {
         options.onError(err);
@@ -539,6 +560,91 @@
         showManualP2PModal(options);
       }
     }
+  }
+
+  // 10. Modal Explicativo de Escopo e Sandbox do Pi Developer Portal
+  function showScopeNoticeModal(data) {
+    data = data || {};
+    let modal = document.getElementById('pi-scope-notice-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.className = 'portal-modal-overlay';
+      modal.id = 'pi-scope-notice-modal';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="portal-modal" style="max-width:460px">
+        <button type="button" class="portal-modal-close" id="scope-notice-close-btn">✕</button>
+        <div class="section-tag section-tag--amber">Configuração do Pi Developer Portal</div>
+        <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">Liberação de Pagamentos Pi</h3>
+        
+        <div style="background:rgba(245, 158, 11, 0.12);border:1px solid rgba(245, 158, 11, 0.35);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.86rem;color:var(--text-secondary);line-height:1.5">
+          ℹ️ <strong>Por que este aviso apareceu?</strong><br>
+          Seu aplicativo no <strong>develop.pi</strong> está em modo <em>Sandbox (desenvolvimento)</em> e aguarda aprovação da Mainnet. Na fase Sandbox, a Pi Network só concede o escopo de pagamentos no <strong>ambiente de teste (Testnet Pi)</strong>.
+        </div>
+
+        <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.84rem">
+          <div style="color:#fff;font-weight:700;margin-bottom:6px">Como prosseguir:</div>
+          <p style="color:var(--text-secondary);margin:0 0 8px;line-height:1.4">
+            🧪 <strong>Para testar pagamentos agora:</strong> Toque no botão abaixo para testar no ambiente Sandbox usando Testnet Pi.
+          </p>
+          <p style="color:var(--text-secondary);margin:0;line-height:1.4">
+            🚀 <strong>Para pagamentos reais em Mainnet:</strong> Complete a checklist do <strong>develop.pi</strong> e clique em <em>Apply for Mainnet Listing</em>.
+          </p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="scope-btn-test-sandbox" style="padding:14px;font-weight:700">
+            🧪 Testar Pagamento em Modo Sandbox
+          </button>
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" id="scope-btn-open-diag">
+            ⚙️ Abrir Diagnóstico da Conta
+          </button>
+        </div>
+      </div>
+    `;
+
+    const closeBtn = modal.querySelector('#scope-notice-close-btn');
+    if (closeBtn) closeBtn.onclick = function () { modal.classList.remove('active'); };
+
+    const sandboxBtn = modal.querySelector('#scope-btn-test-sandbox');
+    if (sandboxBtn) {
+      sandboxBtn.onclick = async function () {
+        modal.classList.remove('active');
+        try {
+          localStorage.setItem('hokage_pi_sandbox', 'true');
+        } catch (_) {}
+        showToast('Ativando Modo Sandbox (Testnet Pi)...', 'info');
+        initPiSdk(true);
+        isSdkSessionAuthenticated = false;
+        try {
+          const logged = await triggerAuthFlow(true);
+          if (logged) {
+            authenticatedUser = logged;
+            isSdkSessionAuthenticated = true;
+            showToast('✓ Sandbox conectado! Repetindo pagamento...', 'success');
+            setTimeout(function () {
+              requestPiPayment(data);
+            }, 500);
+          }
+        } catch (err) {
+          showToast('Erro ao inicializar Sandbox: ' + err, 'error');
+        }
+      };
+    }
+
+    const diagBtn = modal.querySelector('#scope-btn-open-diag');
+    if (diagBtn) {
+      diagBtn.onclick = function () {
+        modal.classList.remove('active');
+        openPiConnectModal();
+      };
+    }
+
+    modal.classList.add('active');
   }
 
   // 10. Modal de Orientação e Checkout Pi SDK
