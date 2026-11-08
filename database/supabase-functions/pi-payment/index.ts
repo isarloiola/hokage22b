@@ -42,9 +42,11 @@ serve(async (req) => {
           "Authorization": `Key ${PI_SERVER_API_KEY}`,
           "Content-Type": "application/json",
         },
+        body: "{}",
       });
 
       const data = await response.json();
+      console.log(`Pi Payment Approve [${paymentId}]: HTTP ${response.status}`, data);
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: response.status,

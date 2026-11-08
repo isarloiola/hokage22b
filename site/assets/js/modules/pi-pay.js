@@ -499,7 +499,14 @@
       onReadyForServerApproval: async function (paymentId) {
         console.log('Pi Payment pronto para aprovação:', paymentId);
         showToast('Aprovando transação no servidor...', 'info');
-        await approvePaymentOnServer(paymentId);
+        const approvalRes = await approvePaymentOnServer(paymentId);
+        if (approvalRes && approvalRes.error) {
+          console.error('Erro na aprovação do servidor:', approvalRes);
+          const msg = approvalRes.error_message || approvalRes.error || 'Falha na aprovação';
+          showToast('Aviso do servidor: ' + msg, 'error');
+        } else {
+          showToast('✓ Transação autorizada pelo servidor! Assinando na Pi Wallet...', 'info');
+        }
       },
 
       onReadyForServerCompletion: async function (paymentId, txid) {
