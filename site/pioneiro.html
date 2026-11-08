@@ -534,37 +534,36 @@
         </p>
 
         <!-- Ação Principal: Pi Browser -->
-        <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.3);border-radius:16px;padding:22px;margin-bottom:22px">
-          <button type="button" class="btn btn-primary" onclick="connectPiBrowserAndStart()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">
-            <span>⚡</span> Conectar Pi Browser e Criar Minha Vitrine
+        <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.35);border-radius:18px;padding:22px;margin-bottom:20px;box-shadow:0 8px 30px rgba(139,92,246,0.15)">
+          <button type="button" class="btn btn-primary" onclick="connectPiBrowserAndStart()" style="width:100%;padding:14px;font-size:1.02rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">
+            <span>⚡</span> Conectar Pi Browser &amp; Criar Minha Vitrine
           </button>
           <small style="color:var(--text-muted);font-size:0.75rem;display:block;margin-top:8px">
-            Identificação segura e com 1 clique usando o Pi SDK Oficial.
+            Autenticação segura e instantânea com seu @usuário via Pi SDK Oficial.
           </small>
         </div>
 
-        <!-- Ação Secundária: Acesso Rápido por Username -->
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
-          <div style="flex:1;height:1px;background:rgba(255,255,255,0.1)"></div>
-          <span style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em">ou digite seu @usuário Pi</span>
-          <div style="flex:1;height:1px;background:rgba(255,255,255,0.1)"></div>
+        <!-- Opções de Experimentação: 2 Atalhos Claros Sem Concorrência -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:10px;margin-bottom:22px">
+          <button type="button" onclick="startSimulatorMode()" class="btn btn-outline" style="padding:12px;font-size:0.86rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px">
+            <span>🧪</span> Testar no Simulador
+          </button>
+          <a href="?u=hokage22b" class="btn btn-outline" style="padding:12px;font-size:0.86rem;border-color:rgba(245,158,11,0.5);color:var(--amber-light);font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px">
+            <span>🌟</span> Ver Vitrine do Fundador
+          </a>
         </div>
 
-        <form onsubmit="handleOnboardingManualSubmit(event)" style="display:flex;gap:8px;margin-bottom:24px">
-          <input type="text" id="onboarding-user-input" placeholder="Ex: @seunome" required maxlength="50" style="flex:1;padding:12px 16px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:10px;color:#fff;font-size:0.95rem" />
-          <button type="submit" class="btn btn-outline" style="padding:12px 20px;font-weight:700;border-color:var(--amber);color:var(--amber-light)">
-            Ver Vitrine →
-          </button>
-        </form>
-
-        <!-- Exemplos e Simulador -->
-        <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;display:flex;flex-direction:column;gap:10px">
-          <a href="?u=hokage22b" class="btn btn-outline" style="width:100%;padding:12px;font-size:0.9rem;border-color:rgba(245,158,11,0.5);color:var(--amber-light);font-weight:700;text-decoration:none;display:block;text-align:center">
-            🌟 Ver Exemplo Real (@hokage22b) →
-          </a>
-          <button type="button" onclick="startSimulatorMode()" class="btn btn-outline" style="width:100%;padding:12px;font-size:0.9rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
-            🧪 Abrir Simulador Interativo (Testar sem Login) →
-          </button>
+        <!-- Busca por @usuário para quem deseja encontrar uma vitrine específica -->
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;text-align:left">
+          <span style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:8px;font-weight:600">
+            🔍 Já possui vitrine ou quer buscar um pioneiro?
+          </span>
+          <form onsubmit="handleOnboardingManualSubmit(event)" style="display:flex;gap:8px">
+            <input type="text" id="onboarding-user-input" placeholder="Digite o @usuário" required maxlength="50" style="flex:1;padding:9px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.18);border-radius:8px;color:#fff;font-size:0.88rem" />
+            <button type="submit" class="btn btn-outline btn-sm" style="padding:9px 16px;font-weight:700;border-color:rgba(255,255,255,0.25);color:#fff">
+              Buscar ↗
+            </button>
+          </form>
         </div>
       </div>
 
@@ -1596,13 +1595,14 @@
             alert('Falha ao conectar via Pi SDK. Por favor, tente novamente no Pi Browser.');
           });
       } else {
-        alert(
-          '💡 Dica Importante:\n\n' +
-          'A autenticação criptográfica oficial da Pi Network só existe dentro do aplicativo Pi Browser.\n\n' +
-          'Aqui no navegador comum, você pode navegar nas vitrines e testar o Simulador.\n\n' +
-          'Para publicar oficialmente sua vitrine na rede, abra este site dentro do Pi Browser!'
+        const wantsSim = confirm(
+          '💡 Você está em um navegador comum!\n\n' +
+          'A autenticação oficial e publicação definitiva na rede Pi ocorre dentro do aplicativo Pi Browser.\n\n' +
+          'Deseja abrir o SIMULADOR INTERATIVO agora para testar fotos, links e produtos na sua tela?'
         );
-        document.getElementById('onboarding-user-input').focus();
+        if (wantsSim) {
+          startSimulatorMode();
+        }
       }
     }
 
