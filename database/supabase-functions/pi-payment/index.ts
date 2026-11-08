@@ -153,6 +153,7 @@ serve(async (req) => {
           "Authorization": `Key ${PI_SERVER_API_KEY}`,
           "Content-Type": "application/json",
         },
+        body: "{}",
       });
 
       const data = await response.json();

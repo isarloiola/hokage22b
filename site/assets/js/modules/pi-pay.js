@@ -324,7 +324,8 @@
 
       if (payment.transaction && payment.transaction.txid) {
         completePaymentOnServer(payment.identifier, payment.transaction.txid);
-      } else if (st.developer_approved === false) {
+      } else {
+        console.log('Limpando pagamento pendente sem txid:', payment.identifier);
         cancelPaymentOnServer(payment.identifier);
       }
     }
@@ -549,6 +550,9 @@
     };
 
     try {
+      document.querySelectorAll('.portal-modal-overlay.active, .pi-modal-overlay.active').forEach(function (m) {
+        m.classList.remove('active');
+      });
       window.Pi.createPayment(paymentData, paymentCallbacks);
     } catch (err) {
       console.error('Erro ao chamar window.Pi.createPayment:', err);
