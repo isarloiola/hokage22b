@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecionando... | HOKAGE22B</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
+  <script>
+    (function () {
+      var path = window.location.pathname || '';
+      var clean = path.replace(/^\/+|\/+$/g, '');
+      var segments = clean.split('/').filter(Boolean);
+      var first = segments[0] || '';
+      var second = segments[1] || '';
+
+      // Páginas conhecidas da raiz do portal
+      var knownRootPages = ['zero', 'mural', 'pioneiro'];
+      if (segments.length === 1 && knownRootPages.indexOf(first.toLowerCase()) !== -1) {
+        window.location.replace('/' + first.toLowerCase() + '.html' + window.location.search + window.location.hash);
+        return;
+      }
+
+      // Caso 1: hokage22b.com/@usuario ou hokage22b.com/@usuario/
+      if (first.startsWith('@')) {
+        window.location.replace('/pioneiro.html?u=' + encodeURIComponent(first) + window.location.hash);
+        return;
+      }
+
+      // Caso 2: hokage22b.com/pioneiro/@usuario ou hokage22b.com/pioneiro/usuario
+      if (first.toLowerCase() === 'pioneiro' && second) {
+        var u = second.startsWith('@') ? second : ('@' + second);
+        window.location.replace('/pioneiro.html?u=' + encodeURIComponent(u) + window.location.hash);
+        return;
+      }
+
+      // Caso 3: hokage22b.com/usuario (ex: hokage22b.com/hokage22b)
+      // Qualquer slug único que não contenha ponto e não seja página do sistema
+      if (segments.length === 1 && first && first.indexOf('.') === -1 && knownRootPages.indexOf(first.toLowerCase()) === -1) {
+        window.location.replace('/pioneiro.html?u=' + encodeURIComponent('@' + first) + window.location.hash);
+        return;
+      }
+
+      // Caso não identificado, envia para a página inicial
+      window.location.replace('/index.html');
+    })();
+  </script>
+</head>
+<body style="background:#09090b;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px">
+  <div>
+    <div style="font-size:2.8rem;color:#8b5cf6;margin-bottom:12px">✦</div>
+    <h1 style="font-size:1.3rem;font-weight:700;margin:0 0 8px">Carregando Vitrine Web3...</h1>
+    <p style="color:#94a3b8;font-size:0.9rem">Conectando ao perfil do pioneiro na Pi Network.</p>
+  </div>
+</body>
+</html>

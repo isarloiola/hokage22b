@@ -395,6 +395,13 @@
         </p>
         <span class="pioneer-badge-verified" id="pioneer-badge">🛡️ Humano Verificado via Pi KYC</span>
 
+        <!-- Link Curto Oficial da Vitrine (Estilo Linktree) -->
+        <div style="margin:14px auto 0;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:20px;font-size:0.8rem">
+          <span style="color:var(--text-muted)">Seu Link:</span>
+          <span id="pioneer-short-url" style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@...</span>
+          <button type="button" onclick="shareProfile()" style="background:transparent;border:none;color:var(--accent-light);cursor:pointer;font-size:0.75rem;padding:2px 6px;text-decoration:underline">Copiar</button>
+        </div>
+
         <!-- Caixa de Pagamento Direto com Pi Wallet -->
         <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:16px;padding:18px;margin-top:24px;text-align:left">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -708,6 +715,20 @@
     // Carrega Perfil Real do Supabase ou Demonstração
     async function loadPioneerProfile() {
       let username = getQueryParam('u') || getQueryParam('user');
+
+      // Fallback de caminho caso venha por /pioneiro/@usuario ou /@usuario
+      if (!username) {
+        const pathSegments = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
+        const lastSeg = pathSegments[pathSegments.length - 1] || '';
+        if (lastSeg.startsWith('@')) {
+          username = lastSeg;
+        } else if (pathSegments.length === 2 && pathSegments[0].toLowerCase() === 'pioneiro') {
+          username = '@' + lastSeg;
+        } else if (pathSegments.length === 1 && !['zero', 'mural', 'pioneiro', 'legal', 'index'].includes(pathSegments[0].toLowerCase()) && !pathSegments[0].includes('.')) {
+          username = '@' + pathSegments[0];
+        }
+      }
+
       const loggedUser = getLoggedUser();
 
       // Se não passou na URL, mas está logado, usa a conta logada
@@ -782,6 +803,10 @@
       document.getElementById('pioneer-handle').textContent = username;
       document.getElementById('pioneer-avatar').textContent = username.replace('@', '').charAt(0).toUpperCase() || 'π';
       document.title = `${username} — Vitrine Oficial de Pioneiro | HOKAGE22B`;
+
+      const shortUrl = `hokage22b.com/@${username.replace(/^@+/, '')}`;
+      const shortUrlEl = document.getElementById('pioneer-short-url');
+      if (shortUrlEl) shortUrlEl.textContent = shortUrl;
 
       // Bio
       document.getElementById('pioneer-bio').textContent = prof.bio || 'Pioneiro oficial na comunidade independente Pi Network.';
@@ -1184,16 +1209,17 @@
     }
 
     function shareProfile() {
-      const shareUrl = window.location.href;
+      const cleanUser = currentPioneerUser ? currentPioneerUser.replace(/^@+/, '') : 'hokage22b';
+      const shareUrl = `https://hokage22b.com/@${cleanUser}`;
       if (navigator.share) {
         navigator.share({
-          title: document.title,
-          text: `Confira minha vitrine oficial e meus links aceitando Pi Network:`,
+          title: `${cleanUsername(currentPioneerUser)} — Vitrine Oficial na Pi Network`,
+          text: `Confira minha vitrine oficial, produtos e links na comunidade Pi Network:`,
           url: shareUrl
         }).catch(() => {});
       } else {
         navigator.clipboard.writeText(shareUrl).then(() => {
-          alert('✓ Link copiado para a área de transferência! Compartilhe no WhatsApp ou X.');
+          alert(`✓ Link da sua Vitrine copiado!\n\n${shareUrl}\n\nVocê pode colar este link na bio do Instagram, TikTok ou WhatsApp.`);
         });
       }
     }
