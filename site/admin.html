@@ -439,6 +439,7 @@
     }
     .badge-ativo { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
     .badge-pausado { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-pendente { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
     .badge-tier-ouro { background: linear-gradient(90deg, #f59e0b, #fbbf24); color: #000; font-weight: 900; }
     .badge-tier-prata { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
     .badge-tier-bronze { background: rgba(180, 100, 50, 0.2); color: #d97706; }
@@ -600,6 +601,7 @@
       <div class="actions-bar">
         <div class="filter-pills">
           <button class="filter-pill active" onclick="filterAds('todos', this)">Todos</button>
+          <button class="filter-pill" onclick="filterAds('pendente', this)">⏳ Pendentes</button>
           <button class="filter-pill" onclick="filterAds('ativo', this)">🟢 Ativos</button>
           <button class="filter-pill" onclick="filterAds('pausado', this)">🟡 Pausados</button>
           <button class="filter-pill" onclick="filterAds('ouro', this)">👑 Destaque Ouro</button>
@@ -1013,6 +1015,7 @@
         let filtered = cachedAds;
 
         if (currentAdFilter === 'ativo') filtered = cachedAds.filter(a => a.status === 'ativo');
+        else if (currentAdFilter === 'pendente') filtered = cachedAds.filter(a => a.status === 'pendente');
         else if (currentAdFilter === 'pausado') filtered = cachedAds.filter(a => a.status === 'pausado');
         else if (currentAdFilter === 'ouro') filtered = cachedAds.filter(a => a.plan_tier === 'ouro');
 
