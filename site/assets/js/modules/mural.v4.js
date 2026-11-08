@@ -558,7 +558,34 @@
             window.HokagePi.showManualP2PModal({
               amount: priceInfo.pi,
               memo: `Anúncio ${selectedTier.toUpperCase()}: ${title}`,
-              metadata: { adId: adId, plan: selectedTier }
+              metadata: { adId: adId, plan: selectedTier },
+              onSuccess: async function (paymentResult) {
+                newAd.status = 'ativo';
+                newAd.payment_txid = paymentResult.txid;
+
+                if (window.IsarDB && window.IsarDB.createAnuncio) {
+                  try { await window.IsarDB.createAnuncio(newAd); } catch (_) {}
+                }
+
+                try {
+                  const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+                  localAds.unshift(newAd);
+                  localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+                } catch (_) {}
+
+                closeModal();
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
+                }
+
+                const gridEl = document.getElementById('mural-ads-grid');
+                if (gridEl) {
+                  gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(newAd));
+                }
+                filterCategory(currentCategory);
+                alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na blockchain! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
+              }
             });
           }
         },

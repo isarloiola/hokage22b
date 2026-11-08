@@ -531,9 +531,12 @@
       window.Pi.createPayment(paymentData, paymentCallbacks);
     } catch (err) {
       console.error('Erro ao chamar window.Pi.createPayment:', err);
-      showManualP2PModal({ amount: amount, memo: memo, metadata: metadata });
+      const errMsg = err && (err.message || (typeof err === 'string' ? err : 'Erro no Pi SDK'));
+      showToast('Aviso Pi Wallet: ' + errMsg, 'error');
       if (typeof options.onError === 'function') {
         options.onError(err);
+      } else {
+        showManualP2PModal(options);
       }
     }
   }
@@ -555,7 +558,7 @@
 
     modal.innerHTML = `
       <div class="portal-modal">
-        <button type="button" class="portal-modal-close" onclick="document.getElementById('pi-p2p-checkout-modal').classList.remove('active')">✕</button>
+        <button type="button" class="portal-modal-close" id="p2p-modal-close-btn">✕</button>
         <div class="section-tag section-tag--amber">Pagamento Seguro Pi SDK</div>
         <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">${escapeHtml(data.memo || 'Pagamento')}</h3>
         
@@ -581,23 +584,63 @@
 
         <div style="display:flex;flex-direction:column;gap:10px">
           ${inPi ? `
-            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" style="padding:14px;font-weight:700" onclick="document.getElementById('pi-p2p-checkout-modal').classList.remove('active'); HokagePi.requestPiPayment({ amount: ${Number(data.amount) || 0.314}, memo: '${escapeHtml(data.memo || 'Pagamento HOKAGE22B')}', metadata: ${JSON.stringify(data.metadata || {})} })">
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="p2p-btn-auth-pay" style="padding:14px;font-weight:700">
               ⚡ Autorizar Pagamento na Pi Wallet
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" onclick="document.getElementById('pi-p2p-checkout-modal').classList.remove('active'); HokagePi.openPiConnectModal()">
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" id="p2p-btn-diag">
               🔍 Status da Conexão Pi
             </button>
           ` : `
-            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" style="padding:14px;font-weight:700" onclick="HokagePi.openExternalDeepLink()">
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="p2p-btn-deep-link" style="padding:14px;font-weight:700">
               🚀 Abrir no Pi Browser
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" onclick="navigator.clipboard.writeText(window.location.href);this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link do App',2500)">
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" id="p2p-btn-copy-link">
               📋 Copiar Link do App
             </button>
           `}
         </div>
       </div>
     `;
+
+    const closeBtn = modal.querySelector('#p2p-modal-close-btn');
+    if (closeBtn) {
+      closeBtn.onclick = function () { modal.classList.remove('active'); };
+    }
+
+    const authPayBtn = modal.querySelector('#p2p-btn-auth-pay');
+    if (authPayBtn) {
+      authPayBtn.onclick = function () {
+        modal.classList.remove('active');
+        showToast('Iniciando conexão com a Pi Wallet...', 'info');
+        requestPiPayment(data);
+      };
+    }
+
+    const diagBtn = modal.querySelector('#p2p-btn-diag');
+    if (diagBtn) {
+      diagBtn.onclick = function () {
+        modal.classList.remove('active');
+        openPiConnectModal();
+      };
+    }
+
+    const deepLinkBtn = modal.querySelector('#p2p-btn-deep-link');
+    if (deepLinkBtn) {
+      deepLinkBtn.onclick = function () {
+        openExternalDeepLink();
+      };
+    }
+
+    const copyLinkBtn = modal.querySelector('#p2p-btn-copy-link');
+    if (copyLinkBtn) {
+      copyLinkBtn.onclick = function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(window.location.href);
+          copyLinkBtn.textContent = '✓ Link Copiado!';
+          setTimeout(function () { copyLinkBtn.textContent = '📋 Copiar Link do App'; }, 2500);
+        }
+      };
+    }
 
     modal.classList.add('active');
   }
