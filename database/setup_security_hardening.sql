@@ -44,7 +44,7 @@ BEGIN
     IF LOWER(REPLACE(NEW.username, '@', '')) = 'hokage22b' THEN
         -- A carteira oficial do fundador é imutável
         NEW.wallet_address := 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR';
-        NEW.is_verified := true;
+        NEW.level_name := 'Fundador Oficial';
     END IF;
 
     -- Normaliza username para minúsculo com prefixo @

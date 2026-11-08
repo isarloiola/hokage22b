@@ -628,14 +628,15 @@
     if (!db || !username) return null;
 
     try {
-      var clean = username.replace('@', '').toLowerCase();
+      var clean = String(username).replace(/@+/g, '').trim().toLowerCase();
       var res = await db
         .from('pioneiros')
         .select('*')
-        .ilike('username', '%' + clean + '%')
-        .maybeSingle();
+        .ilike('username', '@' + clean)
+        .order('updated_at', { ascending: false })
+        .limit(1);
 
-      var data = res.data || null;
+      var data = (res.data && res.data.length > 0) ? res.data[0] : null;
       if (data && data.checklist_state) {
         if (data.checklist_state.showcase_zero !== undefined) {
           data.showcase_zero = data.checklist_state.showcase_zero;
@@ -646,6 +647,7 @@
       }
       return data;
     } catch (err) {
+      console.warn('Erro ao obter perfil do pioneiro:', err);
       return null;
     }
   }
