@@ -193,7 +193,9 @@
       const payload = Object.assign({}, adData, {
         status: adData.status || 'ativo',
         views_count: adData.views_count || 0,
-        clicks_count: adData.clicks_count || 0
+        clicks_count: adData.clicks_count || 0,
+        profile_visits: adData.profile_visits || 0,
+        likes_count: adData.likes_count || 0
       });
 
       const { data, error } = await db
@@ -505,6 +507,51 @@
     }
   }
 
+  // Incrementa contador de visitas ao perfil do anunciante
+  async function incrementAdProfileVisit(adId) {
+    var db = getClient();
+    if (!db || !adId || adId.startsWith('testnet_') || adId.startsWith('mock_') || adId === 'preview_card_mock') return null;
+
+    try {
+      var res = await db.rpc('increment_ad_profile_visit', { p_ad_id: adId });
+      if (res.error) throw res.error;
+      return res.data;
+    } catch (err) {
+      console.warn('Erro ao registrar visita ao perfil:', err.message);
+      return null;
+    }
+  }
+
+  // Incrementa curtida / apoio comunitário no anúncio
+  async function incrementAdLike(adId) {
+    var db = getClient();
+    if (!db || !adId || adId.startsWith('testnet_') || adId.startsWith('mock_') || adId === 'preview_card_mock') return null;
+
+    try {
+      var res = await db.rpc('increment_ad_like', { p_ad_id: adId });
+      if (res.error) throw res.error;
+      return res.data;
+    } catch (err) {
+      console.warn('Erro ao registrar like:', err.message);
+      return null;
+    }
+  }
+
+  // Desfaz curtida no anúncio
+  async function decrementAdLike(adId) {
+    var db = getClient();
+    if (!db || !adId || adId.startsWith('testnet_') || adId.startsWith('mock_') || adId === 'preview_card_mock') return null;
+
+    try {
+      var res = await db.rpc('decrement_ad_like', { p_ad_id: adId });
+      if (res.error) throw res.error;
+      return res.data;
+    } catch (err) {
+      console.warn('Erro ao remover like:', err.message);
+      return null;
+    }
+  }
+
   // --- MOTOR SAAS: GESTÃO DO ANUNCIANTE E VITRINE ---
 
   // Busca os anúncios publicados pelo próprio pioneiro
@@ -772,6 +819,9 @@
     compressImageFile: compressImageFile,
     incrementAdClick: incrementAdClick,
     incrementAdView: incrementAdView,
+    incrementAdProfileVisit: incrementAdProfileVisit,
+    incrementAdLike: incrementAdLike,
+    decrementAdLike: decrementAdLike,
     // Métodos SaaS do Anunciante e Vitrine
     isValidPiPublicKey: isValidPiPublicKey,
     getMyAds: getMyAds,

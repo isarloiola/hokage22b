@@ -87,15 +87,41 @@
       `;
     }
 
-    const views = ad.views_count || (tier === 'ouro' ? 142 : 56);
-    const clicks = ad.clicks_count || (tier === 'ouro' ? 24 : 7);
+    // Métricas reais (sem números fictícios)
+    const views = Number(ad.views_count) || 0;
+    const clicks = Number(ad.clicks_count) || 0;
+    const profileVisits = Number(ad.profile_visits || ad.profile_clicks) || 0;
+    const likes = Number(ad.likes_count) || 0;
+
+    let isLiked = false;
+    try {
+      const likedAds = JSON.parse(localStorage.getItem('isar_liked_ads') || '[]');
+      if (likedAds.includes(cardId)) isLiked = true;
+    } catch (_) {}
+
+    // Linha de métricas adaptada por tier:
+    // Bronze: não possui link externo -> contabiliza visitas ao perfil e likes
+    // Prata / Ouro: possui link externo -> contabiliza cliques no link, visitas ao perfil e likes
+    let metricsDetailsHtml = '';
+    if (tier === 'bronze') {
+      metricsDetailsHtml = `
+        <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)" class="ad-views-num" data-id="${cardId}">${views}</strong> views</span>
+        <span title="Visitas ao Perfil">👤 <strong style="color:var(--accent-light)" class="ad-profile-visits-num" data-id="${cardId}">${profileVisits}</strong> visitas ao perfil</span>
+      `;
+    } else {
+      metricsDetailsHtml = `
+        <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)" class="ad-views-num" data-id="${cardId}">${views}</strong> views</span>
+        <span title="Cliques no Link Oficial">🖱️ <strong style="color:var(--amber-light)" class="ad-clicks-num" data-id="${cardId}">${clicks}</strong> cliques</span>
+        <span title="Visitas ao Perfil">👤 <strong style="color:var(--accent-light)" class="ad-profile-visits-num" data-id="${cardId}">${profileVisits}</strong> perfil</span>
+      `;
+    }
 
     return `
       <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" id="card-${cardId}">
         ${bannerHtml}
         <div class="pioneer-card__top">
           <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
-          <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" class="pioneer-card__author" style="text-decoration:none" title="Ver perfil e mini-página do pioneiro">${safeAuthor} ↗</a>
+          <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__author" style="text-decoration:none" title="Ver perfil e mini-página do pioneiro">${safeAuthor} ↗</a>
         </div>
         <h3 class="pioneer-card__title">${safeTitle}</h3>
         <p class="pioneer-card__desc">${safeDesc}</p>
@@ -103,16 +129,18 @@
           ${linkHtml}
           <span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
         </div>
-        <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:6px">
-          <div style="display:flex;align-items:center;gap:12px">
-            <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)">${views}</strong> views</span>
-            <span title="Cliques no anúncio">🖱️ <strong style="color:var(--amber-light)" class="ad-clicks-num" data-id="${cardId}">${clicks}</strong> cliques</span>
+        <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            ${metricsDetailsHtml}
+            <button type="button" class="btn-like-ad ${isLiked ? 'liked' : ''}" onclick="window.IsarMural && window.IsarMural.toggleLike('${cardId}')" data-id="${cardId}" title="Apoiar este anúncio da comunidade" style="background:${isLiked ? 'rgba(244,63,94,0.25)' : 'rgba(244,63,94,0.1)'};border:1px solid ${isLiked ? '#f43f5e' : 'rgba(244,63,94,0.3)'};color:${isLiked ? '#fff' : '#fb7185'};padding:2px 8px;border-radius:6px;cursor:pointer;font-size:0.74rem;display:inline-flex;align-items:center;gap:4px;font-weight:${isLiked ? '700' : '500'};transition:all 0.2s ease">
+              <span>❤️</span> <strong class="ad-likes-num" data-id="${cardId}">${likes}</strong>
+            </button>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
             <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('${cardId}', '${safeTitle.replace(/'/g, "\\'")}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
               🚩 Denunciar
             </button>
-            <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
+            <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
           </div>
         </div>
       </article>
@@ -239,7 +267,7 @@
   }
 
   function trackClick(adId) {
-    if (!adId || adId.startsWith('testnet_') || adId.startsWith('mock_') || adId === 'preview_card_mock') return;
+    if (!adId || adId === 'preview_card_mock') return;
 
     // Atualização visual imediata no card
     document.querySelectorAll(`.ad-clicks-num[data-id="${adId}"]`).forEach(function (el) {
@@ -247,9 +275,129 @@
       el.textContent = current + 1;
     });
 
+    // Atualiza no cache local de anúncios
+    try {
+      const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+      const found = localAds.find(a => a.id === adId);
+      if (found) {
+        found.clicks_count = (found.clicks_count || 0) + 1;
+        localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+      }
+    } catch (_) {}
+
     // Envio atômico ao Supabase
     if (window.IsarDB && window.IsarDB.incrementAdClick) {
       window.IsarDB.incrementAdClick(adId).catch(function () {});
+    }
+  }
+
+  function trackProfileVisit(adId) {
+    if (!adId || adId === 'preview_card_mock') return;
+
+    // Atualização visual imediata no card
+    document.querySelectorAll(`.ad-profile-visits-num[data-id="${adId}"]`).forEach(function (el) {
+      const current = parseInt(el.textContent, 10) || 0;
+      el.textContent = current + 1;
+    });
+
+    // Atualiza no cache local de anúncios
+    try {
+      const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+      const found = localAds.find(a => a.id === adId);
+      if (found) {
+        found.profile_visits = (found.profile_visits || 0) + 1;
+        localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+      }
+    } catch (_) {}
+
+    // Envio atômico ao Supabase
+    if (window.IsarDB && window.IsarDB.incrementAdProfileVisit) {
+      window.IsarDB.incrementAdProfileVisit(adId).catch(function () {});
+    }
+  }
+
+  function toggleLike(adId) {
+    if (!adId || adId === 'preview_card_mock') return;
+
+    let likedAds = [];
+    try {
+      likedAds = JSON.parse(localStorage.getItem('isar_liked_ads') || '[]');
+    } catch (_) {}
+
+    const alreadyLiked = likedAds.includes(adId);
+    const likeBtns = document.querySelectorAll(`.btn-like-ad[data-id="${adId}"]`);
+    const likeNums = document.querySelectorAll(`.ad-likes-num[data-id="${adId}"]`);
+
+    if (alreadyLiked) {
+      // Desfaz curtida
+      likedAds = likedAds.filter(id => id !== adId);
+      try {
+        localStorage.setItem('isar_liked_ads', JSON.stringify(likedAds));
+      } catch (_) {}
+
+      likeBtns.forEach(btn => {
+        btn.classList.remove('liked');
+        btn.style.background = 'rgba(244,63,94,0.1)';
+        btn.style.borderColor = 'rgba(244,63,94,0.3)';
+        btn.style.color = '#fb7185';
+        btn.style.fontWeight = '500';
+      });
+      likeNums.forEach(el => {
+        const current = parseInt(el.textContent, 10) || 0;
+        el.textContent = Math.max(0, current - 1);
+      });
+
+      try {
+        const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+        const found = localAds.find(a => a.id === adId);
+        if (found) {
+          found.likes_count = Math.max(0, (found.likes_count || 0) - 1);
+          localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+        }
+      } catch (_) {}
+
+      if (window.IsarDB && window.IsarDB.decrementAdLike) {
+        window.IsarDB.decrementAdLike(adId).catch(function () {});
+      }
+
+      if (window.HokagePi && window.HokagePi.showToast) {
+        window.HokagePi.showToast('Apoio removido.', 'info');
+      }
+    } else {
+      // Adiciona curtida
+      likedAds.push(adId);
+      try {
+        localStorage.setItem('isar_liked_ads', JSON.stringify(likedAds));
+      } catch (_) {}
+
+      likeBtns.forEach(btn => {
+        btn.classList.add('liked');
+        btn.style.background = 'rgba(244,63,94,0.25)';
+        btn.style.borderColor = '#f43f5e';
+        btn.style.color = '#fff';
+        btn.style.fontWeight = '700';
+      });
+      likeNums.forEach(el => {
+        const current = parseInt(el.textContent, 10) || 0;
+        el.textContent = current + 1;
+      });
+
+      try {
+        const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+        const found = localAds.find(a => a.id === adId);
+        if (found) {
+          found.likes_count = (found.likes_count || 0) + 1;
+          localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+        }
+      } catch (_) {}
+
+      if (window.IsarDB && window.IsarDB.incrementAdLike) {
+        window.IsarDB.incrementAdLike(adId).catch(function () {});
+      }
+
+      if (window.HokagePi && window.HokagePi.showToast) {
+        window.HokagePi.showToast('❤️ Você apoiou este anúncio!', 'success');
+      }
     }
   }
 
@@ -504,6 +652,10 @@
       plan_tier: selectedTier,
       price_pi: priceInfo.pi,
       status: 'ativo',
+      views_count: 0,
+      clicks_count: 0,
+      profile_visits: 0,
+      likes_count: 0,
       created_at: new Date().toISOString()
     };
 
@@ -764,9 +916,13 @@
 
       let totalViews = 0;
       let totalClicks = 0;
+      let totalProfileVisits = 0;
+      let totalLikes = 0;
       myCachedAds.forEach(a => {
-        totalViews += (a.views_count || 0);
-        totalClicks += (a.clicks_count || 0);
+        totalViews += (Number(a.views_count) || 0);
+        totalClicks += (Number(a.clicks_count) || 0);
+        totalProfileVisits += (Number(a.profile_visits || a.profile_clicks) || 0);
+        totalLikes += (Number(a.likes_count) || 0);
       });
 
       const countEl = document.getElementById('my-ads-count');
@@ -775,7 +931,7 @@
 
       if (countEl) countEl.textContent = myCachedAds.length;
       if (viewsEl) viewsEl.textContent = totalViews;
-      if (clicksEl) clicksEl.textContent = totalClicks;
+      if (clicksEl) clicksEl.textContent = totalClicks + totalProfileVisits;
 
       if (myCachedAds.length === 0) {
         container.innerHTML = `
@@ -806,8 +962,11 @@
                 <span>Expira em: <strong>${daysLeft} dias</strong></span>
               </div>
               <strong style="color:#fff;font-size:0.95rem;display:block">${escapeHtml(ad.title || '')}</strong>
-              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">
-                👁️ ${ad.views_count || 0} views &nbsp;·&nbsp; 🖱️ <strong style="color:var(--amber-light)">${ad.clicks_count || 0} cliques</strong>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap">
+                <span>👁️ <strong>${Number(ad.views_count) || 0}</strong> views</span>
+                ${ad.plan_tier === 'bronze' ? '' : `<span>🖱️ <strong style="color:var(--amber-light)">${Number(ad.clicks_count) || 0}</strong> cliques</span>`}
+                <span>👤 <strong style="color:var(--accent-light)">${Number(ad.profile_visits || ad.profile_clicks) || 0}</strong> visitas perfil</span>
+                <span>❤️ <strong style="color:#f43f5e">${Number(ad.likes_count) || 0}</strong> apoios</span>
               </div>
             </div>
             <div style="display:flex;gap:6px">
@@ -1068,6 +1227,8 @@
     updateLivePreview: updateLivePreview,
     simulateTestnetPublish: simulateTestnetPublish,
     trackClick: trackClick,
+    trackProfileVisit: trackProfileVisit,
+    toggleLike: toggleLike,
     // Métodos do Painel do Anunciante SaaS
     openMyAdsModal: openMyAdsModal,
     closeMyAdsModal: closeMyAdsModal,
