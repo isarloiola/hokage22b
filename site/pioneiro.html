@@ -656,42 +656,43 @@
           <button type="button" onclick="shareProfile()" style="background:transparent;border:none;color:var(--accent-light);cursor:pointer;font-size:0.75rem;padding:2px 6px;text-decoration:underline;flex-shrink:0">Copiar</button>
         </div>
 
-        <!-- Caixa de Pagamento Direto com Pi Wallet (Blindagem Criptográfica) -->
-        <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:16px;padding:18px;margin-top:24px;text-align:left">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <span style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--amber-light);font-weight:700">
-              ⚡ Pagar ou Transferir Pi (Mainnet P2P)
-            </span>
-            <span style="font-size:0.7rem;color:var(--text-muted)">Sem Taxas do App</span>
-          </div>
+        <!-- Barra Compacta de Pagamento Direto com Pi Wallet (Mainnet P2P) -->
+        <div id="pioneer-wallet-container" style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.25);border-radius:14px;padding:12px 14px;margin-top:20px;text-align:left">
           
-          <div id="pioneer-wallet-box" style="margin-bottom:12px;display:none">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-              <span style="font-size:0.75rem;color:var(--text-muted)">Chave Pública Oficial (Carteira):</span>
-              <span id="wallet-verified-badge" style="font-size:0.7rem;color:#10b981;font-weight:700">✓ Checksum ed25519 Válido</span>
+          <div id="pioneer-wallet-box" style="display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <!-- Informação Resumida da Carteira (Anti-Clipper Nativamente Integrado) -->
+            <div style="display:flex;align-items:center;gap:10px;min-width:170px;flex:1">
+              <span style="font-size:1.2rem;color:var(--amber-light);flex-shrink:0">⚡</span>
+              <div style="line-height:1.25">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);font-weight:700">Carteira Pi (P2P)</span>
+                  <span id="wallet-verified-badge" style="font-size:0.68rem;color:#10b981;font-weight:700">✓ Válida</span>
+                </div>
+                <div style="font-family:var(--font-mono);font-size:0.85rem;color:#fff;font-weight:700;display:flex;align-items:center;gap:4px">
+                  <span id="wallet-short-key" class="notranslate" translate="no" style="color:var(--amber-light)">GA5F...XPUR</span>
+                  <span id="wallet-shield-icon" title="Proteção Anti-Clipper Guard" style="font-size:0.75rem;cursor:help">🛡️</span>
+                </div>
+              </div>
             </div>
-            <code id="pioneer-wallet-key" class="notranslate" translate="no" style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);color:var(--accent-light);user-select:all"></code>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:0.72rem;color:var(--text-muted);background:rgba(255,255,255,0.02);padding:4px 8px;border-radius:6px;border:1px dashed rgba(255,255,255,0.08)">
-              <span>Início: <strong id="wallet-head-tag" class="notranslate" style="color:var(--amber-light)">G...</strong></span>
-              <span style="color:#10b981">🛡️ Anti-Clipper Guard</span>
-              <span>Fim: <strong id="wallet-tail-tag" class="notranslate" style="color:var(--amber-light)">...</strong></span>
+
+            <!-- Ações Rápidas em Linha Única -->
+            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+              <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-copy-wallet" onclick="copyWalletKey()" title="Copiar Chave Pública Completa" style="padding:7px 11px;font-size:0.8rem;border-color:rgba(255,255,255,0.15)">
+                📋 Copiar
+              </button>
+              <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" id="btn-show-qr" onclick="openWalletQrModal()" title="Abrir QR Code e Cobrança" style="padding:7px 14px;font-size:0.82rem;font-weight:700">
+                ⚡ Pagar / QR
+              </button>
             </div>
+
+            <!-- Elementos Técnicos Ocultos para Acessibilidade e Suporte a Scripts -->
+            <code id="pioneer-wallet-key" class="notranslate" translate="no" style="display:none"></code>
+            <span id="wallet-head-tag" class="notranslate" style="display:none"></span>
+            <span id="wallet-tail-tag" class="notranslate" style="display:none"></span>
           </div>
 
-          <div id="pioneer-wallet-empty" style="margin-bottom:12px;display:none;font-size:0.82rem;color:var(--text-muted)">
+          <div id="pioneer-wallet-empty" style="display:none;font-size:0.82rem;color:var(--text-muted);padding:4px 0">
             Chave pública ainda não cadastrada. O pioneiro pode adicioná-la editando sua vitrine no Pi Browser.
-          </div>
-
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" id="btn-show-qr" onclick="openWalletQrModal()" style="flex:2;min-width:140px;padding:10px 12px;font-weight:700">
-              ⚡ Cobrar / POS Pi
-            </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-copy-wallet" onclick="copyWalletKey()" style="flex:1;min-width:110px;padding:10px;font-size:0.82rem;font-weight:600">
-              📋 Chave Pública
-            </button>
-            <a href="https://wallet.pi" class="portal-btn portal-btn--outline portal-btn--sm" style="text-align:center;text-decoration:none;padding:10px 14px;font-size:0.82rem">
-              🚀 wallet.pi
-            </a>
           </div>
         </div>
 
@@ -1017,7 +1018,11 @@
           <span style="font-size:0.72rem;color:var(--text-muted)">Destinatário: <strong id="wallet-qr-user" class="notranslate" style="color:var(--amber-light)">@...</strong></span>
           <span id="pos-badge-status" style="font-size:0.7rem;color:#10b981;font-weight:700">✓ Pronto para Escanear</span>
         </div>
-        <code id="wallet-qr-preview" class="notranslate" translate="no" style="display:block;font-size:0.65rem;color:var(--accent-light);word-break:break-all;margin-top:4px;background:#09090b;padding:6px;border-radius:6px"></code>
+        <code id="wallet-qr-preview" class="notranslate" translate="no" style="display:block;font-size:0.65rem;color:var(--accent-light);word-break:break-all;margin-top:4px;background:#09090b;padding:6px;border-radius:6px;user-select:all"></code>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:0.7rem;color:var(--text-muted)">
+          <span style="color:#10b981">🛡️ Anti-Clipper Guard Ativo</span>
+          <a href="https://wallet.pi" class="notranslate" style="color:var(--amber-light);text-decoration:none;font-weight:700">🚀 Abrir wallet.pi ↗</a>
+        </div>
       </div>
 
       <!-- Ações de Compartilhamento / Link Direto -->
@@ -1753,31 +1758,37 @@
       const walletBadge = document.getElementById('wallet-verified-badge');
       const headEl = document.getElementById('wallet-head-tag');
       const tailEl = document.getElementById('wallet-tail-tag');
+      const shortKeyEl = document.getElementById('wallet-short-key');
 
       if (prof.wallet_address) {
         currentPioneerWallet = prof.wallet_address.trim();
-        document.getElementById('pioneer-wallet-key').textContent = currentPioneerWallet;
+        const keyEl = document.getElementById('pioneer-wallet-key');
+        if (keyEl) keyEl.textContent = currentPioneerWallet;
 
         const isChecksumOk = isValidPiPublicKey(currentPioneerWallet);
         if (walletBadge) {
           if (isChecksumOk) {
-            walletBadge.textContent = '✓ Checksum ed25519 Válido';
+            walletBadge.textContent = '✓ Válida';
             walletBadge.style.color = '#10b981';
           } else {
-            walletBadge.textContent = '⚠️ Checksum Não Verificado';
+            walletBadge.textContent = '⚠️ Não Verificada';
             walletBadge.style.color = '#f59e0b';
           }
         }
 
-        if (headEl) headEl.textContent = currentPioneerWallet.substring(0, 4) + '...';
-        if (tailEl) tailEl.textContent = '...' + currentPioneerWallet.substring(currentPioneerWallet.length - 4);
+        const head = currentPioneerWallet.substring(0, 4);
+        const tail = currentPioneerWallet.substring(currentPioneerWallet.length - 4);
 
-        walletBox.style.display = 'block';
+        if (headEl) headEl.textContent = head + '...';
+        if (tailEl) tailEl.textContent = '...' + tail;
+        if (shortKeyEl) shortKeyEl.textContent = `${head}...${tail}`;
+
+        walletBox.style.display = 'flex';
         walletEmpty.style.display = 'none';
 
         const qrBtn = document.getElementById('btn-show-qr');
         if (qrBtn) {
-          qrBtn.innerHTML = isOwner ? '⚡ Cobrar / Meu POS' : '⚡ Pagar com Pi';
+          qrBtn.innerHTML = isOwner ? '⚡ Cobrar / POS' : '⚡ Pagar / QR';
         }
       } else {
         currentPioneerWallet = '';
@@ -2927,14 +2938,20 @@
         alert('Chave pública não cadastrada para este pioneiro.');
         return;
       }
-      const head = currentPioneerWallet.substring(0, 4);
-      const tail = currentPioneerWallet.substring(currentPioneerWallet.length - 4);
-
       incrementProfileMetric('copies');
       navigator.clipboard.writeText(currentPioneerWallet).then(() => {
         const btn = document.getElementById('btn-copy-wallet');
-        btn.innerHTML = `✓ Copiado: <span class="notranslate" style="color:var(--amber-light)">${head}...${tail}</span>`;
-        setTimeout(() => { btn.innerHTML = '📋 Chave Pública'; }, 3500);
+        if (btn) {
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '✓ Copiada!';
+          btn.style.borderColor = '#10b981';
+          btn.style.color = '#34d399';
+          setTimeout(() => { 
+            btn.innerHTML = originalText;
+            btn.style.borderColor = '';
+            btn.style.color = '';
+          }, 3000);
+        }
       }).catch(() => {
         prompt('Copie a chave pública abaixo:', currentPioneerWallet);
       });
