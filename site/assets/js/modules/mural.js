@@ -505,7 +505,7 @@
       pioneer_name: username.replace('@', ''),
       plan_tier: selectedTier,
       price_pi: priceInfo.pi,
-      status: 'pendente',
+      status: 'ativo',
       created_at: new Date().toISOString()
     };
 

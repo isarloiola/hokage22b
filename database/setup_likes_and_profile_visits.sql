@@ -75,3 +75,4 @@ GRANT EXECUTE ON FUNCTION public.increment_ad_like(TEXT) TO anon, authenticated,
 
 REVOKE ALL ON FUNCTION public.decrement_ad_like(TEXT) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.decrement_ad_like(TEXT) TO anon, authenticated, service_role;
+

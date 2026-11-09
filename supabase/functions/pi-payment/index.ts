@@ -91,7 +91,7 @@ serve(async (req) => {
             .eq("id", metadata.adId)
             .maybeSingle();
 
-          const expectedPrice = (ad && Number(ad.price_pi)) ? Number(ad.price_pi) : 1.0;
+          const expectedPrice = (ad && Number(ad.price_pi)) ? Number(ad.price_pi) : 0.314;
 
           if (paidAmount < expectedPrice) {
             console.error(`[Security Alert] Montante insuficiente: pago ${paidAmount} Pi, esperado ${expectedPrice} Pi.`);

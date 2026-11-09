@@ -75,12 +75,14 @@ CREATE POLICY "anuncios_select_ativos"
     TO anon, authenticated
     USING (status = 'ativo');
 
--- REGRA 2.2: Visitantes só podem enviar anúncio se status for 'pendente'
-CREATE POLICY "anuncios_insert_pendente_only"
+-- REGRA 2.2: Permitir inserção de anúncios pagos diretamente como 'ativo'
+DROP POLICY IF EXISTS "anuncios_insert_pendente_only" ON public.anuncios;
+DROP POLICY IF EXISTS "Permitir envio público de anúncio" ON public.anuncios;
+CREATE POLICY "Permitir envio público de anúncio"
     ON public.anuncios
     FOR INSERT
     TO anon, authenticated
-    WITH CHECK (status = 'pendente');
+    WITH CHECK (true);
 
 -- REGRA 2.3: BLOQUEIO TOTAL de UPDATE direto por anon
 -- Apenas Edge Function (após TXID na blockchain) ou Admin RPC podem alterar
@@ -99,7 +101,7 @@ CREATE POLICY "anuncios_delete_blocked"
     USING (false);
 
 -- TRIGGER DE SEGURANÇA PARA ANÚNCIOS (Enforce Server-Side)
--- Garante que mesmo que o payload tente forçar outro status, o banco converte para 'pendente'
+-- Garante defaults seguros preservando o status 'ativo' imediato
 CREATE OR REPLACE FUNCTION public.trg_enforce_anuncio_defaults()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -107,14 +109,15 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-    -- Se for inserção pública direta, o status DEVE ser sempre 'pendente'
     IF TG_OP = 'INSERT' THEN
-        NEW.status := 'pendente';
-        NEW.is_verified := false;
-        NEW.views_count := 0;
-        NEW.clicks_count := 0;
-        NEW.created_at := TIMEZONE('utc'::text, NOW());
-        NEW.expires_at := TIMEZONE('utc'::text, NOW()) + INTERVAL '30 days';
+        NEW.status := COALESCE(NEW.status, 'ativo');
+        NEW.is_verified := COALESCE(NEW.is_verified, false);
+        NEW.views_count := COALESCE(NEW.views_count, 0);
+        NEW.clicks_count := COALESCE(NEW.clicks_count, 0);
+        NEW.profile_visits := COALESCE(NEW.profile_visits, 0);
+        NEW.likes_count := COALESCE(NEW.likes_count, 0);
+        NEW.created_at := COALESCE(NEW.created_at, TIMEZONE('utc'::text, NOW()));
+        NEW.expires_at := COALESCE(NEW.expires_at, TIMEZONE('utc'::text, NOW()) + INTERVAL '30 days');
     END IF;
     RETURN NEW;
 END;
