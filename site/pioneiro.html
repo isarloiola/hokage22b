@@ -969,51 +969,67 @@
     </div>
   </div>
 
-  <!-- MODAL DO TERMINAL POS & QR CODE DINÂMICO DE COBRANÇA (PI COMMERCE ENGINE) -->
+  <!-- MODAL DE PAGAMENTO & TERMINAL POS INTELIGENTE (ADAPTATIVO POR PERFIL) -->
   <div class="pi-modal-overlay" id="wallet-qr-modal" role="dialog" aria-modal="true" style="z-index:10000;display:none">
     <div class="pi-modal" style="max-width:420px;text-align:center;padding:24px 20px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      
+      <!-- Cabeçalho do Modal com Título Adaptativo -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div id="wallet-qr-modal-title" style="font-size:1.15rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px">
-          <span>⚡</span> Terminal POS &amp; Cobrança Pi
+          <span>⚡</span> Pagar com Pi Network
         </div>
         <button type="button" onclick="closeWalletQrModal()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.3rem;cursor:pointer;padding:4px" aria-label="Fechar modal">✕</button>
       </div>
 
-      <!-- Abas de Modo: Cobrança Dinâmica vs Chave Simples -->
-      <div style="display:flex;background:rgba(255,255,255,0.06);padding:3px;border-radius:10px;margin-bottom:16px;gap:4px">
-        <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-dynamic" onclick="switchPosMode('dynamic')" style="flex:1;background:var(--accent);color:#fff;font-weight:700;font-size:0.8rem">
-          ⚡ Cobrar com Valor (POS)
-        </button>
-        <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-static" onclick="switchPosMode('static')" style="flex:1;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem">
-          📷 Chave Simples
-        </button>
+      <!-- SEÇÃO EXCLUSIVA DO DONO (CONTROLE DE COBRANÇA / PDV / POS) -->
+      <div id="pos-owner-controls" style="display:none;margin-bottom:14px">
+        <div style="display:flex;background:rgba(255,255,255,0.06);padding:3px;border-radius:10px;margin-bottom:12px;gap:4px">
+          <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-dynamic" onclick="switchPosMode('dynamic')" style="flex:1;background:var(--accent);color:#fff;font-weight:700;font-size:0.8rem">
+            ⚡ Cobrar com Valor (POS)
+          </button>
+          <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-static" onclick="switchPosMode('static')" style="flex:1;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem">
+            📷 Chave Simples
+          </button>
+        </div>
+
+        <div id="pos-amount-group" style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:12px;text-align:left">
+          <label style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:4px">VALOR A COBRAR DO CLIENTE (π):</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="number" step="any" min="0.01" id="pos-input-amount" placeholder="Ex: 3.14" oninput="updateDynamicQrPayload()" style="flex:1;background:#09090b;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px 12px;color:var(--amber-light);font-size:1.2rem;font-weight:800;font-family:var(--font-mono)" />
+            <span style="font-size:1.1rem;font-weight:800;color:var(--amber-light)">π</span>
+          </div>
+          <!-- Pílulas rápidas -->
+          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+            <button type="button" onclick="setPosQuickAmount(1)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">1 π</button>
+            <button type="button" onclick="setPosQuickAmount(3.14)" style="font-size:0.72rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 8px;border-radius:6px;font-weight:700;cursor:pointer">3.14 π</button>
+            <button type="button" onclick="setPosQuickAmount(5)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">5 π</button>
+            <button type="button" onclick="setPosQuickAmount(10)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">10 π</button>
+            <button type="button" onclick="setPosQuickAmount(50)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">50 π</button>
+          </div>
+          <div style="margin-top:8px">
+            <input type="text" id="pos-input-memo" placeholder="Descrição / Memo (Ex: Café, Consultoria)" oninput="updateDynamicQrPayload()" maxlength="40" style="width:100%;background:#09090b;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;color:#fff;font-size:0.8rem" />
+          </div>
+        </div>
       </div>
 
-      <!-- Área de Input de Valor (Modo Dinâmico) -->
-      <div id="pos-amount-group" style="margin-bottom:14px;background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:12px;text-align:left">
-        <label id="pos-amount-label" style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:4px">VALOR A COBRAR (π):</label>
-        <div style="display:flex;align-items:center;gap:8px">
-          <input type="number" step="any" min="0.01" id="pos-input-amount" placeholder="Ex: 3.14" oninput="updateDynamicQrPayload()" style="flex:1;background:#09090b;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px 12px;color:var(--amber-light);font-size:1.2rem;font-weight:800;font-family:var(--font-mono)" />
-          <span style="font-size:1.1rem;font-weight:800;color:var(--amber-light)">π</span>
+      <!-- SEÇÃO DE VALOR SOLICITADO PARA VISITANTE (SE VEIO VIA LINK COM PREÇO FIXADO) -->
+      <div id="pos-visitor-preset-badge" style="display:none;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:12px;padding:10px 14px;margin-bottom:14px;text-align:left">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);font-weight:700">Valor Solicitado:</span>
+          <span id="pos-visitor-preset-amount" style="font-size:1.2rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono)">-- π</span>
         </div>
-        <!-- Quick pills -->
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <button type="button" onclick="setPosQuickAmount(1)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">1 π</button>
-          <button type="button" onclick="setPosQuickAmount(3.14)" style="font-size:0.72rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 8px;border-radius:6px;font-weight:700;cursor:pointer">3.14 π</button>
-          <button type="button" onclick="setPosQuickAmount(5)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">5 π</button>
-          <button type="button" onclick="setPosQuickAmount(10)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">10 π</button>
-          <button type="button" onclick="setPosQuickAmount(50)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">50 π</button>
-        </div>
-        <div style="margin-top:8px">
-          <input type="text" id="pos-input-memo" placeholder="Descrição / Memo (Ex: Café, Consultoria)" oninput="updateDynamicQrPayload()" maxlength="40" style="width:100%;background:#09090b;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;color:#fff;font-size:0.8rem" />
+        <div id="pos-visitor-preset-memo-wrap" style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;display:none">
+          Ref: <strong id="pos-visitor-preset-memo" style="color:#fff"></strong>
         </div>
       </div>
 
-      <div style="background:#fff;padding:12px;border-radius:18px;display:inline-block;margin-bottom:12px;box-shadow:0 0 30px rgba(245,158,11,0.35)">
-        <img id="wallet-qr-img" src="" alt="QR Code da Carteira Pi" style="width:190px;height:190px;display:block;margin:0 auto;image-rendering:pixelated" />
+      <!-- QR CODE EM DESTAQUE -->
+      <div style="background:#fff;padding:12px;border-radius:18px;display:inline-block;margin-bottom:12px;box-shadow:0 0 25px rgba(245,158,11,0.3)">
+        <img id="wallet-qr-img" src="" alt="QR Code da Carteira Pi" style="width:185px;height:185px;display:block;margin:0 auto;image-rendering:pixelated" />
       </div>
 
-      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;margin-bottom:14px;text-align:left">
+      <!-- Informações de Destino e Chave Pública -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;margin-bottom:12px;text-align:left">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
           <span style="font-size:0.72rem;color:var(--text-muted)">Destinatário: <strong id="wallet-qr-user" class="notranslate" style="color:var(--amber-light)">@...</strong></span>
           <span id="pos-badge-status" style="font-size:0.7rem;color:#10b981;font-weight:700">✓ Pronto para Escanear</span>
@@ -1021,19 +1037,22 @@
         <code id="wallet-qr-preview" class="notranslate" translate="no" style="display:block;font-size:0.65rem;color:var(--accent-light);word-break:break-all;margin-top:4px;background:#09090b;padding:6px;border-radius:6px;user-select:all"></code>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:0.7rem;color:var(--text-muted)">
           <span style="color:#10b981">🛡️ Anti-Clipper Guard Ativo</span>
-          <a href="https://wallet.pi" class="notranslate" style="color:var(--amber-light);text-decoration:none;font-weight:700">🚀 Abrir wallet.pi ↗</a>
+          <span style="color:var(--text-muted);font-size:0.7rem">Mainnet P2P</span>
         </div>
       </div>
 
-      <!-- Ações de Compartilhamento / Link Direto -->
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="copyPosPaymentLink()" id="btn-copy-pos-link" style="font-weight:700;padding:10px">
-          📋 Copiar Link de Cobrança com Valor
-        </button>
-        <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="sharePosOnWhatsApp()" style="border-color:rgba(37,211,102,0.5);color:#25d366;font-weight:700;padding:10px">
-          💬 Cobrar via WhatsApp
-        </button>
+      <!-- DICA AMIGÁVEL DEPENDENDO DO NAVEGADOR -->
+      <div id="pos-browser-tip" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:8px 12px;margin-bottom:14px;font-size:0.76rem;color:var(--text-secondary);text-align:left;line-height:1.4">
+        <!-- Injetado dinamicamente -->
       </div>
+
+      <!-- AÇÕES INTELIGENTES E CONTEXTUAIS (VISITANTE vs PIONEIRO PI BROWSER vs DONO) -->
+      <div id="pos-actions-container" style="display:flex;flex-direction:column;gap:8px">
+        <!-- Injetado dinamicamente em openWalletQrModal() -->
+      </div>
+
+    </div>
+  </div>
     </div>
   </div>
 
@@ -1344,33 +1363,119 @@
       const userEl = document.getElementById('wallet-qr-user');
       const amtInp = document.getElementById('pos-input-amount');
       const memoInp = document.getElementById('pos-input-memo');
+      const cleanUser = cleanUsername(currentPioneerUser);
+      const isOwner = isOwnerOfCurrentPage();
+      const inPi = isPiBrowser();
 
-      if (userEl) userEl.textContent = cleanUsername(currentPioneerUser);
+      if (userEl) userEl.textContent = cleanUser;
       if (amtInp && presetAmount) amtInp.value = presetAmount;
       if (memoInp && presetMemo) memoInp.value = presetMemo;
 
-      const isOwner = isOwnerOfCurrentPage();
       const modalTitle = document.getElementById('wallet-qr-modal-title');
-      const posTabDyn = document.getElementById('pos-tab-dynamic');
-      const amtLabel = document.getElementById('pos-amount-label');
-      const copyBtn = document.getElementById('btn-copy-pos-link');
+      const ownerControls = document.getElementById('pos-owner-controls');
+      const visitorPresetBadge = document.getElementById('pos-visitor-preset-badge');
+      const visitorPresetAmt = document.getElementById('pos-visitor-preset-amount');
+      const visitorPresetMemoWrap = document.getElementById('pos-visitor-preset-memo-wrap');
+      const visitorPresetMemo = document.getElementById('pos-visitor-preset-memo');
+      const browserTip = document.getElementById('pos-browser-tip');
+      const actionsContainer = document.getElementById('pos-actions-container');
 
-      if (modalTitle) {
-        modalTitle.innerHTML = isOwner 
-          ? '<span>⚡</span> Meu Terminal POS & Cobrança' 
-          : '<span>⚡</span> Pagar com Pi Network';
-      }
-      if (posTabDyn) {
-        posTabDyn.innerHTML = isOwner ? '⚡ Cobrar com Valor (POS)' : '⚡ Pagar com Valor';
-      }
-      if (amtLabel) {
-        amtLabel.textContent = isOwner ? 'VALOR A COBRAR (π):' : 'VALOR A PAGAR / ENVIAR (π):';
-      }
-      if (copyBtn) {
-        copyBtn.textContent = isOwner ? '📋 Copiar Link de Cobrança com Valor' : '📋 Copiar Link de Pagamento';
+      // 1. Configurações Específicas por Cenário / Papel
+      if (isOwner) {
+        // CENÁRIO 3: O PRÓPRIO DONO (TERMINAL POS / COBRANÇA)
+        if (modalTitle) modalTitle.innerHTML = '<span>⚡</span> Meu Terminal POS &amp; Cobrança';
+        if (ownerControls) ownerControls.style.display = 'block';
+        if (visitorPresetBadge) visitorPresetBadge.style.display = 'none';
+
+        if (browserTip) {
+          browserTip.innerHTML = '🏪 <strong>Modo Lojista:</strong> Digite o valor em π para gerar o QR code dinâmico para seu cliente ou envie o link de cobrança direto.';
+        }
+
+        if (actionsContainer) {
+          actionsContainer.innerHTML = `
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="copyPosPaymentLink()" id="btn-copy-pos-link" style="font-weight:700;padding:11px">
+              📋 Copiar Link de Cobrança com Valor
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="shareOwnerPosOnWhatsApp()" style="border-color:rgba(37,211,102,0.5);color:#25d366;font-weight:700;padding:11px">
+              💬 Enviar Cobrança ao Cliente no WhatsApp ↗
+            </button>
+          `;
+        }
+
+        switchPosMode('dynamic');
+
+      } else {
+        // VISITANTE (PIONEIRO OU CLIENTE EXTERNO)
+        if (modalTitle) modalTitle.innerHTML = `<span>⚡</span> Pagar ${cleanUser} com Pi`;
+        if (ownerControls) ownerControls.style.display = 'none';
+
+        if (presetAmount) {
+          if (visitorPresetBadge) visitorPresetBadge.style.display = 'block';
+          if (visitorPresetAmt) visitorPresetAmt.textContent = `${presetAmount} π`;
+          if (presetMemo && visitorPresetMemoWrap && visitorPresetMemo) {
+            visitorPresetMemoWrap.style.display = 'block';
+            visitorPresetMemo.textContent = presetMemo;
+          }
+          switchPosMode('dynamic');
+        } else {
+          if (visitorPresetBadge) visitorPresetBadge.style.display = 'none';
+          switchPosMode('static');
+        }
+
+        const hasWhatsApp = Boolean(currentProfileData && currentProfileData.whatsapp_url);
+
+        if (inPi) {
+          // CENÁRIO 2: OUTRO PIONEIRO LOGADO DENTRO DO PI BROWSER
+          if (browserTip) {
+            browserTip.innerHTML = `📱 <strong>No Pi Browser:</strong> Você pode transferir diretamente pela sua <code>wallet.pi</code> com biometria ou escanear o QR code da carteira de ${cleanUser}.`;
+          }
+
+          let actionsHtml = `
+            <a href="https://wallet.pi" class="portal-btn portal-btn--amber portal-btn--sm" style="text-decoration:none;font-weight:700;padding:11px;display:flex;align-items:center;justify-content:center;gap:6px">
+              <span>🚀</span> Abrir wallet.pi para Transferir ↗
+            </a>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="copyWalletKey()" style="font-weight:600;padding:10px">
+              📋 Copiar Chave Pública de ${cleanUser}
+            </button>
+          `;
+
+          if (hasWhatsApp) {
+            actionsHtml += `
+              <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="sendPaymentProofOnWhatsApp()" style="border-color:rgba(37,211,102,0.5);color:#25d366;font-weight:700;padding:10px">
+                💬 Avisar Pagamento para ${cleanUser} no WhatsApp ↗
+              </button>
+            `;
+          }
+
+          if (actionsContainer) actionsContainer.innerHTML = actionsHtml;
+
+        } else {
+          // CENÁRIO 1: VISITANTE FORA DO PI BROWSER (CHROME / SAFARI / WHATSAPP)
+          if (browserTip) {
+            browserTip.innerHTML = `💡 <strong>Navegador Comum:</strong> Para pagar com Pi, copie a chave pública abaixo, abra o <strong>Pi Browser</strong> no seu celular e acesse sua <code>wallet.pi</code>.`;
+          }
+
+          let actionsHtml = `
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="copyWalletKey()" style="font-weight:700;padding:11px">
+              📋 Copiar Chave Pública de ${cleanUser}
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="copyShowcasePiBrowserLink()" id="btn-copy-pibrowser-link" style="padding:10px;font-weight:600">
+              🔗 Copiar Link para Abrir no Pi Browser
+            </button>
+          `;
+
+          if (hasWhatsApp) {
+            actionsHtml += `
+              <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="sendPaymentProofOnWhatsApp()" style="border-color:rgba(37,211,102,0.5);color:#25d366;font-weight:700;padding:10px">
+                💬 Falar com ${cleanUser} no WhatsApp ↗
+              </button>
+            `;
+          }
+
+          if (actionsContainer) actionsContainer.innerHTML = actionsHtml;
+        }
       }
 
-      switchPosMode('dynamic');
       updateDynamicQrPayload();
 
       if (modal) {
@@ -1391,7 +1496,7 @@
     }
 
     function copyPosPaymentLink() {
-      const cleanUser = cleanUsername(currentPioneerUser);
+      const cleanUser = cleanUsername(currentPioneerUser).replace(/^@+/, '');
       const amtInp = document.getElementById('pos-input-amount');
       const memoInp = document.getElementById('pos-input-memo');
       const amountVal = amtInp ? amtInp.value.trim() : '';
@@ -1406,24 +1511,75 @@
         if (btn) {
           const prev = btn.textContent;
           btn.textContent = '✓ Link de Cobrança Copiado!';
-          setTimeout(() => { btn.textContent = prev; }, 2500);
+          btn.style.color = '#34d399';
+          setTimeout(() => { 
+            btn.textContent = prev;
+            btn.style.color = '';
+          }, 2500);
         }
       });
     }
 
-    function sharePosOnWhatsApp() {
+    function shareOwnerPosOnWhatsApp() {
       const cleanUser = cleanUsername(currentPioneerUser);
       const amtInp = document.getElementById('pos-input-amount');
       const memoInp = document.getElementById('pos-input-memo');
       const amountVal = amtInp ? amtInp.value.trim() : '';
       const memoVal = memoInp ? memoInp.value.trim() : '';
 
-      let link = `https://hokage22b.com/pioneiro?u=${encodeURIComponent(cleanUser)}`;
+      let link = `https://hokage22b.com/pioneiro?u=${encodeURIComponent(cleanUser.replace(/^@+/, ''))}`;
       if (amountVal) link += `&pay=${encodeURIComponent(amountVal)}`;
       if (memoVal) link += `&memo=${encodeURIComponent(memoVal)}`;
 
-      const msg = `Olá! Segue o link da minha vitrine no HOKAGE22B para pagamento direto em Pi Network (${amountVal ? amountVal + ' π' : 'P2P'}):\n${link}\n\nDestinatário: @${cleanUser}`;
+      const msg = `Olá! Segue o link da minha vitrine no HOKAGE22B para pagamento direto em Pi Network (${amountVal ? amountVal + ' π' : 'P2P'}):\n${link}\n\nDestinatário: ${cleanUser}`;
       window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function sendPaymentProofOnWhatsApp() {
+      const cleanUser = cleanUsername(currentPioneerUser);
+      const waUrl = currentProfileData && currentProfileData.whatsapp_url ? currentProfileData.whatsapp_url.trim() : '';
+
+      if (!waUrl) {
+        alert('Este pioneiro ainda não cadastrou um link de contato no WhatsApp.');
+        return;
+      }
+
+      // Se for link de grupo comunitário (ex: chat.whatsapp.com)
+      if (waUrl.includes('chat.whatsapp.com')) {
+        window.open(waUrl, '_blank');
+        return;
+      }
+
+      // Se for número wa.me direto ou link personalizado
+      const msg = `Olá ${cleanUser}! Acessei sua vitrine no HOKAGE22B e efetuei uma transferência em Pi Network para a sua carteira. Segue o comprovante:`;
+      if (waUrl.includes('wa.me/')) {
+        const separator = waUrl.includes('?') ? '&' : '?';
+        window.open(`${waUrl}${separator}text=${encodeURIComponent(msg)}`, '_blank');
+      } else {
+        window.open(waUrl, '_blank');
+      }
+    }
+
+    function copyShowcasePiBrowserLink() {
+      const cleanUser = cleanUsername(currentPioneerUser).replace(/^@+/, '');
+      const link = `https://hokage22b.com/@${cleanUser}`;
+      navigator.clipboard.writeText(link).then(() => {
+        const btn = document.getElementById('btn-copy-pibrowser-link');
+        if (btn) {
+          const original = btn.innerHTML;
+          btn.innerHTML = '✓ Link Copiado! Cole no Pi Browser';
+          btn.style.color = '#34d399';
+          btn.style.borderColor = '#10b981';
+          setTimeout(() => {
+            btn.innerHTML = original;
+            btn.style.color = '';
+            btn.style.borderColor = '';
+          }, 3000);
+        }
+      }).catch(() => {
+        prompt('Copie o link abaixo para abrir dentro do Pi Browser:', link);
+      });
+    }
     }
 
     function isPiBrowser() {
