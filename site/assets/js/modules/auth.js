@@ -13,7 +13,7 @@
   function initPiSdk() {
     if (window.Pi) {
       try {
-        window.Pi.init({ version: '2.0', sandbox: false });
+        window.Pi.init({ version: '2.0', sandbox: true });
       } catch (err) {
         console.warn('Pi.init info:', err);
       }

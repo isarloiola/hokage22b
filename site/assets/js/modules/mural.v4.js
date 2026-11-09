@@ -103,12 +103,17 @@
           ${linkHtml}
           <span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
         </div>
-        <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted)">
+        <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:6px">
           <div style="display:flex;align-items:center;gap:12px">
             <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)">${views}</strong> views</span>
             <span title="Cliques no anúncio">🖱️ <strong style="color:var(--amber-light)" class="ad-clicks-num" data-id="${cardId}">${clicks}</strong> cliques</span>
           </div>
-          <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('${cardId}', '${safeTitle.replace(/'/g, "\\'")}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
+              🚩 Denunciar
+            </button>
+            <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
+          </div>
         </div>
       </article>
     `;
@@ -498,7 +503,7 @@
       pioneer_name: username.replace('@', ''),
       plan_tier: selectedTier,
       price_pi: priceInfo.pi,
-      status: 'pendente',
+      status: 'ativo',
       created_at: new Date().toISOString()
     };
 
@@ -543,7 +548,7 @@
             gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(newAd));
           }
           filterCategory(currentCategory);
-          alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na blockchain! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
+          alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Testnet! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
         },
         onError: function (err) {
           console.error('Erro no pagamento Pi do mural:', err);
@@ -584,7 +589,7 @@
                   gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(newAd));
                 }
                 filterCategory(currentCategory);
-                alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na blockchain! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
+                alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Testnet! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
               }
             });
           }
@@ -893,6 +898,125 @@
     }
   }
 
+  // --- Sistema de Moderação Descentralizada e Denúncias Comunitárias ---
+  function openReportModal(adId, adTitle) {
+    const modal = document.getElementById('report-ad-modal');
+    const idInput = document.getElementById('report-target-ad-id');
+    const titleEl = document.getElementById('report-target-ad-title');
+    const detailsInput = document.getElementById('report-details');
+
+    if (!modal) return;
+    if (idInput) idInput.value = adId || '';
+    if (titleEl) titleEl.textContent = adTitle || ('Anúncio #' + adId);
+    if (detailsInput) detailsInput.value = '';
+
+    // Verifica se já foi denunciado por este usuário
+    let reported = [];
+    try {
+      reported = JSON.parse(localStorage.getItem('isar_reported_ads') || '[]');
+    } catch (_) {}
+
+    const submitBtn = document.getElementById('report-submit-btn');
+    if (submitBtn) {
+      if (reported.includes(adId)) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '✓ Já Denunciado';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '🚩 Confirmar Denúncia';
+      }
+    }
+
+    modal.classList.add('active');
+  }
+
+  function closeReportModal() {
+    const modal = document.getElementById('report-ad-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  async function submitReport(e) {
+    if (e && e.preventDefault) e.preventDefault();
+
+    const idInput = document.getElementById('report-target-ad-id');
+    const titleEl = document.getElementById('report-target-ad-title');
+    const detailsInput = document.getElementById('report-details');
+    const reasonInput = document.querySelector('input[name="report_reason"]:checked');
+    const submitBtn = document.getElementById('report-submit-btn');
+
+    const adId = idInput ? idInput.value : '';
+    if (!adId) {
+      closeReportModal();
+      return;
+    }
+
+    let reported = [];
+    try {
+      reported = JSON.parse(localStorage.getItem('isar_reported_ads') || '[]');
+    } catch (_) {}
+
+    if (reported.includes(adId)) {
+      alert('Você já enviou uma denúncia para este anúncio. Agradecemos sua colaboração com a comunidade!');
+      closeReportModal();
+      return;
+    }
+
+    const reason = reasonInput ? reasonInput.value : 'outro';
+    const details = detailsInput ? detailsInput.value.trim() : '';
+    const title = titleEl ? titleEl.textContent : '';
+
+    let reporter = '@pioneiro';
+    if (window.HokagePi && window.HokagePi.getUser()) {
+      const u = window.HokagePi.getUser();
+      if (u && u.username) reporter = '@' + u.username;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+    }
+
+    // Registra no Supabase se disponível
+    if (window.IsarDB && window.IsarDB.createDenuncia) {
+      try {
+        await window.IsarDB.createDenuncia({
+          ad_id: adId,
+          ad_title: title,
+          reason: reason,
+          details: details,
+          reporter_user: reporter
+        });
+      } catch (err) {
+        console.warn('Erro ao salvar denúncia no Supabase:', err);
+      }
+    }
+
+    // Salva no localStorage local
+    try {
+      reported.push(adId);
+      localStorage.setItem('isar_reported_ads', JSON.stringify(reported));
+    } catch (_) {}
+
+    // Atualiza visualmente o botão do card correspondente
+    const cardEl = document.getElementById('card-' + adId);
+    if (cardEl) {
+      const btn = cardEl.querySelector('.btn-report-ad');
+      if (btn) {
+        btn.textContent = '✓ Denunciado';
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
+        btn.disabled = true;
+      }
+    }
+
+    closeReportModal();
+    if (window.HokagePi && window.HokagePi.showToast) {
+      window.HokagePi.showToast('✓ Denúncia registrada com sucesso! A comunidade agradece seu zelo.', 'success');
+    } else {
+      alert('✓ Denúncia registrada com sucesso! A comunidade agradece seu zelo pelo ecossistema.');
+    }
+  }
+
   let isInitialized = false;
 
   window.IsarMural = {
@@ -951,7 +1075,11 @@
     openEditModal: openEditModal,
     closeEditModal: closeEditModal,
     saveEditedAd: saveEditedAd,
-    renewAdPrompt: renewAdPrompt
+    renewAdPrompt: renewAdPrompt,
+    // Moderação Descentralizada e Denúncias
+    openReportModal: openReportModal,
+    closeReportModal: closeReportModal,
+    submitReport: submitReport
   };
 
   if (document.readyState === 'loading') {

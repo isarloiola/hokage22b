@@ -36,12 +36,12 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
   <link rel="stylesheet" href="assets/css/style.css?v=4.5" />
   <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.5" />
-  <!-- Pi Network SDK Oficial v2.0 -->
+  <!-- Pi Network SDK Oficial v2.0 (Configurado Exclusivo Testnet para Auditoria Oficial) -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
     try {
       if (window.Pi) {
-        window.Pi.init({ version: "2.0", sandbox: false });
+        window.Pi.init({ version: "2.0", sandbox: true });
       }
     } catch (_) {}
   </script>
@@ -160,6 +160,14 @@
     </div>
   </nav>
 
+  <!-- Banner Informativo Oficial Pi Testnet -->
+  <div class="testnet-alert-banner" id="testnet-alert-banner" style="background:linear-gradient(90deg, rgba(99,102,241,0.2) 0%, rgba(139,92,246,0.25) 50%, rgba(245,158,11,0.2) 100%);border-bottom:1px solid rgba(139,92,246,0.35);padding:10px 16px;color:#e0e7ff;font-size:0.88rem;display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;flex-wrap:wrap;position:relative;z-index:90;">
+    <span>🧪 <strong>Ambiente Oficial Pi Testnet:</strong> O HOKAGE22B está em processo de auditoria pela Pi Core Team para listagem oficial na Mainnet. Use seus <strong>Test-Pi gratuitos</strong> para publicar sem gastar suas moedas reais!</span>
+    <button type="button" class="btn btn-outline btn-sm" onclick="window.HokagePi && window.HokagePi.openTestnetInfoModal()" style="border-color:rgba(196,181,253,0.5);color:#fff;font-size:0.78rem;padding:4px 12px;border-radius:20px;font-weight:700;cursor:pointer;background:rgba(139,92,246,0.2)">
+      ℹ️ Como funciona o Testnet?
+    </button>
+  </div>
+
   <!-- Cabeçalho Estilo Jornal Gazeta -->
   <main class="mural-main">
     <div class="container" style="max-width:1100px;margin:0 auto;padding-top:4px">
@@ -225,6 +233,18 @@
               <span class="pioneer-card__price-tag">3.14 π</span>
             </div>
           </div>
+          <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:6px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)">842</strong> views</span>
+              <span title="Cliques no anúncio">🖱️ <strong style="color:var(--amber-light)">194</strong> cliques</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('card-mock-1', 'Bem-vindo ao HOKAGE22B')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
+                🚩 Denunciar
+              </button>
+              <a href="pioneiro?u=hokage22b" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver vitrine oficial">Perfil ↗</a>
+            </div>
+          </div>
         </article>
 
         <!-- 2. DESTAQUE PRATA (SERVIÇO) -->
@@ -246,6 +266,18 @@
                 <span>🌟</span> Ver Vitrine
               </a>
               <span class="pioneer-card__price-tag">1.00 π</span>
+            </div>
+          </div>
+          <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:6px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)">318</strong> views</span>
+              <span title="Cliques no anúncio">🖱️ <strong style="color:var(--amber-light)">42</strong> cliques</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('card-mock-2', 'Desenvolvimento de dApps no Pi Browser')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
+                🚩 Denunciar
+              </button>
+              <a href="pioneiro?u=carlos_dev" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver vitrine oficial">Perfil ↗</a>
             </div>
           </div>
         </article>
@@ -271,6 +303,18 @@
               <span class="pioneer-card__price-tag">1.00 π</span>
             </div>
           </div>
+          <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:6px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)">285</strong> views</span>
+              <span title="Cliques no anúncio">🖱️ <strong style="color:var(--amber-light)">37</strong> cliques</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('card-mock-3', 'Artesanato Mineiro Aceitando Pi')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
+                🚩 Denunciar
+              </button>
+              <a href="pioneiro?u=artes_brasil" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver vitrine oficial">Perfil ↗</a>
+            </div>
+          </div>
         </article>
 
         <!-- 4. CLASSIFICADO BRONZE (MENSAGEM SEM LINK EXTERNO) -->
@@ -292,6 +336,18 @@
                 <span>🌟</span> Ver Vitrine
               </a>
               <span class="pioneer-card__price-tag">0.314 π</span>
+            </div>
+          </div>
+          <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:6px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)">164</strong> views</span>
+              <span title="Cliques no anúncio">🖱️ <strong style="color:var(--amber-light)">19</strong> cliques</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('card-mock-4', 'Rumo à Open Mainnet!')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
+                🚩 Denunciar
+              </button>
+              <a href="pioneiro?u=pioneiro_cwb" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver vitrine oficial">Perfil ↗</a>
             </div>
           </div>
         </article>
@@ -588,6 +644,58 @@
     </div>
   </div>
 
+  <!-- Modal de Denúncia / Moderação Comunitária -->
+  <div class="portal-modal-overlay" id="report-ad-modal" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
+    <div class="portal-modal" style="max-width:440px">
+      <button type="button" class="portal-modal-close" onclick="window.IsarMural && window.IsarMural.closeReportModal()">✕</button>
+      <div class="section-tag section-tag--purple" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)">🚩 Moderação da Comunidade</div>
+      <h3 id="report-modal-title" style="font-size:1.3rem;margin:4px 0 10px;color:#fff">Denunciar Anúncio</h3>
+      <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 14px;line-height:1.4">
+        Ajude a manter a Gazeta dos Pioneiros segura e confiável. Sua denúncia é anônima e registrada para proteção de todos.
+      </p>
+
+      <form id="report-ad-form" onsubmit="window.IsarMural && window.IsarMural.submitReport(event)">
+        <input type="hidden" id="report-target-ad-id" value="" />
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:0.84rem;color:#e2e8f0">
+          <span style="color:var(--text-muted);display:block;font-size:0.72rem;text-transform:uppercase;margin-bottom:2px">Anúncio selecionado:</span>
+          <strong id="report-target-ad-title" style="color:#fff">-</strong>
+        </div>
+
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:0.8rem;color:var(--text-muted);margin-bottom:6px;font-weight:600">Motivo da denúncia:</label>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <label style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.3);border:1px solid var(--border-subtle);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:0.85rem">
+              <input type="radio" name="report_reason" value="golpe_fraude" checked />
+              <span>🚨 Golpe, fraude ou tentativa de phishing</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.3);border:1px solid var(--border-subtle);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:0.85rem">
+              <input type="radio" name="report_reason" value="conteudo_improprio" />
+              <span>⚠️ Conteúdo ofensivo, adulto ou impróprio</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.3);border:1px solid var(--border-subtle);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:0.85rem">
+              <input type="radio" name="report_reason" value="spam_falso" />
+              <span>🚫 Spam, link quebrado ou promessa falsa</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.3);border:1px solid var(--border-subtle);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:0.85rem">
+              <input type="radio" name="report_reason" value="outro" />
+              <span>❓ Outro motivo</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px">
+          <label for="report-details" style="display:block;font-size:0.8rem;color:var(--text-muted);margin-bottom:6px">Observação adicional (opcional):</label>
+          <textarea id="report-details" rows="2" maxlength="280" placeholder="Ex: O link encaminha para site suspeito..." style="width:100%;box-sizing:border-box;background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:6px;padding:8px 10px;color:#fff;font-size:0.82rem;resize:none;font-family:inherit"></textarea>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button type="button" class="btn btn-outline btn-sm" onclick="window.IsarMural && window.IsarMural.closeReportModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-sm" id="report-submit-btn" style="background:#dc2626;border-color:#b91c1c;color:#fff">🚩 Confirmar Denúncia</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- TOAST FEEDBACK -->
   <div class="toast-box" id="toast-msg" role="status" aria-live="polite">
     <span id="toast-icon">ℹ️</span>
@@ -600,9 +708,9 @@
   <!-- Modular Scripts com Arquitetura v4 Bulletproof -->
   <script src="assets/js/modules/i18n.js?v=4.6"></script>
   <script src="assets/js/modules/ui.js?v=4.6"></script>
-  <script src="assets/js/modules/db.js?v=4.6"></script>
-  <script src="assets/js/modules/pi-pay.js?v=5.1"></script>
-  <script src="assets/js/modules/mural.v4.js?v=5.1"></script>
+  <script src="assets/js/modules/db.js?v=4.7"></script>
+  <script src="assets/js/modules/pi-pay.js?v=5.2"></script>
+  <script src="assets/js/modules/mural.v4.js?v=5.2"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');

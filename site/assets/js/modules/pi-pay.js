@@ -54,21 +54,17 @@
 
   // 2. Detecção de Ambiente Sandbox (Testnet) vs Mainnet
   function isSandboxMode() {
-    if (typeof window === 'undefined') return false;
-    const search = window.location.search || '';
-    if (/sandbox=1|sandbox=true/i.test(search)) return true;
-    try {
-      if (localStorage.getItem('hokage_pi_sandbox') === 'true') return true;
-    } catch (_) {}
-    return false;
+    // Fase oficial de auditoria e listagem da Pi Core Team no develop.pi:
+    // Operação 100% exclusiva no ambiente Pi Testnet (Sandbox)
+    return true;
   }
 
   // Inicialização segura do Pi SDK
   function initPiSdk(useSandbox) {
-    if (useSandbox === undefined) useSandbox = isSandboxMode();
+    if (useSandbox === undefined) useSandbox = true;
     if (window.Pi) {
       try {
-        window.Pi.init({ version: '2.0', sandbox: useSandbox });
+        window.Pi.init({ version: '2.0', sandbox: true });
       } catch (err) {
         console.warn('Pi.init info:', err);
       }
@@ -185,8 +181,8 @@
     modal.innerHTML = `
       <div class="portal-modal" style="max-width:440px">
         <button type="button" class="portal-modal-close" onclick="document.getElementById('modal-pi-connect-diag').classList.remove('active')">✕</button>
-        <div class="section-tag section-tag--amber">Web3 Pi Network</div>
-        <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">Conectar Pi Wallet</h3>
+        <div class="section-tag section-tag--purple" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">🧪 Ambiente Oficial Pi Testnet</div>
+        <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">Conectar Pi Wallet (Testnet)</h3>
 
         <!-- Diagnóstico em Tempo Real -->
         <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.85rem">
@@ -194,6 +190,12 @@
             <span style="color:var(--text-muted)">Navegador Atual:</span>
             <span style="font-weight:700;color:${inPi ? '#10b981' : '#f59e0b'}">
               ${inPi ? '✓ Pi Browser detectado' : '⚠️ Navegador Comum (Chrome/Safari)'}
+            </span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="color:var(--text-muted)">Rede Pi Ativa:</span>
+            <span style="font-weight:700;color:#38bdf8">
+              🧪 Pi Testnet (Auditoria Oficial)
             </span>
           </div>
           <div style="display:flex;justify-content:space-between;margin-bottom:8px">
@@ -238,11 +240,11 @@
               Desconectar / Trocar de Conta
             </button>
           ` : `
-            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow(false)" style="padding:14px;font-weight:700">
-              ⚡ Conectar no Pi Browser (Mainnet)
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow(true)" style="padding:14px;font-weight:700">
+              ⚡ Conectar no Pi Browser (Pi Testnet)
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="try{localStorage.setItem('hokage_pi_sandbox','true')}catch(_){};HokagePi.triggerAuthFlow(true)" style="font-size:0.82rem;border-color:var(--amber-light);color:var(--amber-light);font-weight:700;margin-top:2px">
-              🧪 Conectar no Modo Sandbox (Testnet)
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="HokagePi.openTestnetInfoModal()" style="font-size:0.82rem;border-color:rgba(139,92,246,0.4);color:#c4b5fd;font-weight:700;margin-top:2px">
+              ℹ️ Como funciona a Pi Testnet gratuita?
             </button>
           `}
         </div>
@@ -253,7 +255,7 @@
             <span>🔒</span> Protocolo Nativo Pi Platform SDK
           </div>
           <div style="color:var(--text-secondary);line-height:1.45">
-            Todas as transações do HOKAGE22B são autenticadas diretamente no <strong>Pi Browser</strong> com validação biométrica e confirmação descentralizada pela Pi Core Team.
+            O HOKAGE22B opera em conformidade com as diretrizes da Pi Core Team. Na fase de auditoria, todas as interações utilizam Testnet com assinatura biométrica na Pi Wallet.
           </div>
         </div>
       </div>
@@ -264,14 +266,14 @@
     // Se estiver de fato no Pi Browser e desconectado, tenta autenticar
     if (inPi && !authenticatedUser) {
       setTimeout(function () {
-        triggerAuthFlow(false);
+        triggerAuthFlow(true);
       }, 350);
     }
   }
 
   // 6. Disparo Real da Autenticação com Pi SDK (com Proteção de Timeout)
   async function triggerAuthFlow(isSandbox) {
-    if (isSandbox === undefined) isSandbox = isSandboxMode();
+    if (isSandbox === undefined) isSandbox = true;
 
     const feedbackBox = document.getElementById('diag-feedback-box');
     const triggerBtn = document.getElementById('diag-auth-trigger-btn');
@@ -465,9 +467,9 @@
     // O Pi SDK oficial exige que window.Pi.authenticate(['username', 'payments'], ...)
     // tenha sido aprovado nesta sessão de navegador para carregar o escopo 'payments' na memória do SDK.
     if (!isSdkSessionAuthenticated || !authenticatedUser) {
-      showToast('Conectando escopo de pagamentos...', 'info');
+      showToast('Conectando escopo de pagamentos (Pi Testnet)...', 'info');
       try {
-        const logged = await triggerAuthFlow(false);
+        const logged = await triggerAuthFlow(true);
         if (logged) {
           authenticatedUser = logged;
           isSdkSessionAuthenticated = true;
@@ -506,13 +508,13 @@
           const msg = approvalRes.error_message || approvalRes.error || 'Falha na aprovação';
           showToast('Aviso do servidor: ' + msg, 'error');
         } else {
-          showToast('✓ Transação autorizada pelo servidor! Assinando na Pi Wallet...', 'info');
+          showToast('✓ Transação autorizada pelo servidor! Assinando na Pi Wallet (Testnet)...', 'info');
         }
       },
 
       onReadyForServerCompletion: async function (paymentId, txid) {
         console.log('Pi Payment aprovado na blockchain com TXID:', txid);
-        showToast('✓ Pagamento confirmado na blockchain!', 'success');
+        showToast('✓ Pagamento confirmado na Pi Testnet!', 'success');
         const result = await completePaymentOnServer(paymentId, txid);
 
         if (typeof options.onSuccess === 'function') {
@@ -676,13 +678,13 @@
     modal.innerHTML = `
       <div class="portal-modal">
         <button type="button" class="portal-modal-close" id="p2p-modal-close-btn">✕</button>
-        <div class="section-tag section-tag--amber">Pagamento Seguro Pi SDK</div>
+        <div class="section-tag section-tag--purple" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">🧪 Pagamento Oficial Pi Testnet</div>
         <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">${escapeHtml(data.memo || 'Pagamento')}</h3>
         
         ${inPi ? `
           <div style="background:rgba(16, 185, 129, 0.1);border:1px solid rgba(16, 185, 129, 0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.86rem;color:#a7f3d0;line-height:1.5">
-            ✓ <strong>Ambiente Pi Network Detectado:</strong><br>
-            Toque no botão abaixo para autorizar a transação diretamente na sua Pi Wallet oficial.
+            🧪 <strong>Ambiente Oficial Pi Testnet:</strong><br>
+            O app está em auditoria pela Pi Core Team. Toque no botão abaixo para autorizar na sua Pi Wallet usando seus <strong>Test-Pi gratuitos</strong> (suas moedas mineradas reais estão 100% preservadas!).
           </div>
         ` : `
           <div style="background:rgba(245, 158, 11, 0.1);border:1px solid rgba(245, 158, 11, 0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;font-size:0.86rem;color:var(--text-secondary);line-height:1.5">
@@ -692,20 +694,20 @@
         `}
 
         <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px;text-align:center">
-          <div style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase">Valor em Pi Network:</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase">Valor em Pi Testnet:</div>
           <div style="font-size:2rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono);margin:4px 0">
-            ${data.amount || '0.314'} π
+            ${data.amount || '0.314'} Test-π
           </div>
-          <span style="font-size:0.75rem;color:#34d399;font-weight:700">✓ Transação Oficial Pi SDK v2.0</span>
+          <span style="font-size:0.75rem;color:#38bdf8;font-weight:700">✓ Testnet Sandbox · Pi SDK v2.0</span>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:10px">
           ${inPi ? `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="p2p-btn-auth-pay" style="padding:14px;font-weight:700">
-              ⚡ Autorizar Pagamento na Pi Wallet
+              ⚡ Pagar com Test-Pi na Pi Wallet
             </button>
             <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" id="p2p-btn-diag">
-              🔍 Status da Conexão Pi
+              ℹ️ Como funciona o Testnet?
             </button>
           ` : `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="p2p-btn-deep-link" style="padding:14px;font-weight:700">
@@ -737,7 +739,7 @@
     if (diagBtn) {
       diagBtn.onclick = function () {
         modal.classList.remove('active');
-        openPiConnectModal();
+        openTestnetInfoModal();
       };
     }
 
@@ -774,6 +776,57 @@
     setTimeout(function () {
       showToast('Se o Pi Browser não abrir automaticamente, cole o link na barra dele.', 'info');
     }, 1800);
+  }
+
+  // 11. Modal Explicativo da Pi Testnet (Para Pioneiros)
+  function openTestnetInfoModal() {
+    let modal = document.getElementById('pi-testnet-info-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.className = 'portal-modal-overlay';
+      modal.id = 'pi-testnet-info-modal';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="portal-modal" style="max-width:520px;border-color:rgba(139,92,246,0.5);box-shadow:0 20px 60px rgba(0,0,0,0.85)">
+        <button type="button" class="portal-modal-close" onclick="document.getElementById('pi-testnet-info-modal').classList.remove('active')">✕</button>
+        <div class="section-tag section-tag--purple" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3);padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;display:inline-block;margin-bottom:8px">🧪 Ecossistema Oficial · Pi Testnet</div>
+        <h3 style="font-size:1.35rem;margin:0 0 12px;color:#fff;display:flex;align-items:center;gap:8px">
+          <span>Como funciona a Pi Testnet?</span>
+        </h3>
+        
+        <div style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px;font-size:0.86rem;color:#e0e7ff;line-height:1.5">
+          🚀 <strong>Auditoria Mainnet em Andamento:</strong><br>
+          O aplicativo HOKAGE22B está passando pelo processo de auditoria e listagem oficial pela Pi Core Team no <strong>develop.pi</strong>. Durante esta etapa regulatória, os pagamentos operam com segurança total na <strong>Pi Testnet</strong>.
+        </div>
+
+        <div style="background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px;font-size:0.84rem">
+          <div style="color:var(--amber-light);font-weight:700;margin-bottom:6px">💰 Moedas Test-Pi 100% Gratuitas:</div>
+          <p style="color:var(--text-secondary);margin:0 0 8px;line-height:1.45">
+            Você <strong>NÃO gasta suas moedas reais mineradas</strong> na Mainnet! A Pi Network disponibiliza 100 Test-Pi gratuitos para cada pioneiro testar aplicativos no Pi Browser.
+          </p>
+          <div style="color:#34d399;font-weight:700;margin-bottom:6px">🔑 Como alternar para Testnet na Pi Wallet:</div>
+          <ol style="color:var(--text-secondary);margin:0;padding-left:18px;line-height:1.5">
+            <li>Abra o <strong>wallet.pi</strong> no Pi Browser;</li>
+            <li>No topo da tela, toque em <strong>"Pi Mainnet"</strong> e alterne para <strong>"Pi Testnet"</strong>;</li>
+            <li>Pronto! Seu saldo de Test-Pi estará disponível para autorizar transações com sua biometria ou passphrase.</li>
+          </ol>
+        </div>
+
+        <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;font-size:0.82rem;color:#a7f3d0;line-height:1.45">
+          ✓ <strong>Publicação Instantânea:</strong> Ao pagar na Testnet, seu anúncio entra imediatamente no ar na Gazeta dos Pioneiros, sem necessidade de aprovação por administrador!
+        </div>
+
+        <button type="button" class="portal-btn portal-btn--amber portal-btn--full" onclick="document.getElementById('pi-testnet-info-modal').classList.remove('active')" style="padding:12px;font-weight:700">
+          Entendi, vamos testar! 🚀
+        </button>
+      </div>
+    `;
+
+    modal.classList.add('active');
   }
 
   function escapeHtml(str) {
@@ -830,6 +883,7 @@
     loginWithPi: loginWithPi,
     authenticatePioneer: loginWithPi,
     openPiConnectModal: openPiConnectModal,
+    openTestnetInfoModal: openTestnetInfoModal,
     triggerAuthFlow: triggerAuthFlow,
     requestPiPayment: requestPiPayment,
     showManualP2PModal: showManualP2PModal,
@@ -849,7 +903,7 @@
 
   // Inicializa bindings e recupera cache
   function autoInit() {
-    initPiSdk(false);
+    initPiSdk(true);
     initSmartPiBanner();
     try {
       const cached = localStorage.getItem('hokage_pi_user');
@@ -859,11 +913,11 @@
           authenticatedUser = parsed;
           updateAuthUi(authenticatedUser);
 
-          // Se estiver no Pi Browser, pré-autoriza a sessão em background para carregar o escopo 'payments'
+          // Se estiver no Pi Browser, pré-autoriza a sessão em background na Testnet para carregar o escopo 'payments'
           if (isPiBrowser() && window.Pi) {
             setTimeout(function () {
               if (!isSdkSessionAuthenticated && !isAuthenticating) {
-                triggerAuthFlow(false).catch(function () {});
+                triggerAuthFlow(true).catch(function () {});
               }
             }, 450);
           }

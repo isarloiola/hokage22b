@@ -19,12 +19,12 @@
   <link rel="stylesheet" href="assets/css/style.css?v=4.5" />
   <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.5" />
 
-  <!-- Pi Network SDK v2.0 -->
+  <!-- Pi Network SDK v2.0 (Modo Testnet para Auditoria Oficial) -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
     try {
       if (window.Pi) {
-        window.Pi.init({ version: "2.0", sandbox: false });
+        window.Pi.init({ version: "2.0", sandbox: true });
       }
     } catch (_) {}
   </script>
@@ -343,6 +343,6 @@
   </footer>
 
   <script src="assets/js/modules/i18n.js?v=4.5"></script>
-  <script src="assets/js/modules/pi-pay.js?v=4.5"></script>
+  <script src="assets/js/modules/pi-pay.js?v=5.2"></script>
 </body>
 </html>

@@ -184,16 +184,16 @@
     }
   }
 
-  // Cria um novo anúncio no mural
+  // Cria um novo anúncio no mural (Publicação Direta e Imediata na Pi Testnet)
   async function createAnuncio(adData) {
     const db = getClient();
     if (!db) return null;
 
     try {
       const payload = Object.assign({}, adData, {
-        status: 'pendente',
-        views_count: 0,
-        clicks_count: 0
+        status: adData.status || 'ativo',
+        views_count: adData.views_count || 0,
+        clicks_count: adData.clicks_count || 0
       });
 
       const { data, error } = await db
@@ -204,6 +204,32 @@
       return data;
     } catch (err) {
       console.warn('Supabase: Erro ao criar anúncio:', err.message);
+      return null;
+    }
+  }
+
+  // Registra denúncia de anúncio pela comunidade (Moderação Descentralizada)
+  async function createDenuncia(denunciaData) {
+    const db = getClient();
+    if (!db) return null;
+
+    try {
+      const payload = Object.assign({}, denunciaData, {
+        id: denunciaData.id || ('rep_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 6)),
+        created_at: new Date().toISOString()
+      });
+
+      const { data, error } = await db
+        .from('denuncias')
+        .insert([payload]);
+
+      if (error) {
+        console.warn('Supabase: Tabela denuncias ainda não criada ou RLS:', error.message);
+        return null;
+      }
+      return data;
+    } catch (err) {
+      console.warn('Supabase: Erro ao registrar denúncia:', err.message);
       return null;
     }
   }
@@ -741,6 +767,7 @@
     getPioneerProfile: getPioneerProfile,
     getAnuncios: getAnuncios,
     createAnuncio: createAnuncio,
+    createDenuncia: createDenuncia,
     uploadAdImage: uploadAdImage,
     compressImageFile: compressImageFile,
     incrementAdClick: incrementAdClick,
