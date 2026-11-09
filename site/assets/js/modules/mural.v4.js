@@ -42,15 +42,55 @@
   let selectedTier = 'prata';
 
   const tierPrices = {
-    ouro:   { pi: 3.14, name: '🥇 Destaque Ouro (Topo da Gazeta e Card Duplo)' },
-    prata:  { pi: 1.00, name: '🥈 Destaque Prata (Card Médio)' },
-    bronze: { pi: 0.314, name: '🥉 Classificado Bronze (Simples)' }
+    ouro:   { pi: 3.14, name: '🥇 Destaque Ouro (Campanha 7 dias · Topo VIP & Card Duplo)' },
+    prata:  { pi: 1.00, name: '🥈 Destaque Prata (Campanha 7 dias · Card Médio)' },
+    bronze: { pi: 0.314, name: '🥉 Classificado Bronze (Validade 30 dias · Comunitário)' }
   };
 
+  // Helper para localização dos grids das duas áreas comerciais
+  function getFeaturedGrid() {
+    return document.getElementById('mural-featured-grid') || document.getElementById('mural-ads-grid');
+  }
+
+  function getCommunityGrid() {
+    return document.getElementById('mural-community-grid') || document.getElementById('mural-ads-grid');
+  }
+
+  // Rotação determinística e justa por fatia horária (UTC)
+  // Sem modificação artificial de dados no banco de dados
+  function rotateFairly(arr) {
+    if (!Array.isArray(arr) || arr.length <= 1) return arr || [];
+    const hourBucket = Math.floor(Date.now() / (1000 * 60 * 60));
+    const offset = hourBucket % arr.length;
+    return arr.slice(offset).concat(arr.slice(0, offset));
+  }
+
   function buildAdCardHtml(ad) {
+    const isFounderDemo = Boolean(ad.is_founder_demo || ad.status === 'demonstracao' || ad.id === 'card-mock-1');
     const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
     const tierBadgeClass = 'pioneer-badge--' + tier;
-    const tierLabel = tier === 'ouro' ? '👑 Destaque Ouro · Card Duplo' : (tier === 'prata' ? '🥈 Destaque Prata' : '🥉 Classificado Bronze');
+
+    let tierLabel = '';
+    let overlayLabel = '';
+    let priceHtml = '';
+
+    if (isFounderDemo) {
+      tierLabel = '👑 Ouro Fundador · Demonstração';
+      overlayLabel = '👑 OURO FUNDADOR · EXEMPLAR DEMONSTRATIVO';
+      priceHtml = '<span class="pioneer-card__price-tag" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.35);color:var(--amber-light)" title="Exemplar institucional">Exemplar Oficial</span>';
+    } else if (tier === 'ouro') {
+      tierLabel = '👑 Patrocinado · Destaque Ouro';
+      overlayLabel = '👑 PATROCINADO · DESTAQUE VIP';
+      priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '3.14 π'}</span>`;
+    } else if (tier === 'prata') {
+      tierLabel = '🥈 Patrocinado · Destaque Prata';
+      overlayLabel = '🥈 PATROCINADO · DESTAQUE';
+      priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '1.00 π'}</span>`;
+    } else {
+      tierLabel = '🥉 Comunitário · Bronze';
+      overlayLabel = '';
+      priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '0.314 π'}</span>`;
+    }
 
     const author = ad.pioneer_username || ad.pioneer_name || '@pioneiro';
     const safeAuthor = escapeHtml(author);
@@ -80,7 +120,7 @@
           <img src="${finalImg}" alt="${safeTitle}" loading="lazy" />
           <div class="pioneer-card__banner-overlay">
             <span style="font-size:0.72rem;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 10px;border-radius:4px;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.25)">
-              ${tier === 'ouro' ? '👑 DESTAQUE VIP' : 'FOTO OFICIAL'}
+              ${overlayLabel || (tier === 'ouro' ? '👑 DESTAQUE VIP' : 'FOTO OFICIAL')}
             </span>
           </div>
         </div>
@@ -100,8 +140,6 @@
     } catch (_) {}
 
     // Linha de métricas adaptada por tier:
-    // Bronze: não possui link externo -> contabiliza visitas ao perfil e likes
-    // Prata / Ouro: possui link externo -> contabiliza cliques no link, visitas ao perfil e likes
     let metricsDetailsHtml = '';
     if (tier === 'bronze') {
       metricsDetailsHtml = `
@@ -121,13 +159,13 @@
         ${bannerHtml}
         <div class="pioneer-card__top">
           <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
-          <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__author" style="text-decoration:none" title="Ver perfil e mini-página do pioneiro">${safeAuthor} ↗</a>
+          <a href="pioneiro?u=${encodeURIComponent(safeAuthor.replace(/^@+/, ''))}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__author" style="text-decoration:none" title="Ver perfil e vitrine do pioneiro">${safeAuthor} ↗</a>
         </div>
         <h3 class="pioneer-card__title">${safeTitle}</h3>
         <p class="pioneer-card__desc">${safeDesc}</p>
         <div class="pioneer-card__footer">
           ${linkHtml}
-          <span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : ''}</span>
+          ${priceHtml}
         </div>
         <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:8px">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -140,49 +178,103 @@
             <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('${cardId}', '${safeTitle.replace(/'/g, "\\'")}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
               🚩 Denunciar
             </button>
-            <a href="pioneiro?u=${encodeURIComponent(safeAuthor)}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
+            <a href="pioneiro?u=${encodeURIComponent(safeAuthor.replace(/^@+/, ''))}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
           </div>
         </div>
       </article>
     `;
   }
 
-  // Filtragem estrita por CSS: NUNCA apaga nem altera o HTML dos cards existentes
+  // Insere um único card no seu respectivo container comercial
+  function insertAdCard(ad) {
+    if (!ad || !ad.id) return;
+    const cardId = 'card-' + ad.id;
+    if (document.getElementById(cardId)) return;
+
+    const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
+    const html = buildAdCardHtml(ad);
+
+    if (tier === 'ouro') {
+      const featuredGrid = getFeaturedGrid();
+      if (featuredGrid) {
+        featuredGrid.insertAdjacentHTML('afterbegin', html);
+      }
+    } else if (tier === 'prata') {
+      const featuredGrid = getFeaturedGrid();
+      if (featuredGrid) {
+        const firstPrata = featuredGrid.querySelector('.pioneer-card--prata');
+        if (firstPrata) {
+          firstPrata.insertAdjacentHTML('beforebegin', html);
+        } else {
+          featuredGrid.insertAdjacentHTML('beforeend', html);
+        }
+      }
+    } else {
+      const commGrid = getCommunityGrid();
+      if (commGrid) {
+        commGrid.insertAdjacentHTML('afterbegin', html);
+      }
+    }
+  }
+
+  // Filtragem estrita por CSS em ambas as seções (Destaques e Comunidade)
   function filterCategory(cat) {
     currentCategory = cat || 'todos';
-    const gridEl = document.getElementById('mural-ads-grid') || document.getElementById('gazeta-posts-grid');
-    if (!gridEl) return;
+    const featuredSec = document.getElementById('section-destaques');
+    const communitySec = document.getElementById('section-comunidade');
+    const featuredGrid = document.getElementById('mural-featured-grid');
+    const communityGrid = document.getElementById('mural-community-grid');
 
-    const cards = gridEl.querySelectorAll('.pioneer-card, .ad-card');
-    let visibleCount = 0;
+    const allCards = document.querySelectorAll('.pioneer-card, .ad-card');
+    let totalVisible = 0;
+    let featuredVisible = 0;
+    let communityVisible = 0;
 
-    cards.forEach(function (card) {
+    allCards.forEach(function (card) {
+      if (card.closest('.pi-modal') || card.closest('.ad-preview-wrapper')) return;
+
       const cardCat = card.getAttribute('data-category') || 'geral';
-      if (currentCategory === 'todos' || cardCat === currentCategory) {
+      const matches = (currentCategory === 'todos' || cardCat === currentCategory);
+
+      if (matches) {
         card.classList.remove('pioneer-card--hidden', 'ad-card--hidden');
         card.style.display = 'flex';
-        visibleCount++;
+        totalVisible++;
+        if (featuredGrid && featuredGrid.contains(card)) featuredVisible++;
+        if (communityGrid && communityGrid.contains(card)) communityVisible++;
       } else {
         card.classList.add('pioneer-card--hidden', 'ad-card--hidden');
         card.style.display = 'none';
       }
     });
 
+    if (featuredSec && featuredGrid) {
+      featuredSec.style.display = featuredVisible > 0 ? 'block' : 'none';
+    }
+    if (communitySec && communityGrid) {
+      communitySec.style.display = communityVisible > 0 ? 'block' : 'none';
+    }
+
     let emptyNotice = document.getElementById('mural-empty-notice');
-    if (visibleCount === 0) {
+    if (totalVisible === 0) {
       if (!emptyNotice) {
         emptyNotice = document.createElement('div');
         emptyNotice.id = 'mural-empty-notice';
-        emptyNotice.style.cssText = 'grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--text-secondary);';
+        emptyNotice.style.cssText = 'text-align:center;padding:56px 20px;color:var(--text-secondary);background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);margin:24px 0;';
         emptyNotice.innerHTML = `
-          <div style="font-size:2.5rem;margin-bottom:12px">📢</div>
-          <h4 style="color:#fff;margin-bottom:6px">Nenhum anúncio nesta categoria ainda</h4>
-          <p style="font-size:0.9rem">Seja o primeiro pioneiro a anunciar aqui por uma taxa simbólica em Pi!</p>
-          <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="window.IsarMural && window.IsarMural.openModal()" style="margin-top:14px">
+          <div style="font-size:2.8rem;margin-bottom:12px">📢</div>
+          <h4 style="color:#fff;margin-bottom:6px;font-size:1.2rem">Nenhum anúncio nesta categoria ainda</h4>
+          <p style="font-size:0.9rem;max-width:500px;margin:0 auto">Seja o primeiro pioneiro a anunciar aqui com micro-taxa simbólica na Pi Network!</p>
+          <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="window.IsarMural && window.IsarMural.openModal()" style="margin-top:16px">
             + Publicar Meu Anúncio
           </button>
         `;
-        gridEl.appendChild(emptyNotice);
+        const container = (featuredSec && featuredSec.parentElement) || document.querySelector('.mural-container') || document.body;
+        if (communitySec && communitySec.nextSibling) {
+          container.insertBefore(emptyNotice, communitySec.nextSibling);
+        } else if (container) {
+          container.appendChild(emptyNotice);
+        }
       }
       emptyNotice.style.display = 'block';
     } else if (emptyNotice) {
@@ -206,19 +298,85 @@
     try {
       const local = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
       if (Array.isArray(local) && local.length > 0) {
-        const gridEl = document.getElementById('mural-ads-grid');
-        if (gridEl) {
-          local.forEach(function (ad) {
-            if (!document.getElementById('card-' + ad.id)) {
-              gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(ad));
-            }
-          });
-        }
+        local.forEach(function (ad) {
+          insertAdCard(ad);
+        });
       }
     } catch (_) {}
   }
 
-  // Sincroniza anúncios aprovados salvos no Supabase em background sem afetar os cards existentes
+  // Sincroniza anúncios aprovados salvos no Supabase com rotação equilibrada e hierarquia estrita
+  function renderRemoteAdsHierarchy(remoteAds) {
+    if (!Array.isArray(remoteAds) || remoteAds.length === 0) return;
+
+    const featuredGrid = getFeaturedGrid();
+    const communityGrid = getCommunityGrid();
+    if (!featuredGrid && !communityGrid) return;
+
+    const ouroPaid = [];
+    const ouroDemo = [];
+    const prataAds = [];
+    const bronzeAds = [];
+
+    remoteAds.forEach(function (ad) {
+      if (!ad || !ad.id) return;
+      if (document.getElementById('card-' + ad.id)) return;
+
+      const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
+      if (tier === 'ouro') {
+        if (ad.is_founder_demo || ad.status === 'demonstracao') {
+          ouroDemo.push(ad);
+        } else {
+          ouroPaid.push(ad);
+        }
+      } else if (tier === 'prata') {
+        prataAds.push(ad);
+      } else {
+        bronzeAds.push(ad);
+      }
+    });
+
+    // 1. Rotação justa entre os Ouros comerciais ativos
+    const rotatedOuro = rotateFairly(ouroPaid);
+    const orderedOuro = rotatedOuro.concat(ouroDemo);
+
+    // 2. Rotação justa entre os Pratas ativos
+    const rotatedPrata = rotateFairly(prataAds);
+
+    // Inserção na Área A (Destaques do Mural):
+    if (featuredGrid) {
+      const firstPrataMock = featuredGrid.querySelector('.pioneer-card--prata');
+      rotatedPrata.reverse().forEach(function (ad) {
+        if (firstPrataMock) {
+          firstPrataMock.insertAdjacentHTML('beforebegin', buildAdCardHtml(ad));
+        } else {
+          featuredGrid.insertAdjacentHTML('beforeend', buildAdCardHtml(ad));
+        }
+      });
+
+      orderedOuro.reverse().forEach(function (ad) {
+        featuredGrid.insertAdjacentHTML('afterbegin', buildAdCardHtml(ad));
+      });
+    }
+
+    // 3. Mural da Comunidade (Bronze): ordenação cronológica decrescente estrita
+    bronzeAds.sort(function (a, b) {
+      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      return dateB - dateA;
+    });
+
+    if (communityGrid) {
+      bronzeAds.forEach(function (ad) {
+        communityGrid.insertAdjacentHTML('afterbegin', buildAdCardHtml(ad));
+      });
+    }
+
+    filterCategory(currentCategory);
+    trackVisibleAds(remoteAds);
+  }
+
+  // Sincroniza anúncios remotos em background
   async function syncRemoteAds() {
     if (window.IsarDB && window.IsarDB.getAnuncios) {
       try {
@@ -230,16 +388,7 @@
           timeoutPromise
         ]);
         if (Array.isArray(remoteAds) && remoteAds.length > 0) {
-          const gridEl = document.getElementById('mural-ads-grid');
-          if (gridEl) {
-            remoteAds.forEach(function (ad) {
-              if (!document.getElementById('card-' + ad.id)) {
-                gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(ad));
-              }
-            });
-            filterCategory(currentCategory);
-            trackVisibleAds(remoteAds);
-          }
+          renderRemoteAdsHierarchy(remoteAds);
         }
       } catch (_) {}
     }
@@ -463,13 +612,10 @@
       price_pi: '0.00 (Testnet)'
     };
 
-    const gridEl = document.getElementById('mural-ads-grid');
-    if (gridEl) {
-      gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(testAd));
-      const newCard = document.getElementById('card-' + testId);
-      if (newCard) {
-        newCard.classList.add('card-testnet-highlight');
-      }
+    insertAdCard(testAd);
+    const newCard = document.getElementById('card-' + testId);
+    if (newCard) {
+      newCard.classList.add('card-testnet-highlight');
     }
 
     closeModal();
@@ -695,10 +841,7 @@
             submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
           }
 
-          const gridEl = document.getElementById('mural-ads-grid');
-          if (gridEl) {
-            gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(newAd));
-          }
+          insertAdCard(newAd);
           filterCategory(currentCategory);
           alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Testnet! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
         },
@@ -736,10 +879,7 @@
                   submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
                 }
 
-                const gridEl = document.getElementById('mural-ads-grid');
-                if (gridEl) {
-                  gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(newAd));
-                }
+                insertAdCard(newAd);
                 filterCategory(currentCategory);
                 alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Testnet! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
               }
@@ -774,10 +914,7 @@
       submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
     }
 
-    const gridEl = document.getElementById('mural-ads-grid');
-    if (gridEl) {
-      gridEl.insertAdjacentHTML('afterbegin', buildAdCardHtml(newAd));
-    }
+    insertAdCard(newAd);
     filterCategory(currentCategory);
 
     if (window.HokagePi && window.HokagePi.showManualP2PModal) {

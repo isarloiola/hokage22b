@@ -159,7 +159,7 @@
     }
   }
 
-  // Busca os anúncios ativos no mural
+  // Busca os anúncios ativos no mural (com filtro de validade e hierarquia comercial)
   async function getAnuncios(category) {
     const db = getClient();
     if (!db) return [];
@@ -168,7 +168,7 @@
       let query = db
         .from('anuncios')
         .select('*')
-        .eq('status', 'ativo')
+        .or('status.eq.ativo,status.eq.demonstracao,is_founder_demo.eq.true')
         .order('created_at', { ascending: false });
 
       if (category && category !== 'todos') {
@@ -176,22 +176,60 @@
       }
 
       const { data, error } = await query;
-      if (error) throw error;
-      return data || [];
+      if (error) {
+        // Fallback gracioso se a coluna is_founder_demo ainda não foi migrada
+        const fallbackRes = await db
+          .from('anuncios')
+          .select('*')
+          .eq('status', 'ativo')
+          .order('created_at', { ascending: false });
+        if (fallbackRes.error) throw fallbackRes.error;
+        return (fallbackRes.data || []).filter(function (ad) {
+          if (!ad) return false;
+          if (ad.expires_at) {
+            const exp = new Date(ad.expires_at).getTime();
+            if (!isNaN(exp) && exp <= Date.now()) return false;
+          }
+          return true;
+        });
+      }
+
+      // Validação defensiva client-side: garante que nenhum expirado ou suspenso seja exibido
+      const now = Date.now();
+      const validAds = (data || []).filter(function (ad) {
+        if (!ad) return false;
+        if (ad.status === 'suspenso' || ad.status === 'pendente') return false;
+        if (ad.is_founder_demo || ad.status === 'demonstracao') return true;
+        if (ad.expires_at) {
+          const expTime = new Date(ad.expires_at).getTime();
+          if (!isNaN(expTime) && expTime <= now) return false;
+        }
+        return true;
+      });
+
+      return validAds;
     } catch (err) {
       console.warn('Supabase: Erro ao carregar anúncios:', err.message);
       return [];
     }
   }
 
-  // Cria um novo anúncio no mural (Publicação Direta e Imediata na Pi Testnet)
+  // Cria um novo anúncio no mural (com enquadramento de tier e exposição comercial)
   async function createAnuncio(adData) {
     const db = getClient();
     if (!db) return null;
 
     try {
+      const tier = adData.plan_tier || 'bronze';
+      let exposure = 'chronological';
+      if (tier === 'ouro') exposure = 'priority';
+      else if (tier === 'prata') exposure = 'rotation';
+
       const payload = Object.assign({}, adData, {
         status: adData.status || 'ativo',
+        plan_tier: tier,
+        exposure_type: adData.exposure_type || exposure,
+        is_founder_demo: Boolean(adData.is_founder_demo),
         views_count: adData.views_count || 0,
         clicks_count: adData.clicks_count || 0,
         profile_visits: adData.profile_visits || 0,
