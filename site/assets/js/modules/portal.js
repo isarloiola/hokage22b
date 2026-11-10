@@ -395,83 +395,9 @@
 
   // ─── 7. Pagamento do E-book via Pi Browser ────────────────
   function payEbookWithPi() {
-    if (!window.HokagePi) {
-      alert('Carregando integração Pi Network... Tente novamente em instantes.');
-      return;
-    }
-
-    const payBtn = document.getElementById('btn-pay-pi-browser');
-    if (payBtn) {
-      payBtn.disabled = true;
-      payBtn.textContent = 'Processando no Pi Browser…';
-    }
-
-    const feedbackArea = document.getElementById('pi-action-feedback');
-    if (feedbackArea) {
-      feedbackArea.style.display = 'block';
-      feedbackArea.style.background = 'rgba(139, 92, 246, 0.15)';
-      feedbackArea.style.border = '1px solid rgba(139, 92, 246, 0.3)';
-      feedbackArea.style.color = '#c4b5fd';
-      feedbackArea.textContent = '⏳ Autenticando e abrindo a Pi Wallet…';
-    }
-
-    window.HokagePi.requestPiPayment({
-      amount: 3.14,
-      memo: 'E-book: Pi para seu Negócio',
-      metadata: {
-        type: 'ebook',
-        productId: 'pi-para-seu-negocio'
-      },
-      onSuccess: function (result) {
-        console.log('Pagamento do e-book concluído com sucesso:', result);
-        const modalBody = document.getElementById('pi-modal-content-area');
-        if (modalBody) {
-          modalBody.innerHTML = `
-            <div style="text-align:center;padding:12px 0">
-              <div style="font-size:3rem;margin-bottom:8px">🎉</div>
-              <div class="section-tag section-tag--amber">Pagamento Confirmado</div>
-              <h3 style="color:#fff;font-size:1.5rem;margin:12px 0 8px">Parabéns! Acesso Liberado</h3>
-              <p style="color:var(--text-secondary);font-size:0.92rem;margin-bottom:18px">
-                Sua transação de <strong>3.14 π</strong> foi validada com sucesso na blockchain da Pi Network.
-              </p>
-              <div style="background:rgba(16, 185, 129, 0.1);border:1px solid rgba(16, 185, 129, 0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:20px">
-                <span style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono);word-break:break-all">TXID: ${escapeHtml(result.txid || 'Confirmado via Pi SDK')}</span>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:10px">
-                <a href="downloads/Manual-Pi-Network.pdf" download class="portal-btn portal-btn--primary portal-btn--full">
-                  ⬇ Baixar E-book em PDF
-                </a>
-                <a href="downloads/Manual-Pi-Network.epub" download class="portal-btn portal-btn--outline portal-btn--full">
-                  ⬇ Baixar em EPUB (Leitores Digitais)
-                </a>
-              </div>
-            </div>
-          `;
-        }
-      },
-      onError: function (err) {
-        console.warn('Erro ao processar pagamento:', err);
-        if (payBtn) {
-          payBtn.disabled = false;
-          payBtn.textContent = '⚡ Pagar 3.14 π na Pi Wallet (1 Clique)';
-        }
-        if (feedbackArea) {
-          feedbackArea.style.background = 'rgba(239, 68, 68, 0.15)';
-          feedbackArea.style.border = '1px solid rgba(239, 68, 68, 0.3)';
-          feedbackArea.style.color = '#fca5a5';
-          feedbackArea.textContent = '⚠️ Não foi possível abrir o pagamento. Verifique se autorizou no Pi Browser.';
-        }
-      },
-      onCancel: function () {
-        if (payBtn) {
-          payBtn.disabled = false;
-          payBtn.textContent = '⚡ Pagar 3.14 π na Pi Wallet (1 Clique)';
-        }
-        if (feedbackArea) {
-          feedbackArea.style.display = 'none';
-        }
-      }
-    });
+    alert('O e-book "Pi para seu Negócio" está em pré-lançamento exclusivo para a Open Mainnet (não aceita Test-Pi). Cadastre-se na lista de espera ou entre em contato direto com @hokage22b nas redes sociais para acesso antecipado via P2P na Mainnet!');
+    closeModal('modal-pagamento-pi');
+    openModal('modal-waitlist-comunidade');
   }
 
   // ─── 8. Inicialização ──────────────────────────────────────

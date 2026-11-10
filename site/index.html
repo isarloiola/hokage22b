@@ -297,7 +297,7 @@
                 <strong style="font-size:0.82rem;color:#fff;display:block;line-height:1.25;word-break:break-word;margin-bottom:2px">E-book Pi para seu Negócio</strong>
                 <span style="font-size:0.75rem;color:var(--amber-light);font-weight:700">3.14 π</span>
               </div>
-              <a href="pioneiro?u=@hokage22b" style="font-size:0.72rem;background:var(--accent);color:#fff;padding:5px 10px;border-radius:6px;font-weight:700;text-decoration:none">Comprar</a>
+              <a href="#produtos" style="font-size:0.72rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light);padding:5px 10px;border-radius:6px;font-weight:700;text-decoration:none">Reservar</a>
             </div>
 
             <!-- Chamada Final do Mockup -->
@@ -603,15 +603,41 @@
 
             <div class="product-pricing-bar" style="background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(139,92,246,0.12));border:1px solid rgba(245,158,11,0.35);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap">
               <div class="price-box">
-                <span class="price-label"><span style="color:#10b981;font-weight:700">⚡ Exclusivo na Comunidade Web3</span> · Valor Justo e Direto</span>
+                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">🔒 Exclusivo na Open Mainnet</span> · Preço de Lançamento</span>
                 <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">3.14 π</span>
-                <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta peer-to-peer (P2P) na Mainnet da Pi Network</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta P2P na Mainnet da Pi Network (Não aceita Test-Pi)</span>
               </div>
               <div class="product-actions">
-                <button type="button" class="portal-btn portal-btn--amber"
-                  onclick="HokagePortal.openModal('modal-pagamento-pi')" style="font-weight:800;box-shadow:0 0 25px rgba(245,158,11,0.35)">
-                  ⚡ Adquirir com Pi (3.14 π) →
+                <button type="button" class="portal-btn portal-btn--primary"
+                  onclick="HokagePortal.openModal('modal-waitlist-comunidade')" style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.35)">
+                  🔔 Entrar na Lista de Espera (Open Mainnet) →
                 </button>
+              </div>
+            </div>
+
+            <!-- BOX DE ACESSO ANTECIPADO DIRETO COM HOKAGE22B -->
+            <div style="margin-top:16px;background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(20,15,30,0.85));border:1px solid rgba(245,158,11,0.4);border-radius:var(--radius-sm);padding:18px;box-sizing:border-box">
+              <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px">
+                <span style="font-size:1.8rem;line-height:1">⚡</span>
+                <div>
+                  <strong style="color:var(--amber-light);font-size:0.95rem;display:block;margin-bottom:4px">
+                    Deseja Acesso Antecipado com Pi na Mainnet?
+                  </strong>
+                  <p style="font-size:0.86rem;color:var(--text-secondary);line-height:1.55;margin:0">
+                    O pagamento automático via Pi SDK aguarda a abertura da <strong>Open Mainnet</strong> para evitar moedas de teste da Testnet. Se você deseja adquirir agora diretamente via transferência P2P na <strong>Mainnet da Pi Network</strong>, fale diretamente com <strong>@hokage22b</strong> para liberação exclusiva:
+                  </p>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+                <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700">
+                  💬 Falar no WhatsApp ↗
+                </a>
+                <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700">
+                  𝕏 Mensagem no X (@hokage22b) ↗
+                </a>
+                <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
+                  👤 Vitrine Oficial (@hokage22b) ↗
+                </a>
               </div>
             </div>
 
@@ -1428,64 +1454,54 @@
     aria-labelledby="pi-pay-title">
     <div class="portal-modal" id="pi-modal-content-area">
       <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
-      <div class="section-tag section-tag--amber">Pagamento em Pi Network</div>
-      <h3 id="pi-pay-title" style="font-size:1.35rem;margin-bottom:12px">Adquirir e-book com Pi Network</h3>
-      <p style="font-size:0.92rem;margin-bottom:18px;color:var(--text-secondary)">
-        Você pode adquirir o e-book <strong>"Pi para seu negócio"</strong> diretamente com Pi na Mainnet por <strong>3.14 π</strong>.
+      <div class="section-tag section-tag--amber">Status: Aguardando Open Mainnet</div>
+      <h3 id="pi-pay-title" style="font-size:1.35rem;margin-bottom:10px">E-book "Pi para seu Negócio"</h3>
+      <p style="font-size:0.92rem;margin-bottom:16px;color:var(--text-secondary);line-height:1.55">
+        O pagamento automatizado de 1 clique via Pi SDK está temporariamente suspenso para evitar pagamentos com <strong>Test-Pi (Testnet)</strong>. Este produto é comercializado exclusivamente por <strong>3.14 π na Mainnet real</strong>.
       </p>
 
-      <!-- Status de Conexão Pi Network -->
-      <div id="pi-connection-box" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-          <div>
-            <span style="font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);display:block;letter-spacing:0.05em">Sessão Pi Network</span>
-            <span id="pi-user-status-text" style="font-size:0.95rem;font-weight:700;color:#fff">⚪ Não conectado</span>
-          </div>
-          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-login-pi-flow" onclick="HokagePi.loginWithPi()" style="padding:6px 14px;border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
-            ⚡ Conectar Pi Wallet
-          </button>
-        </div>
-        <div id="pi-connection-hint" style="font-size:0.8rem;color:var(--text-secondary);margin-top:8px">
-          💡 No Pi Browser, clique em <strong>Conectar Pi Wallet</strong> para autorizar sua sessão e habilitar o pagamento nativo com 1 clique.
-        </div>
+      <!-- Alerta de Segurança e Explicação -->
+      <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px">
+        <strong style="color:var(--amber-light);font-size:0.88rem;display:block;margin-bottom:4px">
+          🔒 Lançamento Oficial na Open Mainnet
+        </strong>
+        <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;margin:0">
+          Cadastre seu e-mail para receber em primeira mão o aviso assim que a Open Mainnet for liberada e o download for aberto.
+        </p>
       </div>
 
-      <!-- Feedback de Ação Pi -->
-      <div id="pi-action-feedback" style="display:none;padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:14px;font-size:0.85rem"></div>
-
-      <!-- Botão Nativo para Pi Browser -->
+      <!-- Botão de Ação: Cadastro na Lista de Espera -->
       <div style="margin-bottom:20px">
-        <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="btn-pay-pi-browser" onclick="HokagePortal.payEbookWithPi()" style="padding:14px;font-size:1rem;font-weight:700">
-          ⚡ Pagar 3.14 π na Pi Wallet (1 Clique)
+        <button type="button" class="portal-btn portal-btn--primary portal-btn--full"
+          onclick="HokagePortal.closeModal('modal-pagamento-pi');HokagePortal.openModal('modal-waitlist-comunidade')"
+          style="padding:14px;font-size:0.98rem;font-weight:700">
+          🔔 Cadastrar na Lista de Espera da Open Mainnet →
         </button>
-        <span style="display:block;font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:6px">
-          Abre a janela nativa de aprovação na Pi Wallet e libera o download imediatamente.
-        </span>
       </div>
 
-      <!-- Alternativa P2P Manual (Para quem estiver em navegador comum) -->
+      <!-- Acesso Antecipado P2P na Mainnet Direto com Hokage22b -->
       <div style="border-top:1px solid var(--border-subtle);padding-top:16px;margin-top:16px">
-        <div style="font-size:0.85rem;color:var(--text-secondary);font-weight:600;margin-bottom:8px">
-          Ou transferência manual P2P:
+        <div style="font-size:0.88rem;color:#fff;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+          <span>⚡</span> Deseja Acesso Antecipado com Pi na Mainnet?
         </div>
-        <div
-          style="background:rgba(0,0,0,0.4);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px">
-          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">Carteira de destino oficial HOKAGE22B:</div>
-          <code class="notranslate" translate="no"
-            style="display:block;word-break:break-all;font-size:0.75rem;background:#09090b;padding:8px;border-radius:4px;color:var(--accent-light);user-select:all">GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR</code>
-          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" style="margin-top:8px" onclick="navigator.clipboard.writeText('GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR');this.textContent='✓ Endereço Copiado (GA5F...XPUR)!';setTimeout(()=>this.textContent='📋 Copiar Endereço',3000)">
-            📋 Copiar Endereço
-          </button>
-        </div>
-
-        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;line-height:1.4">
-          Após transferir no Pi Wallet, envie o comprovante para <strong>contato@hokage22b.com</strong> para receber a cópia por e-mail.
+        <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:14px;line-height:1.5">
+          Para pioneiros que já possuem saldo transferível na Mainnet e desejam adquirir agora, a liquidação é feita diretamente via transferência P2P. Entre em contato direto com <strong>@hokage22b</strong> para liberação:
         </p>
 
-        <a href="mailto:contato@hokage22b.com?subject=Comprovante%20Pagamento%20Pi%20-%20E-book%20Negocios"
-          class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm">
-          Enviar Comprovante por E-mail
-        </a>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer"
+            class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700;justify-content:center">
+            💬 Conversar com Hokage22b no WhatsApp ↗
+          </a>
+          <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer"
+            class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700;justify-content:center">
+            𝕏 Mensagem Direta no X (@hokage22b) ↗
+          </a>
+          <a href="pioneiro?u=@hokage22b"
+            class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;justify-content:center">
+            👤 Ver Carteira na Vitrine Oficial (@hokage22b) ↗
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -1518,7 +1534,7 @@
   <script src="assets/js/config.js?v=3.0"></script>
   <script src="assets/js/modules/db.js?v=4.8"></script>
   <script src="assets/js/modules/pi-pay.js?v=5.2"></script>
-  <script src="assets/js/modules/portal.js?v=3.0"></script>
+  <script src="assets/js/modules/portal.js?v=3.1"></script>
   <script>
     // Sincroniza foto personalizada do fundador no mockup da vitrine
     document.addEventListener('DOMContentLoaded', async function () {
