@@ -607,7 +607,8 @@
           <button class="filter-pill" onclick="filterAds('pausado', this)">🟡 Pausados (<span id="tab-pill-pausado">0</span>)</button>
           <button class="filter-pill" onclick="filterAds('ouro', this)">🥇 Destaque Ouro (<span id="tab-pill-ouro">0</span>)</button>
         </div>
-        <div style="display:flex;gap:8px">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input type="search" id="admin-ad-search" oninput="handleAdminAdSearch(this.value)" placeholder="🔍 Buscar por título, @usuário ou ID..." style="padding:6px 12px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.84rem;min-width:220px" />
           <button class="btn btn-outline btn-sm" onclick="loadAllAds()">🔄 Atualizar</button>
           <button class="btn btn-primary btn-sm" onclick="openCreateAdModal()">+ Novo Anúncio Manual</button>
         </div>
@@ -1031,6 +1032,12 @@
         }
       };
 
+      let currentAdminSearch = '';
+      window.handleAdminAdSearch = function (val) {
+        currentAdminSearch = (val || '').toLowerCase().trim();
+        renderAdsTable();
+      };
+
       function renderAdsTable() {
         const tbody = document.getElementById('ads-table-body');
         let filtered = cachedAds;
@@ -1040,6 +1047,16 @@
         else if (currentAdFilter === 'pausado') filtered = cachedAds.filter(a => a.status === 'pausado');
         else if (currentAdFilter === 'ouro') filtered = cachedAds.filter(a => a.plan_tier === 'ouro');
         else if (currentAdFilter === 'fundador') filtered = cachedAds.filter(a => a.is_founder_demo || a.status === 'demonstracao' || (a.pioneer_username && a.pioneer_username.toLowerCase().includes('hokage22b')));
+
+        if (currentAdminSearch) {
+          filtered = filtered.filter(a => {
+            const title = (a.title || '').toLowerCase();
+            const desc = (a.description || '').toLowerCase();
+            const user = (a.pioneer_username || a.pioneer_name || '').toLowerCase();
+            const id = (a.id || '').toLowerCase();
+            return title.includes(currentAdminSearch) || desc.includes(currentAdminSearch) || user.includes(currentAdminSearch) || id.includes(currentAdminSearch);
+          });
+        }
 
         // Contadores dinâmicos dos botões de filtro
         const todosCount = cachedAds.length;

@@ -217,9 +217,11 @@
     }
   }
 
-  // Filtragem estrita por CSS em ambas as seções (Destaques e Comunidade)
-  function filterCategory(cat) {
-    currentCategory = cat || 'todos';
+  let currentSearchQuery = '';
+
+  // Filtragem combinada em tempo real por Categoria e Busca Textual
+  function applyFilters() {
+    const query = (currentSearchQuery || '').trim().toLowerCase();
     const featuredSec = document.getElementById('section-destaques');
     const communitySec = document.getElementById('section-comunidade');
     const featuredGrid = document.getElementById('mural-featured-grid');
@@ -234,7 +236,15 @@
       if (card.closest('.pi-modal') || card.closest('.ad-preview-wrapper')) return;
 
       const cardCat = card.getAttribute('data-category') || 'geral';
-      const matches = (currentCategory === 'todos' || cardCat === currentCategory);
+      const matchesCat = (currentCategory === 'todos' || cardCat === currentCategory);
+
+      let matchesSearch = true;
+      if (query) {
+        const textContent = (card.textContent || '').toLowerCase();
+        matchesSearch = textContent.includes(query);
+      }
+
+      const matches = matchesCat && matchesSearch;
 
       if (matches) {
         card.classList.remove('pioneer-card--hidden', 'ad-card--hidden');
@@ -261,6 +271,23 @@
         emptyNotice = document.createElement('div');
         emptyNotice.id = 'mural-empty-notice';
         emptyNotice.style.cssText = 'text-align:center;padding:56px 20px;color:var(--text-secondary);background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);margin:24px 0;';
+        const container = (featuredSec && featuredSec.parentElement) || document.querySelector('.mural-container') || document.body;
+        if (communitySec && communitySec.nextSibling) {
+          container.insertBefore(emptyNotice, communitySec.nextSibling);
+        } else if (container) {
+          container.appendChild(emptyNotice);
+        }
+      }
+      if (query) {
+        emptyNotice.innerHTML = `
+          <div style="font-size:2.4rem;margin-bottom:12px">🔍</div>
+          <h4 style="color:#fff;margin-bottom:6px;font-size:1.15rem">Nenhum anúncio encontrado para "${escapeHtml(query)}"</h4>
+          <p style="font-size:0.88rem;max-width:500px;margin:0 auto">Tente outras palavras-chave ou limpe a busca para ver todos os classificados.</p>
+          <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="window.IsarMural && window.IsarMural.clearSearch()" style="margin-top:16px;padding:8px 18px;font-weight:700">
+            ✕ Limpar Busca
+          </button>
+        `;
+      } else {
         emptyNotice.innerHTML = `
           <div style="font-size:2.8rem;margin-bottom:12px">📢</div>
           <h4 style="color:#fff;margin-bottom:6px;font-size:1.2rem">Nenhum anúncio nesta categoria ainda</h4>
@@ -269,17 +296,37 @@
             + Publicar Meu Anúncio
           </button>
         `;
-        const container = (featuredSec && featuredSec.parentElement) || document.querySelector('.mural-container') || document.body;
-        if (communitySec && communitySec.nextSibling) {
-          container.insertBefore(emptyNotice, communitySec.nextSibling);
-        } else if (container) {
-          container.appendChild(emptyNotice);
-        }
       }
       emptyNotice.style.display = 'block';
     } else if (emptyNotice) {
       emptyNotice.style.display = 'none';
     }
+  }
+
+  function filterCategory(cat) {
+    currentCategory = cat || 'todos';
+    applyFilters();
+  }
+
+  function handleSearchInput(value) {
+    currentSearchQuery = value || '';
+    const clearBtn = document.getElementById('mural-search-clear-btn');
+    if (clearBtn) {
+      clearBtn.style.display = currentSearchQuery.length > 0 ? 'block' : 'none';
+    }
+    applyFilters();
+  }
+
+  function clearSearch() {
+    currentSearchQuery = '';
+    const input = document.getElementById('mural-search-input');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+    const clearBtn = document.getElementById('mural-search-clear-btn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    applyFilters();
   }
 
   function initFilters() {
@@ -1887,6 +1934,9 @@
       } catch (_) {}
     },
     filterCategory: filterCategory,
+    handleSearchInput: handleSearchInput,
+    clearSearch: clearSearch,
+    applyFilters: applyFilters,
     openModal: openModal,
     closeModal: closeModal,
     selectTier: selectTier,
