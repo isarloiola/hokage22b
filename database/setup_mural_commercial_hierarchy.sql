@@ -207,3 +207,4 @@ SET is_founder_demo = true,
     status = 'demonstracao',
     exposure_type = 'priority'
 WHERE pioneer_username ILIKE '%hokage22b%' AND plan_tier = 'ouro';
+
