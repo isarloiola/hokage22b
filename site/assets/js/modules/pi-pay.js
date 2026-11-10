@@ -537,12 +537,25 @@
 
       onError: function (error, payment) {
         console.error('Erro na transação Pi:', error, payment);
-        const errText = error ? (error.message || JSON.stringify(error)) : 'Erro na transação';
+        const errText = error ? (error.message || (typeof error === 'string' ? error : JSON.stringify(error))) : 'Erro na transação';
         if (errText && (errText.includes('payments') || errText.includes('scope'))) {
           showScopeNoticeModal(options);
           return;
         }
-        showToast('Erro Pi: ' + errText, 'error');
+
+        // Se o erro for de pagamento expirado, tenta limpar no backend
+        if (/expired|progress/i.test(errText)) {
+          console.warn('Pi Payment expirado detectado:', error, payment);
+          if (payment && payment.identifier) {
+            cancelPaymentOnServer(payment.identifier);
+          } else if (window.Pi && window.Pi.authenticate) {
+            try {
+              window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound).catch(function () {});
+            } catch (_) {}
+          }
+        }
+
+        showToast('Aviso Pi: ' + errText, 'warning');
         if (typeof options.onError === 'function') {
           options.onError(error, payment);
         } else {
@@ -552,8 +565,11 @@
     };
 
     try {
+      // Fecha outros modais informativos, mas NUNCA fecha o modal de criação de anúncio
       document.querySelectorAll('.portal-modal-overlay.active, .pi-modal-overlay.active').forEach(function (m) {
-        m.classList.remove('active');
+        if (m.id !== 'ad-create-modal') {
+          m.classList.remove('active');
+        }
       });
       window.Pi.createPayment(paymentData, paymentCallbacks);
     } catch (err) {
@@ -566,7 +582,16 @@
         return;
       }
 
-      showToast('Aviso Pi Wallet: ' + errMsg, 'error');
+      if (/expired|progress/i.test(errMsg)) {
+        console.warn('Pi createPayment lançou pagamento expirado:', errMsg);
+        if (window.Pi && window.Pi.authenticate) {
+          try {
+            window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound).catch(function () {});
+          } catch (_) {}
+        }
+      }
+
+      showToast('Aviso Pi Wallet: ' + errMsg, 'warning');
       if (typeof options.onError === 'function') {
         options.onError(err);
       } else {
@@ -876,6 +901,19 @@
     document.body.appendChild(banner);
   }
 
+  async function clearIncompletePayments() {
+    if (!window.Pi || !window.Pi.authenticate) return false;
+    try {
+      showToast('Verificando pagamentos expirados na Pi Wallet...', 'info');
+      await window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
+      showToast('Carteira verificada com sucesso.', 'success');
+      return true;
+    } catch (e) {
+      console.warn('Erro ao limpar pagamentos incompletos:', e);
+      return false;
+    }
+  }
+
   // 13. Expõe na API global
   window.HokagePi = {
     initPiSdk: initPiSdk,
@@ -886,6 +924,7 @@
     openTestnetInfoModal: openTestnetInfoModal,
     triggerAuthFlow: triggerAuthFlow,
     requestPiPayment: requestPiPayment,
+    clearIncompletePayments: clearIncompletePayments,
     showManualP2PModal: showManualP2PModal,
     openExternalDeepLink: openExternalDeepLink,
     showToast: showToast,

@@ -800,10 +800,40 @@
   }
 
   async function publishDirectLocal(customAd) {
-    const adToSave = customAd || pendingAdSubmission;
+    let adToSave = customAd || pendingAdSubmission;
     if (!adToSave) {
-      alert('Nenhum anúncio pendente para publicação.');
-      return;
+      const titleInput = document.getElementById('ad-input-title');
+      const descInput  = document.getElementById('ad-input-desc');
+      const linkInput  = document.getElementById('ad-input-link');
+      const imgInput   = document.getElementById('ad-input-image');
+      const catInput   = document.getElementById('ad-input-cat');
+      const userInput  = document.getElementById('ad-input-user');
+
+      const title = titleInput ? titleInput.value.trim() : 'Anúncio na Gazeta';
+      const desc = descInput ? descInput.value.trim() : 'Publicação oficial';
+      const user = userInput && userInput.value.trim() ? userInput.value.trim() : '@pioneiro';
+      const priceInfo = tierPrices[selectedTier] || tierPrices.prata;
+
+      adToSave = {
+        id: (window.crypto && window.crypto.randomUUID)
+          ? window.crypto.randomUUID()
+          : ('ad_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8)),
+        title: title,
+        description: desc,
+        link_url: linkInput && !linkInput.disabled ? normalizeUrl(linkInput.value.trim()) : '',
+        image_url: imgInput && !imgInput.disabled ? normalizeUrl(imgInput.value.trim()) : '',
+        category: catInput ? catInput.value : 'geral',
+        pioneer_username: user,
+        pioneer_name: user.replace('@', ''),
+        plan_tier: selectedTier,
+        price_pi: priceInfo.pi,
+        status: 'ativo',
+        views_count: 0,
+        clicks_count: 0,
+        profile_visits: 0,
+        likes_count: 0,
+        created_at: new Date().toISOString()
+      };
     }
 
     adToSave.status = 'ativo';
@@ -838,6 +868,28 @@
       const el = document.getElementById('card-' + adToSave.id);
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 250);
+  }
+
+  async function clearExpiredPaymentAndRetry() {
+    if (window.showToast) window.showToast('Verificando pagamentos expirados na Pi Wallet...', 'info');
+    if (window.HokagePi && window.HokagePi.clearIncompletePayments) {
+      await window.HokagePi.clearIncompletePayments();
+    } else if (window.Pi && window.Pi.authenticate) {
+      try {
+        await window.Pi.authenticate(['username', 'payments'], function (p) {
+          console.log('Incomplete payment encontrado:', p);
+        });
+      } catch (_) {}
+    }
+    showSubmitFeedback(
+      'info',
+      'Verificação concluída. Se a carteira Pi continuar com pendência anterior travada, publique diretamente agora:',
+      `
+        <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.84rem;padding:8px 14px;background:#f59e0b;color:#000;font-weight:700">
+          ⚡ Publicar Agora no Mural
+        </button>
+      `
+    );
   }
 
   function openManualP2PForAd() {
@@ -1089,25 +1141,51 @@
             submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
           }
 
-          // Reabre o modal caso o Pi SDK tenha fechado e apresenta feedback claro
+          // Garante que o modal permaneça aberto e ativo
           const modal = document.getElementById('ad-create-modal');
           if (modal) modal.classList.add('active');
 
           const errMsg = (err && (err.message || (typeof err === 'string' ? err : ''))) || 'Pagamento não concluído.';
+          const isExpired = /expired|progress/i.test(errMsg);
 
-          showSubmitFeedback(
-            'warning',
-            `<strong>Atenção:</strong> O pagamento automático Pi não pôde ser concluído (${escapeHtml(errMsg)}).<br>
-             <span style="color:#fff;font-weight:600">Seu rascunho continua 100% salvo.</span> Como você deseja prosseguir?`,
-            `
-              <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.8rem;padding:7px 12px">
-                ⚡ Publicar Direto (${isFounder ? 'Exemplar Fundador' : 'Prévia / Testnet'})
-              </button>
-              <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.openManualP2PForAd()" style="font-size:0.8rem;padding:7px 12px">
-                📲 Concluir via Chave P2P
-              </button>
-            `
-          );
+          if (isExpired) {
+            showSubmitFeedback(
+              'warning',
+              `<div style="font-weight:700;font-size:0.96rem;margin-bottom:6px;color:#fca5a5">
+                ⚠️ Transação anterior expirada na sua Pi Wallet
+               </div>
+               <div style="font-size:0.84rem;color:#f3f4f6;line-height:1.45;margin-bottom:12px">
+                A Pi Network reportou: <em>"${escapeHtml(errMsg)}"</em>.<br>
+                Isso acontece quando uma tentativa anterior não foi concluída a tempo na carteira.<br>
+                <strong style="color:#10b981">Seus dados continuam 100% salvos.</strong> Você pode publicar seu anúncio diretamente agora mesmo:
+               </div>`,
+              `
+                <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.86rem;padding:9px 16px;background:#f59e0b;border-color:#d97706;color:#000;font-weight:700">
+                  ⚡ Publicar Agora no Mural
+                </button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.clearExpiredPaymentAndRetry()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(255,255,255,0.25)">
+                  🔄 Limpar Pendência da Carteira
+                </button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.openManualP2PForAd()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(255,255,255,0.25)">
+                  📲 Chave P2P
+                </button>
+              `
+            );
+          } else {
+            showSubmitFeedback(
+              'warning',
+              `<strong>Atenção:</strong> O pagamento automático Pi não pôde ser concluído (${escapeHtml(errMsg)}).<br>
+               <span style="color:#fff;font-weight:600">Seu rascunho continua 100% salvo.</span> Como você deseja prosseguir?`,
+              `
+                <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.84rem;padding:8px 14px;background:#f59e0b;color:#000;font-weight:700">
+                  ⚡ Publicar Direto (${isFounder ? 'Exemplar Fundador' : 'Prévia / Testnet'})
+                </button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.openManualP2PForAd()" style="font-size:0.8rem;padding:7px 12px">
+                  📲 Concluir via Chave P2P
+                </button>
+              `
+            );
+          }
         },
         onCancel: function () {
           if (submitBtn) {
@@ -1618,6 +1696,7 @@
     simulateTestnetPublish: simulateTestnetPublish,
     publishDirectLocal: publishDirectLocal,
     openManualP2PForAd: openManualP2PForAd,
+    clearExpiredPaymentAndRetry: clearExpiredPaymentAndRetry,
     clearDraft: clearDraft,
     trackClick: trackClick,
     trackProfileVisit: trackProfileVisit,
