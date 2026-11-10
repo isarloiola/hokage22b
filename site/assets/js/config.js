@@ -10,6 +10,14 @@
   'use strict';
 
   window.HOKAGE_CONFIG = {
+    piNetwork: {
+      // Flag centralizado de ambiente da Pi Network:
+      // true  = Pi Testnet / Sandbox (Auditoria Oficial no develop.pi)
+      // false = Pi Open Mainnet (Produção Comercial)
+      sandbox: true,
+      version: '2.0'
+    },
+
     brand: {
       name: 'HOKAGE22B',
       founder: 'Isar Loiola',

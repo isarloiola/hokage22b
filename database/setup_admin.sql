@@ -80,15 +80,22 @@ BEGIN
 END;
 $$;
 
--- B) Função para Configurar ou Alterar a Chave Mestra
-CREATE OR REPLACE FUNCTION public.admin_set_vault_key(p_new_key text)
+-- B) Função para Configurar ou Alterar a Chave Mestra (Blindada contra tomada não autorizada)
+CREATE OR REPLACE FUNCTION public.admin_set_vault_key(p_current_key text, p_new_key text)
 RETURNS boolean
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 BEGIN
+  IF EXISTS (SELECT 1 FROM public.admin_vault WHERE id = 1) THEN
+    IF NOT public.admin_verify_access(p_current_key) THEN
+      RAISE EXCEPTION 'Acesso Negado: A chave mestra atual está incorreta.';
+    END IF;
+  END IF;
+
   IF p_new_key IS NULL OR LENGTH(TRIM(p_new_key)) < 12 THEN
-    RAISE EXCEPTION 'A chave mestra deve possuir no minimo 12 caracteres.';
+    RAISE EXCEPTION 'A nova chave mestra deve possuir no minimo 12 caracteres.';
   END IF;
 
   INSERT INTO public.admin_vault (id, secret_hash, updated_at)
@@ -99,6 +106,9 @@ BEGIN
   RETURN true;
 END;
 $$;
+
+REVOKE ALL ON FUNCTION public.admin_set_vault_key(text, text) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_set_vault_key(text, text) TO service_role;
 
 -- C) Listar todos os anúncios (ativos, pausados, pendentes)
 CREATE OR REPLACE FUNCTION public.admin_get_all_ads(p_secret text)

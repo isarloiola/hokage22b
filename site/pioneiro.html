@@ -1057,9 +1057,10 @@
   </div>
 
   <!-- Scripts -->
+  <script src="assets/js/config.js?v=2.1"></script>
   <script src="assets/js/modules/i18n.js?v=4.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/modules/db.js?v=4.8"></script>
+  <script src="assets/js/modules/db.js?v=5.2"></script>
 
   <script>
     // =========================================================================
@@ -1995,14 +1996,18 @@
         `;
       }
 
-      // 2. Redes Sociais Oficiais Personalizadas com SVGs e Subtítulos
+      // 2. Redes Sociais Oficiais Personalizadas com SVGs e Subtítulos (Sanitizadas contra XSS)
       const isOfficialFounder = (username === '@hokage22b');
+      const safeWaUrl = escapeHtml(sanitizeUrl(prof.whatsapp_url));
+      const safeYtUrl = escapeHtml(sanitizeUrl(prof.youtube_url));
+      const safeIgUrl = escapeHtml(sanitizeUrl(prof.instagram_url));
+      const safeTwUrl = escapeHtml(sanitizeUrl(prof.twitter_url));
 
-      if (prof.whatsapp_url) {
+      if (safeWaUrl) {
         const waTitle = isOfficialFounder ? 'Comunidade &amp; Suporte no WhatsApp' : 'Falar no WhatsApp';
         const waSub = isOfficialFounder ? 'Grupo VIP de Pioneiros · Dúvidas e Networking' : 'Atendimento direto e negociações com Pi';
         linksHtml += `
-          <a href="${prof.whatsapp_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--whatsapp">
+          <a href="${safeWaUrl}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--whatsapp">
             <div class="pioneer-link-icon-wrap">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z"/></svg>
             </div>
@@ -2015,11 +2020,11 @@
         `;
       }
 
-      if (prof.youtube_url) {
+      if (safeYtUrl) {
         const ytTitle = isOfficialFounder ? 'Canal Oficial no YouTube' : 'Canal no YouTube';
         const ytSub = isOfficialFounder ? '@justhokage22b · Análises, tutoriais e Web3' : 'Vídeos e novidades da comunidade';
         linksHtml += `
-          <a href="${prof.youtube_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--youtube">
+          <a href="${safeYtUrl}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--youtube">
             <div class="pioneer-link-icon-wrap">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </div>
@@ -2032,11 +2037,11 @@
         `;
       }
 
-      if (prof.instagram_url) {
+      if (safeIgUrl) {
         const igTitle = isOfficialFounder ? 'Instagram @hokage22b' : 'Perfil no Instagram';
         const igSub = isOfficialFounder ? 'Bastidores, novidades e alertas rápidos' : 'Fotos, novidades e contato diário';
         linksHtml += `
-          <a href="${prof.instagram_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--instagram">
+          <a href="${safeIgUrl}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--instagram">
             <div class="pioneer-link-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
             </div>
@@ -2049,11 +2054,11 @@
         `;
       }
 
-      if (prof.twitter_url) {
+      if (safeTwUrl) {
         const twTitle = isOfficialFounder ? 'Perfil Oficial no Twitter / X' : 'Perfil no Twitter / X';
         const twSub = isOfficialFounder ? '@hokage22b · Informações da Open Mainnet' : 'Atualizações e opiniões na rede';
         linksHtml += `
-          <a href="${prof.twitter_url}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--twitter">
+          <a href="${safeTwUrl}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--twitter">
             <div class="pioneer-link-icon-wrap">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </div>
@@ -2508,24 +2513,42 @@
       container.appendChild(itemEl);
     }
 
-    // Leitor de Foto Local (Instant Preview)
+    // Leitor de Foto Local com Compressão Canvas Automática (Evita Base64 Gigante no Banco)
     function handleProductPhotoUpload(e, inputEl) {
       const file = e.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
       reader.onload = function(evt) {
-        const base64 = evt.target.result;
-        const parent = inputEl.closest('.product-edit-item');
-        if (parent) {
-          const hiddenInput = parent.querySelector('.prod-item-img');
-          const previewImg = parent.querySelector('.prod-item-preview');
-          if (hiddenInput) hiddenInput.value = base64;
-          if (previewImg) {
-            previewImg.src = base64;
-            previewImg.style.display = 'inline-block';
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 420;
+          let w = img.naturalWidth || img.width || 420;
+          let h = img.naturalHeight || img.height || 420;
+          if (w > maxDim || h > maxDim) {
+            const scale = maxDim / Math.max(w, h);
+            w = Math.round(w * scale);
+            h = Math.round(h * scale);
           }
-        }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.80);
+
+          const parent = inputEl.closest('.product-edit-item');
+          if (parent) {
+            const hiddenInput = parent.querySelector('.prod-item-img');
+            const previewImg = parent.querySelector('.prod-item-preview');
+            if (hiddenInput) hiddenInput.value = compressedBase64;
+            if (previewImg) {
+              previewImg.src = compressedBase64;
+              previewImg.style.display = 'inline-block';
+            }
+          }
+        };
+        img.src = evt.target.result;
       };
       reader.readAsDataURL(file);
     }

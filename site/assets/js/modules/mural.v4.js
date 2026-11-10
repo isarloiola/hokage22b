@@ -449,13 +449,22 @@
       seenAds = JSON.parse(sessionStorage.getItem(sessionSeenKey) || '[]');
     } catch (_) {}
 
+    const newSeenIds = [];
     ads.forEach(function (ad) {
       if (!ad || !ad.id || seenAds.includes(ad.id)) return;
       seenAds.push(ad.id);
-      if (window.IsarDB && window.IsarDB.incrementAdView) {
-        window.IsarDB.incrementAdView(ad.id).catch(function () {});
-      }
+      newSeenIds.push(ad.id);
     });
+
+    if (newSeenIds.length > 0 && window.IsarDB) {
+      if (window.IsarDB.incrementAdViewsBatch) {
+        window.IsarDB.incrementAdViewsBatch(newSeenIds).catch(function () {});
+      } else if (window.IsarDB.incrementAdView) {
+        newSeenIds.forEach(function (id) {
+          window.IsarDB.incrementAdView(id).catch(function () {});
+        });
+      }
+    }
 
     try {
       sessionStorage.setItem(sessionSeenKey, JSON.stringify(seenAds));
@@ -1350,10 +1359,12 @@
       window.HokagePi.requestPiPayment({
         amount: priceInfo.pi,
         memo: `Mural HOKAGE22B: ${title.substring(0, 24)}`,
+        adPayload: newAd,
         metadata: {
           type: 'anuncio',
           adId: adId,
-          tier: selectedTier
+          tier: selectedTier,
+          expectedPrice: priceInfo.pi
         },
         onSuccess: async function (paymentResult) {
           if (watchdogTimer) clearTimeout(watchdogTimer);
@@ -1736,7 +1747,14 @@
       window.HokagePi.showManualP2PModal({
         amount: 1.0,
         memo: `Renovacao Anuncio 30d: ${adId}`,
-        metadata: { adId: adId, action: 'renew' }
+        metadata: { adId: adId, action: 'renew', tier: 'prata', expectedPrice: 1.0 },
+        onSuccess: async function (paymentResult) {
+          const ok = await window.IsarDB.renewMyAd(adId, user, paymentResult && paymentResult.txid ? paymentResult.txid : null);
+          if (ok) {
+            if (window.showToast) window.showToast('✓ Anúncio renovado com sucesso por +30 dias!', '🚀');
+            loadMyAds();
+          }
+        }
       });
     } else {
       const ok = await window.IsarDB.renewMyAd(adId, user);

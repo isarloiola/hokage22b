@@ -257,6 +257,10 @@
         .insert([payload]);
 
       if (error) {
+        // Se a Edge Function pi-payment já tiver criado o anúncio no servidor (23505 = duplicate key), considera sucesso!
+        if (error.code === '23505' || (error.message && error.message.includes('duplicate key'))) {
+          return [payload];
+        }
         console.warn('Supabase: Erro ao inserir anúncio:', error.message);
         throw error;
       }
@@ -564,6 +568,27 @@
     }
   }
 
+  // Incrementa visualizações em lote (1 única query para todos os anúncios visíveis)
+  async function incrementAdViewsBatch(adIds) {
+    var db = getClient();
+    if (!db || !Array.isArray(adIds) || adIds.length === 0) return null;
+    var validIds = adIds.filter(function (id) {
+      return id && typeof id === 'string' && !id.startsWith('testnet_') && !id.startsWith('mock_') && id !== 'preview_card_mock' && id !== 'card-mock-1';
+    });
+    if (validIds.length === 0) return null;
+
+    try {
+      var res = await db.rpc('increment_ad_views_batch', { p_ad_ids: validIds });
+      if (!res.error) return res.data;
+    } catch (_) {}
+
+    // Fallback caso a RPC batch ainda não tenha sido aplicada no banco
+    for (var i = 0; i < validIds.length; i++) {
+      incrementAdView(validIds[i]);
+    }
+    return null;
+  }
+
   // Incrementa contador de visitas ao perfil do anunciante
   async function incrementAdProfileVisit(adId) {
     var db = getClient();
@@ -722,6 +747,11 @@
 
       // 1. Tenta salvar via Edge Function segura com validação de token na Pi Core Team
       var token = (window.HokagePi && window.HokagePi.getAccessToken) ? window.HokagePi.getAccessToken() : '';
+      if (!token) {
+        try {
+          token = sessionStorage.getItem('hokage_pi_access_token') || '';
+        } catch (_) {}
+      }
       if (token) {
         try {
           var edgeRes = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-profile', {
@@ -845,7 +875,7 @@
     try {
       var query = db
         .from('pioneiros')
-        .select('uid, username, bio, avatar_url, wallet_address, products, whatsapp_url, youtube_url, instagram_url, twitter_url, reputation_score, created_at, updated_at')
+        .select('uid, username, bio, avatar_url, wallet_address, whatsapp_url, youtube_url, instagram_url, twitter_url, reputation_score, created_at, updated_at')
         .order('updated_at', { ascending: false })
         .limit(limit);
 
@@ -876,6 +906,7 @@
     compressImageFile: compressImageFile,
     incrementAdClick: incrementAdClick,
     incrementAdView: incrementAdView,
+    incrementAdViewsBatch: incrementAdViewsBatch,
     incrementAdProfileVisit: incrementAdProfileVisit,
     incrementAdLike: incrementAdLike,
     decrementAdLike: decrementAdLike,

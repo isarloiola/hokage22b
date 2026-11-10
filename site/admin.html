@@ -756,7 +756,8 @@
   <div id="admin-toast"></div>
 
   <!-- SCRIPTS DE INTEGRAÇÃO & AUTENTICAÇÃO -->
-  <script src="assets/js/modules/db.js?v=5.1"></script>
+  <script src="assets/js/config.js?v=2.1"></script>
+  <script src="assets/js/modules/db.js?v=5.2"></script>
   <script>
     (function () {
       'use strict';
@@ -1086,31 +1087,37 @@
 
         tbody.innerHTML = filtered.map(ad => {
           const isFounderAd = Boolean(ad.is_founder_demo || ad.status === 'demonstracao' || (ad.pioneer_username && ad.pioneer_username.toLowerCase().includes('hokage22b')));
-          const tierClass = 'badge-tier-' + (ad.plan_tier || 'bronze');
-          const statusClass = 'badge-' + (ad.status || 'ativo');
+          const safeTier = escapeHtml(ad.plan_tier || 'bronze');
+          const safeStatus = escapeHtml(ad.status || 'ativo');
+          const safeId = escapeHtml(String(ad.id || '')).replace(/'/g, '&#39;');
+          const tierClass = 'badge-tier-' + safeTier;
+          const statusClass = 'badge-' + safeStatus;
           const dateStr = ad.created_at ? new Date(ad.created_at).toLocaleDateString('pt-BR') : '—';
-          const linkHtml = ad.link_url ? `<a href="${ad.link_url}" target="_blank" rel="noopener" style="color:var(--amber-light);font-size:0.75rem;display:block;margin-top:4px">🔗 Link externo</a>` : '';
+          const cleanLinkUrl = (ad.link_url && /^https?:\/\/[^\s<>"'`]+$/i.test(String(ad.link_url).trim())) ? escapeHtml(String(ad.link_url).trim()) : '';
+          const cleanImgUrl = (ad.image_url && (/^https?:\/\/[^\s<>"'`]+$/i.test(String(ad.image_url).trim()) || /^assets\/img\/[a-zA-Z0-9_\-\.]+\.(jpg|jpeg|png|webp|svg|gif)$/i.test(String(ad.image_url).trim()))) ? escapeHtml(String(ad.image_url).trim()) : '';
+
+          const linkHtml = cleanLinkUrl ? `<a href="${cleanLinkUrl}" target="_blank" rel="noopener noreferrer" style="color:var(--amber-light);font-size:0.75rem;display:block;margin-top:4px">🔗 Link externo</a>` : '';
           
-          const thumbHtml = ad.image_url 
-            ? `<a href="${ad.image_url}" target="_blank" rel="noopener" title="Clique para ampliar"><img src="${ad.image_url}" style="width:48px;height:48px;border-radius:6px;object-fit:cover;border:1px solid rgba(255,255,255,0.2)" loading="lazy" /></a>` 
+          const thumbHtml = cleanImgUrl 
+            ? `<a href="${cleanImgUrl}" target="_blank" rel="noopener noreferrer" title="Clique para ampliar"><img src="${cleanImgUrl}" style="width:48px;height:48px;border-radius:6px;object-fit:cover;border:1px solid rgba(255,255,255,0.2)" loading="lazy" /></a>` 
             : `<div style="width:48px;height:48px;border-radius:6px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.1rem">📷</div>`;
 
-          const views = ad.views_count || 0;
-          const clicks = ad.clicks_count || 0;
+          const views = Number(ad.views_count) || 0;
+          const clicks = Number(ad.clicks_count) || 0;
           const ctr = views > 0 ? ((clicks / views) * 100).toFixed(1) : '0.0';
-          const daysLeft = ad.days_left !== undefined ? ad.days_left : 30;
+          const daysLeft = ad.days_left !== undefined ? Number(ad.days_left) : 30;
           const author = escapeHtml(ad.pioneer_username || ad.pioneer_name || '@pioneiro');
 
           const statusBadge = isFounderAd 
             ? `<span class="badge" style="background:rgba(245,158,11,0.2);color:var(--amber-light);border:1px solid rgba(245,158,11,0.5)">👑 Fundador</span>`
-            : `<span class="badge ${statusClass}">${ad.status || 'ativo'}</span>`;
+            : `<span class="badge ${statusClass}">${safeStatus}</span>`;
 
           const isVisible = (ad.status === 'ativo' || ad.status === 'demonstracao');
 
           return `
-            <tr id="row-ad-${ad.id}">
+            <tr id="row-ad-${safeId}">
               <td>${statusBadge}</td>
-              <td><span class="badge ${tierClass}">${ad.plan_tier || 'bronze'}</span></td>
+              <td><span class="badge ${tierClass}">${safeTier}</span></td>
               <td>${thumbHtml}</td>
               <td style="max-width:260px">
                 <strong style="color:#fff;display:block;font-size:0.92rem">${escapeHtml(ad.title || '')}</strong>
@@ -1137,21 +1144,21 @@
               </td>
               <td style="text-align:right;white-space:nowrap">
                 ${isVisible ? `
-                  <button type="button" class="btn btn-warning btn-sm" onclick="toggleAdStatus('${ad.id}', 'pausado')" title="Ocultar do Mural">
+                  <button type="button" class="btn btn-warning btn-sm" onclick="toggleAdStatus('${safeId}', 'pausado')" title="Ocultar do Mural">
                     ⏸️ Pausar
                   </button>
                 ` : `
-                  <button type="button" class="btn btn-success btn-sm" onclick="toggleAdStatus('${ad.id}', '${isFounderAd ? 'demonstracao' : 'ativo'}')" title="Aprovar e Tornar Visível">
+                  <button type="button" class="btn btn-success btn-sm" onclick="toggleAdStatus('${safeId}', '${isFounderAd ? 'demonstracao' : 'ativo'}')" title="Aprovar e Tornar Visível">
                     ✓ Ativar
                   </button>
                 `}
-                <button type="button" class="btn btn-outline btn-sm" onclick="promoteToOuro('${ad.id}')" title="Destacar como Ouro">
+                <button type="button" class="btn btn-outline btn-sm" onclick="promoteToOuro('${safeId}')" title="Destacar como Ouro">
                   👑
                 </button>
-                <button type="button" class="btn btn-outline btn-sm" onclick="extendAdDuration('${ad.id}')" title="Renovar por +30 dias">
+                <button type="button" class="btn btn-outline btn-sm" onclick="extendAdDuration('${safeId}')" title="Renovar por +30 dias">
                   +30d
                 </button>
-                <button type="button" class="btn btn-danger btn-sm" onclick="deleteAdPrompt('${ad.id}', '${escapeHtml(ad.title || '')}')" title="Excluir Definitivamente">
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteAdPrompt('${safeId}', '${escapeHtml(ad.title || '').replace(/'/g, '&#39;')}')" title="Excluir Definitivamente">
                   🗑️
                 </button>
               </td>

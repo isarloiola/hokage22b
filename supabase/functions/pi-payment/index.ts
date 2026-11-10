@@ -18,7 +18,7 @@ serve(async (req) => {
   }
 
   try {
-    const { action, paymentId, txid } = await req.json();
+    const { action, paymentId, txid, adPayload } = await req.json();
     const PI_SERVER_API_KEY = Deno.env.get("PI_SERVER_API_KEY");
 
     if (!PI_SERVER_API_KEY) {
@@ -83,24 +83,64 @@ serve(async (req) => {
         const paidAmount = Number(data.amount) || 0;
         const metadata = data.metadata || {};
 
-        // A. Anti-Tampering: Validação de montante mínimo para anúncios do mural
+        // A. Anti-Tampering: Validação estrita de montante mínimo por Tier Comercial (Ouro=3.14, Prata=1.00, Bronze=0.314)
         if (metadata.adId) {
-          const { data: ad, error: adErr } = await supabase
+          const { data: ad } = await supabase
             .from("anuncios")
-            .select("id, price_pi, status")
+            .select("id, price_pi, plan_tier, status")
             .eq("id", metadata.adId)
             .maybeSingle();
 
-          const expectedPrice = (ad && Number(ad.price_pi)) ? Number(ad.price_pi) : 0.314;
+          const rawTier = String(
+            (ad && ad.plan_tier) ||
+            (adPayload && adPayload.plan_tier) ||
+            metadata.tier ||
+            "bronze"
+          ).toLowerCase();
 
-          if (paidAmount < expectedPrice) {
-            console.error(`[Security Alert] Montante insuficiente: pago ${paidAmount} Pi, esperado ${expectedPrice} Pi.`);
+          let tierPrice = 0.314;
+          if (rawTier === "ouro") tierPrice = 3.14;
+          else if (rawTier === "prata") tierPrice = 1.00;
+          else if (metadata.action === "renew") tierPrice = 1.00;
+
+          const dbPrice = (ad && Number(ad.price_pi)) ? Number(ad.price_pi) : 0;
+          const expectedPrice = Math.max(tierPrice, dbPrice);
+
+          if (paidAmount + 0.0001 < expectedPrice) {
+            console.error(`[Security Alert] Montante insuficiente: pago ${paidAmount} Pi, esperado ${expectedPrice} Pi (tier=${rawTier}).`);
+            return new Response(
+              JSON.stringify({
+                error: `Montante pago (${paidAmount} Pi) inferior ao plano selecionado (${expectedPrice} Pi).`,
+                security_rejected: true,
+              }),
+              { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+            );
           } else {
-            // Ativa o anúncio com verificação de montante aprovada
-            await supabase
-              .from("anuncios")
-              .update({ status: "ativo" })
-              .eq("id", metadata.adId);
+            if (!ad && adPayload && typeof adPayload === "object") {
+              // Cria e ativa o anúncio diretamente via service_role com TXID verificado
+              const cleanTier = (rawTier === "ouro" || rawTier === "prata") ? rawTier : "bronze";
+              await supabase.from("anuncios").upsert({
+                id: String(metadata.adId),
+                title: String(adPayload.title || "").slice(0, 120),
+                description: String(adPayload.description || "").slice(0, 600),
+                link_url: cleanTier !== "bronze" && adPayload.link_url ? String(adPayload.link_url).slice(0, 500) : null,
+                image_url: cleanTier !== "bronze" && adPayload.image_url ? String(adPayload.image_url).slice(0, 500) : null,
+                category: String(adPayload.category || "geral").slice(0, 40),
+                pioneer_username: String(adPayload.pioneer_username || metadata.pioneer_username || "@pioneiro").slice(0, 60),
+                pioneer_name: String(adPayload.pioneer_name || metadata.pioneer_username || "pioneiro").replace(/^@+/, "").slice(0, 60),
+                plan_tier: cleanTier,
+                price_pi: paidAmount,
+                status: "ativo",
+                pi_txid: txid,
+                pi_payment_id: paymentId,
+              }, { onConflict: "id" });
+            } else {
+              // Ativa o anúncio existente com verificação de montante aprovada
+              await supabase
+                .from("anuncios")
+                .update({ status: "ativo", pi_txid: txid, pi_payment_id: paymentId })
+                .eq("id", metadata.adId);
+            }
           }
         } else if (metadata.type === "ebook") {
           // B. Registro de compra de E-book com verificação de montante (mínimo 3.14 Pi)
@@ -145,7 +185,7 @@ serve(async (req) => {
       });
     }
 
-    // 3. CANCELAMENTO DO PAGAMENTO (onCancel ou limpeza de pendência)
+    // 3. CANCELAMENTO DO PAGAMENTO (onCancel ou limpeza de pendência com idempotência)
     if (action === "cancel") {
       const response = await fetch(`${piApiBase}/payments/${paymentId}/cancel`, {
         method: "POST",
@@ -156,7 +196,21 @@ serve(async (req) => {
         body: "{}",
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+
+      // Se a Pi Network responder que já foi cancelado ou não encontrado, trata como sucesso (idempotente)
+      const isAlreadyCancelled = !response.ok && (
+        (data && data.error && (typeof data.error === "string") && (data.error.includes("already_cancelled") || data.error.includes("not_found") || data.error.includes("expired"))) ||
+        (data && data.error_message && (typeof data.error_message === "string") && (data.error_message.includes("already") || data.error_message.includes("cancelled") || data.error_message.includes("canceled") || data.error_message.includes("expired")))
+      );
+
+      if (isAlreadyCancelled) {
+        return new Response(JSON.stringify({ status: "cancelled", message: "Pagamento já cancelado ou expirado na Pi Network.", data }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: response.status,

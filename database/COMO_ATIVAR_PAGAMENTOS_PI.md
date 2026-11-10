@@ -13,7 +13,7 @@ Para processar pagamentos na Pi Network sem expor sua Server API Key no navegado
 ## 2. Criar a Edge Function
 1. No menu lateral do Supabase, clique em **Edge Functions**.
 2. Clique em **Create Function** e dê o nome: `pi-payment`.
-3. Cole o código que está no arquivo `database/supabase-functions/pi-payment/index.ts`.
+3. Cole o código que está no arquivo `supabase/functions/pi-payment/index.ts`.
 4. Clique em **Deploy**.
 
 Pronto! Seu site agora tem um validador de pagamentos oficial da Pi Network na nuvem com custo R$ 0,00 e segurança total.

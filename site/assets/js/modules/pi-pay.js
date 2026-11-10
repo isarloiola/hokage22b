@@ -52,22 +52,38 @@
     }, 4500);
   }
 
-  // 2. Detecção de Ambiente Sandbox (Testnet) vs Mainnet
+  // 2. Detecção Centralizada de Ambiente Sandbox (Testnet) vs Mainnet
   function isSandboxMode() {
-    // Fase oficial de auditoria e listagem da Pi Core Team no develop.pi:
-    // Operação 100% exclusiva no ambiente Pi Testnet (Sandbox)
+    if (window.HOKAGE_CONFIG && window.HOKAGE_CONFIG.piNetwork && typeof window.HOKAGE_CONFIG.piNetwork.sandbox === 'boolean') {
+      return window.HOKAGE_CONFIG.piNetwork.sandbox;
+    }
     return true;
   }
 
   // Inicialização segura do Pi SDK
   function initPiSdk(useSandbox) {
-    if (useSandbox === undefined) useSandbox = true;
+    if (useSandbox === undefined) useSandbox = isSandboxMode();
     if (window.Pi) {
       try {
-        window.Pi.init({ version: '2.0', sandbox: true });
+        window.Pi.init({ version: '2.0', sandbox: Boolean(useSandbox) });
       } catch (err) {
         console.warn('Pi.init info:', err);
       }
+    }
+  }
+
+  // Callback global do Pi SDK para recuperar ou cancelar pagamentos pendentes/travados na carteira
+  function onIncompletePaymentFound(payment) {
+    console.log('Pagamento incompleto detectado:', payment);
+    if (!payment || !payment.identifier) return;
+    const st = payment.status || {};
+    if (st.developer_completed) return;
+
+    if (payment.transaction && payment.transaction.txid) {
+      completePaymentOnServer(payment.identifier, payment.transaction.txid);
+    } else {
+      console.log('Limpando pagamento pendente sem txid:', payment.identifier);
+      cancelPaymentOnServer(payment.identifier);
     }
   }
 
@@ -318,20 +334,6 @@
 
     const scopes = ['username', 'payments'];
 
-    function onIncompletePaymentFound(payment) {
-      console.log('Pagamento incompleto detectado:', payment);
-      if (!payment || !payment.identifier) return;
-      const st = payment.status || {};
-      if (st.developer_completed) return;
-
-      if (payment.transaction && payment.transaction.txid) {
-        completePaymentOnServer(payment.identifier, payment.transaction.txid);
-      } else {
-        console.log('Limpando pagamento pendente sem txid:', payment.identifier);
-        cancelPaymentOnServer(payment.identifier);
-      }
-    }
-
     try {
       // Cria promessa com timeout de 25s para dar tempo ao pioneiro de aceitar no modal nativo
       const authPromise = window.Pi.authenticate(scopes, onIncompletePaymentFound);
@@ -429,12 +431,16 @@
     }
   }
 
-  async function completePaymentOnServer(paymentId, txid) {
+  async function completePaymentOnServer(paymentId, txid, adPayload) {
     try {
+      const payload = { action: 'complete', paymentId: paymentId, txid: txid };
+      if (adPayload && typeof adPayload === 'object') {
+        payload.adPayload = adPayload;
+      }
       const res = await fetch(SUPABASE_FUNCTIONS_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'complete', paymentId: paymentId, txid: txid })
+        body: JSON.stringify(payload)
       });
       return await res.json();
     } catch (err) {
@@ -545,7 +551,16 @@
         releasePaymentLock();
         console.log('Pi Payment aprovado na blockchain com TXID:', txid);
         showToast('✓ Pagamento confirmado na Pi Testnet!', 'success');
-        const result = await completePaymentOnServer(paymentId, txid);
+        const result = await completePaymentOnServer(paymentId, txid, options.adPayload || null);
+
+        if (result && result.security_rejected) {
+          const secMsg = result.error || 'Montante pago inferior ao plano selecionado.';
+          showToast('Erro de validação: ' + secMsg, 'error');
+          if (typeof options.onError === 'function') {
+            options.onError(new Error(secMsg), { identifier: paymentId });
+          }
+          return;
+        }
 
         if (typeof options.onSuccess === 'function') {
           options.onSuccess({

@@ -13,7 +13,10 @@
   function initPiSdk() {
     if (window.Pi) {
       try {
-        window.Pi.init({ version: '2.0', sandbox: true });
+        var useSandbox = (window.HOKAGE_CONFIG && window.HOKAGE_CONFIG.piNetwork && typeof window.HOKAGE_CONFIG.piNetwork.sandbox === 'boolean')
+          ? window.HOKAGE_CONFIG.piNetwork.sandbox
+          : true;
+        window.Pi.init({ version: '2.0', sandbox: Boolean(useSandbox) });
       } catch (err) {
         console.warn('Pi.init info:', err);
       }

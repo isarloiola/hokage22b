@@ -11,8 +11,7 @@
   },
   "exclude": [
     "node_modules",
-    "supabase/functions",
-    "database/supabase-functions"
+    "supabase/functions"
   ]
 }
 
