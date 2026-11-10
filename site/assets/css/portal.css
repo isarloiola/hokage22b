@@ -449,11 +449,45 @@ a {
   color: var(--text-primary);
 }
 
-/* ─── 6. Seção Comece por Aqui (4 Cards) ──────────────────── */
+/* ─── 5B. Diferencial KYC & Camada de Confiança ───────────── */
+.kyc-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.kyc-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 16px;
+  padding: 28px 24px;
+  position: relative;
+  transition: all var(--transition);
+}
+
+.kyc-card--risk {
+  background: rgba(239, 68, 68, 0.04);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.kyc-card--trust {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(139, 92, 246, 0.08));
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.15);
+}
+
+/* ─── 6. Seção Comece por Aqui (3 Caminhos) ───────────────── */
 .portal-start-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 24px;
+  align-items: stretch;
 }
 
 .start-card {
@@ -463,8 +497,35 @@ a {
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-sizing: border-box;
   transition: all var(--transition);
   position: relative;
+}
+
+.start-card__visual {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.start-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.start-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 16px;
 }
 
 .start-card:hover {
@@ -721,8 +782,9 @@ a {
 
 .future-products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   gap: 20px;
+  align-items: stretch;
 }
 
 .future-card {
@@ -730,6 +792,17 @@ a {
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-sm);
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-sizing: border-box;
+  transition: all var(--transition);
+}
+
+.future-card:hover {
+  border-color: rgba(139, 92, 246, 0.45);
+  background: rgba(139, 92, 246, 0.04);
 }
 
 .future-card__badge {
@@ -742,6 +815,7 @@ a {
   color: var(--text-muted);
   margin-bottom: 12px;
   display: inline-block;
+  align-self: flex-start;
 }
 
 .future-card__title {
@@ -755,14 +829,16 @@ a {
   font-size: 0.85rem;
   color: var(--text-muted);
   line-height: 1.5;
+  flex: 1;
 }
 
 /* ─── 8. Explore o Universo Digital (4 Categorias) ─────────── */
 .universe-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   gap: 24px;
   margin-bottom: 48px;
+  align-items: stretch;
 }
 
 .universe-card {
@@ -770,6 +846,11 @@ a {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-sizing: border-box;
   transition: all var(--transition);
 }
 
@@ -777,6 +858,7 @@ a {
   border-color: var(--border-accent);
   background: var(--bg-surface-2);
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.12);
 }
 
 .universe-card__icon {
@@ -797,6 +879,13 @@ a {
   font-weight: 700;
   margin-bottom: 10px;
   color: var(--text-primary);
+}
+
+.universe-card__desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
 }
 
 .universe-card__desc {
@@ -836,8 +925,9 @@ a {
 /* ─── 9. Conteúdo Recente (Seção Editorial Real) ──────────── */
 .editorial-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 28px;
+  align-items: stretch;
 }
 
 .article-card {
@@ -847,6 +937,9 @@ a {
   padding: 28px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-sizing: border-box;
   transition: all var(--transition);
 }
 
@@ -854,6 +947,7 @@ a {
   border-color: var(--border-accent);
   background: var(--bg-surface-2);
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .article-category {
@@ -882,13 +976,14 @@ a {
 }
 
 .article-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid var(--border-subtle);
   font-size: 0.82rem;
   color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .article-link {
@@ -1011,9 +1106,10 @@ a {
 /* ─── 12. Parcerias e Publicidade ─────────────────────────── */
 .partnerships-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 24px;
   margin-bottom: 48px;
+  align-items: stretch;
 }
 
 .partner-card {
@@ -1023,6 +1119,17 @@ a {
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-sizing: border-box;
+  transition: all var(--transition);
+}
+
+.partner-card:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-surface-2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .partner-card__icon {
@@ -1059,6 +1166,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-top: auto;
 }
 
 .partner-card__points li {
@@ -1366,21 +1474,133 @@ a {
     padding: 0 !important;
   }
   .portal-section {
-    padding: 64px 0;
+    padding: 56px 0;
   }
   .portal-hero {
-    padding: 80px 0 64px;
+    padding: 72px 0 54px;
   }
+
+  /* Prevenção Absoluta contra Botões Transbordando na Tela */
+  .portal-btn {
+    white-space: normal !important;
+    text-align: center !important;
+    line-height: 1.35 !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .portal-hero__actions {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 440px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    gap: 12px !important;
+    margin-bottom: 36px !important;
+  }
+  .portal-hero__actions .portal-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Grids & Cards Alinhamento Perfeito no Mobile */
+  .kyc-comparison-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+  .portal-start-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .future-products-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .universe-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    margin-bottom: 36px !important;
+  }
+  .editorial-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .partnerships-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    margin-bottom: 36px !important;
+  }
+
+  .community-box {
+    padding: 40px 20px !important;
+  }
+  .community-box__actions {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+  .community-box__actions .portal-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .partnerships-cta-box {
+    padding: 30px 18px !important;
+  }
+  .partnerships-cta-box > div {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+  .partnerships-cta-box .portal-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .directory-callout {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 28px 20px !important;
+  }
+  .directory-callout__actions {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+    margin-top: 16px !important;
+  }
+  .directory-callout__actions .portal-btn {
+    width: 100% !important;
+    margin-right: 0 !important;
+    justify-content: center !important;
+  }
+
+  .mural-header-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+  .mural-header-actions .portal-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
   .newsletter-inputs {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .newsletter-inputs .portal-btn {
+    width: 100% !important;
+    justify-content: center !important;
   }
   .newsletter-card {
-    padding: 36px 24px;
+    padding: 36px 20px !important;
   }
-  .directory-callout {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+
   .footer-top {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -1390,7 +1610,7 @@ a {
     text-align: center;
   }
 
-  /* Ajuste Especial para Produtos Digitais (Mobile & Samsung Galaxy S20) */
+  /* Ajuste Especial para Produtos Digitais (Mobile) */
   .product-showcase {
     grid-template-columns: 1fr !important;
     gap: 24px !important;
@@ -1450,11 +1670,17 @@ a {
     line-height: 1.45 !important;
   }
   .product-pricing-bar {
-    padding: 16px 14px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    padding: 18px 14px !important;
     border-radius: 12px !important;
     width: 100% !important;
     box-sizing: border-box !important;
-    gap: 14px !important;
+  }
+  .price-box {
+    width: 100% !important;
+    text-align: left !important;
   }
   .product-actions {
     width: 100% !important;
@@ -1509,9 +1735,28 @@ a {
   .portal-hero__actions .portal-btn {
     width: 100%;
   }
+
+  .hero-vitrine-mockup {
+    padding: 20px 14px !important;
+    border-radius: 20px !important;
+    margin: 22px auto 30px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
   .start-card {
     padding: 24px 18px;
   }
+  .kyc-card {
+    padding: 22px 18px !important;
+  }
+  .universe-card,
+  .article-card,
+  .partner-card,
+  .future-card {
+    padding: 22px 18px !important;
+  }
+
   .product-showcase {
     padding: 20px 14px !important;
     border-radius: 16px !important;
@@ -1536,10 +1781,19 @@ a {
     font-size: 0.84rem !important;
   }
   .product-pricing-bar {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: column !important;
+    align-items: stretch !important;
     gap: 12px;
     padding: 14px 12px !important;
+  }
+  .product-early-access-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+  .product-early-access-actions .portal-btn {
+    width: 100% !important;
+    justify-content: center !important;
   }
   .product-perks-grid {
     grid-template-columns: 1fr !important;
@@ -1547,6 +1801,96 @@ a {
   }
   .about-pillars {
     grid-template-columns: 1fr;
+  }
+
+  .portal-modal-overlay {
+    padding: 12px !important;
+  }
+  .portal-modal {
+    padding: 24px 16px !important;
+    border-radius: var(--radius-sm) !important;
+  }
+
+  /* Footer dos Cards de Pioneiro / Mural em Telas Estreitas */
+  .pioneer-card__footer {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  .pioneer-card__footer .pioneer-card__price-tag {
+    align-self: flex-start !important;
+  }
+  .pioneer-card__footer .pioneer-card__link,
+  .pioneer-card__footer .portal-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* ─── 17. Telas Ultra-Estreitas (Smartphones Pequenos e Foldables) ── */
+@media (max-width: 380px) {
+  .portal-container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  .portal-hero__title {
+    font-size: 1.8rem !important;
+    line-height: 1.12 !important;
+  }
+  .portal-hero__subtitle {
+    font-size: 1.05rem !important;
+  }
+  .portal-hero__badge {
+    padding: 4px 10px !important;
+    font-size: 0.72rem !important;
+    line-height: 1.3 !important;
+  }
+  .section-title {
+    font-size: 1.45rem !important;
+  }
+  .portal-btn {
+    font-size: 0.86rem !important;
+    padding: 10px 12px !important;
+    gap: 6px !important;
+  }
+  .start-card,
+  .kyc-card,
+  .universe-card,
+  .article-card,
+  .partner-card,
+  .future-card {
+    padding: 18px 12px !important;
+    border-radius: 14px !important;
+  }
+  .hero-vitrine-mockup {
+    padding: 16px 10px !important;
+  }
+  .product-showcase {
+    padding: 16px 10px !important;
+    border-radius: 14px !important;
+  }
+  .product-pricing-bar {
+    padding: 12px 10px !important;
+  }
+  .price-val {
+    font-size: 1.75rem !important;
+  }
+  .community-box {
+    padding: 28px 12px !important;
+  }
+  .newsletter-card {
+    padding: 24px 12px !important;
+  }
+  .partnerships-cta-box {
+    padding: 20px 12px !important;
+  }
+  .directory-callout {
+    padding: 20px 12px !important;
+  }
+  .portal-modal {
+    padding: 20px 12px !important;
   }
 }
 

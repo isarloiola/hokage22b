@@ -385,9 +385,39 @@
 
 .pioneer-card__price-tag,
 .ad-card__price-tag {
-  font-size: 0.76rem;
-  color: var(--gray);
+  font-size: 0.78rem;
   font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+}
+
+.pioneer-card--ouro .pioneer-card__price-tag,
+.ad-card--ouro .ad-card__price-tag {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #facc15;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+}
+
+.pioneer-card--prata .pioneer-card__price-tag,
+.ad-card--prata .ad-card__price-tag {
+  background: rgba(148, 163, 184, 0.15);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #cbd5e1;
+}
+
+.pioneer-card--bronze .pioneer-card__price-tag,
+.ad-card--bronze .ad-card__price-tag {
+  background: rgba(180, 100, 50, 0.15);
+  border-color: rgba(180, 100, 50, 0.35);
+  color: #fbbf24;
 }
 
 /* ─── Faixa de Planos (Plans Strip) ───────────────────────── */
@@ -590,15 +620,30 @@
 
   .pioneer-card__footer,
   .ad-card__footer {
+    display: flex !important;
     flex-wrap: wrap !important;
-    gap: 8px !important;
-    padding-top: 8px !important;
+    gap: 10px !important;
+    padding-top: 10px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .pioneer-card__link,
+  .ad-card__link {
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.35 !important;
+    max-width: 100% !important;
   }
 
   .pioneer-card__link--ouro,
   .ad-card__link--ouro {
     padding: 8px 14px !important;
     font-size: 0.82rem !important;
+    white-space: normal !important;
+    text-align: center !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .ad-tier-selector {
@@ -612,6 +657,25 @@
   .mural-plan-pill {
     font-size: 0.78rem;
     padding: 6px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pioneer-card__footer,
+  .ad-card__footer {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  .pioneer-card__price-tag,
+  .ad-card__price-tag {
+    align-self: flex-start !important;
+  }
+  .pioneer-card__link,
+  .ad-card__link {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
   }
 }
 

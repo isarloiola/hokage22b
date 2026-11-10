@@ -255,8 +255,8 @@
           <div class="hero-vitrine-mockup" style="max-width:440px;margin:28px auto 36px;background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98));border:1px solid rgba(139,92,246,0.45);border-radius:24px;padding:24px 20px;box-shadow:0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(139,92,246,0.22);text-align:center;position:relative">
             
             <!-- Badge superior flutuante -->
-            <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;font-size:0.75rem;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:16px">
-              <span style="width:6px;height:6px;background:#10b981;border-radius:50%;box-shadow:0 0 8px #10b981"></span>
+            <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;font-size:0.75rem;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:16px;max-width:100%;box-sizing:border-box;line-height:1.3">
+              <span style="width:6px;height:6px;background:#10b981;border-radius:50%;box-shadow:0 0 8px #10b981;flex-shrink:0"></span>
               <span>Exemplo Real: Veja como fica a sua Vitrine</span>
             </div>
 
@@ -273,11 +273,11 @@
             </p>
 
             <!-- Mini Caixa de Pagamento Pi -->
-            <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px">
-              <span class="notranslate" translate="no" style="font-size:0.72rem;color:var(--amber-light);font-family:var(--font-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR">
+            <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-sizing:border-box">
+              <span class="notranslate" translate="no" style="font-size:0.72rem;color:var(--amber-light);font-family:var(--font-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;text-align:left" title="GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR">
                 ⚡ Pi: GA5FXF675WIQ4...
               </span>
-              <button type="button" onclick="navigator.clipboard.writeText('GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR');this.textContent='✓ Copiado!';setTimeout(()=>this.textContent='Copiar',2000)" style="font-size:0.68rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 8px;border-radius:4px;font-weight:700;cursor:pointer">Copiar</button>
+              <button type="button" onclick="navigator.clipboard.writeText('GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR');this.textContent='✓ Copiado!';setTimeout(()=>this.textContent='Copiar',2000)" style="font-size:0.68rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 8px;border-radius:4px;font-weight:700;cursor:pointer;flex-shrink:0">Copiar</button>
             </div>
 
             <!-- Botões Verticais de Exemplo (WhatsApp & YouTube) -->
@@ -343,10 +343,10 @@
         </div>
 
         <!-- Comparativo Visual Lado a Lado -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:24px;max-width:960px;margin:0 auto">
+        <div class="kyc-comparison-grid">
           
           <!-- Card 1: O Risco da Web2 Comum -->
-          <div style="background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.25);border-radius:16px;padding:28px 24px">
+          <div class="kyc-card kyc-card--risk">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
               <span style="font-size:1.5rem">⚠️</span>
               <div>
@@ -371,8 +371,8 @@
           </div>
 
           <!-- Card 2: A Segurança Consciente do HOKAGE22B Web3 -->
-          <div style="background:linear-gradient(135deg, rgba(16,185,129,0.08), rgba(139,92,246,0.08));border:1px solid rgba(16,185,129,0.45);border-radius:16px;padding:28px 24px;box-shadow:0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(16,185,129,0.15);position:relative">
-            <span style="position:absolute;top:-12px;right:20px;background:linear-gradient(135deg, #10b981, #059669);color:#fff;font-size:0.72rem;font-weight:800;padding:3px 12px;border-radius:12px;text-transform:uppercase;letter-spacing:0.05em">
+          <div class="kyc-card kyc-card--trust">
+            <span style="position:absolute;top:-12px;right:20px;background:linear-gradient(135deg, #10b981, #059669);color:#fff;font-size:0.72rem;font-weight:800;padding:3px 12px;border-radius:12px;text-transform:uppercase;letter-spacing:0.05em;box-shadow:0 4px 12px rgba(16,185,129,0.35)">
               Camada de Confiança
             </span>
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
@@ -423,15 +423,15 @@
           </p>
         </div>
 
-        <div class="portal-start-grid" style="grid-template-columns:repeat(auto-fit, minmax(310px, 1fr));gap:24px">
+        <div class="portal-start-grid">
           
           <!-- CAMINHO A: QUERO CONHECER A PI NETWORK -->
-          <article class="start-card start-card--featured" style="display:flex;flex-direction:column;justify-content:space-between;border-color:rgba(245,158,11,0.45);background:linear-gradient(180deg, rgba(35,22,10,0.95), rgba(13,13,20,0.98))">
-            <div>
-              <div style="background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(139,92,246,0.15));border-radius:var(--radius-sm);padding:20px 14px;text-align:center;margin-bottom:16px;border:1px solid rgba(245,158,11,0.35)">
-                <span style="font-size:2.8rem;display:block;margin-bottom:6px">📘</span>
-                <span style="font-size:0.75rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:3px 10px;border-radius:12px;font-weight:700">Caminho A · Educação &amp; Segurança</span>
-              </div>
+          <article class="start-card start-card--featured" style="border-color:rgba(245,158,11,0.45);background:linear-gradient(180deg, rgba(35,22,10,0.95), rgba(13,13,20,0.98))">
+            <div class="start-card__visual" style="background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(139,92,246,0.15));border-radius:var(--radius-sm);padding:18px 14px;text-align:center;border:1px solid rgba(245,158,11,0.35)">
+              <span style="font-size:2.8rem;display:block;margin-bottom:6px">📘</span>
+              <span style="font-size:0.75rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:3px 10px;border-radius:12px;font-weight:700">Caminho A · Educação &amp; Segurança</span>
+            </div>
+            <div class="start-card__body">
               <div class="start-card__top">
                 <div class="start-card__icon" aria-hidden="true" style="color:var(--amber-light)">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -451,7 +451,7 @@
                 <li>✓ <strong>Segurança:</strong> Como guardar sua Passphrase (24 palavras)</li>
               </ul>
             </div>
-            <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
+            <div class="start-card__actions">
               <a href="zero" class="portal-btn portal-btn--amber portal-btn--sm" style="width:100%;text-align:center;font-weight:700">
                 Aprender Pi do Zero →
               </a>
@@ -462,14 +462,14 @@
           </article>
 
           <!-- CAMINHO B: QUERO CRIAR MINHA VITRINE -->
-          <article class="start-card start-card--featured" style="display:flex;flex-direction:column;justify-content:space-between;border-color:rgba(139,92,246,0.45);background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98))">
-            <div>
-              <div style="background:linear-gradient(135deg, rgba(139,92,246,0.18), rgba(245,158,11,0.15));border-radius:var(--radius-sm);padding:20px 14px;text-align:center;margin-bottom:16px;border:1px solid rgba(139,92,246,0.3)">
-                <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 10px;overflow:hidden;box-shadow:0 0 20px rgba(139,92,246,0.4);border:2px solid rgba(255,255,255,0.25);background:#0a0113">
-                  <img src="assets/img/founder-profile.jpg" class="pioneer-founder-avatar-img" alt="Avatar Vitrine @hokage22b" style="width:100%;height:100%;object-fit:cover;display:block" />
-                </div>
-                <span style="font-size:0.75rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:3px 10px;border-radius:12px;font-weight:700">Caminho B · Presença Web3</span>
+          <article class="start-card start-card--featured" style="border-color:rgba(139,92,246,0.45);background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98))">
+            <div class="start-card__visual" style="background:linear-gradient(135deg, rgba(139,92,246,0.18), rgba(245,158,11,0.15));border-radius:var(--radius-sm);padding:18px 14px;text-align:center;border:1px solid rgba(139,92,246,0.3)">
+              <div style="width:58px;height:58px;border-radius:50%;margin:0 auto 8px;overflow:hidden;box-shadow:0 0 20px rgba(139,92,246,0.4);border:2px solid rgba(255,255,255,0.25);background:#0a0113">
+                <img src="assets/img/founder-profile.jpg" class="pioneer-founder-avatar-img" alt="Avatar Vitrine @hokage22b" style="width:100%;height:100%;object-fit:cover;display:block" />
               </div>
+              <span style="font-size:0.75rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:3px 10px;border-radius:12px;font-weight:700">Caminho B · Presença Web3</span>
+            </div>
+            <div class="start-card__body">
               <div class="start-card__top">
                 <div class="start-card__icon" aria-hidden="true" style="color:var(--accent-light)">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -489,7 +489,7 @@
                 <li>✓ <strong>Catálogo de Produtos:</strong> Edição simples em tempo real</li>
               </ul>
             </div>
-            <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
+            <div class="start-card__actions">
               <a href="pioneiro" class="portal-btn portal-btn--primary portal-btn--sm" style="width:100%;text-align:center;font-weight:700">
                 Criar Minha Vitrine Grátis →
               </a>
@@ -500,12 +500,12 @@
           </article>
 
           <!-- CAMINHO C: QUERO ENCONTRAR PESSOAS E NEGÓCIOS -->
-          <article class="start-card" style="display:flex;flex-direction:column;justify-content:space-between;border-color:rgba(245,158,11,0.35);background:linear-gradient(180deg, rgba(20,15,30,0.95), rgba(13,13,20,0.98))">
-            <div>
-              <div style="background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(0,0,0,0.4));border-radius:var(--radius-sm);padding:20px 14px;text-align:center;margin-bottom:16px;border:1px solid rgba(245,158,11,0.25)">
-                <span style="font-size:2.8rem;display:block;margin-bottom:6px">📢</span>
-                <span style="font-size:0.75rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 10px;border-radius:12px;font-weight:700">Caminho C · Gazeta &amp; Negócios</span>
-              </div>
+          <article class="start-card" style="border-color:rgba(245,158,11,0.35);background:linear-gradient(180deg, rgba(20,15,30,0.95), rgba(13,13,20,0.98))">
+            <div class="start-card__visual" style="background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(0,0,0,0.4));border-radius:var(--radius-sm);padding:18px 14px;text-align:center;border:1px solid rgba(245,158,11,0.25)">
+              <span style="font-size:2.8rem;display:block;margin-bottom:6px">📢</span>
+              <span style="font-size:0.75rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 10px;border-radius:12px;font-weight:700">Caminho C · Gazeta &amp; Negócios</span>
+            </div>
+            <div class="start-card__body">
               <div class="start-card__top">
                 <div class="start-card__icon" aria-hidden="true" style="color:var(--amber-light)">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -526,7 +526,7 @@
                 <li>✓ <strong>Guia Comercial:</strong> E-book Pi para seu Negócio</li>
               </ul>
             </div>
-            <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
+            <div class="start-card__actions">
               <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm" style="width:100%;text-align:center;font-weight:700">
                 Acessar a Gazeta dos Pioneiros ↗
               </a>
@@ -628,7 +628,7 @@
                   </p>
                 </div>
               </div>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+              <div class="product-early-access-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
                 <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700">
                   💬 Falar no WhatsApp ↗
                 </a>
@@ -821,7 +821,7 @@
               O mural descentralizado da comunidade: conecte-se com canais de YouTube, lojas que aceitam Pi, desenvolvedores e recados de pioneiros de todo o país.
             </p>
           </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div class="mural-header-actions" style="display:flex;gap:10px;flex-wrap:wrap">
             <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm">
               Ver Mural Completo ↗
             </a>
@@ -915,7 +915,7 @@
         </div>
 
         <div style="text-align:center;margin-top:28px">
-          <a href="mural" class="portal-btn portal-btn--outline" style="padding:12px 28px;font-size:0.95rem">
+          <a href="mural" class="portal-btn portal-btn--outline" style="padding:12px 28px;font-size:0.95rem;max-width:100%;box-sizing:border-box">
             📢 Ver Todos os Anúncios &amp; Filtrar Categorias na Gazeta ↗
           </a>
         </div>
