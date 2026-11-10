@@ -116,10 +116,45 @@
       padding: 36px 32px;
       margin-bottom: 40px;
       position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
     }
     @media (max-width: 640px) {
       .edu-content-block {
         padding: 24px 18px;
+      }
+    }
+
+    /* Rodapé de Navegação dos Módulos (Anti-Overflow e 100% Responsivo) */
+    .module-nav-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .module-nav-footer .portal-btn {
+      max-width: 100%;
+      box-sizing: border-box;
+      white-space: normal;
+      text-align: center;
+      line-height: 1.35;
+      padding: 10px 18px;
+    }
+    @media (max-width: 680px) {
+      .module-nav-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .module-nav-footer .portal-btn {
+        width: 100%;
+        justify-content: center;
       }
     }
     .edu-badge-tag {
@@ -302,6 +337,161 @@
       text-align: center;
       margin-bottom: 40px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ======================================================== */
+    /* CONTAINER ACERVO OFICIAL HOKAGE22B (DOWNLOADS)           */
+    /* ======================================================== */
+    .acervo-box {
+      background: radial-gradient(120% 120% at 50% 0%, rgba(245, 158, 11, 0.12) 0%, rgba(139, 92, 246, 0.08) 45%, rgba(13, 16, 23, 0.98) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 24px;
+      padding: 40px 32px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 35px -5px rgba(245, 158, 11, 0.15);
+      box-sizing: border-box;
+    }
+    @media (max-width: 640px) {
+      .acervo-box {
+        padding: 26px 18px;
+        border-radius: 18px;
+      }
+    }
+    .acervo-header {
+      margin-bottom: 28px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      padding-bottom: 20px;
+    }
+    .acervo-chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .acervo-chip {
+      font-size: 0.76rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .acervo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+      gap: 24px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .acervo-card {
+      background: rgba(18, 22, 32, 0.85);
+      border-radius: 18px;
+      padding: 28px 24px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .acervo-card:hover {
+      transform: translateY(-3px);
+    }
+    .acervo-card--amber {
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.15);
+    }
+    .acervo-card--amber:hover {
+      border-color: rgba(245, 158, 11, 0.7);
+      box-shadow: 0 14px 35px -8px rgba(245, 158, 11, 0.3);
+    }
+    .acervo-card--purple {
+      border: 1px solid rgba(139, 92, 246, 0.45);
+      box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.18);
+    }
+    .acervo-card--purple:hover {
+      border-color: rgba(139, 92, 246, 0.75);
+      box-shadow: 0 14px 35px -8px rgba(139, 92, 246, 0.35);
+    }
+    .acervo-card-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 4px 14px;
+      border-bottom-left-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .acervo-card-badge--amber {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #000;
+    }
+    .acervo-card-badge--purple {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      color: #fff;
+    }
+    .acervo-item-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0 22px;
+      font-size: 0.83rem;
+      line-height: 1.6;
+    }
+    .acervo-item-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+    .acervo-item-list li::before {
+      content: "✦";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 0.75rem;
+    }
+    .acervo-item-list--amber li::before {
+      color: var(--amber-light);
+    }
+    .acervo-item-list--purple li::before {
+      color: var(--accent-light);
+    }
+    .acervo-btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .acervo-btn-group .portal-btn {
+      flex: 1 1 auto;
+      min-width: 140px;
+      text-align: center;
+      justify-content: center;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      box-sizing: border-box;
+      white-space: normal;
+    }
+    .acervo-meta-info {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
     }
   </style>
 </head>
@@ -516,9 +706,9 @@
           </div>
         </div>
 
-        <div style="display:flex;justify-content:flex-end;margin-top:24px">
+        <div class="module-nav-footer" style="justify-content:flex-end">
           <a href="#modulo-2" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Anatomia do Pi Browser →
+            Próximo: Módulo 2 · Anatomia do Pi Browser →
           </a>
         </div>
       </section>
@@ -616,12 +806,12 @@
           </div>
         </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+        <div class="module-nav-footer">
           <a href="#modulo-1" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 1
+            ← Módulo 1: O Fim do Espectador
           </a>
           <a href="#modulo-3" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Segurança Radical &amp; Pi SDK →
+            Próximo: Módulo 3 · Segurança Radical &amp; Pi SDK →
           </a>
         </div>
       </section>
@@ -687,12 +877,12 @@
           </div>
         </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+        <div class="module-nav-footer">
           <a href="#modulo-2" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 2
+            ← Módulo 2: O Pi Browser
           </a>
           <a href="#modulo-4" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Redes Sociais &amp; O Caso do X →
+            Próximo: Módulo 4 · Redes Sociais &amp; O Caso do X →
           </a>
         </div>
       </section>
@@ -760,12 +950,12 @@
           </div>
         </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+        <div class="module-nav-footer">
           <a href="#modulo-3" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 3
+            ← Módulo 3: Segurança Radical
           </a>
           <a href="#modulo-5" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Ecossistema Hokage22b →
+            Próximo: Módulo 5 · Ecossistema Hokage22b →
           </a>
         </div>
       </section>
@@ -821,12 +1011,12 @@
           </div>
         </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+        <div class="module-nav-footer">
           <a href="#modulo-4" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 4
+            ← Módulo 4: Redes Sociais
           </a>
           <a href="#modulo-6" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Checklist do Pioneiro Construtor →
+            Próximo: Módulo 6 · Checklist do Construtor →
           </a>
         </div>
       </section>
@@ -907,12 +1097,12 @@
           <span style="font-size:0.85rem;font-weight:700;color:var(--amber-light)" id="chk-badge-status">Nível: Iniciante</span>
         </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
+        <div class="module-nav-footer">
           <a href="#modulo-5" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 5
+            ← Módulo 5: Ecossistema Hokage22b
           </a>
           <a href="#downloads-oficiais" class="portal-btn portal-btn--amber portal-btn--sm">
-            📥 Baixar E-book &amp; Manual Oficial →
+            📥 Ir para o Acervo Oficial de Downloads ↓
           </a>
         </div>
       </section>
@@ -920,84 +1110,108 @@
       <!-- ======================================================== -->
       <!-- PUBLICAÇÕES OFICIAIS: MANUAL TÉCNICO (PDF) & E-BOOK (EPUB)-->
       <!-- ======================================================== -->
-      <section class="edu-card" id="downloads-oficiais" style="margin-bottom:48px;border-color:rgba(245,158,11,0.35);background:linear-gradient(180deg, rgba(20,24,33,0.85) 0%, rgba(13,16,23,0.95) 100%)">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:16px">
-          <div>
-            <span class="edu-badge-tag" style="background:rgba(245,158,11,0.2);color:var(--amber-light);border:1px solid rgba(245,158,11,0.4)">
-              📥 Acervo Oficial HOKAGE22B · Downloads Gratuitos
-            </span>
-            <h2 style="font-size:1.65rem;font-weight:800;color:#fff;margin:8px 0 4px">
-              Material de Apoio Oficial para Construtores
-            </h2>
-            <p style="font-size:0.9rem;color:var(--text-muted);margin:0">
-              Tenha acesso permanente ao conteúdo técnico completo para leitura offline, impressão ou dispositivos e-reader (Kindle, Apple Books, Kobo e celular).
-            </p>
+      <section class="acervo-box" id="downloads-oficiais">
+        <div class="acervo-header">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px">
+            <div>
+              <span class="edu-badge-tag" style="background:rgba(245,158,11,0.22);color:var(--amber-light);border:1px solid rgba(245,158,11,0.45);margin-bottom:8px">
+                🏛️ ACERVO OFICIAL HOKAGE22B · PUBLICAÇÕES TÉCNICAS WEB3
+              </span>
+              <h2 style="font-size:clamp(1.6rem, 2.8vw, 2.2rem);font-weight:900;color:#fff;margin:6px 0 6px;letter-spacing:-0.02em">
+                Biblioteca do Construtor: Manuais &amp; E-books Oficiais
+              </h2>
+              <p style="font-size:0.95rem;color:var(--text-secondary);max-width:760px;margin:0;line-height:1.6">
+                Obras originais de autoria de <strong>HOKAGE22B &amp; Isar Loiola</strong>. Conteúdo técnico e geopolítico 100% comunitário e de livre distribuição, desenvolvido para leitura offline, impressão ou sincronização direta com seu e-reader favorito.
+              </p>
+            </div>
+            <div style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.35);padding:8px 14px;border-radius:12px;text-align:right">
+              <span style="display:block;font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em">Acesso Aberto</span>
+              <strong style="color:var(--accent-light);font-size:0.88rem">✓ Licença Livre Comunitária</strong>
+            </div>
           </div>
-          <span style="font-size:0.75rem;background:rgba(139,92,246,0.15);color:var(--accent-light);border:1px solid rgba(139,92,246,0.3);padding:6px 12px;border-radius:20px;font-weight:700">
-            ✓ Conteúdo 100% Livre &amp; Comunitário
-          </span>
+
+          <div class="acervo-chips-row">
+            <span class="acervo-chip">⚡ 100% Livre &amp; Gratuito</span>
+            <span class="acervo-chip">🛡️ Sem Cadastro ou Coleta de Dados</span>
+            <span class="acervo-chip">📱 Compatível com Celular, PC, Kindle &amp; Kobo</span>
+            <span class="acervo-chip">📄 PDF Vetorial HD + EPUB 3.0 Oficial</span>
+          </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:24px">
+        <div class="acervo-grid">
           <!-- CARD 1: MANUAL TÉCNICO EM PDF -->
-          <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-md);padding:24px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
-            <div style="position:absolute;top:0;right:0;background:var(--amber);color:#000;font-size:0.7rem;font-weight:900;padding:3px 12px;border-bottom-left-radius:8px;text-transform:uppercase;letter-spacing:0.04em">
-              PDF Oficial · 2 Páginas
+          <div class="acervo-card acervo-card--amber">
+            <div class="acervo-card-badge acervo-card-badge--amber">
+              PDF Vetorial HD · 2 Páginas
             </div>
             <div>
-              <div style="font-size:2rem;margin-bottom:8px">📄</div>
-              <h3 style="color:#fff;font-size:1.18rem;font-weight:800;margin:0 0 6px">
-                Além do Clique: O Manual do Construtor Web3, Geopolítica Monetária &amp; Futuros Possíveis
+              <div style="font-size:2.2rem;margin-bottom:10px">📄</div>
+              <h3 style="color:#fff;font-size:1.25rem;font-weight:800;line-height:1.35;margin:0 0 8px">
+                Além do Clique: O Manual do Construtor Web3 &amp; Geopolítica Monetária
               </h3>
-              <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.55;margin-bottom:14px">
-                Documento técnico e tratado geopolítico diagramado em alta resolução. Ideal para impressão rápida, consulta de mesa ou compartilhamento com outros pioneiros.
+              <p style="color:var(--text-secondary);font-size:0.87rem;line-height:1.55;margin-bottom:12px">
+                Tratado geopolítico e manual sintético diagramado em alta resolução vetorial. Ideal para consulta rápida, estudo em bancada, distribuição impressa em encontros de pioneiros ou leitura executiva.
               </p>
-              <ul style="font-size:0.8rem;color:var(--text-muted);margin:0 0 18px 0;padding-left:18px;line-height:1.6">
-                <li><strong style="color:#fff">Equação Monetária:</strong> Velocidade da moeda ($V = \frac{P \times Y}{M}$) vs. retenção estática.</li>
-                <li><strong style="color:#fff">Tabela Analítica:</strong> Pioneiro Espectador vs. Pioneiro Construtor.</li>
-                <li><strong style="color:#fff">Diagrama de Fluxo:</strong> Sandbox Web3, wallet.pi e Pi Platform SDK (Zero-Trust).</li>
-                <li><strong style="color:#fff">Geopolítica Global:</strong> Desdolarização, BRICS e vigilância CBDC.</li>
-                <li><strong style="color:#fff">Três Cenários 2030:</strong> Prospecções da economia agêntica e descentralizada.</li>
+              <ul class="acervo-item-list acervo-item-list--amber">
+                <li><strong style="color:#fff">Equação Monetária:</strong> Velocidade de circulação ($V = \frac{P \times Y}{M}$) vs. acúmulo passivo.</li>
+                <li><strong style="color:#fff">Matriz Comparativa:</strong> Pioneiro Espectador vs. Pioneiro Construtor em 5 dimensões.</li>
+                <li><strong style="color:#fff">Diagrama Sandbox Web3:</strong> Isolamento nativo de <code>wallet.pi</code> e arquitetura Zero-Trust.</li>
+                <li><strong style="color:#fff">Tabuleiro Geopolítico:</strong> Desdolarização, acordos BRICS e a alternativa descentralizada a CBDCs.</li>
+                <li><strong style="color:#fff">Três Cenários 2030:</strong> O futuro da micropoupança agêntica e governança descentralizada.</li>
               </ul>
             </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <a href="downloads/Alem-do-Clique-Manual-Tecnico.pdf" download="Alem-do-Clique-Manual-Tecnico.pdf" class="portal-btn portal-btn--amber" style="flex:1;text-align:center;padding:12px 18px;font-size:0.88rem;display:inline-flex;align-items:center;justify-content:center;gap:6px">
-                <span>📥</span> Baixar Manual (PDF)
-              </a>
-              <a href="downloads/manual-tecnico.html" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline" style="padding:12px 16px;font-size:0.88rem;border-color:rgba(255,255,255,0.2);color:#fff" title="Abrir versão de visualização direta">
-                👁️ Ver Online
-              </a>
+
+            <div>
+              <div class="acervo-btn-group">
+                <a href="downloads/Alem-do-Clique-Manual-Tecnico.pdf" download="Alem-do-Clique-Manual-Tecnico.pdf" class="portal-btn portal-btn--amber">
+                  <span>📥</span> Baixar Manual (PDF)
+                </a>
+                <a href="downloads/manual-tecnico.html" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline" style="border-color:rgba(255,255,255,0.22);color:#fff">
+                  👁️ Ver Online
+                </a>
+              </div>
+              <div class="acervo-meta-info">
+                <span>📄 Arquivo: <code>Alem-do-Clique-Manual-Tecnico.pdf</code></span>
+                <span>Tamanho: ~526 KB · Vetorial HD</span>
+              </div>
             </div>
           </div>
 
-          <!-- CARD 2: E-BOOK EM EPUB -->
-          <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(139,92,246,0.35);border-radius:var(--radius-md);padding:24px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
-            <div style="position:absolute;top:0;right:0;background:var(--accent);color:#fff;font-size:0.7rem;font-weight:900;padding:3px 12px;border-bottom-left-radius:8px;text-transform:uppercase;letter-spacing:0.04em">
+          <!-- CARD 2: E-BOOK EM EPUB 3.0 -->
+          <div class="acervo-card acervo-card--purple">
+            <div class="acervo-card-badge acervo-card-badge--purple">
               EPUB 3.0 · E-Book Completo
             </div>
             <div>
-              <div style="font-size:2rem;margin-bottom:8px">📚</div>
-              <h3 style="color:#fff;font-size:1.18rem;font-weight:800;margin:0 0 6px">
-                Além do Clique: O Guia Definitivo do Construtor Web3, Geopolítica Monetária e Futuros Hipotéticos
+              <div style="font-size:2.2rem;margin-bottom:10px">📚</div>
+              <h3 style="color:#fff;font-size:1.25rem;font-weight:800;line-height:1.35;margin:0 0 8px">
+                Além do Clique: O Guia Definitivo do Construtor Web3 &amp; Futuros Hipotéticos
               </h3>
-              <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.55;margin-bottom:14px">
-                Obra aprofundada por <strong>HOKAGE22B &amp; Isar Loiola</strong>. Livro digital completo em 5 capítulos otimizado para Kindle, Apple Books, Kobo e Google Play Livros.
+              <p style="color:var(--text-secondary);font-size:0.87rem;line-height:1.55;margin-bottom:12px">
+                Livro digital aprofundado por <strong>HOKAGE22B &amp; Isar Loiola</strong>. Desenvolvido no padrão internacional EPUB 3.0 com paginação responsiva, tipografia fluida e suporte total ao modo noturno.
               </p>
-              <ul style="font-size:0.8rem;color:var(--text-muted);margin:0 0 18px 0;padding-left:18px;line-height:1.6">
-                <li><strong style="color:#fff">Cap. 1:</strong> O Fim da Espera Passiva e a Realidade Econômica.</li>
-                <li><strong style="color:#fff">Cap. 2:</strong> Anatomia do Pi Browser e Segurança Radical Zero-Trust.</li>
-                <li><strong style="color:#fff">Cap. 3:</strong> O Tabuleiro Geopolítico Global &amp; Camada de Humanidade.</li>
-                <li><strong style="color:#fff">Cap. 4:</strong> Cenários Prospectivos para a Década de 2030.</li>
-                <li><strong style="color:#fff">Cap. 5:</strong> O Plano Prático de Ação do Construtor em 5 Passos.</li>
+              <ul class="acervo-item-list acervo-item-list--purple">
+                <li><strong style="color:#fff">Capítulo 1:</strong> O Fim da Espera Passiva &amp; A Ilusão das Corretoras Tradicionais.</li>
+                <li><strong style="color:#fff">Capítulo 2:</strong> A Anatomia do Pi Browser e a Blindagem Radical Zero-Trust.</li>
+                <li><strong style="color:#fff">Capítulo 3:</strong> O Tabuleiro Geopolítico Global &amp; A Camada de Humanidade Única.</li>
+                <li><strong style="color:#fff">Capítulo 4:</strong> Cenários Prospectivos para a Década de 2030 e a Economia Agêntica.</li>
+                <li><strong style="color:#fff">Capítulo 5:</strong> O Plano Prático de Ação do Pioneiro Construtor em 5 Passos.</li>
               </ul>
             </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <a href="downloads/Alem-do-Clique-Guia-Definitivo.epub" download="Alem-do-Clique-Guia-Definitivo.epub" class="portal-btn portal-btn--primary" style="flex:1;text-align:center;padding:12px 18px;font-size:0.88rem;display:inline-flex;align-items:center;justify-content:center;gap:6px">
-                <span>📖</span> Baixar E-Book (EPUB)
-              </a>
-              <button type="button" onclick="openEpubReaderModal()" class="portal-btn portal-btn--outline" style="padding:12px 16px;font-size:0.88rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light)" title="Abrir leitor de capítulos online">
-                👓 Ler Capítulos
-              </button>
+
+            <div>
+              <div class="acervo-btn-group">
+                <a href="downloads/Alem-do-Clique-Guia-Definitivo.epub" download="Alem-do-Clique-Guia-Definitivo.epub" class="portal-btn portal-btn--primary">
+                  <span>📖</span> Baixar E-Book (EPUB)
+                </a>
+                <button type="button" onclick="openEpubReaderModal()" class="portal-btn portal-btn--outline" style="border-color:rgba(139,92,246,0.45);color:var(--accent-light)">
+                  👓 Ler Capítulos Online
+                </button>
+              </div>
+              <div class="acervo-meta-info">
+                <span>📱 Leitores: Kindle, Apple Books, Kobo, Moon+</span>
+                <span>Tamanho: ~8.4 KB · EPUB 3.0</span>
+              </div>
             </div>
           </div>
         </div>

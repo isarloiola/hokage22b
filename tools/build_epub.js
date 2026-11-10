@@ -366,3 +366,4 @@ console.log('EPUB criado com sucesso! Tamanho:', epubBuffer.length, 'bytes');
 console.log('Arquivos salvos:');
 console.log(' ->', epubOut);
 console.log(' ->', legacyEpub);
+
