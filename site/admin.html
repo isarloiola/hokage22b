@@ -600,11 +600,12 @@
     <section id="tab-ads" class="tab-pane active">
       <div class="actions-bar">
         <div class="filter-pills">
-          <button class="filter-pill active" onclick="filterAds('todos', this)">Todos</button>
-          <button class="filter-pill" onclick="filterAds('pendente', this)">⏳ Pendentes</button>
-          <button class="filter-pill" onclick="filterAds('ativo', this)">🟢 Ativos</button>
-          <button class="filter-pill" onclick="filterAds('pausado', this)">🟡 Pausados</button>
-          <button class="filter-pill" onclick="filterAds('ouro', this)">👑 Destaque Ouro</button>
+          <button class="filter-pill active" onclick="filterAds('todos', this)">Todos (<span id="tab-pill-todos">0</span>)</button>
+          <button class="filter-pill" onclick="filterAds('fundador', this)">👑 Fundador / Demos (<span id="tab-pill-fundador">0</span>)</button>
+          <button class="filter-pill" onclick="filterAds('ativo', this)">🟢 Ativos (<span id="tab-pill-ativo">0</span>)</button>
+          <button class="filter-pill" onclick="filterAds('pendente', this)">⏳ Pendentes (<span id="tab-pill-pendente">0</span>)</button>
+          <button class="filter-pill" onclick="filterAds('pausado', this)">🟡 Pausados (<span id="tab-pill-pausado">0</span>)</button>
+          <button class="filter-pill" onclick="filterAds('ouro', this)">🥇 Destaque Ouro (<span id="tab-pill-ouro">0</span>)</button>
         </div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-outline btn-sm" onclick="loadAllAds()">🔄 Atualizar</button>
@@ -754,7 +755,7 @@
   <div id="admin-toast"></div>
 
   <!-- SCRIPTS DE INTEGRAÇÃO & AUTENTICAÇÃO -->
-  <script src="assets/js/modules/db.js"></script>
+  <script src="assets/js/modules/db.js?v=5.1"></script>
   <script>
     (function () {
       'use strict';
@@ -1002,7 +1003,27 @@
 
         try {
           const ads = await window.IsarDB.getAllAnuncios(currentSecret);
-          cachedAds = ads || [];
+          let allAds = ads || [];
+
+          // Sincronização inteligente com anúncios locais (incluindo demos do fundador)
+          try {
+            const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+            if (Array.isArray(localAds) && localAds.length > 0) {
+              const knownIds = new Set(allAds.map(a => a.id));
+              for (const lAd of localAds) {
+                if (lAd && lAd.id && !knownIds.has(lAd.id)) {
+                  // Sincroniza no Supabase para nunca mais perder
+                  try {
+                    await window.IsarDB.createAnuncio(lAd);
+                  } catch (_) {}
+                  allAds.unshift(lAd);
+                  knownIds.add(lAd.id);
+                }
+              }
+            }
+          } catch (_) {}
+
+          cachedAds = allAds;
           renderAdsTable();
           updateStats();
         } catch (err) {
@@ -1018,8 +1039,28 @@
         else if (currentAdFilter === 'pendente') filtered = cachedAds.filter(a => a.status === 'pendente');
         else if (currentAdFilter === 'pausado') filtered = cachedAds.filter(a => a.status === 'pausado');
         else if (currentAdFilter === 'ouro') filtered = cachedAds.filter(a => a.plan_tier === 'ouro');
+        else if (currentAdFilter === 'fundador') filtered = cachedAds.filter(a => a.is_founder_demo || a.status === 'demonstracao' || (a.pioneer_username && a.pioneer_username.toLowerCase().includes('hokage22b')));
 
-        document.getElementById('tab-count-ads').textContent = cachedAds.length;
+        // Contadores dinâmicos dos botões de filtro
+        const todosCount = cachedAds.length;
+        const fundadorCount = cachedAds.filter(a => a.is_founder_demo || a.status === 'demonstracao' || (a.pioneer_username && a.pioneer_username.toLowerCase().includes('hokage22b'))).length;
+        const ativoCount = cachedAds.filter(a => a.status === 'ativo').length;
+        const pendenteCount = cachedAds.filter(a => a.status === 'pendente').length;
+        const pausadoCount = cachedAds.filter(a => a.status === 'pausado').length;
+        const ouroCount = cachedAds.filter(a => a.plan_tier === 'ouro').length;
+
+        const setPill = (id, count) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = count;
+        };
+        setPill('tab-pill-todos', todosCount);
+        setPill('tab-pill-fundador', fundadorCount);
+        setPill('tab-pill-ativo', ativoCount);
+        setPill('tab-pill-pendente', pendenteCount);
+        setPill('tab-pill-pausado', pausadoCount);
+        setPill('tab-pill-ouro', ouroCount);
+
+        document.getElementById('tab-count-ads').textContent = todosCount;
 
         if (filtered.length === 0) {
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">Nenhum anúncio encontrado com este filtro.</td></tr>';
@@ -1027,6 +1068,7 @@
         }
 
         tbody.innerHTML = filtered.map(ad => {
+          const isFounderAd = Boolean(ad.is_founder_demo || ad.status === 'demonstracao' || (ad.pioneer_username && ad.pioneer_username.toLowerCase().includes('hokage22b')));
           const tierClass = 'badge-tier-' + (ad.plan_tier || 'bronze');
           const statusClass = 'badge-' + (ad.status || 'ativo');
           const dateStr = ad.created_at ? new Date(ad.created_at).toLocaleDateString('pt-BR') : '—';
@@ -1042,9 +1084,15 @@
           const daysLeft = ad.days_left !== undefined ? ad.days_left : 30;
           const author = escapeHtml(ad.pioneer_username || ad.pioneer_name || '@pioneiro');
 
+          const statusBadge = isFounderAd 
+            ? `<span class="badge" style="background:rgba(245,158,11,0.2);color:var(--amber-light);border:1px solid rgba(245,158,11,0.5)">👑 Fundador</span>`
+            : `<span class="badge ${statusClass}">${ad.status || 'ativo'}</span>`;
+
+          const isVisible = (ad.status === 'ativo' || ad.status === 'demonstracao');
+
           return `
             <tr id="row-ad-${ad.id}">
-              <td><span class="badge ${statusClass}">${ad.status || 'ativo'}</span></td>
+              <td>${statusBadge}</td>
               <td><span class="badge ${tierClass}">${ad.plan_tier || 'bronze'}</span></td>
               <td>${thumbHtml}</td>
               <td style="max-width:260px">
@@ -1066,17 +1114,17 @@
               </td>
               <td>
                 <span style="font-size:0.8rem;font-weight:700;color:${daysLeft <= 5 ? '#ef4444' : '#10b981'}">
-                  ${daysLeft} dias
+                  ${isFounderAd ? '∞ Permanente' : daysLeft + ' dias'}
                 </span>
                 <div style="font-size:0.7rem;color:var(--text-muted)">desde ${dateStr}</div>
               </td>
               <td style="text-align:right;white-space:nowrap">
-                ${ad.status === 'ativo' ? `
+                ${isVisible ? `
                   <button type="button" class="btn btn-warning btn-sm" onclick="toggleAdStatus('${ad.id}', 'pausado')" title="Ocultar do Mural">
                     ⏸️ Pausar
                   </button>
                 ` : `
-                  <button type="button" class="btn btn-success btn-sm" onclick="toggleAdStatus('${ad.id}', 'ativo')" title="Aprovar e Tornar Visível">
+                  <button type="button" class="btn btn-success btn-sm" onclick="toggleAdStatus('${ad.id}', '${isFounderAd ? 'demonstracao' : 'ativo'}')" title="Aprovar e Tornar Visível">
                     ✓ Ativar
                   </button>
                 `}
@@ -1158,14 +1206,18 @@
 
         try {
           const ok = await window.IsarDB.deleteAnuncio(id, currentSecret);
-          if (ok) {
-            showToast('Anúncio excluído com sucesso.');
-            cachedAds = cachedAds.filter(a => a.id !== id);
-            renderAdsTable();
-            updateStats();
-          } else {
-            showToast('Falha ao excluir anúncio.', true);
-          }
+          
+          // Limpa também do cache local isar_local_ads se existir
+          try {
+            const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+            const filteredLocal = localAds.filter(a => a.id !== id);
+            localStorage.setItem('isar_local_ads', JSON.stringify(filteredLocal));
+          } catch (_) {}
+
+          showToast('Anúncio excluído com sucesso.');
+          cachedAds = cachedAds.filter(a => a.id !== id);
+          renderAdsTable();
+          updateStats();
         } catch (err) {
           showToast('Erro: ' + err.message, true);
         }
@@ -1274,8 +1326,8 @@
 
       // Atualiza cards de estatísticas
       function updateStats() {
-        const active = cachedAds.filter(a => a.status === 'ativo').length;
-        const pending = cachedAds.filter(a => a.status !== 'ativo').length;
+        const active = cachedAds.filter(a => a.status === 'ativo' || a.status === 'demonstracao' || a.is_founder_demo).length;
+        const pending = cachedAds.filter(a => a.status === 'pendente' || a.status === 'pausado').length;
         const totalPi = cachedAds.reduce((acc, a) => acc + (parseFloat(a.price_pi) || 0), 0);
 
         document.getElementById('stat-active-ads').textContent = active;

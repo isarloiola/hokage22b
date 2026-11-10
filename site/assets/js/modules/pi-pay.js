@@ -475,11 +475,17 @@
           isSdkSessionAuthenticated = true;
         } else {
           openPiConnectModal();
+          if (typeof options.onError === 'function') {
+            options.onError(new Error('Sessão Pi não autorizada. Conecte sua carteira para continuar.'));
+          }
           return;
         }
       } catch (err) {
         console.warn('Tentativa de autenticação de pagamentos:', err);
         openPiConnectModal();
+        if (typeof options.onError === 'function') {
+          options.onError(err || new Error('Erro ao conectar carteira Pi'));
+        }
         return;
       }
     }
@@ -487,19 +493,13 @@
     let user = authenticatedUser;
     if (!user) {
       openPiConnectModal();
+      if (typeof options.onError === 'function') {
+        options.onError(new Error('Usuário pioneiro não autenticado'));
+      }
       return;
     }
 
     metadata.pioneer_username = user.username;
-
-    // PRÉ-VERIFICAÇÃO ATIVA: Limpa qualquer pagamento anterior expirado/cancelado no SDK antes de criar um novo
-    if (window.Pi && window.Pi.authenticate) {
-      try {
-        await window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
-      } catch (preAuthErr) {
-        console.warn('Pré-verificação Pi authenticate:', preAuthErr);
-      }
-    }
 
     const paymentData = {
       amount: amount,
@@ -516,6 +516,9 @@
           console.error('Erro na aprovação do servidor:', approvalRes);
           const msg = approvalRes.error_message || approvalRes.error || 'Falha na aprovação';
           showToast('Aviso do servidor: ' + msg, 'error');
+          if (typeof options.onError === 'function') {
+            options.onError(new Error('Aprovação recusada pelo servidor: ' + msg), { identifier: paymentId });
+          }
         } else {
           showToast('✓ Transação autorizada pelo servidor! Assinando na Pi Wallet (Testnet)...', 'info');
         }
@@ -552,6 +555,9 @@
         const errText = error ? (error.message || (typeof error === 'string' ? error : JSON.stringify(error))) : 'Erro na transação';
         if (errText && (errText.includes('payments') || errText.includes('scope'))) {
           showScopeNoticeModal(options);
+          if (typeof options.onError === 'function') {
+            options.onError(error, payment);
+          }
           return;
         }
 
@@ -593,6 +599,9 @@
       // Se for erro de escopo 'payments', abre modal explicativo com opção de alternar para Sandbox
       if (errMsg && (errMsg.includes('payments') || errMsg.includes('scope'))) {
         showScopeNoticeModal(options);
+        if (typeof options.onError === 'function') {
+          options.onError(err);
+        }
         return;
       }
 

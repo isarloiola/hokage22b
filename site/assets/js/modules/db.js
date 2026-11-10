@@ -217,7 +217,7 @@
   // Cria um novo anúncio no mural (com enquadramento de tier e exposição comercial)
   async function createAnuncio(adData) {
     const db = getClient();
-    if (!db) return null;
+    if (!db || !adData) return null;
 
     try {
       const tier = adData.plan_tier || 'bronze';
@@ -225,25 +225,44 @@
       if (tier === 'ouro') exposure = 'priority';
       else if (tier === 'prata') exposure = 'rotation';
 
-      const payload = Object.assign({}, adData, {
-        status: adData.status || 'ativo',
+      // Higienização estrita de price_pi para garantir formato numérico no PostgreSQL
+      const numPrice = (typeof adData.price_pi === 'number')
+        ? adData.price_pi
+        : (parseFloat(adData.price_pi) || 0.0);
+
+      const payload = {
+        id: adData.id || ('ad_' + Date.now()),
+        title: adData.title,
+        description: adData.description,
+        link_url: adData.link_url || null,
+        image_url: adData.image_url || null,
+        category: adData.category || 'geral',
+        pioneer_username: adData.pioneer_username || '@pioneiro',
+        pioneer_name: adData.pioneer_name || 'Pioneiro',
         plan_tier: tier,
+        price_pi: numPrice,
+        status: adData.status || (adData.is_founder_demo ? 'demonstracao' : 'ativo'),
         exposure_type: adData.exposure_type || exposure,
         is_founder_demo: Boolean(adData.is_founder_demo),
+        payment_txid: adData.payment_txid || (adData.is_founder_demo ? 'FOUNDER_DEMO_OFFICIAL' : null),
         views_count: adData.views_count || 0,
         clicks_count: adData.clicks_count || 0,
         profile_visits: adData.profile_visits || 0,
-        likes_count: adData.likes_count || 0
-      });
+        likes_count: adData.likes_count || 0,
+        created_at: adData.created_at || new Date().toISOString()
+      };
 
       const { data, error } = await db
         .from('anuncios')
         .insert([payload]);
 
-      if (error) throw error;
+      if (error) {
+        console.warn('Supabase: Erro ao inserir anúncio:', error.message);
+        throw error;
+      }
       return data;
     } catch (err) {
-      console.warn('Supabase: Erro ao criar anúncio:', err.message);
+      console.warn('Supabase: Falha ao criar anúncio:', err.message);
       return null;
     }
   }

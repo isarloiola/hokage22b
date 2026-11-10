@@ -871,7 +871,7 @@
     const userInput = document.getElementById('ad-input-user');
     const userHandle = ((userInput && userInput.value) || '').toLowerCase().replace('@', '').trim();
     if (userHandle !== 'hokage22b') {
-      alert('A publicação de demonstração institucional é exclusiva para o Fundador (@hokage22b). Anunciantes comerciais devem realizar o pagamento via Pi Wallet ou Chave P2P.');
+      alert('A publicação de demonstração institucional é exclusiva para o Fundador (@hokage22b). Anunciantes comerciais devem realizar o pagamento via Pi Wallet.');
       return;
     }
 
@@ -894,9 +894,11 @@
       pioneer_username: '@hokage22b',
       pioneer_name: 'Hokage22b',
       plan_tier: selectedTier || 'ouro',
-      price_pi: '0.00 (Exemplar Oficial)',
+      price_pi: 0.00,
       status: 'demonstracao',
       is_founder_demo: true,
+      exposure_type: 'priority',
+      payment_txid: 'FOUNDER_DEMO_OFFICIAL',
       views_count: 0,
       clicks_count: 0,
       profile_visits: 0,
@@ -904,10 +906,17 @@
       created_at: new Date().toISOString()
     };
 
+    // 1. Salva no banco de dados Supabase para aparecer no admin e em todos os dispositivos
     if (window.IsarDB && window.IsarDB.createAnuncio) {
-      try { await window.IsarDB.createAnuncio(demoAd); } catch (_) {}
+      try {
+        const res = await window.IsarDB.createAnuncio(demoAd);
+        console.log('✓ Exemplar fundador sincronizado no Supabase:', res);
+      } catch (dbErr) {
+        console.warn('Erro ao sincronizar exemplar no Supabase:', dbErr);
+      }
     }
 
+    // 2. Salva localmente para cache instantâneo
     try {
       const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
       localAds.unshift(demoAd);
@@ -1212,6 +1221,17 @@
 
     pendingAdSubmission = newAd;
 
+    function resetSubmitButtons() {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
+      }
+      if (founderPayBtn) {
+        founderPayBtn.disabled = false;
+        founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${priceInfo.pi} π Testnet)`;
+      }
+    }
+
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = 'Processando publicação…';
@@ -1220,6 +1240,46 @@
       founderPayBtn.disabled = true;
       founderPayBtn.textContent = 'Processando na Pi Wallet…';
     }
+
+    // WATCHDOG DE SEGURANÇA: Destrava os botões se o app nativo do Pi fechar sem disparar callbacks
+    let watchdogTimer = setTimeout(function () {
+      console.warn('Watchdog acionado: Pi Wallet demorou ou fechou sem resposta nativa.');
+      resetSubmitButtons();
+      const modal = document.getElementById('ad-create-modal');
+      if (modal) modal.classList.add('active');
+      showSubmitFeedback(
+        'warning',
+        `<div style="font-weight:700;font-size:0.96rem;margin-bottom:6px;color:#fca5a5">
+          ⚠️ A janela da Pi Wallet foi encerrada ou demorou para responder
+         </div>
+         <div style="font-size:0.84rem;color:#f3f4f6;line-height:1.45;margin-bottom:12px">
+          Seus dados continuam 100% salvos. Se o pagamento fechou, você pode tentar novamente ou publicar a demonstração:
+         </div>`,
+        `
+          <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.clearExpiredPaymentAndRetry()" style="font-size:0.86rem;padding:9px 18px;background:#8b5cf6;border-color:#7c3aed;color:#fff;font-weight:700">
+            🔄 Destravar Carteira e Pagar
+          </button>
+          ${isFounder ? `
+            <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.publishFounderDemo()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(245,158,11,0.7);color:var(--amber-light);font-weight:700">
+              👑 Publicar Exemplar Fundador (Demonstração)
+            </button>
+          ` : ''}
+        `
+      );
+    }, 25000);
+
+    // Listener de retorno à página no celular (Samsung S20 / Pi Browser)
+    const onReturnToPage = function () {
+      setTimeout(function () {
+        if ((submitBtn && submitBtn.disabled && submitBtn.textContent.includes('Processando')) ||
+            (founderPayBtn && founderPayBtn.disabled && founderPayBtn.textContent.includes('Processando'))) {
+          if (watchdogTimer) clearTimeout(watchdogTimer);
+          resetSubmitButtons();
+        }
+      }, 2000);
+    };
+    window.addEventListener('focus', onReturnToPage, { once: true });
+    document.addEventListener('visibilitychange', onReturnToPage, { once: true });
 
     // ── FLUXO A: Dentro do Pi Browser ou com Pi SDK Carregado (Pagamento Nativo) ──
     const canUsePi = window.HokagePi && (window.HokagePi.isPiBrowser() || Boolean(window.Pi));
@@ -1233,6 +1293,9 @@
           tier: selectedTier
         },
         onSuccess: async function (paymentResult) {
+          if (watchdogTimer) clearTimeout(watchdogTimer);
+          resetSubmitButtons();
+
           newAd.status = 'ativo';
           newAd.payment_txid = paymentResult.txid;
 
@@ -1250,29 +1313,15 @@
           closeModal();
           hideSubmitFeedback();
 
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
-          }
-          if (founderPayBtn) {
-            founderPayBtn.disabled = false;
-            founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${priceInfo.pi} π Testnet)`;
-          }
-
           insertAdCard(newAd);
           filterCategory(currentCategory);
           alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Testnet! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
         },
         onError: function (err) {
+          if (watchdogTimer) clearTimeout(watchdogTimer);
+          resetSubmitButtons();
+
           console.error('Erro no pagamento Pi do mural:', err);
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
-          }
-          if (founderPayBtn) {
-            founderPayBtn.disabled = false;
-            founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${priceInfo.pi} π Testnet)`;
-          }
 
           // Garante que o modal permaneça aberto e ativo
           const modal = document.getElementById('ad-create-modal');
@@ -1322,14 +1371,8 @@
           }
         },
         onCancel: function () {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
-          }
-          if (founderPayBtn) {
-            founderPayBtn.disabled = false;
-            founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${priceInfo.pi} π Testnet)`;
-          }
+          if (watchdogTimer) clearTimeout(watchdogTimer);
+          resetSubmitButtons();
 
           const modal = document.getElementById('ad-create-modal');
           if (modal) modal.classList.add('active');
