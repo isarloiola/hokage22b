@@ -1148,8 +1148,21 @@
     updateLivePreview();
   }
 
+  let isAdSubmitInProgress = false;
+
   async function handleAdSubmit(e) {
-    if (e) e.preventDefault();
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+      if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+    }
+
+    if (isAdSubmitInProgress) {
+      console.warn('handleAdSubmit: submissão já em andamento, ignorando chamada concorrente.');
+      return;
+    }
+    isAdSubmitInProgress = true;
+
     hideSubmitFeedback();
 
     const titleInput = document.getElementById('ad-input-title');
@@ -1165,12 +1178,14 @@
     const desc = descInput ? descInput.value.trim() : '';
 
     if (!title || title.length < 3) {
+      isAdSubmitInProgress = false;
       alert('Por favor, informe um título para o seu anúncio (mínimo 3 caracteres).');
       if (titleInput) titleInput.focus();
       return;
     }
 
     if (!desc || desc.length < 5) {
+      isAdSubmitInProgress = false;
       alert('Por favor, informe uma descrição detalhada para o anúncio (mínimo 5 caracteres).');
       if (descInput) descInput.focus();
       return;
@@ -1222,6 +1237,7 @@
     pendingAdSubmission = newAd;
 
     function resetSubmitButtons() {
+      isAdSubmitInProgress = false;
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
@@ -1828,7 +1844,12 @@
       }
 
       const form = document.getElementById('ad-create-form');
-      if (form) form.addEventListener('submit', handleAdSubmit);
+      if (form) {
+        form.onsubmit = function (e) {
+          if (e && typeof e.preventDefault === 'function') e.preventDefault();
+          return false;
+        };
+      }
 
       // Ouvintes para atualização da Prévia ao Vivo e Salvamento Automático
       const previewInputs = [

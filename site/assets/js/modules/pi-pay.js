@@ -457,9 +457,22 @@
     }
   }
 
-  // 9. Dispara Pagamento Nativo no Pi Browser
+  // 9. Dispara Pagamento Nativo no Pi Browser (com Proteção contra Chamada Duplicada)
+  let isPaymentRequestInFlight = false;
+
   async function requestPiPayment(options) {
     options = options || {};
+
+    if (isPaymentRequestInFlight) {
+      console.warn('requestPiPayment: chamada simultânea bloqueada para evitar expiração do Pi SDK.');
+      return;
+    }
+    isPaymentRequestInFlight = true;
+
+    function releasePaymentLock() {
+      isPaymentRequestInFlight = false;
+    }
+
     const amount = Number(options.amount) || 0.314;
     const memo = options.memo || 'Pagamento HOKAGE22B';
     const metadata = options.metadata || {};
@@ -474,6 +487,7 @@
           authenticatedUser = logged;
           isSdkSessionAuthenticated = true;
         } else {
+          releasePaymentLock();
           openPiConnectModal();
           if (typeof options.onError === 'function') {
             options.onError(new Error('Sessão Pi não autorizada. Conecte sua carteira para continuar.'));
@@ -481,6 +495,7 @@
           return;
         }
       } catch (err) {
+        releasePaymentLock();
         console.warn('Tentativa de autenticação de pagamentos:', err);
         openPiConnectModal();
         if (typeof options.onError === 'function') {
@@ -492,6 +507,7 @@
 
     let user = authenticatedUser;
     if (!user) {
+      releasePaymentLock();
       openPiConnectModal();
       if (typeof options.onError === 'function') {
         options.onError(new Error('Usuário pioneiro não autenticado'));
@@ -513,6 +529,7 @@
         showToast('Aprovando transação no servidor...', 'info');
         const approvalRes = await approvePaymentOnServer(paymentId);
         if (approvalRes && approvalRes.error) {
+          releasePaymentLock();
           console.error('Erro na aprovação do servidor:', approvalRes);
           const msg = approvalRes.error_message || approvalRes.error || 'Falha na aprovação';
           showToast('Aviso do servidor: ' + msg, 'error');
@@ -525,6 +542,7 @@
       },
 
       onReadyForServerCompletion: async function (paymentId, txid) {
+        releasePaymentLock();
         console.log('Pi Payment aprovado na blockchain com TXID:', txid);
         showToast('✓ Pagamento confirmado na Pi Testnet!', 'success');
         const result = await completePaymentOnServer(paymentId, txid);
@@ -540,6 +558,7 @@
       },
 
       onCancel: function (paymentId) {
+        releasePaymentLock();
         console.log('Pagamento cancelado pelo pioneiro:', paymentId);
         if (paymentId) {
           cancelPaymentOnServer(paymentId);
@@ -551,6 +570,7 @@
       },
 
       onError: function (error, payment) {
+        releasePaymentLock();
         console.error('Erro na transação Pi:', error, payment);
         const errText = error ? (error.message || (typeof error === 'string' ? error : JSON.stringify(error))) : 'Erro na transação';
         if (errText && (errText.includes('payments') || errText.includes('scope'))) {
@@ -593,6 +613,7 @@
       });
       window.Pi.createPayment(paymentData, paymentCallbacks);
     } catch (err) {
+      releasePaymentLock();
       console.error('Erro ao chamar window.Pi.createPayment:', err);
       const errMsg = err && (err.message || (typeof err === 'string' ? err : 'Erro no Pi SDK'));
       
