@@ -43,6 +43,7 @@ GRANT EXECUTE ON FUNCTION public.increment_ad_views_batch(TEXT[]) TO anon, authe
 -- ─── 2. PRIVACIDADE FINANCEIRA: FECHAR LEITURA ANÔNIMA DE transacoes_pi [F-08] ─
 ALTER TABLE IF EXISTS public.transacoes_pi ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Transacoes Pi publicas para consulta" ON public.transacoes_pi;
 DROP POLICY IF EXISTS "Leitura publica de transacoes_pi" ON public.transacoes_pi;
 DROP POLICY IF EXISTS "Permitir leitura publica de transacoes" ON public.transacoes_pi;
 DROP POLICY IF EXISTS "Enable read access for all users" ON public.transacoes_pi;

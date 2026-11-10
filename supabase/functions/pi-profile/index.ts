@@ -83,6 +83,12 @@ serve(async (req) => {
       }
     }
 
+    const checklistState = (safeData.checklist_state && typeof safeData.checklist_state === "object")
+      ? { ...safeData.checklist_state }
+      : {};
+    if (safeData.showcase_zero !== undefined) checklistState.showcase_zero = Boolean(safeData.showcase_zero);
+    if (safeData.showcase_mural !== undefined) checklistState.showcase_mural = Boolean(safeData.showcase_mural);
+
     const updatePayload = {
       uid: verifiedUid,
       username: verifiedUsername,
@@ -93,13 +99,25 @@ serve(async (req) => {
       youtube_url: safeData.youtube_url ? String(safeData.youtube_url).slice(0, 300) : null,
       twitter_url: safeData.twitter_url ? String(safeData.twitter_url).slice(0, 300) : null,
       instagram_url: safeData.instagram_url ? String(safeData.instagram_url).slice(0, 300) : null,
-      checklist_state: safeData.checklist_state || {},
+      checklist_state: checklistState,
       products: Array.isArray(safeData.products) ? safeData.products.slice(0, 20) : [],
       updated_at: new Date().toISOString(),
     };
 
-    // 4. GRAVAÇÃO SEGURA NO SUPABASE
-    // O upsert é amarrado exclusivamente ao UID e USERNAME validados pelo Pi
+    // 4. GRAVAÇÃO SEGURA NO SUPABASE (Com migração automática caso exista registro prévio user_<username>)
+    const { data: existingByUser } = await supabase
+      .from("pioneiros")
+      .select("uid")
+      .ilike("username", verifiedUsername)
+      .maybeSingle();
+
+    if (existingByUser && existingByUser.uid && existingByUser.uid !== verifiedUid) {
+      await supabase
+        .from("pioneiros")
+        .update({ uid: verifiedUid })
+        .eq("uid", existingByUser.uid);
+    }
+
     const { data, error } = await supabase
       .from("pioneiros")
       .upsert(updatePayload, { onConflict: "uid" })

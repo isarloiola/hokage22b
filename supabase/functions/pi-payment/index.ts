@@ -19,7 +19,7 @@ serve(async (req) => {
 
   try {
     const { action, paymentId, txid, adPayload } = await req.json();
-    const PI_SERVER_API_KEY = Deno.env.get("PI_SERVER_API_KEY");
+    const PI_SERVER_API_KEY = Deno.env.get("PI_SERVER_API_KEY") || Deno.env.get("PI_API_KEY");
 
     if (!PI_SERVER_API_KEY) {
       throw new Error("PI_SERVER_API_KEY não configurada no Supabase Secrets.");
@@ -98,13 +98,17 @@ serve(async (req) => {
             "bronze"
           ).toLowerCase();
 
-          let tierPrice = 0.314;
-          if (rawTier === "ouro") tierPrice = 3.14;
-          else if (rawTier === "prata") tierPrice = 1.00;
-          else if (metadata.action === "renew") tierPrice = 1.00;
+          let expectedPrice = 0.314;
+          if (metadata.action === "renew") {
+            expectedPrice = (metadata.upgrade === "ouro") ? 3.14 : 1.00;
+          } else {
+            let tierPrice = 0.314;
+            if (rawTier === "ouro") tierPrice = 3.14;
+            else if (rawTier === "prata") tierPrice = 1.00;
 
-          const dbPrice = (ad && Number(ad.price_pi)) ? Number(ad.price_pi) : 0;
-          const expectedPrice = Math.max(tierPrice, dbPrice);
+            const dbPrice = (ad && Number(ad.price_pi)) ? Number(ad.price_pi) : 0;
+            expectedPrice = Math.max(tierPrice, dbPrice);
+          }
 
           if (paidAmount + 0.0001 < expectedPrice) {
             console.error(`[Security Alert] Montante insuficiente: pago ${paidAmount} Pi, esperado ${expectedPrice} Pi (tier=${rawTier}).`);
