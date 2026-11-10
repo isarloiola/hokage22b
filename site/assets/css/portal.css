@@ -274,6 +274,22 @@ a {
   display: inline;
 }
 
+.pi-auth-header-btn {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+.pi-auth-header-btn span {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+}
+
 .portal-burger {
   display: none;
   background: rgba(255, 255, 255, 0.04);
@@ -1447,15 +1463,18 @@ a {
   .pi-auth-header-btn {
     padding: 5px 8px !important;
     font-size: 0.74rem !important;
-    white-space: nowrap;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
     border-radius: var(--radius-sm);
     display: inline-flex !important;
     align-items: center;
     gap: 4px;
-    max-width: 90px !important;
+    max-width: 105px !important;
     overflow: hidden;
     text-overflow: ellipsis;
     flex-shrink: 0;
+    line-height: 1 !important;
   }
   .pi-btn-full {
     display: none !important;
@@ -1481,7 +1500,7 @@ a {
   }
 
   /* Prevenção Absoluta contra Botões Transbordando na Tela */
-  .portal-btn {
+  .portal-btn:not(.pi-auth-header-btn) {
     white-space: normal !important;
     text-align: center !important;
     line-height: 1.35 !important;
@@ -1717,7 +1736,11 @@ a {
   .pi-auth-header-btn {
     padding: 4px 6px !important;
     font-size: 0.72rem !important;
-    max-width: 78px !important;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+    max-width: 95px !important;
+    line-height: 1 !important;
   }
   .portal-burger {
     width: 34px !important;
@@ -1850,7 +1873,7 @@ a {
   .section-title {
     font-size: 1.45rem !important;
   }
-  .portal-btn {
+  .portal-btn:not(.pi-auth-header-btn) {
     font-size: 0.86rem !important;
     padding: 10px 12px !important;
     gap: 6px !important;

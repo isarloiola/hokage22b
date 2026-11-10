@@ -123,10 +123,10 @@
     headerBtns.forEach(function (btn) {
       if (handle) {
         const shortHandle = handle.length > 7 ? handle.slice(0, 6) + '…' : handle;
-        btn.innerHTML = `<span style="color:#10b981">●</span> <span class="pi-btn-full">@${escapeHtml(handle)}</span><span class="pi-btn-short">@${escapeHtml(shortHandle)}</span>`;
+        btn.innerHTML = `<span style="color:#10b981;flex-shrink:0;line-height:1">●</span><span class="pi-btn-full" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${escapeHtml(handle)}</span><span class="pi-btn-short" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${escapeHtml(shortHandle)}</span>`;
         btn.title = `Conectado como @${handle} — Clique para gerenciar`;
       } else {
-        btn.innerHTML = `<span class="pi-btn-full">⚡ Conectar Pi</span><span class="pi-btn-short">⚡ Pi</span>`;
+        btn.innerHTML = `<span class="pi-btn-full" style="white-space:nowrap">⚡ Conectar Pi</span><span class="pi-btn-short" style="white-space:nowrap">⚡ Pi</span>`;
         btn.title = 'Fazer login com Pi Network';
       }
     });

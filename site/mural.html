@@ -53,8 +53,13 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
       padding: 10px 0 !important;
     }
+    .testnet-alert-banner {
+      margin-top: 68px !important;
+      position: relative !important;
+      z-index: 90 !important;
+    }
     .mural-main {
-      padding-top: 120px !important;
+      padding-top: 24px !important;
       min-height: 90vh;
     }
     .ad-btn-short,
@@ -75,8 +80,11 @@
       .navbar__logo .brand-sub {
         display: none !important;
       }
+      .testnet-alert-banner {
+        margin-top: 56px !important;
+      }
       .mural-main {
-        padding-top: 86px !important;
+        padding-top: 16px !important;
       }
       .navbar__actions {
         display: flex !important;
@@ -161,7 +169,7 @@
   </nav>
 
   <!-- Banner Informativo Oficial Pi Testnet -->
-  <div class="testnet-alert-banner" id="testnet-alert-banner" style="background:linear-gradient(90deg, rgba(99,102,241,0.2) 0%, rgba(139,92,246,0.25) 50%, rgba(245,158,11,0.2) 100%);border-bottom:1px solid rgba(139,92,246,0.35);padding:10px 16px;color:#e0e7ff;font-size:0.88rem;display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;flex-wrap:wrap;position:relative;z-index:90;">
+  <div class="testnet-alert-banner" id="testnet-alert-banner" style="margin-top:68px;background:linear-gradient(90deg, rgba(99,102,241,0.2) 0%, rgba(139,92,246,0.25) 50%, rgba(245,158,11,0.2) 100%);border-bottom:1px solid rgba(139,92,246,0.35);padding:10px 16px;color:#e0e7ff;font-size:0.88rem;display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;flex-wrap:wrap;position:relative;z-index:90;">
     <span>🧪 <strong>Ambiente Oficial Pi Testnet:</strong> O HOKAGE22B está em processo de auditoria pela Pi Core Team para listagem oficial na Mainnet. Use seus <strong>Test-Pi gratuitos</strong> para publicar sem gastar suas moedas reais!</span>
     <button type="button" class="btn btn-outline btn-sm" onclick="window.HokagePi && window.HokagePi.openTestnetInfoModal()" style="border-color:rgba(196,181,253,0.5);color:#fff;font-size:0.78rem;padding:4px 12px;border-radius:20px;font-weight:700;cursor:pointer;background:rgba(139,92,246,0.2)">
       ℹ️ Como funciona o Testnet?
@@ -837,12 +845,14 @@
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');
-      const main = document.querySelector('.mural-main');
-      if (nav && main) {
-        const h = nav.offsetHeight || 80;
-        main.style.paddingTop = (h + 24) + 'px';
+      const banner = document.getElementById('testnet-alert-banner');
+      if (nav && banner) {
+        const h = nav.offsetHeight || 68;
+        banner.style.marginTop = h + 'px';
       }
     }
+
+    window.addEventListener('resize', syncMuralOffset);
 
     document.addEventListener('DOMContentLoaded', function () {
       syncMuralOffset();
