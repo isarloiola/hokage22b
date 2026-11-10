@@ -298,6 +298,10 @@
   line-height: 1.55;
   flex: 1;
   margin: 0;
+  word-break: normal;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .pioneer-card__footer,
@@ -497,7 +501,17 @@
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    overflow: hidden !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  .pioneer-card__desc,
+  .ad-card__desc {
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .pioneer-card--ouro,

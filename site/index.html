@@ -49,8 +49,8 @@
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
 
   <!-- Stylesheets com Cache Buster -->
-  <link rel="stylesheet" href="assets/css/style.css?v=4.5" />
-  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.5" />
+  <link rel="stylesheet" href="assets/css/style.css?v=4.6" />
+  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.6" />
 
   <!-- Pi Network SDK Oficial v2.0 (Modo Testnet para Auditoria Oficial) -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -294,7 +294,7 @@
             <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;display:flex;gap:10px;align-items:center;margin-bottom:16px;text-align:left">
               <img src="assets/img/ebook-pago-negocios.jpg" alt="E-book Pi para Negócios" style="width:44px;height:44px;border-radius:6px;object-fit:cover;flex-shrink:0" />
               <div style="flex:1;min-width:0">
-                <strong style="font-size:0.82rem;color:#fff;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">E-book Pi para seu Negócio</strong>
+                <strong style="font-size:0.82rem;color:#fff;display:block;line-height:1.25;word-break:break-word;margin-bottom:2px">E-book Pi para seu Negócio</strong>
                 <span style="font-size:0.75rem;color:var(--amber-light);font-weight:700">3.14 π</span>
               </div>
               <a href="pioneiro?u=@hokage22b" style="font-size:0.72rem;background:var(--accent);color:#fff;padding:5px 10px;border-radius:6px;font-weight:700;text-decoration:none">Comprar</a>
@@ -601,26 +601,26 @@
               </li>
             </ul>
 
-            <div class="product-pricing-bar" style="background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(139,92,246,0.12));border:1px solid rgba(245,158,11,0.35);border-radius:var(--radius-sm);padding:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+            <div class="product-pricing-bar" style="background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(139,92,246,0.12));border:1px solid rgba(245,158,11,0.35);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap">
               <div class="price-box">
                 <span class="price-label"><span style="color:#10b981;font-weight:700">⚡ Exclusivo na Comunidade Web3</span> · Valor Justo e Direto</span>
                 <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">3.14 π</span>
                 <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta peer-to-peer (P2P) na Mainnet da Pi Network</span>
               </div>
-              <div class="product-actions" style="flex-shrink:0">
+              <div class="product-actions">
                 <button type="button" class="portal-btn portal-btn--amber"
-                  onclick="HokagePortal.openModal('modal-pagamento-pi')" style="padding:16px 32px;font-size:1.05rem;font-weight:800;box-shadow:0 0 25px rgba(245,158,11,0.35)">
+                  onclick="HokagePortal.openModal('modal-pagamento-pi')" style="font-weight:800;box-shadow:0 0 25px rgba(245,158,11,0.35)">
                   ⚡ Adquirir com Pi (3.14 π) →
                 </button>
               </div>
             </div>
 
             <!-- VANTAGENS EXCLUSIVAS DO MODELO NATIVO PI -->
-            <div style="margin-top:18px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:16px">
+            <div style="margin-top:18px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:16px;box-sizing:border-box">
               <div style="font-size:0.8rem;text-transform:uppercase;color:var(--amber-light);font-weight:800;letter-spacing:0.05em;margin-bottom:10px">
                 💎 Vantagens do Pagamento Nativo no Ecossistema Pi:
               </div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;font-size:0.84rem;color:var(--text-secondary)">
+              <div class="product-perks-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 200px), 1fr));gap:12px;font-size:0.84rem;color:var(--text-secondary)">
                 <div style="display:flex;align-items:flex-start;gap:8px">
                   <span style="color:#10b981">✓</span>
                   <span><strong>Zero Intermediários:</strong> Sem retenções bancárias ou taxas abusivas da Web2.</span>
