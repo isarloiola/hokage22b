@@ -249,6 +249,9 @@ $$;
 
 
 -- ─── 5. BLINDAGEM DE PERFIS DE PIONEIROS CONTRA TOMADA DE CARTEIRA [F-04] ────
+-- Remove sobrecarga legada de 8 parâmetros (sem p_avatar) para evitar conflito PGRST203 no PostgREST
+DROP FUNCTION IF EXISTS public.pioneer_save_profile(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB);
+
 CREATE OR REPLACE FUNCTION public.pioneer_save_profile(
     p_username TEXT,
     p_bio TEXT DEFAULT NULL,
