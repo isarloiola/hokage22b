@@ -1060,17 +1060,17 @@
     const info = tierPrices[selectedTier] || tierPrices.prata;
     const infoEl = document.getElementById('ad-selected-payment-info');
     if (infoEl) {
-      infoEl.textContent = `Taxa da publicação: ${info.pi} π (pagamento exclusivo em Pi Network)`;
+      infoEl.textContent = `Taxa da publicação: ${info.pi} π (Ambiente Pi Testnet / Sandbox)`;
     }
 
     const submitBtn = document.getElementById('ad-submit-btn');
     if (submitBtn) {
-      submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${info.pi} π)`;
+      submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${info.pi} π Testnet)`;
     }
 
     const founderPayBtn = document.getElementById('founder-test-pay-btn');
     if (founderPayBtn) {
-      founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${info.pi} π)`;
+      founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${info.pi} π Testnet)`;
     }
 
     const linkInput = document.getElementById('ad-input-link');
@@ -1150,6 +1150,7 @@
     const catInput   = document.getElementById('ad-input-cat');
     const userInput  = document.getElementById('ad-input-user');
     const submitBtn  = document.getElementById('ad-submit-btn');
+    const founderPayBtn = document.getElementById('founder-test-pay-btn');
 
     const title = titleInput ? titleInput.value.trim() : '';
     const desc = descInput ? descInput.value.trim() : '';
@@ -1215,6 +1216,10 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Processando publicação…';
     }
+    if (founderPayBtn) {
+      founderPayBtn.disabled = true;
+      founderPayBtn.textContent = 'Processando na Pi Wallet…';
+    }
 
     // ── FLUXO A: Dentro do Pi Browser ou com Pi SDK Carregado (Pagamento Nativo) ──
     const canUsePi = window.HokagePi && (window.HokagePi.isPiBrowser() || Boolean(window.Pi));
@@ -1247,18 +1252,26 @@
 
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
+            submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
+          }
+          if (founderPayBtn) {
+            founderPayBtn.disabled = false;
+            founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${priceInfo.pi} π Testnet)`;
           }
 
           insertAdCard(newAd);
           filterCategory(currentCategory);
-          alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Network! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
+          alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Testnet! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
         },
         onError: function (err) {
           console.error('Erro no pagamento Pi do mural:', err);
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
+            submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
+          }
+          if (founderPayBtn) {
+            founderPayBtn.disabled = false;
+            founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${priceInfo.pi} π Testnet)`;
           }
 
           // Garante que o modal permaneça aberto e ativo
@@ -1311,7 +1324,11 @@
         onCancel: function () {
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π)`;
+            submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
+          }
+          if (founderPayBtn) {
+            founderPayBtn.disabled = false;
+            founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${priceInfo.pi} π Testnet)`;
           }
 
           const modal = document.getElementById('ad-create-modal');
@@ -1329,7 +1346,11 @@
     // ── FLUXO B: Fora do Pi Browser (Exige validação instantânea via Pi Wallet no Pi Browser) ──
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π)`;
+      submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
+    }
+    if (founderPayBtn) {
+      founderPayBtn.disabled = false;
+      founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${priceInfo.pi} π Testnet)`;
     }
 
     const piDeepLink = 'pi://' + window.location.host + window.location.pathname;
