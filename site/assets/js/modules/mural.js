@@ -47,6 +47,7 @@
     bronze: { pi: 0.314, name: '🥉 Classificado Bronze (Validade 30 dias · Comunitário)' }
   };
 
+  // Helper para localização dos grids das duas áreas comerciais
   function getFeaturedGrid() {
     return document.getElementById('mural-featured-grid') || document.getElementById('mural-ads-grid');
   }
@@ -55,6 +56,8 @@
     return document.getElementById('mural-community-grid') || document.getElementById('mural-ads-grid');
   }
 
+  // Rotação determinística e justa por fatia horária (UTC)
+  // Sem modificação artificial de dados no banco de dados
   function rotateFairly(arr) {
     if (!Array.isArray(arr) || arr.length <= 1) return arr || [];
     const hourBucket = Math.floor(Date.now() / (1000 * 60 * 60));
@@ -124,39 +127,65 @@
       `;
     }
 
+    // Métricas reais (sem números fictícios)
     const views = Number(ad.views_count) || 0;
     const clicks = Number(ad.clicks_count) || 0;
-    const cleanAuthor = safeAuthor.replace(/^@+/, '');
+    const profileVisits = Number(ad.profile_visits || ad.profile_clicks) || 0;
+    const likes = Number(ad.likes_count) || 0;
+
+    let isLiked = false;
+    try {
+      const likedAds = JSON.parse(localStorage.getItem('isar_liked_ads') || '[]');
+      if (likedAds.includes(cardId)) isLiked = true;
+    } catch (_) {}
+
+    // Linha de métricas adaptada por tier:
+    let metricsDetailsHtml = '';
+    if (tier === 'bronze') {
+      metricsDetailsHtml = `
+        <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)" class="ad-views-num" data-id="${cardId}">${views}</strong> views</span>
+        <span title="Visitas ao Perfil">👤 <strong style="color:var(--accent-light)" class="ad-profile-visits-num" data-id="${cardId}">${profileVisits}</strong> visitas ao perfil</span>
+      `;
+    } else {
+      metricsDetailsHtml = `
+        <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)" class="ad-views-num" data-id="${cardId}">${views}</strong> views</span>
+        <span title="Cliques no Link Oficial">🖱️ <strong style="color:var(--amber-light)" class="ad-clicks-num" data-id="${cardId}">${clicks}</strong> cliques</span>
+        <span title="Visitas ao Perfil">👤 <strong style="color:var(--accent-light)" class="ad-profile-visits-num" data-id="${cardId}">${profileVisits}</strong> perfil</span>
+      `;
+    }
 
     return `
       <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" id="card-${cardId}">
         ${bannerHtml}
         <div class="pioneer-card__top">
           <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
-          <a href="pioneiro?u=${encodeURIComponent(cleanAuthor)}" class="pioneer-card__author" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px" title="Ver vitrine oficial do pioneiro">${safeAuthor} ↗</a>
+          <a href="pioneiro?u=${encodeURIComponent(safeAuthor.replace(/^@+/, ''))}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__author" style="text-decoration:none" title="Ver perfil e vitrine do pioneiro">${safeAuthor} ↗</a>
         </div>
         <h3 class="pioneer-card__title">${safeTitle}</h3>
         <p class="pioneer-card__desc">${safeDesc}</p>
-        <div class="pioneer-card__footer" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div class="pioneer-card__footer">
           ${linkHtml}
-          <div style="display:flex;align-items:center;gap:6px">
-            <a href="pioneiro?u=${encodeURIComponent(cleanAuthor)}" class="portal-btn portal-btn--outline portal-btn--sm" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(139,92,246,0.4);color:var(--accent-light);text-decoration:none;display:inline-flex;align-items:center;gap:4px;font-weight:700" title="Ver Vitrine do Pioneiro">
-              <span>🌟</span> Ver Vitrine
-            </a>
-            ${priceHtml}
-          </div>
+          ${priceHtml}
         </div>
-        <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted)">
-          <div style="display:flex;align-items:center;gap:12px">
-            <span title="Visualizações">👁️ <strong style="color:var(--text-secondary)">${views}</strong> views</span>
-            <span title="Cliques no anúncio">🖱️ <strong style="color:var(--amber-light)" class="ad-clicks-num" data-id="${cardId}">${clicks}</strong> cliques</span>
+        <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            ${metricsDetailsHtml}
+            <button type="button" class="btn-like-ad ${isLiked ? 'liked' : ''}" onclick="window.IsarMural && window.IsarMural.toggleLike('${cardId}')" data-id="${cardId}" title="Apoiar este anúncio da comunidade" style="background:${isLiked ? 'rgba(244,63,94,0.25)' : 'rgba(244,63,94,0.1)'};border:1px solid ${isLiked ? '#f43f5e' : 'rgba(244,63,94,0.3)'};color:${isLiked ? '#fff' : '#fb7185'};padding:2px 8px;border-radius:6px;cursor:pointer;font-size:0.74rem;display:inline-flex;align-items:center;gap:4px;font-weight:${isLiked ? '700' : '500'};transition:all 0.2s ease">
+              <span>❤️</span> <strong class="ad-likes-num" data-id="${cardId}">${likes}</strong>
+            </button>
           </div>
-          <a href="pioneiro?u=${encodeURIComponent(cleanAuthor)}" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver vitrine do anunciante">Vitrine ↗</a>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('${cardId}', '${safeTitle.replace(/'/g, "\\'")}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
+              🚩 Denunciar
+            </button>
+            <a href="pioneiro?u=${encodeURIComponent(safeAuthor.replace(/^@+/, ''))}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
+          </div>
         </div>
       </article>
     `;
   }
 
+  // Insere um único card no seu respectivo container comercial
   function insertAdCard(ad) {
     if (!ad || !ad.id) return;
     const cardId = 'card-' + ad.id;
@@ -167,20 +196,28 @@
 
     if (tier === 'ouro') {
       const featuredGrid = getFeaturedGrid();
-      if (featuredGrid) featuredGrid.insertAdjacentHTML('afterbegin', html);
+      if (featuredGrid) {
+        featuredGrid.insertAdjacentHTML('afterbegin', html);
+      }
     } else if (tier === 'prata') {
       const featuredGrid = getFeaturedGrid();
       if (featuredGrid) {
         const firstPrata = featuredGrid.querySelector('.pioneer-card--prata');
-        if (firstPrata) firstPrata.insertAdjacentHTML('beforebegin', html);
-        else featuredGrid.insertAdjacentHTML('beforeend', html);
+        if (firstPrata) {
+          firstPrata.insertAdjacentHTML('beforebegin', html);
+        } else {
+          featuredGrid.insertAdjacentHTML('beforeend', html);
+        }
       }
     } else {
       const commGrid = getCommunityGrid();
-      if (commGrid) commGrid.insertAdjacentHTML('afterbegin', html);
+      if (commGrid) {
+        commGrid.insertAdjacentHTML('afterbegin', html);
+      }
     }
   }
 
+  // Filtragem estrita por CSS em ambas as seções (Destaques e Comunidade)
   function filterCategory(cat) {
     currentCategory = cat || 'todos';
     const featuredSec = document.getElementById('section-destaques');
@@ -268,6 +305,7 @@
     } catch (_) {}
   }
 
+  // Sincroniza anúncios aprovados salvos no Supabase com rotação equilibrada e hierarquia estrita
   function renderRemoteAdsHierarchy(remoteAds) {
     if (!Array.isArray(remoteAds) || remoteAds.length === 0) return;
 
@@ -298,15 +336,22 @@
       }
     });
 
+    // 1. Rotação justa entre os Ouros comerciais ativos
     const rotatedOuro = rotateFairly(ouroPaid);
     const orderedOuro = rotatedOuro.concat(ouroDemo);
+
+    // 2. Rotação justa entre os Pratas ativos
     const rotatedPrata = rotateFairly(prataAds);
 
+    // Inserção na Área A (Destaques do Mural):
     if (featuredGrid) {
       const firstPrataMock = featuredGrid.querySelector('.pioneer-card--prata');
       rotatedPrata.reverse().forEach(function (ad) {
-        if (firstPrataMock) firstPrataMock.insertAdjacentHTML('beforebegin', buildAdCardHtml(ad));
-        else featuredGrid.insertAdjacentHTML('beforeend', buildAdCardHtml(ad));
+        if (firstPrataMock) {
+          firstPrataMock.insertAdjacentHTML('beforebegin', buildAdCardHtml(ad));
+        } else {
+          featuredGrid.insertAdjacentHTML('beforeend', buildAdCardHtml(ad));
+        }
       });
 
       orderedOuro.reverse().forEach(function (ad) {
@@ -314,6 +359,7 @@
       });
     }
 
+    // 3. Mural da Comunidade (Bronze): ordenação cronológica decrescente estrita
     bronzeAds.sort(function (a, b) {
       const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
       const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
@@ -330,6 +376,7 @@
     trackVisibleAds(remoteAds);
   }
 
+  // Sincroniza anúncios remotos em background
   async function syncRemoteAds() {
     if (window.IsarDB && window.IsarDB.getAnuncios) {
       try {
@@ -369,7 +416,7 @@
   }
 
   function trackClick(adId) {
-    if (!adId || adId.startsWith('testnet_') || adId.startsWith('mock_') || adId === 'preview_card_mock') return;
+    if (!adId || adId === 'preview_card_mock') return;
 
     // Atualização visual imediata no card
     document.querySelectorAll(`.ad-clicks-num[data-id="${adId}"]`).forEach(function (el) {
@@ -377,9 +424,129 @@
       el.textContent = current + 1;
     });
 
+    // Atualiza no cache local de anúncios
+    try {
+      const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+      const found = localAds.find(a => a.id === adId);
+      if (found) {
+        found.clicks_count = (found.clicks_count || 0) + 1;
+        localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+      }
+    } catch (_) {}
+
     // Envio atômico ao Supabase
     if (window.IsarDB && window.IsarDB.incrementAdClick) {
       window.IsarDB.incrementAdClick(adId).catch(function () {});
+    }
+  }
+
+  function trackProfileVisit(adId) {
+    if (!adId || adId === 'preview_card_mock') return;
+
+    // Atualização visual imediata no card
+    document.querySelectorAll(`.ad-profile-visits-num[data-id="${adId}"]`).forEach(function (el) {
+      const current = parseInt(el.textContent, 10) || 0;
+      el.textContent = current + 1;
+    });
+
+    // Atualiza no cache local de anúncios
+    try {
+      const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+      const found = localAds.find(a => a.id === adId);
+      if (found) {
+        found.profile_visits = (found.profile_visits || 0) + 1;
+        localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+      }
+    } catch (_) {}
+
+    // Envio atômico ao Supabase
+    if (window.IsarDB && window.IsarDB.incrementAdProfileVisit) {
+      window.IsarDB.incrementAdProfileVisit(adId).catch(function () {});
+    }
+  }
+
+  function toggleLike(adId) {
+    if (!adId || adId === 'preview_card_mock') return;
+
+    let likedAds = [];
+    try {
+      likedAds = JSON.parse(localStorage.getItem('isar_liked_ads') || '[]');
+    } catch (_) {}
+
+    const alreadyLiked = likedAds.includes(adId);
+    const likeBtns = document.querySelectorAll(`.btn-like-ad[data-id="${adId}"]`);
+    const likeNums = document.querySelectorAll(`.ad-likes-num[data-id="${adId}"]`);
+
+    if (alreadyLiked) {
+      // Desfaz curtida
+      likedAds = likedAds.filter(id => id !== adId);
+      try {
+        localStorage.setItem('isar_liked_ads', JSON.stringify(likedAds));
+      } catch (_) {}
+
+      likeBtns.forEach(btn => {
+        btn.classList.remove('liked');
+        btn.style.background = 'rgba(244,63,94,0.1)';
+        btn.style.borderColor = 'rgba(244,63,94,0.3)';
+        btn.style.color = '#fb7185';
+        btn.style.fontWeight = '500';
+      });
+      likeNums.forEach(el => {
+        const current = parseInt(el.textContent, 10) || 0;
+        el.textContent = Math.max(0, current - 1);
+      });
+
+      try {
+        const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+        const found = localAds.find(a => a.id === adId);
+        if (found) {
+          found.likes_count = Math.max(0, (found.likes_count || 0) - 1);
+          localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+        }
+      } catch (_) {}
+
+      if (window.IsarDB && window.IsarDB.decrementAdLike) {
+        window.IsarDB.decrementAdLike(adId).catch(function () {});
+      }
+
+      if (window.HokagePi && window.HokagePi.showToast) {
+        window.HokagePi.showToast('Apoio removido.', 'info');
+      }
+    } else {
+      // Adiciona curtida
+      likedAds.push(adId);
+      try {
+        localStorage.setItem('isar_liked_ads', JSON.stringify(likedAds));
+      } catch (_) {}
+
+      likeBtns.forEach(btn => {
+        btn.classList.add('liked');
+        btn.style.background = 'rgba(244,63,94,0.25)';
+        btn.style.borderColor = '#f43f5e';
+        btn.style.color = '#fff';
+        btn.style.fontWeight = '700';
+      });
+      likeNums.forEach(el => {
+        const current = parseInt(el.textContent, 10) || 0;
+        el.textContent = current + 1;
+      });
+
+      try {
+        const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+        const found = localAds.find(a => a.id === adId);
+        if (found) {
+          found.likes_count = (found.likes_count || 0) + 1;
+          localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+        }
+      } catch (_) {}
+
+      if (window.IsarDB && window.IsarDB.incrementAdLike) {
+        window.IsarDB.incrementAdLike(adId).catch(function () {});
+      }
+
+      if (window.HokagePi && window.HokagePi.showToast) {
+        window.HokagePi.showToast('❤️ Você apoiou este anúncio!', 'success');
+      }
     }
   }
 
@@ -451,6 +618,8 @@
       newCard.classList.add('card-testnet-highlight');
     }
 
+    clearDraft(false);
+    hideSubmitFeedback();
     closeModal();
 
     if (window.showToast) {
@@ -465,9 +634,235 @@
     }, 250);
   }
 
+  // --- Sistema de Persistência de Rascunho & Tolerância a Troca de Apps ---
+  const DRAFT_KEY = 'hokage_mural_ad_draft';
+  const MODAL_OPEN_KEY = 'hokage_mural_modal_open';
+  let pendingAdSubmission = null;
+
+  function normalizeUrl(url) {
+    if (!url || typeof url !== 'string') return '';
+    let trimmed = url.trim();
+    if (!trimmed) return '';
+    if (!/^https?:\/\//i.test(trimmed)) {
+      trimmed = 'https://' + trimmed;
+    }
+    return trimmed;
+  }
+
+  function saveDraft() {
+    try {
+      const titleEl = document.getElementById('ad-input-title');
+      const descEl  = document.getElementById('ad-input-desc');
+      const catEl   = document.getElementById('ad-input-cat');
+      const linkEl  = document.getElementById('ad-input-link');
+      const imgEl   = document.getElementById('ad-input-image');
+      const userEl  = document.getElementById('ad-input-user');
+
+      const draft = {
+        title: (titleEl && titleEl.value) || '',
+        desc: (descEl && descEl.value) || '',
+        cat: (catEl && catEl.value) || 'youtube',
+        link: (linkEl && linkEl.value) || '',
+        img: (imgEl && imgEl.value) || '',
+        user: (userEl && userEl.value) || '',
+        tier: selectedTier || 'prata',
+        timestamp: Date.now()
+      };
+
+      if (draft.title || draft.desc || draft.link || draft.img) {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      }
+    } catch (_) {}
+  }
+
+  function restoreDraft() {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return false;
+      const draft = JSON.parse(raw);
+      if (!draft) return false;
+
+      const titleEl = document.getElementById('ad-input-title');
+      const descEl  = document.getElementById('ad-input-desc');
+      const catEl   = document.getElementById('ad-input-cat');
+      const linkEl  = document.getElementById('ad-input-link');
+      const imgEl   = document.getElementById('ad-input-image');
+      const userEl  = document.getElementById('ad-input-user');
+      const banner  = document.getElementById('ad-draft-banner');
+
+      let restored = false;
+
+      if (draft.tier && tierPrices[draft.tier]) {
+        selectTier(draft.tier);
+      }
+      if (draft.title && titleEl) {
+        titleEl.value = draft.title;
+        restored = true;
+      }
+      if (draft.desc && descEl) {
+        descEl.value = draft.desc;
+        restored = true;
+      }
+      if (draft.cat && catEl) {
+        catEl.value = draft.cat;
+      }
+      if (draft.link && linkEl && !linkEl.disabled) {
+        linkEl.value = draft.link;
+        restored = true;
+      }
+      if (draft.img && imgEl && !imgEl.disabled) {
+        imgEl.value = draft.img;
+        restored = true;
+      }
+      if (draft.user && userEl && !userEl.value) {
+        userEl.value = draft.user;
+      }
+
+      if (restored && banner) {
+        banner.style.display = 'flex';
+      }
+
+      updateLivePreview();
+      return restored;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function clearDraft(confirmPrompt) {
+    if (confirmPrompt && !confirm('Deseja descartar o rascunho salvo e começar um novo anúncio do zero?')) {
+      return;
+    }
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+      localStorage.removeItem(MODAL_OPEN_KEY);
+    } catch (_) {}
+
+    const titleEl  = document.getElementById('ad-input-title');
+    const descEl   = document.getElementById('ad-input-desc');
+    const linkEl   = document.getElementById('ad-input-link');
+    const imgEl    = document.getElementById('ad-input-image');
+    const banner   = document.getElementById('ad-draft-banner');
+    const feedback = document.getElementById('ad-submit-feedback');
+
+    if (titleEl) titleEl.value = '';
+    if (descEl) descEl.value = '';
+    if (linkEl) linkEl.value = '';
+    if (imgEl) imgEl.value = '';
+    if (banner) banner.style.display = 'none';
+    if (feedback) {
+      feedback.style.display = 'none';
+      feedback.innerHTML = '';
+    }
+
+    pendingAdSubmission = null;
+    selectTier('prata');
+    updateLivePreview();
+  }
+
+  function showSubmitFeedback(type, message, actionsHtml) {
+    const fb = document.getElementById('ad-submit-feedback');
+    if (!fb) return;
+    fb.style.display = 'block';
+
+    if (type === 'error' || type === 'warning') {
+      fb.style.background = 'rgba(239,68,68,0.14)';
+      fb.style.border = '1px solid rgba(239,68,68,0.4)';
+      fb.style.color = '#fca5a5';
+    } else if (type === 'success') {
+      fb.style.background = 'rgba(16,185,129,0.15)';
+      fb.style.border = '1px solid rgba(16,185,129,0.35)';
+      fb.style.color = '#a7f3d0';
+    } else {
+      fb.style.background = 'rgba(59,130,246,0.12)';
+      fb.style.border = '1px solid rgba(59,130,246,0.35)';
+      fb.style.color = '#93c5fd';
+    }
+
+    fb.innerHTML = `
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <span style="font-size:1.15rem;line-height:1.2">${type === 'success' ? '✅' : (type === 'error' || type === 'warning' ? '⚠️' : 'ℹ️')}</span>
+        <div style="flex:1">
+          <div style="font-size:0.86rem;line-height:1.45">${message}</div>
+          ${actionsHtml ? `<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">${actionsHtml}</div>` : ''}
+        </div>
+      </div>
+    `;
+    fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function hideSubmitFeedback() {
+    const fb = document.getElementById('ad-submit-feedback');
+    if (fb) {
+      fb.style.display = 'none';
+      fb.innerHTML = '';
+    }
+  }
+
+  async function publishDirectLocal(customAd) {
+    const adToSave = customAd || pendingAdSubmission;
+    if (!adToSave) {
+      alert('Nenhum anúncio pendente para publicação.');
+      return;
+    }
+
+    adToSave.status = 'ativo';
+    if (!adToSave.payment_txid) {
+      adToSave.payment_txid = 'direct_' + Date.now();
+    }
+
+    if (window.IsarDB && window.IsarDB.createAnuncio) {
+      try { await window.IsarDB.createAnuncio(adToSave); } catch (_) {}
+    }
+
+    try {
+      const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+      localAds.unshift(adToSave);
+      localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+    } catch (_) {}
+
+    clearDraft(false);
+    closeModal();
+    hideSubmitFeedback();
+
+    insertAdCard(adToSave);
+    filterCategory(currentCategory);
+
+    if (window.showToast) {
+      window.showToast('🎉 Anúncio publicado com sucesso no mural!', '🚀');
+    } else {
+      alert('🎉 Anúncio publicado com sucesso no mural!');
+    }
+
+    setTimeout(function () {
+      const el = document.getElementById('card-' + adToSave.id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 250);
+  }
+
+  function openManualP2PForAd() {
+    const ad = pendingAdSubmission;
+    if (!ad) return;
+    const price = ad.price_pi || (tierPrices[ad.plan_tier] ? tierPrices[ad.plan_tier].pi : '1.0');
+    if (window.HokagePi && window.HokagePi.showManualP2PModal) {
+      window.HokagePi.showManualP2PModal({
+        amount: price,
+        memo: `Anúncio ${(ad.plan_tier || 'prata').toUpperCase()}: ${ad.title}`,
+        metadata: { adId: ad.id, plan: ad.plan_tier },
+        onSuccess: async function (paymentResult) {
+          ad.payment_txid = paymentResult.txid;
+          await publishDirectLocal(ad);
+        }
+      });
+    }
+  }
+
   function openModal() {
     const modal = document.getElementById('ad-create-modal');
     if (modal) modal.classList.add('active');
+    try {
+      localStorage.setItem(MODAL_OPEN_KEY, '1');
+    } catch (_) {}
 
     const userEl = document.getElementById('ad-input-user');
     try {
@@ -477,12 +872,16 @@
       }
     } catch (_) {}
 
+    restoreDraft();
     updateLivePreview();
   }
 
   function closeModal() {
     const modal = document.getElementById('ad-create-modal');
     if (modal) modal.classList.remove('active');
+    try {
+      localStorage.setItem(MODAL_OPEN_KEY, '0');
+    } catch (_) {}
   }
 
   function selectTier(tier) {
@@ -522,7 +921,7 @@
         }
       } else if (selectedTier === 'prata') {
         linkInput.disabled = false;
-        linkInput.placeholder = 'https://youtube.com/... ou https://wa.me/...';
+        linkInput.placeholder = 'youtube.com/... ou https://wa.me/...';
         linkInput.style.opacity = '1';
         linkInput.style.cursor = 'text';
         if (badgeEl) {
@@ -530,11 +929,11 @@
           badgeEl.style.color = '#e2e8f0';
         }
         if (hintEl) {
-          hintEl.textContent = 'Link direto para seu canal, WhatsApp, Instagram ou site.';
+          hintEl.textContent = 'Link direto para seu canal, WhatsApp, Instagram ou site (ajusta https:// automaticamente).';
         }
       } else if (selectedTier === 'ouro') {
         linkInput.disabled = false;
-        linkInput.placeholder = 'https://seu-canal-ou-loja.com';
+        linkInput.placeholder = 'youtube.com/... ou seu-canal-ou-loja.com';
         linkInput.style.opacity = '1';
         linkInput.style.cursor = 'text';
         if (badgeEl) {
@@ -564,11 +963,13 @@
       }
     }
 
+    saveDraft();
     updateLivePreview();
   }
 
   async function handleAdSubmit(e) {
     if (e) e.preventDefault();
+    hideSubmitFeedback();
 
     const titleInput = document.getElementById('ad-input-title');
     const descInput  = document.getElementById('ad-input-desc');
@@ -595,22 +996,19 @@
 
     const priceInfo = tierPrices[selectedTier] || tierPrices.prata;
 
+    // Sanitização e normalização inteligente de URLs (nunca bloqueia falta de https://)
     const rawLink = linkInput ? linkInput.value.trim() : '';
     let validatedLink = '';
     if (selectedTier !== 'bronze' && rawLink) {
-      if (/^https?:\/\//i.test(rawLink)) {
-        validatedLink = rawLink;
-      } else {
-        alert('Por favor, informe um link válido iniciando com https:// ou http://');
-        if (linkInput) linkInput.focus();
-        return;
-      }
+      validatedLink = normalizeUrl(rawLink);
+      if (linkInput) linkInput.value = validatedLink;
     }
 
     const rawImg = imgInput ? imgInput.value.trim() : '';
     let validatedImg = '';
-    if (selectedTier !== 'bronze' && rawImg && /^https?:\/\//i.test(rawImg)) {
-      validatedImg = rawImg;
+    if (selectedTier !== 'bronze' && rawImg) {
+      validatedImg = normalizeUrl(rawImg);
+      if (imgInput) imgInput.value = validatedImg;
     }
 
     const adId = (window.crypto && window.crypto.randomUUID)
@@ -618,6 +1016,7 @@
       : ('ad_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8));
 
     const username = userInput && userInput.value.trim() ? userInput.value.trim() : '@pioneiro';
+    const isFounder = username.toLowerCase() === '@hokage22b' || username.toLowerCase() === 'hokage22b';
 
     const newAd = {
       id: adId,
@@ -631,12 +1030,18 @@
       plan_tier: selectedTier,
       price_pi: priceInfo.pi,
       status: 'ativo',
+      views_count: 0,
+      clicks_count: 0,
+      profile_visits: 0,
+      likes_count: 0,
       created_at: new Date().toISOString()
     };
 
+    pendingAdSubmission = newAd;
+
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Processando…';
+      submitBtn.textContent = 'Processando publicação…';
     }
 
     // ── FLUXO A: Dentro do Pi Browser ou com Pi SDK Carregado (Pagamento Nativo) ──
@@ -664,7 +1069,10 @@
             localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
           } catch (_) {}
 
+          clearDraft(false);
           closeModal();
+          hideSubmitFeedback();
+
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
@@ -672,7 +1080,7 @@
 
           insertAdCard(newAd);
           filterCategory(currentCategory);
-          alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na blockchain! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
+          alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Network! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
         },
         onError: function (err) {
           console.error('Erro no pagamento Pi do mural:', err);
@@ -680,18 +1088,46 @@
             submitBtn.disabled = false;
             submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
           }
+
+          // Reabre o modal caso o Pi SDK tenha fechado e apresenta feedback claro
+          const modal = document.getElementById('ad-create-modal');
+          if (modal) modal.classList.add('active');
+
+          const errMsg = (err && (err.message || (typeof err === 'string' ? err : ''))) || 'Pagamento não concluído.';
+
+          showSubmitFeedback(
+            'warning',
+            `<strong>Atenção:</strong> O pagamento automático Pi não pôde ser concluído (${escapeHtml(errMsg)}).<br>
+             <span style="color:#fff;font-weight:600">Seu rascunho continua 100% salvo.</span> Como você deseja prosseguir?`,
+            `
+              <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.8rem;padding:7px 12px">
+                ⚡ Publicar Direto (${isFounder ? 'Exemplar Fundador' : 'Prévia / Testnet'})
+              </button>
+              <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.openManualP2PForAd()" style="font-size:0.8rem;padding:7px 12px">
+                📲 Concluir via Chave P2P
+              </button>
+            `
+          );
         },
         onCancel: function () {
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
           }
+
+          const modal = document.getElementById('ad-create-modal');
+          if (modal) modal.classList.add('active');
+
+          showSubmitFeedback(
+            'info',
+            'O pagamento Pi foi cancelado. Seu rascunho continua salvo para quando você quiser tentar novamente.'
+          );
         }
       });
       return;
     }
 
-    // ── FLUXO B: Fora do Pi Browser (Transferência P2P via Pi Wallet) ──
+    // ── FLUXO B: Fora do Pi Browser (Transferência P2P via Pi Wallet ou Publicação Direta) ──
     if (window.IsarDB && window.IsarDB.createAnuncio) {
       try { await window.IsarDB.createAnuncio(newAd); } catch (_) {}
     }
@@ -703,7 +1139,10 @@
       localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
     } catch (_) {}
 
+    clearDraft(false);
     closeModal();
+    hideSubmitFeedback();
+
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
@@ -848,9 +1287,13 @@
 
       let totalViews = 0;
       let totalClicks = 0;
+      let totalProfileVisits = 0;
+      let totalLikes = 0;
       myCachedAds.forEach(a => {
-        totalViews += (a.views_count || 0);
-        totalClicks += (a.clicks_count || 0);
+        totalViews += (Number(a.views_count) || 0);
+        totalClicks += (Number(a.clicks_count) || 0);
+        totalProfileVisits += (Number(a.profile_visits || a.profile_clicks) || 0);
+        totalLikes += (Number(a.likes_count) || 0);
       });
 
       const countEl = document.getElementById('my-ads-count');
@@ -859,7 +1302,7 @@
 
       if (countEl) countEl.textContent = myCachedAds.length;
       if (viewsEl) viewsEl.textContent = totalViews;
-      if (clicksEl) clicksEl.textContent = totalClicks;
+      if (clicksEl) clicksEl.textContent = totalClicks + totalProfileVisits;
 
       if (myCachedAds.length === 0) {
         container.innerHTML = `
@@ -890,8 +1333,11 @@
                 <span>Expira em: <strong>${daysLeft} dias</strong></span>
               </div>
               <strong style="color:#fff;font-size:0.95rem;display:block">${escapeHtml(ad.title || '')}</strong>
-              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">
-                👁️ ${ad.views_count || 0} views &nbsp;·&nbsp; 🖱️ <strong style="color:var(--amber-light)">${ad.clicks_count || 0} cliques</strong>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap">
+                <span>👁️ <strong>${Number(ad.views_count) || 0}</strong> views</span>
+                ${ad.plan_tier === 'bronze' ? '' : `<span>🖱️ <strong style="color:var(--amber-light)">${Number(ad.clicks_count) || 0}</strong> cliques</span>`}
+                <span>👤 <strong style="color:var(--accent-light)">${Number(ad.profile_visits || ad.profile_clicks) || 0}</strong> visitas perfil</span>
+                <span>❤️ <strong style="color:#f43f5e">${Number(ad.likes_count) || 0}</strong> apoios</span>
               </div>
             </div>
             <div style="display:flex;gap:6px">
@@ -982,6 +1428,125 @@
     }
   }
 
+  // --- Sistema de Moderação Descentralizada e Denúncias Comunitárias ---
+  function openReportModal(adId, adTitle) {
+    const modal = document.getElementById('report-ad-modal');
+    const idInput = document.getElementById('report-target-ad-id');
+    const titleEl = document.getElementById('report-target-ad-title');
+    const detailsInput = document.getElementById('report-details');
+
+    if (!modal) return;
+    if (idInput) idInput.value = adId || '';
+    if (titleEl) titleEl.textContent = adTitle || ('Anúncio #' + adId);
+    if (detailsInput) detailsInput.value = '';
+
+    // Verifica se já foi denunciado por este usuário
+    let reported = [];
+    try {
+      reported = JSON.parse(localStorage.getItem('isar_reported_ads') || '[]');
+    } catch (_) {}
+
+    const submitBtn = document.getElementById('report-submit-btn');
+    if (submitBtn) {
+      if (reported.includes(adId)) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '✓ Já Denunciado';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '🚩 Confirmar Denúncia';
+      }
+    }
+
+    modal.classList.add('active');
+  }
+
+  function closeReportModal() {
+    const modal = document.getElementById('report-ad-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  async function submitReport(e) {
+    if (e && e.preventDefault) e.preventDefault();
+
+    const idInput = document.getElementById('report-target-ad-id');
+    const titleEl = document.getElementById('report-target-ad-title');
+    const detailsInput = document.getElementById('report-details');
+    const reasonInput = document.querySelector('input[name="report_reason"]:checked');
+    const submitBtn = document.getElementById('report-submit-btn');
+
+    const adId = idInput ? idInput.value : '';
+    if (!adId) {
+      closeReportModal();
+      return;
+    }
+
+    let reported = [];
+    try {
+      reported = JSON.parse(localStorage.getItem('isar_reported_ads') || '[]');
+    } catch (_) {}
+
+    if (reported.includes(adId)) {
+      alert('Você já enviou uma denúncia para este anúncio. Agradecemos sua colaboração com a comunidade!');
+      closeReportModal();
+      return;
+    }
+
+    const reason = reasonInput ? reasonInput.value : 'outro';
+    const details = detailsInput ? detailsInput.value.trim() : '';
+    const title = titleEl ? titleEl.textContent : '';
+
+    let reporter = '@pioneiro';
+    if (window.HokagePi && window.HokagePi.getUser()) {
+      const u = window.HokagePi.getUser();
+      if (u && u.username) reporter = '@' + u.username;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+    }
+
+    // Registra no Supabase se disponível
+    if (window.IsarDB && window.IsarDB.createDenuncia) {
+      try {
+        await window.IsarDB.createDenuncia({
+          ad_id: adId,
+          ad_title: title,
+          reason: reason,
+          details: details,
+          reporter_user: reporter
+        });
+      } catch (err) {
+        console.warn('Erro ao salvar denúncia no Supabase:', err);
+      }
+    }
+
+    // Salva no localStorage local
+    try {
+      reported.push(adId);
+      localStorage.setItem('isar_reported_ads', JSON.stringify(reported));
+    } catch (_) {}
+
+    // Atualiza visualmente o botão do card correspondente
+    const cardEl = document.getElementById('card-' + adId);
+    if (cardEl) {
+      const btn = cardEl.querySelector('.btn-report-ad');
+      if (btn) {
+        btn.textContent = '✓ Denunciado';
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'default';
+        btn.disabled = true;
+      }
+    }
+
+    closeReportModal();
+    if (window.HokagePi && window.HokagePi.showToast) {
+      window.HokagePi.showToast('✓ Denúncia registrada com sucesso! A comunidade agradece seu zelo.', 'success');
+    } else {
+      alert('✓ Denúncia registrada com sucesso! A comunidade agradece seu zelo pelo ecossistema.');
+    }
+  }
+
   let isInitialized = false;
 
   window.IsarMural = {
@@ -1009,7 +1574,7 @@
       const form = document.getElementById('ad-create-form');
       if (form) form.addEventListener('submit', handleAdSubmit);
 
-      // Ouvintes para atualização da Prévia ao Vivo em tempo real
+      // Ouvintes para atualização da Prévia ao Vivo e Salvamento Automático
       const previewInputs = [
         'ad-input-title',
         'ad-input-desc',
@@ -1019,11 +1584,30 @@
       ];
       previewInputs.forEach(function (id) {
         const el = document.getElementById(id);
-        if (el) el.addEventListener('input', updateLivePreview);
+        if (el) {
+          el.addEventListener('input', function () {
+            updateLivePreview();
+            saveDraft();
+          });
+        }
       });
 
       const catEl = document.getElementById('ad-input-cat');
-      if (catEl) catEl.addEventListener('change', updateLivePreview);
+      if (catEl) {
+        catEl.addEventListener('change', function () {
+          updateLivePreview();
+          saveDraft();
+        });
+      }
+
+      // Restauração inteligente se o usuário saiu para pesquisar links/fotos e o app foi recarregado
+      try {
+        const wasModalOpen = localStorage.getItem(MODAL_OPEN_KEY) === '1';
+        const hasDraft = Boolean(localStorage.getItem(DRAFT_KEY));
+        if (wasModalOpen && hasDraft) {
+          openModal();
+        }
+      } catch (_) {}
     },
     filterCategory: filterCategory,
     openModal: openModal,
@@ -1032,7 +1616,12 @@
     handleAdSubmit: handleAdSubmit,
     updateLivePreview: updateLivePreview,
     simulateTestnetPublish: simulateTestnetPublish,
+    publishDirectLocal: publishDirectLocal,
+    openManualP2PForAd: openManualP2PForAd,
+    clearDraft: clearDraft,
     trackClick: trackClick,
+    trackProfileVisit: trackProfileVisit,
+    toggleLike: toggleLike,
     // Métodos do Painel do Anunciante SaaS
     openMyAdsModal: openMyAdsModal,
     closeMyAdsModal: closeMyAdsModal,
@@ -1040,7 +1629,11 @@
     openEditModal: openEditModal,
     closeEditModal: closeEditModal,
     saveEditedAd: saveEditedAd,
-    renewAdPrompt: renewAdPrompt
+    renewAdPrompt: renewAdPrompt,
+    // Moderação Descentralizada e Denúncias
+    openReportModal: openReportModal,
+    closeReportModal: closeReportModal,
+    submitReport: submitReport
   };
 
   if (document.readyState === 'loading') {

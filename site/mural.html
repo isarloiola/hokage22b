@@ -501,7 +501,23 @@
       <button type="button" class="pi-modal-close" onclick="window.IsarMural && window.IsarMural.closeModal()" aria-label="Fechar modal">✕</button>
       <div class="pi-modal-logo">📢</div>
       <h3 id="modal-ad-title">Anunciar na Gazeta dos Pioneiros</h3>
-      <p>Divulgue seu canal, produto, serviço ou mensagem para milhares de pioneiros.</p>
+      <p style="margin-bottom:8px">Divulgue seu canal, produto, serviço ou mensagem para milhares de pioneiros.</p>
+
+      <!-- BANNER DE PERSISTÊNCIA / RECUPERAÇÃO DE RASCUNHO -->
+      <div id="ad-draft-banner" style="display:none;margin:10px 0 12px 0;padding:10px 14px;border-radius:var(--radius-sm);background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);color:var(--amber-light);font-size:0.83rem;align-items:center;justify-content:space-between;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:1.1rem">📝</span>
+          <span><strong>Rascunho recuperado:</strong> Seus dados foram salvos automaticamente. Pode continuar editando!</span>
+        </div>
+        <button type="button" onclick="window.IsarMural && window.IsarMural.clearDraft(true)" style="background:none;border:none;color:#ef4444;font-size:0.78rem;cursor:pointer;text-decoration:underline;white-space:nowrap;font-weight:700">
+          ✕ Limpar
+        </button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);margin-bottom:14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.22);padding:6px 10px;border-radius:6px">
+        <span style="color:#10b981">●</span>
+        <span><strong>Salvamento automático ativo:</strong> você pode sair para copiar links ou fotos sem perder o texto.</span>
+      </div>
 
       <form id="ad-create-form" onsubmit="window.IsarMural && window.IsarMural.handleAdSubmit(event)">
         <!-- Escolha do Nível / Posição -->
@@ -555,9 +571,9 @@
             <label for="ad-input-link" style="font-size:0.85rem;color:var(--gray-light)">Link de Destino</label>
             <span id="ad-link-status-badge" style="font-size:0.75rem;color:var(--accent-light);font-weight:600">Disponível no Prata e Ouro</span>
           </div>
-          <input type="url" id="ad-input-link" placeholder="https://youtube.com/... ou https://wa.me/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+          <input type="text" inputmode="url" id="ad-input-link" placeholder="youtube.com/... ou wa.me/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
           <small id="ad-link-hint" style="display:block;font-size:0.75rem;color:var(--gray-light);margin-top:4px">
-            Seu link direto para canal do YouTube, WhatsApp, loja ou site.
+            Seu link direto para canal do YouTube, WhatsApp, loja ou site (pode colar sem https://, o sistema ajusta).
           </small>
         </div>
 
@@ -584,7 +600,7 @@
                 ✕ Remover foto
               </button>
             </div>
-            <input type="url" id="ad-input-image" placeholder="https://... (URL da imagem ou canal do YouTube)" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+            <input type="text" inputmode="url" id="ad-input-image" placeholder="https://... (URL da foto ou canal do YouTube)" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
           </div>
 
           <small id="ad-image-hint" style="display:block;font-size:0.75rem;color:var(--gray-light);margin-top:4px">
@@ -615,6 +631,9 @@
             <!-- Renderizado dinamicamente -->
           </div>
         </div>
+
+        <!-- FEEDBACK / STATUS DE SUBMISSÃO -->
+        <div id="ad-submit-feedback" style="display:none;margin-bottom:14px;padding:12px 14px;border-radius:var(--radius-sm);font-size:0.85rem;line-height:1.4"></div>
 
         <!-- Ações do Modal: Publicar Real ou Testar na Testnet -->
         <div style="display:flex;flex-direction:column;gap:10px">
@@ -772,7 +791,7 @@
   <script src="assets/js/modules/ui.js?v=4.6"></script>
   <script src="assets/js/modules/db.js?v=5.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=5.2"></script>
-  <script src="assets/js/modules/mural.v4.js?v=6.0"></script>
+  <script src="assets/js/modules/mural.v4.js?v=6.1"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');
