@@ -492,6 +492,15 @@
 
     metadata.pioneer_username = user.username;
 
+    // PRÉ-VERIFICAÇÃO ATIVA: Limpa qualquer pagamento anterior expirado/cancelado no SDK antes de criar um novo
+    if (window.Pi && window.Pi.authenticate) {
+      try {
+        await window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
+      } catch (preAuthErr) {
+        console.warn('Pré-verificação Pi authenticate:', preAuthErr);
+      }
+    }
+
     const paymentData = {
       amount: amount,
       memo: memo,
@@ -529,6 +538,9 @@
 
       onCancel: function (paymentId) {
         console.log('Pagamento cancelado pelo pioneiro:', paymentId);
+        if (paymentId) {
+          cancelPaymentOnServer(paymentId);
+        }
         showToast('Pagamento cancelado na Pi Wallet.', 'info');
         if (typeof options.onCancel === 'function') {
           options.onCancel(paymentId);
@@ -543,12 +555,14 @@
           return;
         }
 
-        // Se o erro for de pagamento expirado, tenta limpar no backend
-        if (/expired|progress/i.test(errText)) {
-          console.warn('Pi Payment expirado detectado:', error, payment);
+        // Se o erro for de pagamento expirado, cancelado ou em andamento, reseta a sessão do SDK
+        if (/expired|progress|cancelled|canceled/i.test(errText)) {
+          console.warn('Pi Payment pendente/expirado/cancelado detectado:', error, payment);
+          isSdkSessionAuthenticated = false;
           if (payment && payment.identifier) {
             cancelPaymentOnServer(payment.identifier);
-          } else if (window.Pi && window.Pi.authenticate) {
+          }
+          if (window.Pi && window.Pi.authenticate) {
             try {
               window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound).catch(function () {});
             } catch (_) {}
@@ -582,8 +596,9 @@
         return;
       }
 
-      if (/expired|progress/i.test(errMsg)) {
-        console.warn('Pi createPayment lançou pagamento expirado:', errMsg);
+      if (/expired|progress|cancelled|canceled/i.test(errMsg)) {
+        console.warn('Pi createPayment lançou pagamento expirado/cancelado:', errMsg);
+        isSdkSessionAuthenticated = false;
         if (window.Pi && window.Pi.authenticate) {
           try {
             window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound).catch(function () {});

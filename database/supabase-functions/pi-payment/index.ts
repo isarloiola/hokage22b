@@ -145,7 +145,7 @@ serve(async (req) => {
       });
     }
 
-    // 3. CANCELAMENTO DO PAGAMENTO (onCancel ou limpeza de pendência)
+    // 3. CANCELAMENTO DO PAGAMENTO (onCancel ou limpeza de pendência com idempotência)
     if (action === "cancel") {
       const response = await fetch(`${piApiBase}/payments/${paymentId}/cancel`, {
         method: "POST",
@@ -156,7 +156,21 @@ serve(async (req) => {
         body: "{}",
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+
+      // Se a Pi Network responder que já foi cancelado ou não encontrado, trata como sucesso (idempotente)
+      const isAlreadyCancelled = !response.ok && (
+        (data && data.error && (typeof data.error === "string") && (data.error.includes("already_cancelled") || data.error.includes("not_found") || data.error.includes("expired"))) ||
+        (data && data.error_message && (typeof data.error_message === "string") && (data.error_message.includes("already") || data.error_message.includes("cancelled") || data.error_message.includes("canceled") || data.error_message.includes("expired")))
+      );
+
+      if (isAlreadyCancelled) {
+        return new Response(JSON.stringify({ status: "cancelled", message: "Pagamento já cancelado ou expirado na Pi Network.", data }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: response.status,

@@ -635,13 +635,13 @@
         <!-- FEEDBACK / STATUS DE SUBMISSÃO -->
         <div id="ad-submit-feedback" style="display:none;margin-bottom:14px;padding:12px 14px;border-radius:var(--radius-sm);font-size:0.85rem;line-height:1.4"></div>
 
-        <!-- Ações do Modal: Publicar Real ou Testar na Testnet -->
+        <!-- Ações do Modal: Publicar Real ou Publicar Direto -->
         <div style="display:flex;flex-direction:column;gap:10px">
           <button type="submit" class="btn btn-primary" id="ad-submit-btn" style="width:100%;padding:14px;font-weight:700">
             🚀 Publicar Anúncio no Mural (1.0 π)
           </button>
-          <button type="button" class="btn btn-outline" id="ad-testnet-btn" onclick="window.IsarMural && window.IsarMural.simulateTestnetPublish()" style="width:100%;padding:11px;font-size:0.86rem;border-color:rgba(139,92,246,0.5);color:var(--accent-light)">
-            👁️ Pré-visualizar Anúncio no Mural
+          <button type="button" class="btn btn-outline" id="ad-testnet-btn" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="width:100%;padding:11px;font-size:0.86rem;border-color:rgba(245,158,11,0.5);color:var(--amber-light);font-weight:600">
+            ⚡ Publicar Direto no Mural (Modo Imediato / Fundador)
           </button>
         </div>
       </form>
@@ -790,8 +790,8 @@
   <script src="assets/js/modules/i18n.js?v=4.6"></script>
   <script src="assets/js/modules/ui.js?v=4.6"></script>
   <script src="assets/js/modules/db.js?v=5.0"></script>
-  <script src="assets/js/modules/pi-pay.js?v=5.3"></script>
-  <script src="assets/js/modules/mural.v4.js?v=6.2"></script>
+  <script src="assets/js/modules/pi-pay.js?v=5.4"></script>
+  <script src="assets/js/modules/mural.v4.js?v=6.3"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');

@@ -871,7 +871,11 @@
   }
 
   async function clearExpiredPaymentAndRetry() {
-    if (window.showToast) window.showToast('Verificando pagamentos expirados na Pi Wallet...', 'info');
+    if (window.showToast) window.showToast('Limpando pendências e liberando carteira Pi...', 'info');
+    showSubmitFeedback(
+      'info',
+      '⏳ <strong>Liberando sessão da Pi Wallet...</strong><br>Aguarde enquanto limpamos pagamentos antigos presos na memória do SDK.'
+    );
     if (window.HokagePi && window.HokagePi.clearIncompletePayments) {
       await window.HokagePi.clearIncompletePayments();
     } else if (window.Pi && window.Pi.authenticate) {
@@ -882,11 +886,14 @@
       } catch (_) {}
     }
     showSubmitFeedback(
-      'info',
-      'Verificação concluída. Se a carteira Pi continuar com pendência anterior travada, publique diretamente agora:',
+      'success',
+      '✅ <strong>Carteira Pi liberada!</strong><br>Você pode tentar o pagamento novamente ou publicar diretamente no mural agora mesmo:',
       `
-        <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.84rem;padding:8px 14px;background:#f59e0b;color:#000;font-weight:700">
+        <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.86rem;padding:9px 16px;background:#f59e0b;border-color:#d97706;color:#000;font-weight:700">
           ⚡ Publicar Agora no Mural
+        </button>
+        <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.handleAdSubmit()" style="font-size:0.82rem;padding:8px 12px;border-color:rgba(255,255,255,0.3)">
+          💳 Tentar Pagamento Pi Novamente
         </button>
       `
     );
@@ -1146,25 +1153,25 @@
           if (modal) modal.classList.add('active');
 
           const errMsg = (err && (err.message || (typeof err === 'string' ? err : ''))) || 'Pagamento não concluído.';
-          const isExpired = /expired|progress/i.test(errMsg);
+          const isPendingOrCancelled = /expired|cancelled|canceled|progress/i.test(errMsg);
 
-          if (isExpired) {
+          if (isPendingOrCancelled) {
             showSubmitFeedback(
               'warning',
               `<div style="font-weight:700;font-size:0.96rem;margin-bottom:6px;color:#fca5a5">
-                ⚠️ Transação anterior expirada na sua Pi Wallet
+                ⚠️ Transação anterior na Pi Wallet já cancelada ou expirada
                </div>
                <div style="font-size:0.84rem;color:#f3f4f6;line-height:1.45;margin-bottom:12px">
                 A Pi Network reportou: <em>"${escapeHtml(errMsg)}"</em>.<br>
-                Isso acontece quando uma tentativa anterior não foi concluída a tempo na carteira.<br>
-                <strong style="color:#10b981">Seus dados continuam 100% salvos.</strong> Você pode publicar seu anúncio diretamente agora mesmo:
+                Isso ocorre quando uma tentativa anterior não foi assinada a tempo ou já foi encerrada pela carteira.<br>
+                <strong style="color:#10b981">Seus dados continuam 100% salvos.</strong> Para publicar imediatamente sem travas na carteira:
                </div>`,
               `
-                <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.86rem;padding:9px 16px;background:#f59e0b;border-color:#d97706;color:#000;font-weight:700">
+                <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.88rem;padding:10px 18px;background:#f59e0b;border-color:#d97706;color:#000;font-weight:800">
                   ⚡ Publicar Agora no Mural
                 </button>
                 <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.clearExpiredPaymentAndRetry()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(255,255,255,0.25)">
-                  🔄 Limpar Pendência da Carteira
+                  🔄 Limpar e Tentar na Pi Wallet
                 </button>
                 <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.openManualP2PForAd()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(255,255,255,0.25)">
                   📲 Chave P2P
