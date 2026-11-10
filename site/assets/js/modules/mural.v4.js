@@ -582,6 +582,13 @@
     };
 
     previewContainer.innerHTML = buildAdCardHtml(previewAd);
+
+    // Controle de Exibição do Botão Exclusivo do Fundador
+    const cleanUser = user.toLowerCase().replace('@', '').trim();
+    const founderBtn = document.getElementById('ad-founder-demo-btn');
+    if (founderBtn) {
+      founderBtn.style.display = (cleanUser === 'hokage22b') ? 'block' : 'none';
+    }
   }
 
   function simulateTestnetPublish() {
@@ -799,55 +806,51 @@
     }
   }
 
-  async function publishDirectLocal(customAd) {
-    let adToSave = customAd || pendingAdSubmission;
-    if (!adToSave) {
-      const titleInput = document.getElementById('ad-input-title');
-      const descInput  = document.getElementById('ad-input-desc');
-      const linkInput  = document.getElementById('ad-input-link');
-      const imgInput   = document.getElementById('ad-input-image');
-      const catInput   = document.getElementById('ad-input-cat');
-      const userInput  = document.getElementById('ad-input-user');
-
-      const title = titleInput ? titleInput.value.trim() : 'Anúncio na Gazeta';
-      const desc = descInput ? descInput.value.trim() : 'Publicação oficial';
-      const user = userInput && userInput.value.trim() ? userInput.value.trim() : '@pioneiro';
-      const priceInfo = tierPrices[selectedTier] || tierPrices.prata;
-
-      adToSave = {
-        id: (window.crypto && window.crypto.randomUUID)
-          ? window.crypto.randomUUID()
-          : ('ad_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8)),
-        title: title,
-        description: desc,
-        link_url: linkInput && !linkInput.disabled ? normalizeUrl(linkInput.value.trim()) : '',
-        image_url: imgInput && !imgInput.disabled ? normalizeUrl(imgInput.value.trim()) : '',
-        category: catInput ? catInput.value : 'geral',
-        pioneer_username: user,
-        pioneer_name: user.replace('@', ''),
-        plan_tier: selectedTier,
-        price_pi: priceInfo.pi,
-        status: 'ativo',
-        views_count: 0,
-        clicks_count: 0,
-        profile_visits: 0,
-        likes_count: 0,
-        created_at: new Date().toISOString()
-      };
+  // --- Publicação de Exemplar Demonstrativo Oficial (Exclusivo do Fundador @hokage22b) ---
+  async function publishFounderDemo() {
+    const userInput = document.getElementById('ad-input-user');
+    const userHandle = ((userInput && userInput.value) || '').toLowerCase().replace('@', '').trim();
+    if (userHandle !== 'hokage22b') {
+      alert('A publicação de demonstração institucional é exclusiva para o Fundador (@hokage22b). Anunciantes comerciais devem realizar o pagamento via Pi Wallet ou Chave P2P.');
+      return;
     }
 
-    adToSave.status = 'ativo';
-    if (!adToSave.payment_txid) {
-      adToSave.payment_txid = 'direct_' + Date.now();
-    }
+    const titleInput = document.getElementById('ad-input-title');
+    const descInput  = document.getElementById('ad-input-desc');
+    const linkInput  = document.getElementById('ad-input-link');
+    const imgInput   = document.getElementById('ad-input-image');
+    const catInput   = document.getElementById('ad-input-cat');
+
+    const title = (titleInput && titleInput.value.trim()) || 'Exemplar Oficial Hokage22b';
+    const desc  = (descInput && descInput.value.trim()) || 'Demonstração institucional da Gazeta dos Pioneiros.';
+
+    const demoAd = {
+      id: 'founder_demo_' + Date.now(),
+      title: title,
+      description: desc,
+      link_url: linkInput && !linkInput.disabled ? normalizeUrl(linkInput.value.trim()) : '',
+      image_url: imgInput && !imgInput.disabled ? normalizeUrl(imgInput.value.trim()) : '',
+      category: catInput ? catInput.value : 'geral',
+      pioneer_username: '@hokage22b',
+      pioneer_name: 'Hokage22b',
+      plan_tier: selectedTier || 'ouro',
+      price_pi: '0.00 (Exemplar Oficial)',
+      status: 'demonstracao',
+      is_founder_demo: true,
+      views_count: 0,
+      clicks_count: 0,
+      profile_visits: 0,
+      likes_count: 0,
+      created_at: new Date().toISOString()
+    };
 
     if (window.IsarDB && window.IsarDB.createAnuncio) {
-      try { await window.IsarDB.createAnuncio(adToSave); } catch (_) {}
+      try { await window.IsarDB.createAnuncio(demoAd); } catch (_) {}
     }
 
     try {
       const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
-      localAds.unshift(adToSave);
+      localAds.unshift(demoAd);
       localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
     } catch (_) {}
 
@@ -855,26 +858,25 @@
     closeModal();
     hideSubmitFeedback();
 
-    insertAdCard(adToSave);
+    insertAdCard(demoAd);
     filterCategory(currentCategory);
 
     if (window.showToast) {
-      window.showToast('🎉 Anúncio publicado com sucesso no mural!', '🚀');
-    } else {
-      alert('🎉 Anúncio publicado com sucesso no mural!');
+      window.showToast('👑 Exemplar Ouro Fundador demonstrativo publicado!', '✨');
     }
 
     setTimeout(function () {
-      const el = document.getElementById('card-' + adToSave.id);
+      const el = document.getElementById('card-' + demoAd.id);
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 250);
   }
 
+  // --- Recuperação / Destravamento de Sessão da Carteira Pi ---
   async function clearExpiredPaymentAndRetry() {
     if (window.showToast) window.showToast('Limpando pendências e liberando carteira Pi...', 'info');
     showSubmitFeedback(
       'info',
-      '⏳ <strong>Liberando sessão da Pi Wallet...</strong><br>Aguarde enquanto limpamos pagamentos antigos presos na memória do SDK.'
+      '⏳ <strong>Destravando sessão da Pi Wallet...</strong><br>Aguarde enquanto limpamos pagamentos antigos pendentes na memória do SDK.'
     );
     if (window.HokagePi && window.HokagePi.clearIncompletePayments) {
       await window.HokagePi.clearIncompletePayments();
@@ -887,30 +889,76 @@
     }
     showSubmitFeedback(
       'success',
-      '✅ <strong>Carteira Pi liberada!</strong><br>Você pode tentar o pagamento novamente ou publicar diretamente no mural agora mesmo:',
+      '✅ <strong>Carteira Pi destravada!</strong><br>Você pode tentar o pagamento seguro novamente ou transferir via Chave P2P:',
       `
-        <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.86rem;padding:9px 16px;background:#f59e0b;border-color:#d97706;color:#000;font-weight:700">
-          ⚡ Publicar Agora no Mural
+        <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.handleAdSubmit()" style="font-size:0.86rem;padding:9px 16px;background:#8b5cf6;border-color:#7c3aed;color:#fff;font-weight:700">
+          🚀 Pagar com Pi Wallet Novamente
         </button>
-        <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.handleAdSubmit()" style="font-size:0.82rem;padding:8px 12px;border-color:rgba(255,255,255,0.3)">
-          💳 Tentar Pagamento Pi Novamente
+        <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.openManualP2PForAd()" style="font-size:0.84rem;padding:8px 14px;border-color:rgba(245,158,11,0.6);color:var(--amber-light);font-weight:600">
+          📲 Pagar via Chave P2P
         </button>
       `
     );
   }
 
+  // --- Pagamento Alternativo via Chave P2P (Quando o SDK da Pi Wallet der erro) ---
   function openManualP2PForAd() {
-    const ad = pendingAdSubmission;
-    if (!ad) return;
-    const price = ad.price_pi || (tierPrices[ad.plan_tier] ? tierPrices[ad.plan_tier].pi : '1.0');
+    const titleInput = document.getElementById('ad-input-title');
+    const descInput  = document.getElementById('ad-input-desc');
+    const linkInput  = document.getElementById('ad-input-link');
+    const imgInput   = document.getElementById('ad-input-image');
+    const catInput   = document.getElementById('ad-input-cat');
+    const userInput  = document.getElementById('ad-input-user');
+
+    const title = (titleInput && titleInput.value.trim()) || 'Anúncio';
+    const user = (userInput && userInput.value.trim()) || '@pioneiro';
+    const priceInfo = tierPrices[selectedTier] || tierPrices.prata;
+
+    const adId = (window.crypto && window.crypto.randomUUID)
+      ? window.crypto.randomUUID()
+      : ('ad_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8));
+
+    const pendingAd = {
+      id: adId,
+      title: title,
+      description: (descInput && descInput.value.trim()) || '',
+      link_url: linkInput && !linkInput.disabled ? normalizeUrl(linkInput.value.trim()) : '',
+      image_url: imgInput && !imgInput.disabled ? normalizeUrl(imgInput.value.trim()) : '',
+      category: catInput ? catInput.value : 'geral',
+      pioneer_username: user,
+      pioneer_name: user.replace('@', ''),
+      plan_tier: selectedTier,
+      price_pi: priceInfo.pi,
+      status: 'pendente', // NUNCA ativo de graça! Pendente até confirmação
+      payment_method: 'p2p_manual',
+      created_at: new Date().toISOString()
+    };
+
     if (window.HokagePi && window.HokagePi.showManualP2PModal) {
       window.HokagePi.showManualP2PModal({
-        amount: price,
-        memo: `Anúncio ${(ad.plan_tier || 'prata').toUpperCase()}: ${ad.title}`,
-        metadata: { adId: ad.id, plan: ad.plan_tier },
+        amount: priceInfo.pi,
+        memo: `Anúncio ${selectedTier.toUpperCase()}: ${title}`,
+        metadata: { adId: adId, plan: selectedTier, pioneer_username: user },
         onSuccess: async function (paymentResult) {
-          ad.payment_txid = paymentResult.txid;
-          await publishDirectLocal(ad);
+          pendingAd.status = 'ativo';
+          pendingAd.payment_txid = paymentResult.txid;
+
+          if (window.IsarDB && window.IsarDB.createAnuncio) {
+            try { await window.IsarDB.createAnuncio(pendingAd); } catch (_) {}
+          }
+          try {
+            const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
+            localAds.unshift(pendingAd);
+            localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
+          } catch (_) {}
+
+          clearDraft(false);
+          closeModal();
+          hideSubmitFeedback();
+
+          insertAdCard(pendingAd);
+          filterCategory(currentCategory);
+          alert(`🎉 Pagamento P2P de ${priceInfo.pi} π confirmado na blockchain! Seu anúncio já está no ar na Gazeta.`);
         }
       });
     }
@@ -1701,7 +1749,7 @@
     handleAdSubmit: handleAdSubmit,
     updateLivePreview: updateLivePreview,
     simulateTestnetPublish: simulateTestnetPublish,
-    publishDirectLocal: publishDirectLocal,
+    publishFounderDemo: publishFounderDemo,
     openManualP2PForAd: openManualP2PForAd,
     clearExpiredPaymentAndRetry: clearExpiredPaymentAndRetry,
     clearDraft: clearDraft,
