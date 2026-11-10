@@ -583,15 +583,49 @@
 
     previewContainer.innerHTML = buildAdCardHtml(previewAd);
 
-    // Controle de Exibição do Botão Exclusivo do Fundador
+    // Controle Inteligente: Alterne entre os Botões do Fundador e de Anunciantes Padrão
     const cleanUser = user.toLowerCase().replace('@', '').trim();
-    const founderBtn = document.getElementById('ad-founder-demo-btn');
-    if (founderBtn) {
-      founderBtn.style.display = (cleanUser === 'hokage22b') ? 'block' : 'none';
+    let cachedPiUser = '';
+    try {
+      const piUser = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
+      if (piUser && piUser.username) {
+        cachedPiUser = piUser.username.toLowerCase().replace('@', '').trim();
+      }
+    } catch (_) {}
+
+    const isFounder = cleanUser === 'hokage22b' || cachedPiUser === 'hokage22b';
+    const founderBox = document.getElementById('founder-actions-box');
+    const standardBox = document.getElementById('standard-actions-box');
+    if (founderBox && standardBox) {
+      if (isFounder) {
+        founderBox.style.display = 'block';
+        standardBox.style.display = 'none';
+      } else {
+        founderBox.style.display = 'none';
+        standardBox.style.display = 'flex';
+      }
+    }
+  }
+
+  // --- Função para Retornar da Prévia para o Formulário sem Perder Dados ---
+  function returnFromPreview(testId) {
+    if (testId) {
+      const card = document.getElementById('card-' + testId);
+      if (card) card.remove();
+    }
+    const returnBar = document.getElementById('mural-preview-return-bar');
+    if (returnBar) returnBar.remove();
+
+    openModal();
+    const modal = document.getElementById('ad-create-modal');
+    if (modal) {
+      modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 
   function simulateTestnetPublish() {
+    saveDraft(); // Garante que nenhum dado digitado seja perdido
+
     const titleInput = document.getElementById('ad-input-title');
     const descInput  = document.getElementById('ad-input-desc');
     const userInput  = document.getElementById('ad-input-user');
@@ -600,37 +634,63 @@
     const imgInput   = document.getElementById('ad-input-image');
 
     const title = (titleInput && titleInput.value.trim()) || 'Pioneiro Web3';
-    const desc = (descInput && descInput.value.trim()) || 'Simulação de anúncio no mural via Testnet Pi. Pronto para publicação oficial na Mainnet!';
-    const user = (userInput && userInput.value.trim()) || '@pioneiro_testnet';
-    const cat = (catInput && catInput.value) || 'geral';
-    const link = (linkInput && !linkInput.disabled && linkInput.value.trim()) || '';
-    const img = (imgInput && imgInput.value.trim()) || '';
+    const desc  = (descInput && descInput.value.trim()) || 'Simulação de anúncio no mural via Testnet Pi. Pronto para publicação oficial na Mainnet!';
+    const user  = (userInput && userInput.value.trim()) || '@pioneiro_testnet';
+    const cat   = (catInput && catInput.value) || 'geral';
+    const link  = (linkInput && !linkInput.disabled && linkInput.value.trim()) || '';
+    const img   = (imgInput && imgInput.value.trim()) || '';
 
     const testId = 'testnet_' + Date.now();
     const testAd = {
       id: testId,
       plan_tier: selectedTier,
-      title: '🧪 [TESTNET] ' + title,
-      description: desc + ' — (Simulação gratuita de teste)',
+      title: '🧪 [PRÉVIA] ' + title,
+      description: desc + ' — (Simulação temporária de visualização)',
       pioneer_username: user,
       category: cat,
       link_url: link,
       image_url: img,
-      price_pi: '0.00 (Testnet)'
+      price_pi: '0.00 (Prévia)'
     };
 
     insertAdCard(testAd);
     const newCard = document.getElementById('card-' + testId);
     if (newCard) {
       newCard.classList.add('card-testnet-highlight');
+
+      // Botão visível de retorno no próprio topo do card de prévia
+      const returnBadge = document.createElement('div');
+      returnBadge.style.cssText = 'background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.4);border-radius:6px;padding:8px 12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px';
+      returnBadge.innerHTML = `
+        <span style="font-size:0.78rem;color:var(--amber-light);font-weight:600">👁️ Você está visualizando a prévia deste card</span>
+        <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.returnFromPreview('${testId}')" style="font-size:0.75rem;padding:5px 12px;background:#f59e0b;color:#000;font-weight:700">
+          🔙 Voltar ao Formulário
+        </button>
+      `;
+      newCard.prepend(returnBadge);
     }
 
-    clearDraft(false);
     hideSubmitFeedback();
     closeModal();
 
+    // Cria a barra flutuante de retorno rápido na parte inferior da tela
+    const oldBar = document.getElementById('mural-preview-return-bar');
+    if (oldBar) oldBar.remove();
+
+    const returnBar = document.createElement('div');
+    returnBar.id = 'mural-preview-return-bar';
+    returnBar.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:99999;background:rgba(15,23,42,0.95);border:1px solid rgba(245,158,11,0.5);box-shadow:0 10px 30px rgba(0,0,0,0.8);padding:10px 16px;border-radius:40px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(10px);max-width:92vw';
+    returnBar.innerHTML = `
+      <span style="font-size:0.8rem;color:#f3f4f6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">👁️ Modo Prévia Ativo</span>
+      <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.returnFromPreview('${testId}')" style="font-size:0.8rem;padding:7px 16px;border-radius:20px;background:#f59e0b;color:#000;font-weight:700;white-space:nowrap">
+        🔙 Voltar a Editar / Pagar
+      </button>
+      <button type="button" onclick="document.getElementById('mural-preview-return-bar').remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:2px 6px" aria-label="Fechar">✕</button>
+    `;
+    document.body.appendChild(returnBar);
+
     if (window.showToast) {
-      window.showToast('🧪 Anúncio Testnet criado com sucesso! Role para ver seu card.', '🎉');
+      window.showToast('👁️ Prévia carregada no mural! Toque em "Voltar" a qualquer momento.', 'ℹ️');
     }
 
     setTimeout(function () {
@@ -1005,7 +1065,12 @@
 
     const submitBtn = document.getElementById('ad-submit-btn');
     if (submitBtn) {
-      submitBtn.textContent = `📢 Publicar Anúncio (${info.pi} π)`;
+      submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${info.pi} π)`;
+    }
+
+    const founderPayBtn = document.getElementById('founder-test-pay-btn');
+    if (founderPayBtn) {
+      founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${info.pi} π)`;
     }
 
     const linkInput = document.getElementById('ad-input-link');
@@ -1749,6 +1814,7 @@
     handleAdSubmit: handleAdSubmit,
     updateLivePreview: updateLivePreview,
     simulateTestnetPublish: simulateTestnetPublish,
+    returnFromPreview: returnFromPreview,
     publishFounderDemo: publishFounderDemo,
     openManualP2PForAd: openManualP2PForAd,
     clearExpiredPaymentAndRetry: clearExpiredPaymentAndRetry,
