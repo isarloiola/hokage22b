@@ -1277,32 +1277,33 @@
                <div style="font-size:0.84rem;color:#f3f4f6;line-height:1.45;margin-bottom:12px">
                 A Pi Network reportou: <em>"${escapeHtml(errMsg)}"</em>.<br>
                 Isso ocorre quando uma tentativa anterior não foi assinada a tempo ou já foi encerrada pela carteira.<br>
-                <strong style="color:#10b981">Seus dados continuam 100% salvos.</strong> Para publicar imediatamente sem travas na carteira:
+                <strong style="color:#10b981">Seus dados continuam 100% salvos.</strong> Clique abaixo para destravar a carteira e realizar o pagamento seguro:
                </div>`,
               `
-                <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.88rem;padding:10px 18px;background:#f59e0b;border-color:#d97706;color:#000;font-weight:800">
-                  ⚡ Publicar Agora no Mural
+                <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.clearExpiredPaymentAndRetry()" style="font-size:0.86rem;padding:9px 18px;background:#8b5cf6;border-color:#7c3aed;color:#fff;font-weight:700">
+                  🔄 Destravar Carteira Pi e Pagar
                 </button>
-                <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.clearExpiredPaymentAndRetry()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(255,255,255,0.25)">
-                  🔄 Limpar e Tentar na Pi Wallet
-                </button>
-                <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.openManualP2PForAd()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(255,255,255,0.25)">
-                  📲 Chave P2P
-                </button>
+                ${isFounder ? `
+                  <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.publishFounderDemo()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(245,158,11,0.7);color:var(--amber-light);font-weight:700">
+                    👑 Publicar Exemplar Fundador (Demonstração)
+                  </button>
+                ` : ''}
               `
             );
           } else {
             showSubmitFeedback(
               'warning',
               `<strong>Atenção:</strong> O pagamento automático Pi não pôde ser concluído (${escapeHtml(errMsg)}).<br>
-               <span style="color:#fff;font-weight:600">Seu rascunho continua 100% salvo.</span> Como você deseja prosseguir?`,
+               <span style="color:#fff;font-weight:600">Seu rascunho continua 100% salvo.</span>`,
               `
-                <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.publishDirectLocal()" style="font-size:0.84rem;padding:8px 14px;background:#f59e0b;color:#000;font-weight:700">
-                  ⚡ Publicar Direto (${isFounder ? 'Exemplar Fundador' : 'Prévia / Testnet'})
+                <button type="button" class="btn btn-sm btn-primary" onclick="window.IsarMural && window.IsarMural.clearExpiredPaymentAndRetry()" style="font-size:0.86rem;padding:9px 18px;background:#8b5cf6;border-color:#7c3aed;color:#fff;font-weight:700">
+                  🔄 Tentar Novamente na Pi Wallet
                 </button>
-                <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.openManualP2PForAd()" style="font-size:0.8rem;padding:7px 12px">
-                  📲 Concluir via Chave P2P
-                </button>
+                ${isFounder ? `
+                  <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.publishFounderDemo()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(245,158,11,0.7);color:var(--amber-light);font-weight:700">
+                    👑 Publicar Exemplar Fundador (Demonstração)
+                  </button>
+                ` : ''}
               `
             );
           }
@@ -1310,7 +1311,7 @@
         onCancel: function () {
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
+            submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π)`;
           }
 
           const modal = document.getElementById('ad-create-modal');
@@ -1318,44 +1319,37 @@
 
           showSubmitFeedback(
             'info',
-            'O pagamento Pi foi cancelado. Seu rascunho continua salvo para quando você quiser tentar novamente.'
+            'O pagamento Pi foi cancelado na carteira. Seu rascunho continua salvo para quando você quiser tentar novamente.'
           );
         }
       });
       return;
     }
 
-    // ── FLUXO B: Fora do Pi Browser (Transferência P2P via Pi Wallet ou Publicação Direta) ──
-    if (window.IsarDB && window.IsarDB.createAnuncio) {
-      try { await window.IsarDB.createAnuncio(newAd); } catch (_) {}
-    }
-
-    try {
-      const localAdForSelf = Object.assign({}, newAd, { status: 'ativo' });
-      const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
-      localAds.unshift(localAdForSelf);
-      localStorage.setItem('isar_local_ads', JSON.stringify(localAds));
-    } catch (_) {}
-
-    clearDraft(false);
-    closeModal();
-    hideSubmitFeedback();
-
+    // ── FLUXO B: Fora do Pi Browser (Exige validação instantânea via Pi Wallet no Pi Browser) ──
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = `📢 Publicar Anúncio (${priceInfo.pi} π)`;
+      submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π)`;
     }
 
-    insertAdCard(newAd);
-    filterCategory(currentCategory);
+    const piDeepLink = 'pi://' + window.location.host + window.location.pathname;
 
-    if (window.HokagePi && window.HokagePi.showManualP2PModal) {
-      window.HokagePi.showManualP2PModal({
-        amount: priceInfo.pi,
-        memo: `Anúncio ${selectedTier.toUpperCase()}: ${title}`,
-        metadata: { adId: adId, plan: selectedTier }
-      });
-    }
+    showSubmitFeedback(
+      'warning',
+      `<strong>⚠️ Validação Instantânea Obrigatória:</strong><br>
+       Para manter a integridade comercial da Gazeta, anúncios pagos exigem validação instantânea pela blockchain via <strong>Pi Wallet oficial</strong>.<br>
+       <span style="color:#fff;display:block;margin-top:6px">Seu rascunho continua 100% salvo. Abra esta página no Pi Browser oficial no celular para concluir:</span>`,
+      `
+        <a href="${piDeepLink}" class="btn btn-sm btn-primary" style="font-size:0.84rem;padding:8px 16px;text-decoration:none;display:inline-block;background:#8b5cf6;border-color:#7c3aed;font-weight:700">
+          🚀 Abrir no Pi Browser Oficial
+        </a>
+        ${isFounder ? `
+          <button type="button" class="btn btn-sm btn-outline" onclick="window.IsarMural && window.IsarMural.publishFounderDemo()" style="font-size:0.8rem;padding:8px 12px;border-color:rgba(245,158,11,0.7);color:var(--amber-light);font-weight:700">
+            👑 Publicar Exemplar Fundador (Demonstração)
+          </button>
+        ` : ''}
+      `
+    );
   }
 
   // --- Upload Direto de Imagens (Supabase Storage) ---
