@@ -619,7 +619,7 @@
 
               <!-- MODO NAVEGADOR CONVENCIONAL (HOTMART / PIX / CARTÃO) -->
               <div class="price-box" data-channel="web2" style="display:none">
-                <span class="price-label"><span style="color:#10b981;font-weight:700">⚡ Acesso Imediato via Hotmart</span> · PIX ou Cartão</span>
+                <span class="price-label"><span style="color:#10b981;font-weight:700">⚡ Acesso Imediato</span> · PIX ou Cartão</span>
                 <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$ 19,90</span>
                 <span class="price-sub" style="color:var(--text-secondary)">Pagamento facilitado via PIX ou Cartão de Crédito com entrega automática</span>
               </div>
@@ -751,21 +751,21 @@
 
               <!-- MODO PI BROWSER (7.50 π) -->
               <div class="price-box" data-channel="pi">
-                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">✦ Preço Promocional de Lançamento</span> · Pi Network</span>
+                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">🔒 Exclusivo na Open Mainnet</span> · Preço de Lançamento</span>
                 <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">7.50 π</span>
-                <span class="price-sub" style="color:var(--text-secondary)">Edição Definitiva (293 páginas) via pagamento nativo Pi Network</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta P2P na Mainnet da Pi Network (Não aceita Test-Pi)</span>
               </div>
               <div class="product-actions" data-channel="pi">
                 <button type="button" class="portal-btn portal-btn--primary"
-                  onclick="if(window.HokagePi && window.HokagePi.requestPiPayment){ window.HokagePi.requestPiPayment({ amount: 7.50, memo: 'E-book IA na Prática (293p) - HOKAGE22B', metadata: { productId: 'ia-na-pratica' } }); }"
+                  onclick="HokagePortal.openModal('modal-waitlist-comunidade')"
                   style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.4)">
-                  ⚡ Adquirir com 7.50 π →
+                  🔔 Entrar na Lista de Espera (Open Mainnet) →
                 </button>
               </div>
 
               <!-- MODO NAVEGADOR CONVENCIONAL (R$ 47,00 HOTMART) -->
               <div class="price-box" data-channel="web2" style="display:none">
-                <span class="price-label"><span style="color:#10b981;font-weight:700">🔥 Oferta de Lançamento</span> · PIX ou Cartão via Hotmart</span>
+                <span class="price-label"><span style="color:#10b981;font-weight:700">🔥 Oferta de Lançamento</span> · PIX ou Cartão</span>
                 <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$ 47,00</span>
                 <span class="price-sub" style="color:var(--text-secondary)">Acesso imediato ao PDF completo (293 páginas) + 50 Prompts Prontos</span>
               </div>
@@ -774,6 +774,32 @@
                   data-hotmart-link="ia-na-pratica"
                   class="portal-btn portal-btn--primary" style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.4)">
                   🚀 Comprar Agora por R$ 47,00 →
+                </a>
+              </div>
+            </div>
+
+            <!-- BOX DE ACESSO ANTECIPADO DIRETO COM HOKAGE22B -->
+            <div style="margin-top:16px;background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(20,15,30,0.85));border:1px solid rgba(245,158,11,0.4);border-radius:var(--radius-sm);padding:18px;box-sizing:border-box">
+              <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px">
+                <span style="font-size:1.8rem;line-height:1">⚡</span>
+                <div>
+                  <strong style="color:var(--amber-light);font-size:0.95rem;display:block;margin-bottom:4px">
+                    Deseja Acesso Antecipado com Pi na Mainnet?
+                  </strong>
+                  <p style="font-size:0.86rem;color:var(--text-secondary);line-height:1.55;margin:0">
+                    O pagamento automático via Pi SDK aguarda a abertura da <strong>Open Mainnet</strong> para evitar moedas de teste da Testnet. Se você deseja adquirir agora diretamente via transferência P2P na <strong>Mainnet da Pi Network</strong>, fale diretamente com <strong>@hokage22b</strong> para liberação exclusiva:
+                  </p>
+                </div>
+              </div>
+              <div class="product-early-access-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+                <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700">
+                  💬 Falar no WhatsApp ↗
+                </a>
+                <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700">
+                  𝕏 Mensagem no X (@hokage22b) ↗
+                </a>
+                <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
+                  👤 Vitrine Oficial (@hokage22b) ↗
                 </a>
               </div>
             </div>
@@ -1649,7 +1675,7 @@
   <script src="assets/js/modules/i18n.js?v=4.5"></script>
   <script src="assets/js/config.js?v=3.0"></script>
   <script src="assets/js/modules/db.js?v=4.8"></script>
-  <script src="assets/js/modules/pi-pay.js?v=5.2"></script>
+  <script src="assets/js/modules/pi-pay.js?v=5.3"></script>
   <script src="assets/js/modules/portal.js?v=3.1"></script>
   <script>
     // Sincroniza foto personalizada do fundador no mockup da vitrine

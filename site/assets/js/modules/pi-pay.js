@@ -92,19 +92,14 @@
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
     // 1. Identificadores explícitos no User Agent
     if (/PiBrowser|PiNetwork|minepi/i.test(ua)) return true;
-    
+
     // 2. Pontes e objetos nativos injetados pelo app oficial Pi Browser (Flutter InAppWebView / Bridge)
     if (typeof window !== 'undefined') {
       if (window.flutter_inappwebview || window.PiNetwork || window.isPiBrowser) return true;
       if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
-      
+
       // 3. Usuário autenticado anteriormente com Pi SDK neste dispositivo/sessão
       if (localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user') || localStorage.getItem('pioneer_auth_type') === 'pi-sdk') return true;
-      
-      // 4. Se o script oficial do Pi SDK está presente e o ambiente é mobile WebView
-      if (window.Pi && (/Android/i.test(ua) || /iPhone|iPad|iPod/i.test(ua))) {
-        return true;
-      }
     }
     return false;
   }
@@ -330,7 +325,7 @@
 
     try {
       window.Pi.init({ version: '2.0', sandbox: isSandbox });
-    } catch (_) {}
+    } catch (_) { }
 
     const scopes = ['username', 'payments'];
 
@@ -352,7 +347,7 @@
         if (auth.accessToken) {
           sessionStorage.setItem('hokage_pi_access_token', auth.accessToken);
         }
-      } catch (_) {}
+      } catch (_) { }
 
       const cleanAuthName = formatUserHandle(auth.user.username);
       updateAuthUi(authenticatedUser);
@@ -605,8 +600,8 @@
           }
           if (window.Pi && window.Pi.authenticate) {
             try {
-              window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound).catch(function () {});
-            } catch (_) {}
+              window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound).catch(function () { });
+            } catch (_) { }
           }
         }
 
@@ -631,7 +626,7 @@
       releasePaymentLock();
       console.error('Erro ao chamar window.Pi.createPayment:', err);
       const errMsg = err && (err.message || (typeof err === 'string' ? err : 'Erro no Pi SDK'));
-      
+
       // Se for erro de escopo 'payments', abre modal explicativo com opção de alternar para Sandbox
       if (errMsg && (errMsg.includes('payments') || errMsg.includes('scope'))) {
         showScopeNoticeModal(options);
@@ -646,8 +641,8 @@
         isSdkSessionAuthenticated = false;
         if (window.Pi && window.Pi.authenticate) {
           try {
-            window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound).catch(function () {});
-          } catch (_) {}
+            window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound).catch(function () { });
+          } catch (_) { }
         }
       }
 
@@ -714,7 +709,7 @@
         modal.classList.remove('active');
         try {
           localStorage.setItem('hokage_pi_sandbox', 'true');
-        } catch (_) {}
+        } catch (_) { }
         showToast('Ativando Modo Sandbox (Testnet Pi)...', 'info');
         initPiSdk(true);
         isSdkSessionAuthenticated = false;
@@ -924,7 +919,7 @@
     if (isPiBrowser()) return;
     try {
       if (sessionStorage.getItem('hokage_pi_banner_dismissed')) return;
-    } catch (_) {}
+    } catch (_) { }
 
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
     if (!isMobile) return;
@@ -1016,13 +1011,13 @@
           if (isPiBrowser() && window.Pi) {
             setTimeout(function () {
               if (!isSdkSessionAuthenticated && !isAuthenticating) {
-                triggerAuthFlow(true).catch(function () {});
+                triggerAuthFlow(true).catch(function () { });
               }
             }, 450);
           }
         }
       }
-    } catch (_) {}
+    } catch (_) { }
 
     document.querySelectorAll('.pi-auth-header-btn').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
