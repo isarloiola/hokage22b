@@ -68,8 +68,11 @@
         pricePi: '7.50 π',
         pricePiValue: 7.50,
         priceBrl: 'R$ 47,00',
-        hotmartUrl: 'https://pay.hotmart.com/[INSERIR_LINK_HOTMART_IA]',
-        coverImage: 'assets/img/ebook-ia-na-pratica.jpg'
+        hotmartUrl: 'https://pay.hotmart.com/J108469065H',
+        salesPageUrl: 'https://go.hotmart.com/J108469065H',
+        productPageUrl: 'https://go.hotmart.com/J108469065H?dp=1',
+        affiliateRecruitingUrl: 'https://affiliate.hotmart.com/affiliate-recruiting/view/1605I108469086',
+        coverImage: 'assets/img/ebook-ia-na-pratica.png'
       }
     },
 
