@@ -601,17 +601,34 @@
               </li>
             </ul>
 
-            <div class="product-pricing-bar" style="background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(139,92,246,0.12));border:1px solid rgba(245,158,11,0.35);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap">
-              <div class="price-box">
+            <div class="product-pricing-bar" data-product-id="pi-para-seu-negocio"
+              style="background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(139,92,246,0.12));border:1px solid rgba(245,158,11,0.35);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+
+              <!-- MODO PI BROWSER (NATIVO) -->
+              <div class="price-box" data-channel="pi">
                 <span class="price-label"><span style="color:var(--amber-light);font-weight:700">🔒 Exclusivo na Open Mainnet</span> · Preço de Lançamento</span>
                 <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">3.14 π</span>
                 <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta P2P na Mainnet da Pi Network (Não aceita Test-Pi)</span>
               </div>
-              <div class="product-actions">
+              <div class="product-actions" data-channel="pi">
                 <button type="button" class="portal-btn portal-btn--primary"
                   onclick="HokagePortal.openModal('modal-waitlist-comunidade')" style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.35)">
                   🔔 Entrar na Lista de Espera (Open Mainnet) →
                 </button>
+              </div>
+
+              <!-- MODO NAVEGADOR CONVENCIONAL (HOTMART / PIX / CARTÃO) -->
+              <div class="price-box" data-channel="web2" style="display:none">
+                <span class="price-label"><span style="color:#10b981;font-weight:700">⚡ Acesso Imediato via Hotmart</span> · PIX ou Cartão</span>
+                <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$ 19,90</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Pagamento facilitado via PIX ou Cartão de Crédito com entrega automática</span>
+              </div>
+              <div class="product-actions" data-channel="web2" style="display:none">
+                <a href="https://pay.hotmart.com/[INSERIR_LINK_HOTMART]" target="_blank" rel="noopener noreferrer"
+                  data-hotmart-link="pi-para-seu-negocio"
+                  class="portal-btn portal-btn--primary" style="font-weight:800;box-shadow:0 0 25px rgba(245,158,11,0.35)">
+                  🛒 Comprar Agora por R$ 19,90 →
+                </a>
               </div>
             </div>
 
@@ -677,6 +694,93 @@
               <span style="font-size:0.8rem;color:var(--accent-light);font-weight:700">
                 ✦ Pi Network Mainnet Utility
               </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUTO LANÇAMENTO: IA NA PRÁTICA -->
+        <div class="product-showcase" style="margin-top:36px;border-color:rgba(139,92,246,0.4);background:linear-gradient(180deg, rgba(20,16,36,0.92), rgba(13,13,20,0.98))">
+          <div class="product-cover-wrap">
+            <img src="assets/img/ebook-ia-na-pratica.jpg" alt="Capa do E-book IA na Prática — HOKAGE22B"
+              class="product-cover-img" loading="lazy" style="box-shadow:0 12px 36px rgba(139,92,246,0.35);border-radius:10px" />
+          </div>
+
+          <div class="product-details">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+              <span style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(245,158,11,0.16);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light)">🚀 Lançamento Oficial</span>
+              <span style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.45);color:var(--accent-light)">✦ Edição Definitiva · 293 Páginas</span>
+              <span style="font-size:0.72rem;font-weight:800;letter-spacing:0.02em;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#34d399">🛡️ Inclui Módulo Master de Cibersegurança &amp; 50 Prompts Prontos</span>
+            </div>
+
+            <div class="product-headline" style="color:var(--accent-light)">IA na Prática</div>
+            <h3 class="product-title">Transforme a Inteligência Artificial no Seu Assistente Pessoal</h3>
+            <p class="product-desc">
+              Manual completo de 293 páginas focado em produtividade real, automação de negócios e segurança digital.
+              Aprenda a usar IA no dia a dia com responsabilidade técnica, proteção de dados (LGPD) e boas práticas alinhadas ao CERT.br.
+            </p>
+
+            <ul class="product-benefits">
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>Produtividade e Negócios:</strong> Fluxos práticos para atendimento, criação de conteúdo, análise e organização operacional.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>Módulo Master de Cibersegurança:</strong> Blindagem de contas, prevenção contra engenharia social, conformidade LGPD e diretrizes CERT.br.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>50 Prompts Prontos para Copiar e Colar:</strong> Estruturas testadas para acelerar resultados imediatos sem curva de aprendizado longa.</span>
+              </li>
+            </ul>
+
+            <div class="product-pricing-bar" data-product-id="ia-na-pratica"
+              style="background:linear-gradient(135deg, rgba(139,92,246,0.16), rgba(245,158,11,0.12));border:1px solid rgba(139,92,246,0.45);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+
+              <!-- MODO PI BROWSER (7.50 π) -->
+              <div class="price-box" data-channel="pi">
+                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">✦ Preço Promocional de Lançamento</span> · Pi Network</span>
+                <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">7.50 π</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Edição Definitiva (293 páginas) via pagamento nativo Pi Network</span>
+              </div>
+              <div class="product-actions" data-channel="pi">
+                <button type="button" class="portal-btn portal-btn--primary"
+                  onclick="if(window.HokagePi && window.HokagePi.requestPiPayment){ window.HokagePi.requestPiPayment({ amount: 7.50, memo: 'E-book IA na Prática (293p) - HOKAGE22B', metadata: { productId: 'ia-na-pratica' } }); }"
+                  style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.4)">
+                  ⚡ Adquirir com 7.50 π →
+                </button>
+              </div>
+
+              <!-- MODO NAVEGADOR CONVENCIONAL (R$ 47,00 HOTMART) -->
+              <div class="price-box" data-channel="web2" style="display:none">
+                <span class="price-label"><span style="color:#10b981;font-weight:700">🔥 Oferta de Lançamento</span> · PIX ou Cartão via Hotmart</span>
+                <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$ 47,00</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Acesso imediato ao PDF completo (293 páginas) + 50 Prompts Prontos</span>
+              </div>
+              <div class="product-actions" data-channel="web2" style="display:none">
+                <a href="https://pay.hotmart.com/[INSERIR_LINK_HOTMART_IA]" target="_blank" rel="noopener noreferrer"
+                  data-hotmart-link="ia-na-pratica"
+                  class="portal-btn portal-btn--primary" style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.4)">
+                  🚀 Comprar Agora por R$ 47,00 →
+                </a>
+              </div>
+            </div>
+
+            <div class="guarantee-note"
+              style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:14px;padding:12px 16px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span style="color:#fff;font-size:0.85rem"><strong>Entrega Digital Imediata:</strong> Download liberado logo após confirmação do pagamento.</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--accent-light);font-weight:700">✦ 293 Páginas · Edição Definitiva</span>
             </div>
           </div>
         </div>
@@ -1560,6 +1664,39 @@
         }
       } catch (_) {}
     });
+  </script>
+  <script>
+    (function () {
+      function syncProductPricingChannels() {
+        var inPi = (window.HokagePi && typeof window.HokagePi.isPiBrowser === 'function')
+          ? window.HokagePi.isPiBrowser()
+          : /PiBrowser|PiNetwork|minepi/i.test(navigator.userAgent || '');
+
+        document.querySelectorAll('.product-pricing-bar [data-channel="pi"]').forEach(function (el) {
+          el.style.display = inPi ? '' : 'none';
+        });
+        document.querySelectorAll('.product-pricing-bar [data-channel="web2"]').forEach(function (el) {
+          el.style.display = inPi ? 'none' : '';
+        });
+
+        var productsCfg = window.HOKAGE_CONFIG && window.HOKAGE_CONFIG.products;
+        if (productsCfg) {
+          document.querySelectorAll('[data-hotmart-link]').forEach(function (link) {
+            var id = link.getAttribute('data-hotmart-link');
+            if (productsCfg[id] && productsCfg[id].hotmartUrl) {
+              link.href = productsCfg[id].hotmartUrl;
+            }
+          });
+        }
+      }
+
+      window.syncProductPricingChannels = syncProductPricingChannels;
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', syncProductPricingChannels);
+      } else {
+        syncProductPricingChannels();
+      }
+    })();
   </script>
 </body>
 

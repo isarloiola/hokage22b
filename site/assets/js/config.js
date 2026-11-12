@@ -49,6 +49,30 @@
       pages: '23 Capítulos'
     },
 
+    products: {
+      'pi-para-seu-negocio': {
+        id: 'pi-para-seu-negocio',
+        title: 'Pi para seu negócio',
+        subtitle: 'O Guia Prático para Empreendedores e Comerciantes',
+        pricePi: '3.14 π',
+        pricePiValue: 3.14,
+        priceBrl: 'R$ 19,90',
+        hotmartUrl: 'https://pay.hotmart.com/[INSERIR_LINK_HOTMART]',
+        coverImage: 'assets/img/ebook-pago-negocios.jpg'
+      },
+      'ia-na-pratica': {
+        id: 'ia-na-pratica',
+        title: 'IA na Prática',
+        subtitle: 'Transforme a Inteligência Artificial no Seu Assistente Pessoal',
+        pages: 293,
+        pricePi: '7.50 π',
+        pricePiValue: 7.50,
+        priceBrl: 'R$ 47,00',
+        hotmartUrl: 'https://pay.hotmart.com/[INSERIR_LINK_HOTMART_IA]',
+        coverImage: 'assets/img/ebook-ia-na-pratica.jpg'
+      }
+    },
+
     featuredProduct: {
       id: 'pi-para-seu-negocio',
       title: 'Pi para seu negócio',
@@ -56,7 +80,9 @@
       headline: 'Como empreendedores podem compreender e explorar as possibilidades comerciais do ecossistema Pi.',
       description: 'Um guia direto e sem rodeios para lojistas, prestadores de serviços e empreendedores digitais avaliarem aceitação de pagamentos, precificação, aspectos legais no Brasil e estratégias seguras de expansão comercial com a Pi Network.',
       pricePi: '3.14 π',
-      isExclusivePi: true,
+      priceBrl: 'R$ 19,90',
+      hotmartUrl: 'https://pay.hotmart.com/[INSERIR_LINK_HOTMART]',
+      isExclusivePi: false,
       coverImage: 'assets/img/ebook-pago-negocios.jpg',
       benefits: [
         'Modelos práticos de precificação e liquidação peer-to-peer',
