@@ -57,7 +57,10 @@
         pricePi: '3.14 π',
         pricePiValue: 3.14,
         priceBrl: 'R$ 19,90',
-        hotmartUrl: 'https://pay.hotmart.com/[INSERIR_LINK_HOTMART]',
+        hotmartUrl: 'https://pay.hotmart.com/A108356534I',
+        salesPageUrl: 'https://go.hotmart.com/A108356534I',
+        productPageUrl: 'https://go.hotmart.com/A108356534I?dp=1',
+        affiliateRecruitingUrl: 'https://affiliate.hotmart.com/affiliate-recruiting/view/9871P108356555',
         coverImage: 'assets/img/ebook-pago-negocios.jpg'
       },
       'ia-na-pratica': {
@@ -84,7 +87,7 @@
       description: 'Um guia direto e sem rodeios para lojistas, prestadores de serviços e empreendedores digitais avaliarem aceitação de pagamentos, precificação, aspectos legais no Brasil e estratégias seguras de expansão comercial com a Pi Network.',
       pricePi: '3.14 π',
       priceBrl: 'R$ 19,90',
-      hotmartUrl: 'https://pay.hotmart.com/[INSERIR_LINK_HOTMART]',
+      hotmartUrl: 'https://pay.hotmart.com/A108356534I',
       isExclusivePi: false,
       coverImage: 'assets/img/ebook-pago-negocios.jpg',
       benefits: [
