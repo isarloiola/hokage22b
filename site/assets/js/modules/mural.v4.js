@@ -2396,19 +2396,34 @@
       // Restauração inteligente ou pré-preenchimento vindo da Vitrine ("Impulsionar no Mural")
       try {
         const params = new URLSearchParams(window.location.search || '');
-        const promoteTitle = params.get('promote_title');
-        if (promoteTitle) {
+        const promoteTitleParam = params.get('promote_title');
+        const isPromoteDraft = params.get('promote_draft') === '1';
+        let promoteData = null;
+        if (isPromoteDraft || promoteTitleParam) {
+          try {
+            const rawDraft = sessionStorage.getItem('hokage_promote_draft') || localStorage.getItem('hokage_promote_draft');
+            if (rawDraft) promoteData = JSON.parse(rawDraft);
+            sessionStorage.removeItem('hokage_promote_draft');
+            localStorage.removeItem('hokage_promote_draft');
+          } catch (_) {}
+        }
+        const finalTitle = (promoteData && promoteData.title) || promoteTitleParam;
+        if (finalTitle || isPromoteDraft) {
           openModal();
           const tEl = document.getElementById('ad-input-title');
           const dEl = document.getElementById('ad-input-desc');
           const lEl = document.getElementById('ad-input-link');
           const iEl = document.getElementById('ad-input-image');
           const cEl = document.getElementById('ad-input-cat');
-          if (tEl) tEl.value = promoteTitle.slice(0, 60);
-          if (dEl && params.get('promote_desc')) dEl.value = params.get('promote_desc').slice(0, 160);
-          if (lEl && params.get('promote_link')) lEl.value = params.get('promote_link');
-          if (iEl && params.get('promote_img')) iEl.value = params.get('promote_img');
-          if (cEl && params.get('promote_cat')) cEl.value = params.get('promote_cat');
+          const finalDesc = (promoteData && promoteData.desc) || params.get('promote_desc') || '';
+          const finalLink = (promoteData && promoteData.link) || params.get('promote_link') || '';
+          const finalImg = (promoteData && promoteData.img) || params.get('promote_img') || '';
+          const finalCat = (promoteData && promoteData.cat) || params.get('promote_cat') || '';
+          if (tEl && finalTitle) tEl.value = String(finalTitle).slice(0, 60);
+          if (dEl && finalDesc) dEl.value = String(finalDesc).slice(0, 160);
+          if (lEl && finalLink) lEl.value = String(finalLink);
+          if (iEl && finalImg) iEl.value = String(finalImg);
+          if (cEl && finalCat) cEl.value = String(finalCat);
           updateLivePreview();
           saveDraft();
           if (window.history && window.history.replaceState) {

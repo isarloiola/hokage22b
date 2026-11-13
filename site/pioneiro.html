@@ -2458,7 +2458,19 @@
       const productsList = document.getElementById('pioneer-products-list');
 
       if (Array.isArray(prof.products) && prof.products.length > 0) {
-        productsList.innerHTML = prof.products.map(p => {
+        window._vitrinePromoteItems = [];
+        window.promoteVitrineProduct = window.promoteVitrineProduct || function (idx) {
+          try {
+            const item = (window._vitrinePromoteItems || [])[idx];
+            if (item) {
+              const payload = JSON.stringify(item);
+              try { sessionStorage.setItem('hokage_promote_draft', payload); } catch (_) {}
+              try { localStorage.setItem('hokage_promote_draft', payload); } catch (_) {}
+            }
+          } catch (_) {}
+          window.location.href = 'mural?promote_draft=1';
+        };
+        productsList.innerHTML = prof.products.map((p, idx) => {
           const safeTitle = escapeHtml(p.title || 'Produto / Serviço');
           const rawPrice = String(p.price || 'Sob Consulta').trim();
           const safePrice = escapeHtml(rawPrice);
@@ -2470,6 +2482,13 @@
           const safeLink = sanitizeUrl(p.link);
           const safeCta = escapeHtml(p.cta || 'Acessar →');
           const safeImg = sanitizeImageUrl(p.image_url);
+          window._vitrinePromoteItems[idx] = {
+            title: p.title || '',
+            desc: (p.price ? p.price + ' — ' : '') + (p.badge || 'Disponível na minha Vitrine Web3'),
+            link: safeLink && safeLink !== '#' ? safeLink : ('https://hokage22b.com/pioneiro?u=' + encodeURIComponent(prof.username || '')),
+            img: safeImg || '',
+            cat: 'produto'
+          };
 
           return `
             <div class="product-mini-card">
@@ -2488,7 +2507,7 @@
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
                 ${safeLink && safeLink !== '#' ? `<a href="${safeLink}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm product-action-btn" style="flex:1;min-width:120px">${safeCta}</a>` : ''}
-                ${isOwner ? `<a href="mural?promote_title=${encodeURIComponent(p.title || '')}&promote_desc=${encodeURIComponent((p.price ? p.price + ' — ' : '') + (p.badge || 'Disponível na minha Vitrine Web3'))}&promote_link=${encodeURIComponent(safeLink && safeLink !== '#' ? safeLink : 'https://hokage22b.com/pioneiro?u=' + encodeURIComponent(prof.username || ''))}&promote_img=${encodeURIComponent(safeImg || '')}&promote_cat=produto" class="btn btn-outline btn-sm" style="flex:1;min-width:130px;border-color:rgba(245,158,11,0.5);color:var(--amber-light);text-align:center;text-decoration:none;font-weight:700">📢 Impulsionar no Mural</a>` : ''}
+                ${isOwner ? `<button type="button" onclick="window.promoteVitrineProduct(${idx})" class="btn btn-outline btn-sm" style="flex:1;min-width:130px;border-color:rgba(245,158,11,0.5);color:var(--amber-light);text-align:center;font-weight:700">📢 Impulsionar no Mural</button>` : ''}
               </div>
             </div>
           `;
