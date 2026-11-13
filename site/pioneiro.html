@@ -474,6 +474,253 @@
       padding: 14px;
       margin-bottom: 14px;
       position: relative;
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+
+    /* Barra Compacta de Ícones Pequenos para Redes Sociais */
+    .social-icons-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px auto 0;
+    }
+    .social-icon-pill {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      text-decoration: none;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      flex-shrink: 0;
+    }
+    .social-icon-pill:hover {
+      transform: translateY(-2px);
+    }
+    .social-icon-pill--whatsapp { border-color: rgba(37, 211, 102, 0.4); background: rgba(37, 211, 102, 0.12); }
+    .social-icon-pill--whatsapp:hover { border-color: #25d366; box-shadow: 0 6px 18px rgba(37, 211, 102, 0.25); }
+    .social-icon-pill--youtube { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.12); }
+    .social-icon-pill--youtube:hover { border-color: #ef4444; box-shadow: 0 6px 18px rgba(239, 68, 68, 0.25); }
+    .social-icon-pill--instagram { border-color: rgba(225, 48, 108, 0.4); background: rgba(225, 48, 108, 0.12); }
+    .social-icon-pill--instagram:hover { border-color: #e1306c; box-shadow: 0 6px 18px rgba(225, 48, 108, 0.25); }
+    .social-icon-pill--twitter { border-color: rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.08); }
+    .social-icon-pill--twitter:hover { border-color: #fff; box-shadow: 0 6px 18px rgba(255, 255, 255, 0.2); }
+    .social-icon-pill--telegram { border-color: rgba(36, 161, 222, 0.45); background: rgba(36, 161, 222, 0.12); }
+    .social-icon-pill--telegram:hover { border-color: #24a1de; box-shadow: 0 6px 18px rgba(36, 161, 222, 0.25); }
+    .social-icon-pill--tiktok { border-color: rgba(254, 44, 85, 0.4); background: rgba(254, 44, 85, 0.1); }
+    .social-icon-pill--tiktok:hover { border-color: #fe2c55; box-shadow: 0 6px 18px rgba(254, 44, 85, 0.25); }
+    .social-icon-pill--linkedin { border-color: rgba(10, 102, 194, 0.45); background: rgba(10, 102, 194, 0.14); }
+    .social-icon-pill--linkedin:hover { border-color: #0a66c2; box-shadow: 0 6px 18px rgba(10, 102, 194, 0.25); }
+    .social-icon-pill--facebook { border-color: rgba(24, 119, 242, 0.45); background: rgba(24, 119, 242, 0.12); }
+    .social-icon-pill--facebook:hover { border-color: #1877f2; box-shadow: 0 6px 18px rgba(24, 119, 242, 0.25); }
+    .social-icon-pill--discord { border-color: rgba(88, 101, 242, 0.45); background: rgba(88, 101, 242, 0.14); }
+    .social-icon-pill--discord:hover { border-color: #5865f2; box-shadow: 0 6px 18px rgba(88, 101, 242, 0.25); }
+    .social-icon-pill--github { border-color: rgba(255, 255, 255, 0.28); background: rgba(255, 255, 255, 0.08); }
+    .social-icon-pill--github:hover { border-color: #e5e7eb; box-shadow: 0 6px 18px rgba(255, 255, 255, 0.18); }
+    .social-icon-pill--kwai { border-color: rgba(255, 119, 0, 0.45); background: rgba(255, 119, 0, 0.12); }
+    .social-icon-pill--kwai:hover { border-color: #ff7700; box-shadow: 0 6px 18px rgba(255, 119, 0, 0.25); }
+    .social-icon-pill--website { border-color: rgba(139, 92, 246, 0.45); background: rgba(139, 92, 246, 0.12); }
+    .social-icon-pill--website:hover { border-color: var(--accent-light); box-shadow: 0 6px 18px rgba(139, 92, 246, 0.25); }
+    .extra-social-row {
+      display: grid;
+      grid-template-columns: 122px 1fr 32px;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 480px) {
+      .extra-social-row {
+        grid-template-columns: 1fr 32px;
+      }
+      .extra-social-row .extra-social-net {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* Diferenciação Visual de Moeda nos Produtos (R$ vs π) */
+    .product-price--brl {
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+    .product-price--pi {
+      color: var(--amber-light);
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+
+    /* Abas do Modal de Edição & Grids Responsivos */
+    .edit-tabs-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 16px;
+    }
+    .edit-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 8px 6px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .edit-tab-btn.active {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(245, 158, 11, 0.22));
+      color: #fff;
+      border: 1px solid rgba(139, 92, 246, 0.45);
+    }
+    .edit-tab-panel { display: none; }
+    .edit-tab-panel.active { display: block; }
+    .edit-social-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .product-edit-row-grid {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    @media (max-width: 520px) {
+      .edit-social-grid {
+        grid-template-columns: 1fr;
+      }
+      .product-edit-row-grid {
+        grid-template-columns: 1fr;
+      }
+      .edit-tab-btn {
+        font-size: 0.7rem;
+        padding: 7px 4px;
+      }
+    }
+    @media (max-width: 380px) {
+      .pioneer-hero-card,
+      .onboarding-hero {
+        padding: 22px 14px;
+        border-radius: 18px;
+      }
+      .pioneer-handle {
+        font-size: 1.35rem;
+        word-break: break-word;
+      }
+      .short-link-pill {
+        max-width: 100%;
+        padding: 5px 10px;
+        font-size: 0.72rem;
+      }
+      .short-link-pill #pioneer-short-url {
+        max-width: 135px;
+      }
+      #pioneer-wallet-box {
+        flex-direction: column;
+        align-items: stretch !important;
+      }
+      #pioneer-wallet-box > div:last-of-type {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .pi-modal.ad-modal {
+        padding: 20px 14px !important;
+      }
+      #prof-analytics-card {
+        padding: 10px 8px !important;
+        gap: 4px !important;
+      }
+    }
+
+    /* Diretório & Onboarding Responsivos (320px+) */
+    .dir-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.2s ease;
+    }
+    .dir-card:hover {
+      border-color: rgba(139, 92, 246, 0.35);
+      background: rgba(139, 92, 246, 0.05);
+    }
+    .dir-card-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+    .dir-card-cta {
+      flex-shrink: 0;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-color: rgba(139, 92, 246, 0.4);
+      color: var(--accent-light);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .onboarding-logged-card {
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      text-align: left;
+    }
+    @media (max-width: 460px) {
+      .dir-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px;
+      }
+      .dir-card-cta {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+      }
+      .onboarding-logged-card a {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+      }
+    }
+    @media (max-width: 400px) {
+      #onboarding-navbar .brand-sub {
+        display: none;
+      }
+      #onboarding-navbar .btn-sm {
+        padding: 5px 8px;
+        font-size: 0.72rem;
+      }
     }
     .tag-free-badge {
       display: inline-block;
@@ -514,7 +761,7 @@
   <!-- NAVBAR PADRÃO (VISÍVEL APENAS NA TELA INICIAL DE ONBOARDING) -->
   <nav class="navbar" id="onboarding-navbar" style="background:rgba(9,9,11,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.1);padding:10px 0">
     <div class="container">
-      <div class="navbar__inner" style="display:flex;justify-content:space-between;align-items:center">
+      <div class="navbar__inner" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
         <a href="./" class="navbar__logo" aria-label="HOKAGE22B — Início" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:800">
           <span class="pi-sym" style="color:var(--accent-light)">✦</span>
           <div>
@@ -522,9 +769,9 @@
             <div class="brand-sub" style="font-size:0.7rem;color:var(--text-muted)">Vitrine do Pioneiro Web3</div>
           </div>
         </a>
-        <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <div class="lang-mount-point"></div>
-          <a href="mural" class="btn btn-outline btn-sm">📢 Mural dos Pioneiros</a>
+          <a href="mural" class="btn btn-outline btn-sm">📢 Mural</a>
         </div>
       </div>
     </div>
@@ -538,7 +785,7 @@
       <!-- ========================================== -->
       <div id="onboarding-view" class="onboarding-hero" style="display:none">
         <span class="tag-free-badge">✨ 100% Grátis para Sempre</span>
-        <h1 style="font-size:1.85rem;font-weight:800;color:#fff;margin-bottom:10px">
+        <h1 style="font-size:clamp(1.35rem, 4.5vw, 1.85rem);font-weight:800;color:#fff;margin-bottom:10px;line-height:1.25">
           Sua Vitrine Web3 Oficial na Pi Network
         </h1>
         <p style="color:var(--text-secondary);font-size:0.95rem;line-height:1.6;margin-bottom:26px">
@@ -549,8 +796,8 @@
         <div id="onboarding-logged-box" style="display:none"></div>
 
         <!-- Ação Principal: Pi Browser -->
-        <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.35);border-radius:18px;padding:22px;margin-bottom:20px;box-shadow:0 8px 30px rgba(139,92,246,0.15)">
-          <button type="button" class="btn btn-primary" onclick="connectPiBrowserAndStart()" style="width:100%;padding:14px;font-size:1.02rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">
+        <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.35);border-radius:18px;padding:18px 16px;margin-bottom:20px;box-shadow:0 8px 30px rgba(139,92,246,0.15)">
+          <button type="button" class="btn btn-primary" onclick="connectPiBrowserAndStart()" style="width:100%;padding:14px 12px;font-size:clamp(0.9rem, 3vw, 1.02rem);font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">
             <span>⚡</span> Conectar Pi Browser &amp; Criar Minha Vitrine
           </button>
           <small style="color:var(--text-muted);font-size:0.75rem;display:block;margin-top:8px">
@@ -559,7 +806,7 @@
         </div>
 
         <!-- Opções de Experimentação: 2 Atalhos Claros Sem Concorrência -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:10px;margin-bottom:22px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr));gap:10px;margin-bottom:22px">
           <button type="button" onclick="startSimulatorMode()" class="btn btn-outline" style="padding:12px;font-size:0.86rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px">
             <span>🧪</span> Testar no Simulador
           </button>
@@ -573,9 +820,9 @@
           <span style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:8px;font-weight:600">
             🔍 Acesso direto por @usuário:
           </span>
-          <form onsubmit="handleOnboardingManualSubmit(event)" style="display:flex;gap:8px">
-            <input type="text" id="onboarding-user-input" placeholder="Digite o @usuário (Ex: @hokage22b)" required maxlength="50" style="flex:1;padding:9px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.18);border-radius:8px;color:#fff;font-size:0.88rem" />
-            <button type="submit" class="btn btn-outline btn-sm" style="padding:9px 16px;font-weight:700;border-color:rgba(255,255,255,0.25);color:#fff">
+          <form onsubmit="handleOnboardingManualSubmit(event)" style="display:flex;gap:8px;flex-wrap:wrap">
+            <input type="text" id="onboarding-user-input" placeholder="Digite o @usuário (Ex: @hokage22b)" required maxlength="50" style="flex:1;min-width:160px;padding:9px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.18);border-radius:8px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
+            <button type="submit" class="btn btn-outline btn-sm" style="padding:9px 16px;font-weight:700;border-color:rgba(255,255,255,0.25);color:#fff;flex-shrink:0">
               Abrir ↗
             </button>
           </form>
@@ -597,7 +844,7 @@
 
           <!-- Filtros de Busca em Tempo Real -->
           <div style="margin-bottom:12px">
-            <input type="text" id="dir-search-input" placeholder="🔍 Buscar por nome, serviço, produto, nicho..." oninput="filterDirectoryDebounced()" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.6);border:1px solid rgba(139,92,246,0.35);border-radius:10px;color:#fff;font-size:0.88rem" />
+            <input type="text" id="dir-search-input" placeholder="🔍 Buscar por nome, serviço, produto, nicho..." oninput="filterDirectoryDebounced()" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.6);border:1px solid rgba(139,92,246,0.35);border-radius:10px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
           </div>
 
           <!-- Category Pills -->
@@ -656,6 +903,9 @@
           <button type="button" onclick="shareProfile()" style="background:transparent;border:none;color:var(--accent-light);cursor:pointer;font-size:0.75rem;padding:2px 6px;text-decoration:underline;flex-shrink:0">Copiar</button>
         </div>
 
+        <!-- Barra Compacta de Ícones Pequenos (Redes Sociais) -->
+        <div id="pioneer-social-bar" class="social-icons-bar" style="display:none"></div>
+
         <!-- Barra Compacta de Pagamento Direto com Pi Wallet (Mainnet P2P) -->
         <div id="pioneer-wallet-container" style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.25);border-radius:14px;padding:12px 14px;margin-top:20px;text-align:left">
           
@@ -696,23 +946,23 @@
           </div>
         </div>
 
-        <!-- Seção: Links & Redes de Contato (Estilo Linktree) -->
-        <div style="margin-top:28px;text-align:left">
+        <!-- Seção: Links & Destaques da Comunidade -->
+        <div id="pioneer-links-section" style="margin-top:24px;text-align:left">
           <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700;margin-bottom:12px">
-            🔗 Links &amp; Contatos Oficiais
+            🔗 Links &amp; Destaques
           </div>
           <div id="pioneer-links-list">
             <!-- Injetado dinamicamente -->
           </div>
         </div>
 
-        <!-- Seção: Mini-Loja / Produtos Aceitando Pi -->
-        <div id="pioneer-products-section" style="margin-top:28px;text-align:left;display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <!-- Seção: Mini-Loja / Produtos e Serviços (R$ ou Pi) -->
+        <div id="pioneer-products-section" style="margin-top:26px;text-align:left;display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
             <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:700">
-              🛍️ Produtos &amp; Serviços (Aceita Pi)
+              🛍️ Produtos &amp; Serviços
             </div>
-            <span style="font-size:0.72rem;color:var(--text-muted)">Negociação Direta P2P</span>
+            <span style="font-size:0.72rem;color:var(--text-muted)">Em Pi (π) ou Real (R$)</span>
           </div>
           <div id="pioneer-products-list" style="display:flex;flex-direction:column;gap:12px">
             <!-- Injetado dinamicamente -->
@@ -788,107 +1038,143 @@
       </div>
 
       <form id="profile-edit-form" onsubmit="saveProfileForm(event)">
-        
-        <!-- Foto de Perfil com Cortador Interativo -->
-        <div class="form-group" style="margin-bottom:16px;text-align:center;background:rgba(255,255,255,0.03);padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08)">
-          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:8px;font-weight:700">Foto de Perfil</label>
-          <div style="display:flex;align-items:center;justify-content:center;gap:14px">
-            <div style="position:relative;width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--accent);box-shadow:0 0 16px rgba(139,92,246,0.4);background:#1a0533;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <img id="modal-avatar-img" src="" alt="Avatar" style="width:100%;height:100%;object-fit:cover;display:none" />
-              <span id="modal-avatar-placeholder" style="font-size:1.6rem;font-weight:800;color:#fff;display:flex">π</span>
+
+        <!-- Abas de Navegação Rápida no Editor (Organização Mobile-First) -->
+        <div class="edit-tabs-bar" role="tablist" aria-label="Etapas de edição da vitrine">
+          <button type="button" class="edit-tab-btn active" data-edit-tab="perfil" onclick="switchEditTab('perfil')" role="tab" aria-selected="true">
+            👤 Perfil &amp; Pi
+          </button>
+          <button type="button" class="edit-tab-btn" data-edit-tab="redes" onclick="switchEditTab('redes')" role="tab" aria-selected="false">
+            🔗 Redes Sociais
+          </button>
+          <button type="button" class="edit-tab-btn" data-edit-tab="produtos" onclick="switchEditTab('produtos')" role="tab" aria-selected="false">
+            🛍️ Produtos
+          </button>
+        </div>
+
+        <!-- ABA 1: PERFIL & CARTEIRA -->
+        <div class="edit-tab-panel active" data-edit-panel="perfil">
+          <!-- Foto de Perfil com Cortador Interativo -->
+          <div class="form-group" style="margin-bottom:16px;text-align:center;background:rgba(255,255,255,0.03);padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08)">
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:8px;font-weight:700">Foto de Perfil</label>
+            <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap">
+              <div style="position:relative;width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--accent);box-shadow:0 0 16px rgba(139,92,246,0.4);background:#1a0533;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <img id="modal-avatar-img" src="" alt="Avatar" style="width:100%;height:100%;object-fit:cover;display:none" />
+                <span id="modal-avatar-placeholder" style="font-size:1.6rem;font-weight:800;color:#fff;display:flex">π</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
+                <label for="avatar-file-input" class="btn btn-outline btn-sm" style="font-size:0.8rem;padding:7px 14px;border-color:var(--accent);color:var(--accent-light);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:0">
+                  📷 Escolher Foto &amp; Cortar
+                </label>
+                <button type="button" id="btn-remove-avatar" class="btn btn-outline btn-sm" onclick="removeAvatar()" style="font-size:0.75rem;padding:3px 10px;border-color:rgba(239,68,68,0.4);color:#ef4444;display:none">
+                  ✕ Remover Foto
+                </button>
+              </div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
-              <label for="avatar-file-input" class="btn btn-outline btn-sm" style="font-size:0.8rem;padding:7px 14px;border-color:var(--accent);color:var(--accent-light);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:0">
-                📷 Escolher Foto &amp; Cortar
-              </label>
-              <button type="button" id="btn-remove-avatar" class="btn btn-outline btn-sm" onclick="removeAvatar()" style="font-size:0.75rem;padding:3px 10px;border-color:rgba(239,68,68,0.4);color:#ef4444;display:none">
-                ✕ Remover Foto
+            <input type="hidden" id="prof-input-avatar" value="" />
+          </div>
+
+          <!-- Identificação do Usuário -->
+          <div class="form-group" style="margin-bottom:14px">
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Seu @usuário Pi</label>
+            <input type="text" id="prof-input-user" required placeholder="@seunome" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:var(--accent-light);font-weight:700;box-sizing:border-box" />
+          </div>
+
+          <!-- Bio / Apresentação Rápida -->
+          <div class="form-group" style="margin-bottom:14px">
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Bio / Apresentação Rápida</label>
+            <input type="text" id="prof-input-bio" maxlength="140" placeholder="Ex: Criador Web3, aceitando Pi na Mainnet para produtos e mentorias." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;box-sizing:border-box" />
+          </div>
+
+          <!-- Chave Pública Pi Wallet com Validador Criptográfico -->
+          <div class="form-group" style="margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:4px">
+              <label style="font-size:0.8rem;color:var(--gray-light);font-weight:700">Chave Pública da Pi Wallet (Mainnet P2P)</label>
+              <span id="prof-wallet-badge" style="font-size:0.72rem;font-weight:700"></span>
+            </div>
+            <input type="text" id="prof-input-wallet" placeholder="GA5F..." maxlength="56" oninput="validateWalletInputLive(this.value)" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-family:var(--font-mono);font-size:0.8rem;transition:border-color 0.2s ease;box-sizing:border-box" />
+            <small id="prof-wallet-hint" style="color:var(--text-muted);font-size:0.72rem;display:block;margin-top:4px">
+              🔒 Começa com 'G' e possui exatamente 56 caracteres Base32 com CRC16. Nunca informe sua Passphrase de 24 palavras.
+            </small>
+          </div>
+        </div>
+
+        <!-- ABA 2: REDES SOCIAIS & DESTAQUES -->
+        <div class="edit-tab-panel" data-edit-panel="redes">
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 12px">
+            Cole o link completo ou apenas seu <strong>@usuário</strong> (ou número do WhatsApp) — o sistema converte automaticamente e exibe como ícones compactos no topo.
+          </p>
+          <div class="edit-social-grid">
+            <div>
+              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">WhatsApp (Link ou Número)</label>
+              <input type="text" id="prof-input-whatsapp" placeholder="https://wa.me/55... ou 11999999999" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
+            </div>
+            <div>
+              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">YouTube (Link ou @canal)</label>
+              <input type="text" id="prof-input-social" placeholder="https://youtube.com/@... ou @canal" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
+            </div>
+          </div>
+
+          <div class="edit-social-grid" style="margin-bottom:14px">
+            <div>
+              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Instagram (Link ou @usuário)</label>
+              <input type="text" id="prof-input-instagram" placeholder="https://instagram.com/... ou @usuario" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
+            </div>
+            <div>
+              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">X / Twitter (Link ou @usuário)</label>
+              <input type="text" id="prof-input-twitter" placeholder="https://x.com/... ou @usuario" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
+            </div>
+          </div>
+
+          <!-- Outras Redes Sociais Dinâmicas (Telegram, TikTok, LinkedIn, Discord, GitHub, Site) -->
+          <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+              <span style="font-size:0.78rem;font-weight:700;color:var(--accent-light)">
+                🌐 Outras Redes &amp; Links (Telegram, TikTok, LinkedIn...)
+              </span>
+              <button type="button" class="btn btn-outline btn-sm" onclick="addExtraSocialRow('auto', '')" style="font-size:0.72rem;padding:4px 10px;border-color:var(--accent);color:var(--accent-light)">
+                ➕ Adicionar Rede
               </button>
             </div>
+            <div id="prof-extra-socials-container"></div>
           </div>
-          <input type="hidden" id="prof-input-avatar" value="" />
-        </div>
 
-        <!-- Identificação do Usuário -->
-        <div class="form-group" style="margin-bottom:14px">
-          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Seu @usuário Pi</label>
-          <input type="text" id="prof-input-user" required placeholder="@seunome" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:var(--accent-light);font-weight:700" />
-        </div>
-
-        <!-- Bio / Apresentação Rápida -->
-        <div class="form-group" style="margin-bottom:14px">
-          <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Bio / Apresentação Rápida</label>
-          <input type="text" id="prof-input-bio" maxlength="140" placeholder="Ex: Criador Web3, aceitando Pi na Mainnet para produtos e mentorias." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
-        </div>
-
-        <!-- Chave Pública Pi Wallet com Validador Criptográfico -->
-        <div class="form-group" style="margin-bottom:14px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <label style="font-size:0.8rem;color:var(--gray-light);font-weight:700">Chave Pública da Pi Wallet (Mainnet P2P)</label>
-            <span id="prof-wallet-badge" style="font-size:0.72rem;font-weight:700"></span>
-          </div>
-          <input type="text" id="prof-input-wallet" placeholder="GA5F..." maxlength="56" oninput="validateWalletInputLive(this.value)" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-family:var(--font-mono);font-size:0.8rem;transition:border-color 0.2s ease" />
-          <small id="prof-wallet-hint" style="color:var(--text-muted);font-size:0.72rem;display:block;margin-top:4px">
-            🔒 Começa com 'G' e possui exatamente 56 caracteres Base32 com CRC16. Nunca informe sua Passphrase de 24 palavras.
-          </small>
-        </div>
-
-        <!-- Links de Contato -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-          <div>
-            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">WhatsApp (Link)</label>
-            <input type="url" id="prof-input-whatsapp" placeholder="https://wa.me/55..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem" />
-          </div>
-          <div>
-            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">YouTube (Canal / Vídeo)</label>
-            <input type="url" id="prof-input-social" placeholder="https://youtube.com/@..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem" />
-          </div>
-        </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
-          <div>
-            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Instagram (Link)</label>
-            <input type="url" id="prof-input-instagram" placeholder="https://instagram.com/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem" />
-          </div>
-          <div>
-            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">X / Twitter (Link)</label>
-            <input type="url" id="prof-input-twitter" placeholder="https://x.com/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem" />
-          </div>
-        </div>
-
-        <!-- Opções de Destaques Comunitários na Vitrine -->
-        <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left">
-          <span style="font-size:0.78rem;font-weight:700;color:var(--amber-light);display:block;margin-bottom:8px">
-            🌟 Ajudar a Comunidade (Destaques no seu Linktree):
-          </span>
-          <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#fff;cursor:pointer;margin-bottom:8px">
-            <input type="checkbox" id="prof-check-zero" checked style="width:16px;height:16px;accent-color:var(--amber)" />
-            <span>Exibir card educativo <strong>📘 Pi Network do Zero</strong></span>
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#fff;cursor:pointer">
-            <input type="checkbox" id="prof-check-mural" checked style="width:16px;height:16px;accent-color:var(--amber)" />
-            <span>Exibir link da <strong>📢 Gazeta dos Pioneiros (Mural)</strong></span>
-          </label>
-        </div>
-
-        <!-- Seção: Produtos com Fotos Reais & Cards Linktree -->
-        <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:14px;margin-bottom:18px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <span style="font-size:0.82rem;font-weight:700;color:var(--amber-light)">
-              🛍️ Produtos &amp; Serviços (com Foto)
+          <!-- Opções de Destaques Comunitários na Vitrine -->
+          <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left">
+            <span style="font-size:0.78rem;font-weight:700;color:var(--amber-light);display:block;margin-bottom:8px">
+              🌟 Ajudar a Comunidade (Destaques no seu Linktree):
             </span>
-            <button type="button" class="btn btn-outline btn-sm" onclick="addProductRow('', '', '', '')" style="font-size:0.75rem;padding:4px 10px;border-color:var(--amber)">
-              ➕ Adicionar Produto / Link
-            </button>
-          </div>
-
-          <div id="prof-products-container">
-            <!-- Injetado dinamicamente com dados existentes -->
+            <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#fff;cursor:pointer;margin-bottom:8px">
+              <input type="checkbox" id="prof-check-zero" checked style="width:16px;height:16px;accent-color:var(--amber)" />
+              <span>Exibir card educativo <strong>📘 Pi Network do Zero</strong></span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#fff;cursor:pointer">
+              <input type="checkbox" id="prof-check-mural" checked style="width:16px;height:16px;accent-color:var(--amber)" />
+              <span>Exibir link da <strong>📢 Gazeta dos Pioneiros (Mural)</strong></span>
+            </label>
           </div>
         </div>
 
-        <!-- Botões de Ação do Modal -->
-        <div style="display:flex;gap:10px;flex-direction:column">
+        <!-- ABA 3: PRODUTOS & SERVIÇOS (EM R$ OU π) -->
+        <div class="edit-tab-panel" data-edit-panel="produtos">
+          <div style="margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+              <span style="font-size:0.82rem;font-weight:700;color:var(--amber-light)">
+                🛍️ Produtos &amp; Serviços (R$ ou π)
+              </span>
+              <button type="button" class="btn btn-outline btn-sm" onclick="addProductRow('', '', '', '')" style="font-size:0.75rem;padding:5px 10px;border-color:var(--amber)">
+                ➕ Adicionar Produto / Serviço
+              </button>
+            </div>
+
+            <div id="prof-products-container">
+              <!-- Injetado dinamicamente com dados existentes -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de Ação do Modal (Sempre visíveis) -->
+        <div style="display:flex;gap:10px;flex-direction:column;border-top:1px solid rgba(255,255,255,0.1);padding-top:14px">
           <button type="submit" id="btn-save-profile" class="btn btn-primary" style="width:100%;padding:12px;font-size:0.95rem;font-weight:700">
             💾 Salvar Oficialmente na Pi Network
           </button>
@@ -1060,7 +1346,7 @@
   <script src="assets/js/config.js?v=2.1"></script>
   <script src="assets/js/modules/i18n.js?v=4.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/modules/db.js?v=5.2"></script>
+  <script src="assets/js/modules/db.js?v=5.3"></script>
 
   <script>
     // =========================================================================
@@ -1588,8 +1874,6 @@
       if (typeof window !== 'undefined') {
         if (window.flutter_inappwebview || window.PiNetwork || window.isPiBrowser) return true;
         if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
-        if (localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user') || localStorage.getItem('pioneer_auth_type') === 'pi-sdk') return true;
-        if (window.Pi && (/Android/i.test(ua) || /iPhone|iPad|iPod/i.test(ua))) return true;
       }
       return false;
     }
@@ -1741,12 +2025,12 @@
           if (logged && logged.username) {
             const cleanLogged = cleanUsername(logged.username).replace(/^@+/, '');
             loggedBox.innerHTML = `
-              <div style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.35);border-radius:14px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left">
-                <div>
+              <div class="onboarding-logged-card">
+                <div style="min-width:0">
                   <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600">Sua Sessão Pi Conectada:</div>
-                  <div style="font-size:0.95rem;color:#10b981;font-weight:800">🟢 @${escapeHtml(cleanLogged)}</div>
+                  <div style="font-size:0.95rem;color:#10b981;font-weight:800;word-break:break-word">🟢 @${escapeHtml(cleanLogged)}</div>
                 </div>
-                <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="padding:9px 16px;font-size:0.86rem;font-weight:700;text-decoration:none">
+                <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="padding:9px 16px;font-size:0.86rem;font-weight:700;text-decoration:none;flex-shrink:0">
                   🌟 Ir para Minha Vitrine →
                 </a>
               </div>
@@ -1837,6 +2121,108 @@
     }
 
     // Renderiza a Vitrine (Linktree Puro)
+    const SOCIAL_ICON_CATALOG = {
+      whatsapp: {
+        label: 'WhatsApp',
+        cls: 'social-icon-pill--whatsapp',
+        svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z"/></svg>'
+      },
+      youtube: {
+        label: 'YouTube',
+        cls: 'social-icon-pill--youtube',
+        svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>'
+      },
+      instagram: {
+        label: 'Instagram',
+        cls: 'social-icon-pill--instagram',
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>'
+      },
+      twitter: {
+        label: 'X / Twitter',
+        cls: 'social-icon-pill--twitter',
+        svg: '<svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>'
+      },
+      telegram: {
+        label: 'Telegram',
+        cls: 'social-icon-pill--telegram',
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#24a1de"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.818 8.234-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.211-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.833.941z"/></svg>'
+      },
+      tiktok: {
+        label: 'TikTok',
+        cls: 'social-icon-pill--tiktok',
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fe2c55"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>'
+      },
+      linkedin: {
+        label: 'LinkedIn',
+        cls: 'social-icon-pill--linkedin',
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>'
+      },
+      facebook: {
+        label: 'Facebook',
+        cls: 'social-icon-pill--facebook',
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#1877f2"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>'
+      },
+      discord: {
+        label: 'Discord',
+        cls: 'social-icon-pill--discord',
+        svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="#5865f2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>'
+      },
+      github: {
+        label: 'GitHub',
+        cls: 'social-icon-pill--github',
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>'
+      },
+      kwai: {
+        label: 'Kwai',
+        cls: 'social-icon-pill--kwai',
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#ff7700"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="3"/><rect x="4" y="13" width="12" height="7" rx="3"/><polygon points="17,14 22,12 22,20 17,18"/></svg>'
+      },
+      website: {
+        label: 'Site Oficial',
+        cls: 'social-icon-pill--website',
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>'
+      }
+    };
+
+    function detectSocialNetwork(url) {
+      const u = String(url || '').toLowerCase();
+      if (/wa\.me|whatsapp\.com/.test(u)) return 'whatsapp';
+      if (/youtube\.com|youtu\.be/.test(u)) return 'youtube';
+      if (/instagram\.com/.test(u)) return 'instagram';
+      if (/twitter\.com|x\.com/.test(u)) return 'twitter';
+      if (/t\.me|telegram\.me|telegram\.org/.test(u)) return 'telegram';
+      if (/tiktok\.com/.test(u)) return 'tiktok';
+      if (/linkedin\.com/.test(u)) return 'linkedin';
+      if (/facebook\.com|fb\.com|fb\.me/.test(u)) return 'facebook';
+      if (/discord\.gg|discord\.com/.test(u)) return 'discord';
+      if (/github\.com/.test(u)) return 'github';
+      if (/kwai\.com|s\.kw\.ai/.test(u)) return 'kwai';
+      return 'website';
+    }
+
+    function normalizeSocialUrl(network, rawValue) {
+      const val = String(rawValue || '').trim();
+      if (!val) return '';
+      if (/^https?:\/\//i.test(val)) return val;
+      const handle = val.replace(/^@+/, '').trim();
+      if (network === 'whatsapp') {
+        const digits = val.replace(/\D/g, '');
+        if (digits.length >= 8) return 'https://wa.me/' + (digits.length <= 11 ? '55' + digits : digits);
+      }
+      const bases = {
+        instagram: 'https://instagram.com/',
+        twitter: 'https://x.com/',
+        youtube: 'https://youtube.com/@',
+        telegram: 'https://t.me/',
+        tiktok: 'https://tiktok.com/@',
+        github: 'https://github.com/'
+      };
+      if (bases[network] && !val.includes('.')) {
+        return bases[network] + handle;
+      }
+      return 'https://' + val.replace(/^\/+/, '');
+    }
+
     function renderShowcaseData(prof, ads) {
       document.getElementById('onboarding-navbar').style.display = 'none';
       document.getElementById('vitrine-topbar').style.display = 'flex';
@@ -1996,95 +2382,65 @@
         `;
       }
 
-      // 2. Redes Sociais Oficiais Personalizadas com SVGs e Subtítulos (Sanitizadas contra XSS)
-      const isOfficialFounder = (username === '@hokage22b');
-      const safeWaUrl = escapeHtml(sanitizeUrl(prof.whatsapp_url));
-      const safeYtUrl = escapeHtml(sanitizeUrl(prof.youtube_url));
-      const safeIgUrl = escapeHtml(sanitizeUrl(prof.instagram_url));
-      const safeTwUrl = escapeHtml(sanitizeUrl(prof.twitter_url));
+      // 2. Barra Compacta de Ícones Pequenos para Redes Sociais (Principais + Extras Dinâmicos, Anti-XSS)
+      const socialBar = document.getElementById('pioneer-social-bar');
+      if (socialBar) {
+        const socialEntries = [];
+        const seenUrls = new Set();
+        function pushSocialEntry(net, rawUrl) {
+          const safe = escapeHtml(sanitizeUrl(rawUrl));
+          if (!safe || safe === '#' || seenUrls.has(safe)) return;
+          seenUrls.add(safe);
+          const resolvedNet = (net && net !== 'auto' && SOCIAL_ICON_CATALOG[net]) ? net : detectSocialNetwork(safe);
+          socialEntries.push({ net: resolvedNet, url: safe });
+        }
 
-      if (safeWaUrl) {
-        const waTitle = isOfficialFounder ? 'Comunidade &amp; Suporte no WhatsApp' : 'Falar no WhatsApp';
-        const waSub = isOfficialFounder ? 'Grupo VIP de Pioneiros · Dúvidas e Networking' : 'Atendimento direto e negociações com Pi';
-        linksHtml += `
-          <a href="${safeWaUrl}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--whatsapp">
-            <div class="pioneer-link-icon-wrap">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z"/></svg>
-            </div>
-            <div class="pioneer-link-content">
-              <span class="pioneer-link-heading">${waTitle}</span>
-              <span class="pioneer-link-caption">${waSub}</span>
-            </div>
-            <span class="pioneer-link-chevron">↗</span>
-          </a>
-        `;
+        pushSocialEntry('whatsapp', prof.whatsapp_url);
+        pushSocialEntry('youtube', prof.youtube_url);
+        pushSocialEntry('instagram', prof.instagram_url);
+        pushSocialEntry('twitter', prof.twitter_url);
+
+        if (Array.isArray(prof.social_links)) {
+          prof.social_links.forEach(item => {
+            if (item && item.url) pushSocialEntry(item.network || 'auto', item.url);
+          });
+        }
+
+        socialBar.innerHTML = socialEntries.map(entry => {
+          const meta = SOCIAL_ICON_CATALOG[entry.net] || SOCIAL_ICON_CATALOG.website;
+          return `<a href="${entry.url}" target="_blank" rel="noopener noreferrer" class="social-icon-pill ${meta.cls}" title="${meta.label}" aria-label="${meta.label}">${meta.svg}</a>`;
+        }).join('');
+        socialBar.style.display = socialEntries.length > 0 ? 'flex' : 'none';
       }
 
-      if (safeYtUrl) {
-        const ytTitle = isOfficialFounder ? 'Canal Oficial no YouTube' : 'Canal no YouTube';
-        const ytSub = isOfficialFounder ? '@justhokage22b · Análises, tutoriais e Web3' : 'Vídeos e novidades da comunidade';
-        linksHtml += `
-          <a href="${safeYtUrl}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--youtube">
-            <div class="pioneer-link-icon-wrap">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      const linksSection = document.getElementById('pioneer-links-section');
+      if (linksHtml) {
+        linksList.innerHTML = linksHtml;
+        if (linksSection) linksSection.style.display = 'block';
+      } else {
+        linksList.innerHTML = '';
+        if (linksSection) linksSection.style.display = (socialBar && socialBar.innerHTML) ? 'none' : 'block';
+        if (!socialBar || !socialBar.innerHTML) {
+          linksList.innerHTML = `
+            <div style="background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;padding:14px;color:var(--text-muted);font-size:0.85rem">
+              Nenhum link cadastrado no momento.
             </div>
-            <div class="pioneer-link-content">
-              <span class="pioneer-link-heading">${ytTitle}</span>
-              <span class="pioneer-link-caption">${ytSub}</span>
-            </div>
-            <span class="pioneer-link-chevron">↗</span>
-          </a>
-        `;
+          `;
+        }
       }
 
-      if (safeIgUrl) {
-        const igTitle = isOfficialFounder ? 'Instagram @hokage22b' : 'Perfil no Instagram';
-        const igSub = isOfficialFounder ? 'Bastidores, novidades e alertas rápidos' : 'Fotos, novidades e contato diário';
-        linksHtml += `
-          <a href="${safeIgUrl}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--instagram">
-            <div class="pioneer-link-icon-wrap">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
-            </div>
-            <div class="pioneer-link-content">
-              <span class="pioneer-link-heading">${igTitle}</span>
-              <span class="pioneer-link-caption">${igSub}</span>
-            </div>
-            <span class="pioneer-link-chevron">↗</span>
-          </a>
-        `;
-      }
-
-      if (safeTwUrl) {
-        const twTitle = isOfficialFounder ? 'Perfil Oficial no Twitter / X' : 'Perfil no Twitter / X';
-        const twSub = isOfficialFounder ? '@hokage22b · Informações da Open Mainnet' : 'Atualizações e opiniões na rede';
-        linksHtml += `
-          <a href="${safeTwUrl}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--twitter">
-            <div class="pioneer-link-icon-wrap">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            </div>
-            <div class="pioneer-link-content">
-              <span class="pioneer-link-heading">${twTitle}</span>
-              <span class="pioneer-link-caption">${twSub}</span>
-            </div>
-            <span class="pioneer-link-chevron">↗</span>
-          </a>
-        `;
-      }
-
-      linksList.innerHTML = linksHtml || `
-        <div style="background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;padding:14px;color:var(--text-muted);font-size:0.85rem">
-          Nenhum link cadastrado no momento.
-        </div>
-      `;
-
-      // Produtos com Fotos Reais (Sem cortes nem sobreposição de letras no celular + Anti-XSS)
+      // Produtos com Fotos Reais (Suporta R$ e π com formatação profissional + Anti-XSS)
       const productsSection = document.getElementById('pioneer-products-section');
       const productsList = document.getElementById('pioneer-products-list');
 
       if (Array.isArray(prof.products) && prof.products.length > 0) {
         productsList.innerHTML = prof.products.map(p => {
-          const safeTitle = escapeHtml(p.title || 'Produto / Oferta');
-          const safePrice = escapeHtml(p.price || 'Sob Consulta');
+          const safeTitle = escapeHtml(p.title || 'Produto / Serviço');
+          const rawPrice = String(p.price || 'Sob Consulta').trim();
+          const safePrice = escapeHtml(rawPrice);
+          const isBrl = /^R\$|BRL/i.test(rawPrice);
+          const isPi = /π|\bpi\b/i.test(rawPrice);
+          const priceClass = isBrl ? 'product-price product-price--brl' : (isPi ? 'product-price product-price--pi' : 'product-price');
           const safeBadge = p.badge ? escapeHtml(p.badge) : '';
           const safeLink = sanitizeUrl(p.link);
           const safeCta = escapeHtml(p.cta || 'Acessar →');
@@ -2099,7 +2455,7 @@
                 <div class="product-info">
                   <strong class="product-title">${safeTitle}</strong>
                   <div class="product-meta-row">
-                    <span class="product-price">${safePrice}</span>
+                    <span class="${priceClass}">${safePrice}</span>
                     ${safeBadge ? `<span class="product-badge-pill">${safeBadge}</span>` : ''}
                   </div>
                 </div>
@@ -2180,7 +2536,7 @@
 
     // Conectar via Pi Browser
     function connectPiBrowserAndStart() {
-      const inPi = isPiBrowser() || Boolean(window.Pi);
+      const inPi = isPiBrowser();
       if (inPi && window.Pi) {
         window.Pi.authenticate(['username', 'payments', 'wallet_address'], function(p) { console.log('Pendência:', p); })
           .then(function(auth) {
@@ -2220,12 +2576,30 @@
       loadPioneerProfile();
     }
 
+    function switchEditTab(tabName) {
+      document.querySelectorAll('.edit-tab-btn').forEach(btn => {
+        const isActive = btn.getAttribute('data-edit-tab') === tabName;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      document.querySelectorAll('.edit-tab-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.getAttribute('data-edit-panel') === tabName);
+      });
+    }
+
     // ==========================================
-    // MODAL DE EDIÇÃO
+    // MODAL DE EDIÇÃO (EXCLUSIVO NO PI BROWSER)
     // ==========================================
     function openProfileEditModal() {
+      // Bloqueio estrito: edição oficial só ocorre dentro do Pi Browser (ou no Simulador Interativo)
+      if (!isSimulatorMode && !isPiBrowser()) {
+        openExternalBrowserModal();
+        return;
+      }
+
       const modal = document.getElementById('edit-profile-modal');
       if (!modal) return;
+      switchEditTab('perfil');
 
       const loggedUser = getLoggedUser();
       const activeUser = currentPioneerUser || (loggedUser ? loggedUser.username : '@meu_usuario');
@@ -2264,6 +2638,17 @@
       const checkMural = document.getElementById('prof-check-mural');
       if (checkZero) checkZero.checked = (!currentProfileData || currentProfileData.showcase_zero !== false);
       if (checkMural) checkMural.checked = (!currentProfileData || currentProfileData.showcase_mural !== false);
+
+      // Preenche outras redes sociais dinâmicas
+      const extraSocialsContainer = document.getElementById('prof-extra-socials-container');
+      if (extraSocialsContainer) {
+        extraSocialsContainer.innerHTML = '';
+        if (currentProfileData && Array.isArray(currentProfileData.social_links) && currentProfileData.social_links.length > 0) {
+          currentProfileData.social_links.forEach(item => {
+            addExtraSocialRow(item.network || 'auto', item.url || '');
+          });
+        }
+      }
 
       // Preenche produtos com suporte a fotos
       const container = document.getElementById('prof-products-container');
@@ -2409,25 +2794,27 @@
         const bio = p.bio || 'Pioneiro oficial na comunidade descentralizada Pi Network.';
         const avatar = sanitizeImageUrl(p.avatar_url || '');
         const hasWallet = Boolean(p.wallet_address);
+        const prodCount = Array.isArray(p.products) ? p.products.length : 0;
 
         html += `
-          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:all 0.2s ease">
-            <div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1">
+          <div class="dir-card">
+            <div class="dir-card-main">
               <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;background:#1a0533;border:2px solid rgba(139,92,246,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 ${avatar ? `<img src="${avatar}" alt="${escapeHtml(uName)}" style="width:100%;height:100%;object-fit:cover" />` : `<span style="font-size:1.15rem;font-weight:800;color:#fff">${uSlug.charAt(0).toUpperCase()}</span>`}
               </div>
               <div style="min-width:0;flex:1">
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-                  <strong style="color:#fff;font-size:0.9rem" class="notranslate">${escapeHtml(uName)}</strong>
+                  <strong style="color:#fff;font-size:0.9rem;word-break:break-word" class="notranslate">${escapeHtml(uName)}</strong>
                   <span style="font-size:0.65rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:1px 6px;border-radius:10px;font-weight:700">✓ KYC</span>
-                  ${hasWallet ? `<span style="font-size:0.65rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:1px 6px;border-radius:10px;font-weight:700">⚡ Aceita Pi</span>` : ''}
+                  ${hasWallet ? `<span style="font-size:0.65rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:1px 6px;border-radius:10px;font-weight:700">⚡ Pi</span>` : ''}
+                  ${prodCount > 0 ? `<span style="font-size:0.65rem;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:1px 6px;border-radius:10px;font-weight:700">🛍️ ${prodCount}</span>` : ''}
                 </div>
-                <p style="font-size:0.78rem;color:var(--text-secondary);margin:3px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:3px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35">
                   ${escapeHtml(bio)}
                 </p>
               </div>
             </div>
-            <a href="?u=${encodeURIComponent(uSlug)}" class="portal-btn portal-btn--outline portal-btn--sm" style="flex-shrink:0;padding:6px 12px;font-size:0.75rem;font-weight:700;border-color:rgba(139,92,246,0.4);color:var(--accent-light);text-decoration:none">
+            <a href="?u=${encodeURIComponent(uSlug)}" class="portal-btn portal-btn--outline portal-btn--sm dir-card-cta">
               Ver Vitrine ↗
             </a>
           </div>
@@ -2466,12 +2853,15 @@
       let filtered = cachedDirectoryPioneers.filter(p => {
         const u = cleanUsername(p.username).toLowerCase().replace(/^@+/, '');
         const b = (p.bio || '').toLowerCase();
-        const matchesTerm = !term || u.includes(term) || b.includes(term);
+        const prodsText = Array.isArray(p.products)
+          ? p.products.map(item => (item && item.title ? String(item.title).toLowerCase() : '')).join(' ')
+          : '';
+        const matchesTerm = !term || u.includes(term) || b.includes(term) || prodsText.includes(term);
 
         if (!matchesTerm) return false;
 
         if (currentDirCategory === 'todos') return true;
-        if (currentDirCategory === 'lojas') return b.includes('loja') || b.includes('produto') || b.includes('venda') || b.includes('comércio') || b.includes('ecommerce');
+        if (currentDirCategory === 'lojas') return (Array.isArray(p.products) && p.products.length > 0) || b.includes('loja') || b.includes('produto') || b.includes('venda') || b.includes('comércio') || b.includes('ecommerce');
         if (currentDirCategory === 'servicos') return b.includes('serviço') || b.includes('design') || b.includes('dev') || b.includes('consultoria') || b.includes('advogado') || b.includes('tecnologia');
         if (currentDirCategory === 'criadores') return b.includes('criador') || b.includes('canal') || b.includes('youtube') || b.includes('vídeo') || b.includes('conteúdo') || b.includes('influencer');
 
@@ -2481,36 +2871,125 @@
       renderDirectoryGrid(filtered);
     }
 
-    // Adiciona uma linha de produto/link editável com suporte a foto
+    function addExtraSocialRow(network, url) {
+      const container = document.getElementById('prof-extra-socials-container');
+      if (!container) return;
+      const row = document.createElement('div');
+      row.className = 'extra-social-row';
+      const net = network || 'auto';
+      const safeUrl = (url || '').replace(/"/g, '&quot;');
+      row.innerHTML = `
+        <select class="extra-social-net" aria-label="Rede Social" style="padding:8px 6px;background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:var(--accent-light);font-size:0.78rem;font-weight:700;width:100%;box-sizing:border-box">
+          <option value="auto"${net === 'auto' ? ' selected' : ''}>Detectar URL</option>
+          <option value="telegram"${net === 'telegram' ? ' selected' : ''}>Telegram</option>
+          <option value="tiktok"${net === 'tiktok' ? ' selected' : ''}>TikTok</option>
+          <option value="linkedin"${net === 'linkedin' ? ' selected' : ''}>LinkedIn</option>
+          <option value="facebook"${net === 'facebook' ? ' selected' : ''}>Facebook</option>
+          <option value="discord"${net === 'discord' ? ' selected' : ''}>Discord</option>
+          <option value="github"${net === 'github' ? ' selected' : ''}>GitHub</option>
+          <option value="kwai"${net === 'kwai' ? ' selected' : ''}>Kwai</option>
+          <option value="website"${net === 'website' ? ' selected' : ''}>Site / Blog</option>
+        </select>
+        <input type="text" class="extra-social-url" placeholder="https://... ou @usuario" value="${safeUrl}" style="width:100%;padding:8px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.18);border-radius:6px;color:#fff;font-size:0.82rem;box-sizing:border-box;min-width:0" />
+        <button type="button" onclick="this.parentElement.remove()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#ef4444;border-radius:6px;height:32px;cursor:pointer;font-size:0.85rem" title="Remover rede">✕</button>
+      `;
+      container.appendChild(row);
+    }
+
+    function collectExtraSocialsFromForm() {
+      const rows = document.querySelectorAll('#prof-extra-socials-container .extra-social-row');
+      const list = [];
+      rows.forEach(row => {
+        const netEl = row.querySelector('.extra-social-net');
+        const urlEl = row.querySelector('.extra-social-url');
+        const net = netEl ? netEl.value : 'auto';
+        const raw = urlEl ? urlEl.value.trim() : '';
+        if (!raw) return;
+        const normalized = normalizeSocialUrl(net, raw);
+        const resolvedNet = (net === 'auto') ? detectSocialNetwork(normalized) : net;
+        list.push({ network: resolvedNet, url: normalized });
+      });
+      return list;
+    }
+
+    // Adiciona uma linha de produto/serviço editável com seletor de moeda (R$ ou π) e foto
     function addProductRow(title, price, link, imageUrl) {
       const container = document.getElementById('prof-products-container');
       const itemEl = document.createElement('div');
       itemEl.className = 'product-edit-item';
-      
+
+      const rawPrice = (price || '').trim();
+      let initCurrency = 'PI';
+      let cleanPriceVal = rawPrice;
+      if (/^R\$/i.test(rawPrice)) {
+        initCurrency = 'BRL';
+        cleanPriceVal = rawPrice.replace(/^R\$\s*/i, '').trim();
+      } else if (/π|\bpi\b/i.test(rawPrice)) {
+        initCurrency = 'PI';
+        cleanPriceVal = rawPrice.replace(/\s*(?:π|pi)\s*$/i, '').trim();
+      } else if (rawPrice) {
+        initCurrency = 'CUSTOM';
+      }
+
       const safeTitle = title ? title.replace(/"/g, '&quot;') : '';
-      const safePrice = price ? price.replace(/"/g, '&quot;') : '';
+      const safePrice = cleanPriceVal ? cleanPriceVal.replace(/"/g, '&quot;') : '';
       const safeLink = link ? link.replace(/"/g, '&quot;') : '';
       const safeImg = imageUrl ? imageUrl.replace(/"/g, '&quot;') : '';
 
       itemEl.innerHTML = `
         <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#ef4444;cursor:pointer;font-size:0.9rem" title="Remover item">✕</button>
-        <div style="font-size:0.75rem;font-weight:700;color:var(--amber-light);margin-bottom:6px">Produto / Card</div>
+        <div style="font-size:0.75rem;font-weight:700;color:var(--amber-light);margin-bottom:6px">Produto / Serviço</div>
         
-        <input type="text" class="prod-item-title" placeholder="Nome do produto (Ex: Camiseta Pi)" value="${safeTitle}" style="width:100%;padding:8px 10px;margin-bottom:6px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem" />
+        <input type="text" class="prod-item-title" placeholder="Nome do produto ou serviço" value="${safeTitle}" style="width:100%;padding:8px 10px;margin-bottom:6px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem;box-sizing:border-box" />
         
-        <div style="display:flex;gap:6px;margin-bottom:6px">
-          <input type="text" class="prod-item-price" placeholder="Preço (Ex: 3.14 π)" value="${safePrice}" style="flex:1;padding:8px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem" />
-          <input type="url" class="prod-item-link" placeholder="Link de compra ou zap (https://...)" value="${safeLink}" style="flex:2;padding:8px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem" />
+        <div class="product-edit-row-grid">
+          <select class="prod-item-currency" aria-label="Moeda" style="padding:8px 6px;background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:var(--amber-light);font-size:0.8rem;font-weight:700;width:100%;box-sizing:border-box">
+            <option value="PI"${initCurrency === 'PI' ? ' selected' : ''}>π (Pi)</option>
+            <option value="BRL"${initCurrency === 'BRL' ? ' selected' : ''}>R$ (Real)</option>
+            <option value="CUSTOM"${initCurrency === 'CUSTOM' ? ' selected' : ''}>Outro</option>
+          </select>
+          <input type="text" class="prod-item-price" placeholder="Valor (Ex: 3.14 ou 47,00)" value="${safePrice}" style="width:100%;padding:8px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem;box-sizing:border-box" />
         </div>
 
-        <div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.3);padding:6px 10px;border-radius:6px;border:1px dashed rgba(255,255,255,0.15)">
-          <span style="font-size:0.75rem;color:var(--text-muted)">📷 Foto:</span>
-          <input type="file" accept="image/*" onchange="handleProductPhotoUpload(event, this)" style="font-size:0.75rem;color:var(--text-muted);flex:1" />
+        <input type="url" class="prod-item-link" placeholder="Link de compra ou WhatsApp (https://...)" value="${safeLink}" style="width:100%;padding:8px 10px;margin-bottom:6px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem;box-sizing:border-box" />
+
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:rgba(0,0,0,0.3);padding:6px 10px;border-radius:6px;border:1px dashed rgba(255,255,255,0.15)">
+          <span style="font-size:0.75rem;color:var(--text-muted);flex-shrink:0">📷 Foto:</span>
+          <input type="file" accept="image/*" onchange="handleProductPhotoUpload(event, this)" style="font-size:0.75rem;color:var(--text-muted);flex:1;min-width:0;max-width:100%" />
           <input type="hidden" class="prod-item-img" value="${safeImg}" />
-          ${safeImg ? `<img src="${safeImg}" class="prod-item-preview" style="width:28px;height:28px;border-radius:4px;object-fit:cover" />` : `<img class="prod-item-preview" style="width:28px;height:28px;border-radius:4px;object-fit:cover;display:none" />`}
+          ${safeImg ? `<img src="${safeImg}" class="prod-item-preview" style="width:28px;height:28px;border-radius:4px;object-fit:cover;flex-shrink:0" />` : `<img class="prod-item-preview" style="width:28px;height:28px;border-radius:4px;object-fit:cover;display:none;flex-shrink:0" />`}
         </div>
       `;
       container.appendChild(itemEl);
+    }
+
+    function collectProductsFromForm() {
+      const productElements = document.querySelectorAll('#prof-products-container .product-edit-item');
+      const products = [];
+      productElements.forEach(el => {
+        const title = el.querySelector('.prod-item-title').value.trim();
+        const currencyEl = el.querySelector('.prod-item-currency');
+        const currency = currencyEl ? currencyEl.value : 'CUSTOM';
+        const rawVal = el.querySelector('.prod-item-price').value.trim();
+        const link = el.querySelector('.prod-item-link').value.trim();
+        const img = el.querySelector('.prod-item-img').value.trim();
+
+        let formattedPrice = rawVal;
+        if (rawVal) {
+          if (currency === 'BRL') {
+            formattedPrice = /^R\$/i.test(rawVal) ? rawVal : ('R$ ' + rawVal);
+          } else if (currency === 'PI') {
+            formattedPrice = /π|\bpi\b/i.test(rawVal) ? rawVal : (rawVal + ' π');
+          }
+        } else {
+          formattedPrice = 'Sob Consulta';
+        }
+
+        if (title || link) {
+          products.push({ title: title, price: formattedPrice, link: link, image_url: img });
+        }
+      });
+      return products;
     }
 
     // Leitor de Foto Local com Compressão Canvas Automática (Evita Base64 Gigante no Banco)
@@ -2553,6 +3032,16 @@
       reader.readAsDataURL(file);
     }
 
+    function collectSocialFieldsFromForm() {
+      return {
+        whatsapp_url: normalizeSocialUrl('whatsapp', document.getElementById('prof-input-whatsapp').value),
+        youtube_url: normalizeSocialUrl('youtube', document.getElementById('prof-input-social').value),
+        instagram_url: normalizeSocialUrl('instagram', document.getElementById('prof-input-instagram').value),
+        twitter_url: normalizeSocialUrl('twitter', document.getElementById('prof-input-twitter').value),
+        social_links: collectExtraSocialsFromForm()
+      };
+    }
+
     // Atualização da Prévia no Modo Simulador
     function applyLivePreviewFromForm() {
       const username = document.getElementById('prof-input-user').value.trim() || '@pioneiro';
@@ -2566,44 +3055,24 @@
         if (walletInp) { walletInp.focus(); walletInp.style.borderColor = '#ef4444'; }
         return;
       }
-      const whatsapp = document.getElementById('prof-input-whatsapp').value.trim();
-      const social = document.getElementById('prof-input-social').value.trim();
-      const instagram = document.getElementById('prof-input-instagram').value.trim();
-      const twitter = document.getElementById('prof-input-twitter').value.trim();
 
-      // Validação Criptográfica Estrita da Chave Pública
-      if (wallet && !isValidPiPublicKey(wallet)) {
-        alert('⚠️ Chave Pública Inválida!\n\nA chave da Pi Wallet deve começar com a letra "G", conter exatamente 56 caracteres e possuir checksum CRC16 válido da rede Stellar/Pi.\n\nPor favor, copie sua chave diretamente da sua carteira no aplicativo Pi Browser (wallet.pi).');
-        const walletInp = document.getElementById('prof-input-wallet');
-        if (walletInp) { walletInp.focus(); walletInp.style.borderColor = '#ef4444'; }
-        return;
-      }
-
+      const socials = collectSocialFieldsFromForm();
       const avatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
       const showcaseZero = document.getElementById('prof-check-zero') ? document.getElementById('prof-check-zero').checked : true;
       const showcaseMural = document.getElementById('prof-check-mural') ? document.getElementById('prof-check-mural').checked : true;
 
-      const productElements = document.querySelectorAll('#prof-products-container .product-edit-item');
-      const products = [];
-      productElements.forEach(el => {
-        const title = el.querySelector('.prod-item-title').value.trim();
-        const price = el.querySelector('.prod-item-price').value.trim();
-        const link = el.querySelector('.prod-item-link').value.trim();
-        const img = el.querySelector('.prod-item-img').value.trim();
-        if (title || link) {
-          products.push({ title: title, price: price, link: link, image_url: img });
-        }
-      });
+      const products = collectProductsFromForm();
 
       currentProfileData = {
         username: username,
         bio: bio,
         avatar_url: avatarUrl,
         wallet_address: wallet,
-        whatsapp_url: whatsapp,
-        youtube_url: social,
-        instagram_url: instagram,
-        twitter_url: twitter,
+        whatsapp_url: socials.whatsapp_url,
+        youtube_url: socials.youtube_url,
+        instagram_url: socials.instagram_url,
+        twitter_url: socials.twitter_url,
+        social_links: socials.social_links,
         showcase_zero: showcaseZero,
         showcase_mural: showcaseMural,
         products: products
@@ -2633,8 +3102,8 @@
       }
       let username = cleanUsername(rawUser);
 
-      // Verificação de Segurança Anti-Fraude:
-      const inPi = isPiBrowser() || Boolean(window.Pi);
+      // Verificação de Segurança Anti-Fraude (Exclusivo Pi Browser):
+      const inPi = isPiBrowser();
       const isAuth = isPiSdkAuthenticated();
 
       if (!inPi && !isAuth) {
@@ -2672,26 +3141,13 @@
         if (walletInp) { walletInp.focus(); walletInp.style.borderColor = '#ef4444'; }
         return;
       }
-      const whatsapp = document.getElementById('prof-input-whatsapp').value.trim();
-      const social = document.getElementById('prof-input-social').value.trim();
-      const instagram = document.getElementById('prof-input-instagram').value.trim();
-      const twitter = document.getElementById('prof-input-twitter').value.trim();
+      const socials = collectSocialFieldsFromForm();
 
       const avatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
       const showcaseZero = document.getElementById('prof-check-zero') ? document.getElementById('prof-check-zero').checked : true;
       const showcaseMural = document.getElementById('prof-check-mural') ? document.getElementById('prof-check-mural').checked : true;
 
-      const productElements = document.querySelectorAll('#prof-products-container .product-edit-item');
-      const products = [];
-      productElements.forEach(el => {
-        const title = el.querySelector('.prod-item-title').value.trim();
-        const price = el.querySelector('.prod-item-price').value.trim();
-        const link = el.querySelector('.prod-item-link').value.trim();
-        const img = el.querySelector('.prod-item-img').value.trim();
-        if (title || link) {
-          products.push({ title: title, price: price, link: link, image_url: img });
-        }
-      });
+      const products = collectProductsFromForm();
 
       const btn = document.getElementById('btn-save-profile');
       btn.disabled = true;
@@ -2703,10 +3159,11 @@
             bio: bio,
             avatar_url: avatarUrl,
             wallet_address: wallet,
-            whatsapp_url: whatsapp,
-            youtube_url: social,
-            instagram_url: instagram,
-            twitter_url: twitter,
+            whatsapp_url: socials.whatsapp_url,
+            youtube_url: socials.youtube_url,
+            instagram_url: socials.instagram_url,
+            twitter_url: socials.twitter_url,
+            social_links: socials.social_links,
             showcase_zero: showcaseZero,
             showcase_mural: showcaseMural,
             products: products

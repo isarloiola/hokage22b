@@ -797,7 +797,8 @@
         instagram_url: profileData.instagram_url || null,
         checklist_state: {
           showcase_zero: profileData.showcase_zero !== false,
-          showcase_mural: profileData.showcase_mural !== false
+          showcase_mural: profileData.showcase_mural !== false,
+          social_links: Array.isArray(profileData.social_links) ? profileData.social_links.slice(0, 12) : []
         },
         products: profileData.products || [],
         updated_at: new Date().toISOString()
@@ -857,6 +858,7 @@
         if (data.checklist_state.showcase_mural !== undefined) {
           data.showcase_mural = data.checklist_state.showcase_mural;
         }
+        data.social_links = Array.isArray(data.checklist_state.social_links) ? data.checklist_state.social_links : [];
       }
       return data;
     } catch (err) {
@@ -875,7 +877,7 @@
     try {
       var query = db
         .from('pioneiros')
-        .select('uid, username, bio, avatar_url, wallet_address, whatsapp_url, youtube_url, instagram_url, twitter_url, reputation_score, created_at, updated_at')
+        .select('uid, username, bio, avatar_url, wallet_address, whatsapp_url, youtube_url, instagram_url, twitter_url, products, reputation_score, created_at, updated_at')
         .order('updated_at', { ascending: false })
         .limit(limit);
 
