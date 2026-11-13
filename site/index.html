@@ -610,21 +610,27 @@
           </article>
         </div>
 
-        <div style="margin-top:26px;padding:20px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
-          <div style="max-width:560px">
+        <div style="margin-top:26px;padding:20px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+          <div style="max-width:520px">
             <strong style="color:#fff;font-size:0.96rem;display:block;margin-bottom:4px">
               Quer criar sua presença na Web3 ou dominar o método usado para construir este portal?
             </strong>
-            <span style="font-size:0.84rem;color:var(--text-secondary)">
+            <span style="font-size:0.84rem;color:var(--text-secondary);display:block">
               O mesmo método aplicado aqui no HOKAGE22B está documentado passo a passo no e-book <strong>IA na Prática</strong>.
             </span>
+            <div id="pi-live-ticker" style="display:none;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;padding:6px 11px;border-radius:999px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.22);font-size:0.8rem"></div>
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:10px">
-            <a href="pioneiro" class="portal-btn portal-btn--primary" style="font-weight:700">
-              👤 Criar Minha Vitrine Web3 Grátis →
-            </a>
-            <a href="#produto-ia-na-pratica" class="portal-btn portal-btn--amber" style="font-weight:700">
-              📘 Aprender a Construir com IA →
+          <div style="display:flex;flex-direction:column;gap:10px;flex:1;min-width:260px;max-width:460px">
+            <div style="display:flex;flex-wrap:wrap;gap:10px">
+              <a href="pioneiro" class="portal-btn portal-btn--primary" style="font-weight:700;flex:1;justify-content:center">
+                👤 Criar Minha Vitrine Web3 Grátis →
+              </a>
+              <a href="#produto-ia-na-pratica" class="portal-btn portal-btn--amber" style="font-weight:700;flex:1;justify-content:center">
+                📘 Aprender a Construir com IA →
+              </a>
+            </div>
+            <a href="pioneiro?u=hokage22b" class="portal-btn portal-btn--outline" style="font-weight:700;width:100%;justify-content:center;border-color:rgba(139,92,246,0.4);color:#c4b5fd">
+              🌟 Visualizar Vitrine do Pioneiro @hokage22b →
             </a>
           </div>
         </div>
@@ -1778,6 +1784,7 @@
   <script src="assets/js/modules/db.js?v=4.8"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.1"></script>
   <script src="assets/js/modules/portal.js?v=3.1"></script>
+  <script src="assets/js/modules/pi-ticker.js?v=1.0"></script>
   <script>
     // Sincroniza foto personalizada do fundador no mockup da vitrine
     document.addEventListener('DOMContentLoaded', async function () {
