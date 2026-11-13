@@ -7,11 +7,24 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const ALLOWED_ORIGINS = new Set([
+  "https://hokage22b.com",
+  "https://www.hokage22b.com",
+  "https://isarloiola.github.io",
+]);
 
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+  const allowOrigin = (ALLOWED_ORIGINS.has(origin) || isLocal) ? origin : "https://hokage22b.com";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Vary": "Origin",
+  };
+}
+
+const MAX_BODY_BYTES = 32 * 1024; // 32 KB limit against payload-flood DoS
 const TIER_PRICES: Record<string, number> = {
   ouro: 3.14,
   prata: 1.0,
@@ -22,9 +35,14 @@ const AD_EDIT_WINDOW_MS = 24 * 60 * 60 * 1000;
 const COMMENT_COOLDOWN_MS = 15 * 1000;
 const AUTO_MODERATION_REPORT_THRESHOLD = 5;
 
+let currentCorsHeaders: Record<string, string> = {
+  "Access-Control-Allow-Origin": "https://hokage22b.com",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...currentCorsHeaders, "Content-Type": "application/json" },
     status,
   });
 }
@@ -95,12 +113,28 @@ async function verifyPiPayment(paymentId: string, expectedMinAmount: number, exp
 }
 
 serve(async (req) => {
+  currentCorsHeaders = getCorsHeaders(req);
+
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { headers: currentCorsHeaders });
+  }
+
+  if (req.method !== "POST") {
+    return jsonResponse({ error: "Método não permitido." }, 405);
   }
 
   try {
-    const body = await req.json();
+    const contentLength = Number(req.headers.get("content-length") || "0");
+    if (contentLength > MAX_BODY_BYTES) {
+      return jsonResponse({ error: "Payload excede o limite de segurança (32 KB)." }, 413);
+    }
+
+    const rawText = await req.text();
+    if (rawText.length > MAX_BODY_BYTES) {
+      return jsonResponse({ error: "Payload excede o limite de segurança (32 KB)." }, 413);
+    }
+
+    const body = JSON.parse(rawText || "{}");
     const { action, accessToken, payload } = body || {};
 
     if (!action || typeof action !== "string") {
@@ -314,6 +348,18 @@ serve(async (req) => {
       const details = String(payload?.details || "").trim().slice(0, 500);
       if (!adId) return jsonResponse({ error: "ad_id é obrigatório." }, 400);
 
+      const reportCutoffIso = new Date(Date.now() - COMMENT_COOLDOWN_MS).toISOString();
+      const { data: recentReports } = await supabase
+        .from("denuncias")
+        .select("id")
+        .eq("reporter_user", piUser.username)
+        .gte("created_at", reportCutoffIso)
+        .limit(1);
+
+      if (recentReports && recentReports.length > 0) {
+        return jsonResponse({ error: "Aguarde 15 segundos antes de enviar outra denúncia." }, 429);
+      }
+
       const { data: existingReport } = await supabase
         .from("denuncias")
         .select("id")
@@ -372,6 +418,18 @@ serve(async (req) => {
       const comment = String(payload?.comment || "").trim();
       if (comment.length < 2 || comment.length > 200) {
         return jsonResponse({ error: "O comentário deve ter entre 2 e 200 caracteres." }, 400);
+      }
+
+      const reviewCutoffIso = new Date(Date.now() - 30 * 1000).toISOString();
+      const { data: recentReviews } = await supabase
+        .from("pioneer_reviews")
+        .select("id")
+        .eq("reviewer_username", piUser.username)
+        .gte("created_at", reviewCutoffIso)
+        .limit(1);
+
+      if (recentReviews && recentReviews.length > 0) {
+        return jsonResponse({ error: "Aguarde 30 segundos antes de enviar outra avaliação." }, 429);
       }
 
       const { data, error } = await supabase
