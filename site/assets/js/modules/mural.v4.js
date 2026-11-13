@@ -62,6 +62,18 @@
     return '';
   }
 
+  function safeImageUrl(url) {
+    if (!url || typeof url !== 'string') return '';
+    const trimmed = url.trim();
+    if (/^data:image\/(png|jpe?g|webp|gif);base64,[a-z0-9+/=]+$/i.test(trimmed)) {
+      return trimmed;
+    }
+    if (/^blob:https?:\/\//i.test(trimmed)) {
+      return trimmed;
+    }
+    return safeUrl(trimmed);
+  }
+
   function getYouTubeThumb(url) {
     if (!url || typeof url !== 'string') return '';
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -144,7 +156,7 @@
     }
 
     let bannerHtml = '';
-    const rawImg = ad.image_url ? safeUrl(ad.image_url) : '';
+    const rawImg = ad.image_url ? safeImageUrl(ad.image_url) : '';
     const ytThumb = cleanUrl ? getYouTubeThumb(cleanUrl) : '';
     const finalImg = rawImg || ytThumb || (tier === 'ouro' ? 'assets/img/ebook-pago-negocios.jpg' : '');
 
@@ -853,6 +865,9 @@
     if (!url || typeof url !== 'string') return '';
     let trimmed = url.trim();
     if (!trimmed) return '';
+    if (/^(data:image\/(png|jpe?g|webp|gif);base64,|blob:https?:\/\/)/i.test(trimmed)) {
+      return trimmed;
+    }
     if (!/^https?:\/\//i.test(trimmed)) {
       trimmed = 'https://' + trimmed;
     }
