@@ -909,7 +909,8 @@
 
         try {
           try {
-            window.Pi.init({ version: '2.0', sandbox: true });
+            var isPiSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || /[?&]sandbox=(1|true)/i.test(location.search) || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+            window.Pi.init({ version: '2.0', sandbox: isPiSandbox });
           } catch (_) {}
 
           diag.innerHTML = '⚡ Autenticando com a Pi Blockchain...';

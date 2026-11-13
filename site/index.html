@@ -54,12 +54,13 @@
   <link rel="stylesheet" href="assets/css/style.css?v=4.6" />
   <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.6" />
 
-  <!-- Pi Network SDK Oficial v2.0 (Modo Testnet para Auditoria Oficial) -->
+  <!-- Pi Network SDK Oficial v2.0 (Produção no Pi Browser / Sandbox automático) -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
     try {
       if (window.Pi) {
-        window.Pi.init({ version: "2.0", sandbox: true });
+        var isPiSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || /[?&]sandbox=(1|true)/i.test(location.search) || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        window.Pi.init({ version: "2.0", sandbox: isPiSandbox });
       }
     } catch (_) {}
   </script>

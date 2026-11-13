@@ -11,10 +11,19 @@
 
   window.HOKAGE_CONFIG = {
     piNetwork: {
-      // Flag centralizado de ambiente da Pi Network:
-      // true  = Pi Testnet / Sandbox (Auditoria Oficial no develop.pi)
-      // false = Pi Open Mainnet (Produção Comercial)
-      sandbox: true,
+      // false = Pi Browser direto em produção (hokage22b.com)
+      // true  = Ativado automaticamente no Sandbox (sandbox.minepi.com / ?sandbox=true)
+      sandbox: (function () {
+        try {
+          var q = new URLSearchParams(window.location.search);
+          if (q.get('sandbox') === 'true' || q.get('sandbox') === '1') return true;
+          if (q.get('sandbox') === 'false' || q.get('sandbox') === '0') return false;
+          var ref = (document.referrer || '').toLowerCase();
+          return ref.indexOf('sandbox.minepi.com') !== -1 || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        } catch (_) {
+          return false;
+        }
+      })(),
       version: '2.0'
     },
 
