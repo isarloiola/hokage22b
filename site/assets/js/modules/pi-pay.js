@@ -409,7 +409,14 @@
             <em>Ou realize o pagamento direto usando a carteira abaixo!</em>
           `;
         } else {
-          const errMsg = (err && (err.message || err.error || (typeof err === 'string' ? err : ''))) || 'Autorização cancelada ou recusada.';
+          let errMsg = '';
+          if (err) {
+            errMsg = err.message || err.error || (typeof err === 'string' ? err : '');
+            if (!errMsg) {
+              try { errMsg = JSON.stringify(err); } catch (_) { errMsg = String(err); }
+            }
+          }
+          if (!errMsg || errMsg === '{}') errMsg = 'Autorização cancelada ou recusada pelo Pi Browser.';
           feedbackBox.innerHTML = `⚠️ <strong>Resposta do Pi Browser:</strong><br>${escapeHtml(errMsg)}<br><small style="color:#fff;margin-top:6px;display:block">Confirme se a URL <strong>https://hokage22b.com</strong> está cadastrada no seu app em <strong>develop.pi</strong>.</small>`;
         }
       }
