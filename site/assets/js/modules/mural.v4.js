@@ -1918,17 +1918,22 @@
     const tierInfo = tierPrices[ad.plan_tier] || tierPrices.prata;
     if (!confirm(`Deseja renovar este anúncio (${(ad.plan_tier || 'prata').toUpperCase()}) por mais 30 dias por ${tierInfo.pi} π?`)) return;
 
-    const handleRenewSuccess = async function (txid) {
-      if (!txid) {
-        alert('Pagamento sem TXID confirmado. Renovação cancelada.');
+    const handleRenewSuccess = async function (paymentResult) {
+      const proofId = paymentResult && (paymentResult.paymentId || paymentResult.txid);
+      if (!proofId) {
+        alert('Pagamento sem identificador confirmado. Renovação cancelada.');
         return;
       }
-      const ok = await window.IsarDB.renewMyAd(adId, authUser.username, txid);
-      if (ok) {
-        if (window.showToast) window.showToast('✓ Anúncio renovado com sucesso por +30 dias!', '🚀');
-        loadMyAds();
-      } else {
-        alert('Não foi possível registrar a renovação no banco.');
+      try {
+        const ok = await window.IsarDB.renewMyAd(adId, authUser.username, proofId);
+        if (ok) {
+          if (window.showToast) window.showToast('✓ Anúncio renovado com sucesso por +30 dias!', '🚀');
+          loadMyAds();
+        } else {
+          alert('Não foi possível registrar a renovação no banco.');
+        }
+      } catch (err) {
+        alert('Erro ao validar renovação no servidor: ' + (err && err.message ? err.message : 'erro'));
       }
     };
 
@@ -1938,7 +1943,7 @@
         memo: `Renovação Anúncio 30d (${ad.plan_tier || 'prata'}): ${adId}`,
         metadata: { adId: adId, action: 'renew', tier: ad.plan_tier || 'prata', pioneer_username: authUser.username },
         onSuccess: function (paymentResult) {
-          handleRenewSuccess(paymentResult && paymentResult.txid ? paymentResult.txid : null);
+          handleRenewSuccess(paymentResult);
         },
         onError: function (err) {
           alert('Pagamento de renovação não concluído: ' + ((err && err.message) || 'erro'));
@@ -1950,7 +1955,7 @@
         memo: `Renovacao Anuncio 30d: ${adId}`,
         metadata: { adId: adId, action: 'renew', tier: ad.plan_tier || 'prata', expectedPrice: tierInfo.pi },
         onSuccess: function (paymentResult) {
-          handleRenewSuccess(paymentResult && paymentResult.txid ? paymentResult.txid : null);
+          handleRenewSuccess(paymentResult);
         }
       });
     } else {
@@ -2036,7 +2041,7 @@
       submitBtn.textContent = 'Enviando...';
     }
 
-    // Registra no Supabase se disponível
+    // Registra no Supabase via Edge Function Zero-Trust
     if (window.IsarDB && window.IsarDB.createDenuncia) {
       try {
         await window.IsarDB.createDenuncia({
@@ -2047,7 +2052,12 @@
           reporter_user: reporter
         });
       } catch (err) {
-        console.warn('Erro ao salvar denúncia no Supabase:', err);
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '🚩 Confirmar Denúncia';
+        }
+        alert(err && err.message ? err.message : 'Conecte-se no Pi Browser para registrar uma denúncia.');
+        return;
       }
     }
 

@@ -1,0 +1,44 @@
+name: CI — Validação de Sintaxe e Integridade
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validar sintaxe JavaScript
+        run: |
+          for f in site/assets/js/modules/*.js; do
+            echo "Checking $f"
+            node --check "$f"
+          done
+
+      - name: Validar balanceamento básico de HTML
+        run: |
+          node -e '
+            const fs = require("fs");
+            const files = ["site/index.html", "site/mural.html"];
+            for (const file of files) {
+              if (!fs.existsSync(file)) continue;
+              const html = fs.readFileSync(file, "utf8")
+                .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+                .replace(/<!--[\s\S]*?-->/g, "");
+              const oDiv = (html.match(/<div\b/g) || []).length;
+              const cDiv = (html.match(/<\/div>/g) || []).length;
+              if (oDiv !== cDiv) {
+                console.error(`Unbalanced <div> in ${file}: open=${oDiv}, close=${cDiv}`);
+                process.exit(1);
+              }
+              console.log(`OK ${file}: ${oDiv} divs`);
+            }
+          '

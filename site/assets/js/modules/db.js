@@ -10,6 +10,38 @@
   const SUPABASE_URL = window.ISAR_SUPABASE_URL || 'https://yhzoehwkuxteihsnagcj.supabase.co';
   const SUPABASE_ANON_KEY = window.ISAR_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inloem9laHdrdXh0ZWloc25hZ2NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNzg2OTgsImV4cCI6MjEwODg1NDY5OH0.0ym3I-8oyG3ot_J6ofoVl7pu1m7WyIORLiStQynHG5c';
 
+  const MURAL_ACTION_URL = SUPABASE_URL + '/functions/v1/mural-action';
+
+  async function callMuralAction(action, payload) {
+    const accessToken = (window.HokagePi && window.HokagePi.getAccessToken)
+      ? window.HokagePi.getAccessToken()
+      : null;
+
+    if (!accessToken) {
+      throw new Error('Sessão Pi Network não autenticada. Conecte-se no Pi Browser.');
+    }
+
+    const res = await fetch(MURAL_ACTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({
+        action: action,
+        accessToken: accessToken,
+        payload: payload || {}
+      })
+    });
+
+    const json = await res.json().catch(function () { return {}; });
+    if (!res.ok) {
+      throw new Error(json.error || ('Erro no servidor (' + res.status + ')'));
+    }
+    return json;
+  }
+
   let client = null;
 
   function getClient() {
@@ -175,6 +207,8 @@
         query = query.eq('category', category);
       }
 
+      query = query.range(0, 79);
+
       const { data, error } = await query;
       if (error) {
         // Fallback gracioso se a coluna is_founder_demo ainda não foi migrada
@@ -271,29 +305,19 @@
     }
   }
 
-  // Registra denúncia de anúncio pela comunidade (Moderação Descentralizada)
+  // Registra denúncia de anúncio pela comunidade (Edge Function Zero-Trust)
   async function createDenuncia(denunciaData) {
-    const db = getClient();
-    if (!db) return null;
-
     try {
-      const payload = Object.assign({}, denunciaData, {
-        id: denunciaData.id || ('rep_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 6)),
-        created_at: new Date().toISOString()
+      const res = await callMuralAction('create_report', {
+        ad_id: denunciaData.ad_id,
+        ad_title: denunciaData.ad_title,
+        reason: denunciaData.reason,
+        details: denunciaData.details
       });
-
-      const { data, error } = await db
-        .from('denuncias')
-        .insert([payload]);
-
-      if (error) {
-        console.warn('Supabase: Tabela denuncias ainda não criada ou RLS:', error.message);
-        return null;
-      }
-      return data;
+      return res;
     } catch (err) {
-      console.warn('Supabase: Erro ao registrar denúncia:', err.message);
-      return null;
+      console.warn('Erro ao registrar denúncia:', err.message);
+      throw err;
     }
   }
 
@@ -689,46 +713,27 @@
     return list;
   }
 
-  // Atualiza um anúncio pelo próprio anunciante
+  // Atualiza um anúncio pelo próprio anunciante (Edge Function Zero-Trust)
   async function updateMyAd(adId, username, data) {
-    var db = getClient();
-    if (!db || !adId || !username) return false;
-
-    try {
-      var res = await db.rpc('pioneer_update_my_ad', {
-        p_ad_id: adId,
-        p_username: username,
-        p_title: data.title || '',
-        p_description: data.description || '',
-        p_link_url: data.link_url || null,
-        p_image_url: data.image_url || null
-      });
-      if (res.error) throw res.error;
-      return Boolean(res.data);
-    } catch (err) {
-      console.warn('Erro ao atualizar meu anúncio:', err.message);
-      return false;
-    }
+    if (!adId || !username) return false;
+    const res = await callMuralAction('update_ad', {
+      ad_id: adId,
+      title: data.title || '',
+      description: data.description || '',
+      link_url: data.link_url || null,
+      image_url: data.image_url || null
+    });
+    return Boolean(res && res.ok);
   }
 
-  // Renova anúncio por mais 30 dias ou turbina plano
-  async function renewMyAd(adId, username, txid, upgradeTier) {
-    var db = getClient();
-    if (!db || !adId || !username) return false;
-
-    try {
-      var res = await db.rpc('pioneer_renew_ad', {
-        p_ad_id: adId,
-        p_username: username,
-        p_txid: txid || null,
-        p_upgrade_tier: upgradeTier || null
-      });
-      if (res.error) throw res.error;
-      return Boolean(res.data);
-    } catch (err) {
-      console.warn('Erro ao renovar anúncio:', err.message);
-      return false;
-    }
+  // Renova anúncio por mais 30 dias com pagamento validado no servidor
+  async function renewMyAd(adId, username, paymentIdOrTxid) {
+    if (!adId || !username || !paymentIdOrTxid) return false;
+    const res = await callMuralAction('renew_ad', {
+      ad_id: adId,
+      paymentId: paymentIdOrTxid
+    });
+    return Boolean(res && res.ok);
   }
 
   // Salva o perfil completo do pioneiro (avatar, links sociais e mini-loja)
@@ -935,26 +940,16 @@
   }
 
   async function createAdComment(commentData) {
-    const db = getClient();
-    if (!db) throw new Error('Supabase não configurado.');
     const adId = String(commentData.ad_id || '').trim();
-    const rawUser = String(commentData.author_username || '').trim().replace(/^@+/, '').toLowerCase();
     const content = String(commentData.content || '').trim().slice(0, 280);
-    if (!adId || !rawUser || content.length < 2) {
+    if (!adId || content.length < 2) {
       throw new Error('Dados inválidos para comentário.');
     }
-    const payload = {
+    const res = await callMuralAction('create_comment', {
       ad_id: adId,
-      author_username: '@' + rawUser,
       content: content
-    };
-    const res = await db
-      .from('anuncio_comentarios')
-      .insert([payload])
-      .select('id, ad_id, author_username, content, created_at')
-      .single();
-    if (res.error) throw res.error;
-    return res.data;
+    });
+    return res && res.comment ? res.comment : null;
   }
 
   window.IsarDB = {
