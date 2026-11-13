@@ -149,6 +149,9 @@ serve(async (req) => {
       const linkUrl = tier === "bronze" ? null : validateHttpUrl(payload?.link_url);
       const imageUrl = tier === "bronze" ? null : validateHttpUrl(payload?.image_url);
       const category = String(payload?.category || "geral").trim().slice(0, 32);
+      const location = String(payload?.location || "Online / Digital").trim().slice(0, 60) || "Online / Digital";
+      const rawPayMode = String(payload?.payment_modes || "pi").trim().toLowerCase();
+      const paymentModes = (rawPayMode === "pi_reais" || rawPayMode === "reais") ? rawPayMode : "pi";
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
       const insertRow = {
@@ -157,6 +160,8 @@ serve(async (req) => {
         link_url: linkUrl,
         image_url: imageUrl,
         category,
+        location,
+        payment_modes: paymentModes,
         pioneer_username: piUser.username,
         pioneer_name: piUser.username.replace(/^@+/, ""),
         plan_tier: tier,
@@ -343,6 +348,45 @@ serve(async (req) => {
       }
 
       return jsonResponse({ ok: true, autoModerated: (count || 0) >= AUTO_MODERATION_REPORT_THRESHOLD });
+    }
+
+    // ── 6. AVALIAÇÃO VERIFICADA DE PIONEIRO (REPUTAÇÃO P2P) ──────
+    if (action === "submit_review") {
+      const cleanTarget = normalizeHandle(String(payload?.target_username || ""));
+      if (!cleanTarget) {
+        return jsonResponse({ error: "Perfil de destino inválido." }, 400);
+      }
+      const targetUsername = "@" + cleanTarget;
+      if (cleanTarget === normalizeHandle(piUser.username)) {
+        return jsonResponse({ error: "Você não pode avaliar a própria Vitrine." }, 400);
+      }
+
+      const rating = Math.round(Number(payload?.rating));
+      if (!Number.isFinite(rating) || rating < 1 || rating > 5) {
+        return jsonResponse({ error: "A nota deve ser entre 1 e 5 estrelas." }, 400);
+      }
+
+      const comment = String(payload?.comment || "").trim();
+      if (comment.length < 2 || comment.length > 200) {
+        return jsonResponse({ error: "O comentário deve ter entre 2 e 200 caracteres." }, 400);
+      }
+
+      const { data, error } = await supabase
+        .from("pioneer_reviews")
+        .upsert(
+          [{
+            target_username: targetUsername,
+            reviewer_username: piUser.username,
+            rating,
+            comment,
+          }],
+          { onConflict: "target_username,reviewer_username" }
+        )
+        .select("id, target_username, reviewer_username, rating, comment, created_at")
+        .single();
+
+      if (error) throw error;
+      return jsonResponse({ ok: true, review: data });
     }
 
     return jsonResponse({ error: "Ação desconhecida." }, 400);

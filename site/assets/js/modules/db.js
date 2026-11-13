@@ -952,6 +952,35 @@
     return res && res.comment ? res.comment : null;
   }
 
+  // --- Sistema de Avaliações & Reputação Verificada (Vitrine) ---
+  async function getPioneerReviews(targetUsername) {
+    const db = getClient();
+    if (!db || !targetUsername) return [];
+    const normalized = '@' + String(targetUsername).trim().replace(/^@+/, '').toLowerCase();
+    try {
+      const res = await db
+        .from('pioneer_reviews')
+        .select('id, target_username, reviewer_username, rating, comment, created_at')
+        .eq('target_username', normalized)
+        .order('created_at', { ascending: false })
+        .limit(30);
+      if (res.error) throw res.error;
+      return res.data || [];
+    } catch (err) {
+      console.warn('Erro ao carregar avaliações do pioneiro:', err);
+      return [];
+    }
+  }
+
+  async function submitPioneerReview(reviewData) {
+    const res = await callMuralAction('submit_review', {
+      target_username: reviewData && reviewData.target_username,
+      rating: reviewData && reviewData.rating,
+      comment: reviewData && reviewData.comment
+    });
+    return res && res.review ? res.review : null;
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
@@ -977,6 +1006,8 @@
     getAdComments: getAdComments,
     getAdCommentCounts: getAdCommentCounts,
     createAdComment: createAdComment,
+    getPioneerReviews: getPioneerReviews,
+    submitPioneerReview: submitPioneerReview,
     savePioneerProfile: savePioneerProfile,
     getPioneerFullProfile: getPioneerFullProfile,
     getPioneersDirectory: getPioneersDirectory,

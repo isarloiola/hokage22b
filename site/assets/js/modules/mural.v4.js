@@ -188,8 +188,12 @@
       `;
     }
 
+    const rawPayMode = (ad.payment_modes === 'pi_reais' || ad.payment_modes === 'reais') ? ad.payment_modes : 'pi';
+    const payModeLabel = rawPayMode === 'pi_reais' ? '⚡💵 Pi + R$' : (rawPayMode === 'reais' ? '💵 R$' : '⚡ 100% Pi');
+    const safeLocation = escapeHtml((ad.location && String(ad.location).trim()) || 'Online / Digital');
+
     return `
-      <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" id="card-${cardId}">
+      <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" data-payment-mode="${rawPayMode}" id="card-${cardId}">
         ${bannerHtml}
         <div class="pioneer-card__top">
           <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
@@ -197,6 +201,10 @@
         </div>
         <h3 class="pioneer-card__title">${safeTitle}</h3>
         <p class="pioneer-card__desc">${safeDesc}</p>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-size:0.72rem">
+          <span style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:var(--text-secondary);padding:2px 8px;border-radius:999px">📍 ${safeLocation}</span>
+          <span style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--amber-light);padding:2px 8px;border-radius:999px;font-weight:600">${payModeLabel}</span>
+        </div>
         <div class="pioneer-card__footer">
           ${linkHtml}
           ${priceHtml}
@@ -256,8 +264,14 @@
   }
 
   let currentSearchQuery = '';
+  let currentPaymentFilter = 'todos';
 
-  // Filtragem combinada em tempo real por Categoria e Busca Textual
+  function filterPaymentMode(mode) {
+    currentPaymentFilter = mode || 'todos';
+    applyFilters();
+  }
+
+  // Filtragem combinada em tempo real por Categoria, Moeda e Busca Textual
   function applyFilters() {
     const query = (currentSearchQuery || '').trim().toLowerCase();
     const featuredSec = document.getElementById('section-destaques');
@@ -276,13 +290,16 @@
       const cardCat = card.getAttribute('data-category') || 'geral';
       const matchesCat = (currentCategory === 'todos' || cardCat === currentCategory);
 
+      const cardPayMode = card.getAttribute('data-payment-mode') || 'pi';
+      const matchesPay = (currentPaymentFilter === 'todos' || cardPayMode === currentPaymentFilter);
+
       let matchesSearch = true;
       if (query) {
         const textContent = (card.textContent || '').toLowerCase();
         matchesSearch = textContent.includes(query);
       }
 
-      const matches = matchesCat && matchesSearch;
+      const matches = matchesCat && matchesPay && matchesSearch;
 
       if (matches) {
         card.classList.remove('pioneer-card--hidden', 'ad-card--hidden');
@@ -1309,6 +1326,9 @@
     const username = userInput && userInput.value.trim() ? userInput.value.trim() : '@pioneiro';
     const isFounder = username.toLowerCase() === '@hokage22b' || username.toLowerCase() === 'hokage22b';
 
+    const locInput = document.getElementById('ad-input-location');
+    const payModeInput = document.getElementById('ad-input-payment-modes');
+
     const newAd = {
       id: adId,
       title: title,
@@ -1316,6 +1336,8 @@
       link_url: validatedLink,
       image_url: validatedImg,
       category: catInput ? catInput.value : 'geral',
+      location: (locInput && locInput.value.trim()) ? locInput.value.trim().slice(0, 60) : 'Online / Digital',
+      payment_modes: (payModeInput && payModeInput.value) ? payModeInput.value : 'pi',
       pioneer_username: username,
       pioneer_name: username.replace('@', ''),
       plan_tier: selectedTier,
@@ -2337,16 +2359,38 @@
         });
       }
 
-      // Restauração inteligente se o usuário saiu para pesquisar links/fotos e o app foi recarregado
+      // Restauração inteligente ou pré-preenchimento vindo da Vitrine ("Impulsionar no Mural")
       try {
-        const wasModalOpen = localStorage.getItem(MODAL_OPEN_KEY) === '1';
-        const hasDraft = Boolean(localStorage.getItem(DRAFT_KEY));
-        if (wasModalOpen && hasDraft) {
+        const params = new URLSearchParams(window.location.search || '');
+        const promoteTitle = params.get('promote_title');
+        if (promoteTitle) {
           openModal();
+          const tEl = document.getElementById('ad-input-title');
+          const dEl = document.getElementById('ad-input-desc');
+          const lEl = document.getElementById('ad-input-link');
+          const iEl = document.getElementById('ad-input-image');
+          const cEl = document.getElementById('ad-input-cat');
+          if (tEl) tEl.value = promoteTitle.slice(0, 60);
+          if (dEl && params.get('promote_desc')) dEl.value = params.get('promote_desc').slice(0, 160);
+          if (lEl && params.get('promote_link')) lEl.value = params.get('promote_link');
+          if (iEl && params.get('promote_img')) iEl.value = params.get('promote_img');
+          if (cEl && params.get('promote_cat')) cEl.value = params.get('promote_cat');
+          updateLivePreview();
+          saveDraft();
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        } else {
+          const wasModalOpen = localStorage.getItem(MODAL_OPEN_KEY) === '1';
+          const hasDraft = Boolean(localStorage.getItem(DRAFT_KEY));
+          if (wasModalOpen && hasDraft) {
+            openModal();
+          }
         }
       } catch (_) {}
     },
     filterCategory: filterCategory,
+    filterPaymentMode: filterPaymentMode,
     handleSearchInput: handleSearchInput,
     clearSearch: clearSearch,
     applyFilters: applyFilters,

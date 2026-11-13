@@ -210,7 +210,7 @@
             type="search" 
             id="mural-search-input" 
             class="mural-search-input" 
-            placeholder="🔍 Buscar por título, @usuário, canal, produto..." 
+            placeholder="🔍 Buscar por título, cidade/região, @usuário, produto..." 
             autocomplete="off"
             aria-label="Buscar anúncios no mural"
             oninput="window.IsarMural && window.IsarMural.handleSearchInput(this.value)"
@@ -230,6 +230,12 @@
           <button class="mural-filter-btn" data-category="produto" type="button">🛍️ Produtos &amp; Lojas</button>
           <button class="mural-filter-btn" data-category="servico" type="button">🛠️ Serviços Profissionais</button>
           <button class="mural-filter-btn" data-category="mensagem" type="button">💬 Recados da Comunidade</button>
+          <select id="mural-payment-filter" onchange="window.IsarMural && window.IsarMural.filterPaymentMode(this.value)" aria-label="Filtrar por moeda aceita" style="padding:8px 12px;border-radius:20px;background:rgba(15,23,42,0.85);border:1px solid rgba(245,158,11,0.35);color:#fcd34d;font-size:0.82rem;font-weight:600;cursor:pointer">
+            <option value="todos">💰 Todas Moedas</option>
+            <option value="pi">⚡ 100% Pi</option>
+            <option value="pi_reais">⚡💵 Pi + Reais</option>
+            <option value="reais">💵 Só Reais</option>
+          </select>
         </div>
       </div>
 
@@ -597,6 +603,21 @@
           <textarea id="ad-input-desc" required rows="3" placeholder="Explique o que você oferece ou deixe seu recado para os pioneiros..." maxlength="160" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff"></textarea>
         </div>
 
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:14px">
+          <div class="form-group">
+            <label for="ad-input-location" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">📍 Cidade / Atendimento</label>
+            <input type="text" id="ad-input-location" placeholder="Ex: São Paulo - SP ou Online / Brasil" maxlength="60" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+          </div>
+          <div class="form-group">
+            <label for="ad-input-payment-modes" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">💰 Forma de Pagamento</label>
+            <select id="ad-input-payment-modes" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff">
+              <option value="pi">⚡ Aceita 100% Pi</option>
+              <option value="pi_reais">⚡💵 Aceita Pi + Reais</option>
+              <option value="reais">💵 Apenas Reais (R$)</option>
+            </select>
+          </div>
+        </div>
+
         <div class="form-group" style="margin-bottom:14px" id="ad-link-group">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
             <label for="ad-input-link" style="font-size:0.85rem;color:var(--gray-light)">Link de Destino</label>
@@ -841,9 +862,9 @@
   <script src="assets/js/config.js?v=2.1"></script>
   <script src="assets/js/modules/i18n.js?v=4.6"></script>
   <script src="assets/js/modules/ui.js?v=4.6"></script>
-  <script src="assets/js/modules/db.js?v=5.4"></script>
+  <script src="assets/js/modules/db.js?v=5.5"></script>
   <script src="assets/js/modules/pi-pay.js?v=6.0"></script>
-  <script src="assets/js/modules/mural.v4.js?v=7.3"></script>
+  <script src="assets/js/modules/mural.v4.js?v=7.4"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');
