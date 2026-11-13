@@ -895,6 +895,68 @@
     }
   }
 
+  // --- Sistema de Comentários Comunitários do Mural ---
+  async function getAdComments(adId) {
+    const db = getClient();
+    if (!db || !adId) return [];
+    try {
+      const res = await db
+        .from('anuncio_comentarios')
+        .select('id, ad_id, author_username, content, created_at')
+        .eq('ad_id', String(adId))
+        .order('created_at', { ascending: true })
+        .limit(50);
+      if (res.error) throw res.error;
+      return res.data || [];
+    } catch (err) {
+      console.warn('Erro ao carregar comentários:', err);
+      return [];
+    }
+  }
+
+  async function getAdCommentCounts(adIds) {
+    const db = getClient();
+    if (!db || !Array.isArray(adIds) || adIds.length === 0) return {};
+    try {
+      const res = await db
+        .from('anuncio_comentarios')
+        .select('ad_id')
+        .in('ad_id', adIds.map(String));
+      if (res.error) throw res.error;
+      const counts = {};
+      (res.data || []).forEach(function (row) {
+        counts[row.ad_id] = (counts[row.ad_id] || 0) + 1;
+      });
+      return counts;
+    } catch (err) {
+      console.warn('Erro ao contar comentários:', err);
+      return {};
+    }
+  }
+
+  async function createAdComment(commentData) {
+    const db = getClient();
+    if (!db) throw new Error('Supabase não configurado.');
+    const adId = String(commentData.ad_id || '').trim();
+    const rawUser = String(commentData.author_username || '').trim().replace(/^@+/, '').toLowerCase();
+    const content = String(commentData.content || '').trim().slice(0, 280);
+    if (!adId || !rawUser || content.length < 2) {
+      throw new Error('Dados inválidos para comentário.');
+    }
+    const payload = {
+      ad_id: adId,
+      author_username: '@' + rawUser,
+      content: content
+    };
+    const res = await db
+      .from('anuncio_comentarios')
+      .insert([payload])
+      .select('id, ad_id, author_username, content, created_at')
+      .single();
+    if (res.error) throw res.error;
+    return res.data;
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
@@ -917,6 +979,9 @@
     getMyAds: getMyAds,
     updateMyAd: updateMyAd,
     renewMyAd: renewMyAd,
+    getAdComments: getAdComments,
+    getAdCommentCounts: getAdCommentCounts,
+    createAdComment: createAdComment,
     savePioneerProfile: savePioneerProfile,
     getPioneerFullProfile: getPioneerFullProfile,
     getPioneersDirectory: getPioneersDirectory,

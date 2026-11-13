@@ -19,6 +19,40 @@
       .replace(/'/g, '&#039;');
   }
 
+  const AD_EDIT_WINDOW_HOURS = 24;
+
+  function normalizeHandle(handle) {
+    return String(handle || '').trim().replace(/^@+/, '').toLowerCase();
+  }
+
+  function getAuthenticatedPiUser() {
+    if (!window.HokagePi || !window.HokagePi.isPiBrowser || !window.HokagePi.isPiBrowser()) {
+      return null;
+    }
+    const u = window.HokagePi.getUser ? window.HokagePi.getUser() : null;
+    if (!u || !u.username) return null;
+    return {
+      uid: u.uid || '',
+      username: '@' + normalizeHandle(u.username)
+    };
+  }
+
+  function getAdEditStatus(ad) {
+    if (!ad || !ad.created_at) {
+      return { editable: false, hoursLeft: 0 };
+    }
+    const createdMs = new Date(ad.created_at).getTime();
+    if (!Number.isFinite(createdMs)) {
+      return { editable: false, hoursLeft: 0 };
+    }
+    const elapsedHours = (Date.now() - createdMs) / (1000 * 60 * 60);
+    const remaining = AD_EDIT_WINDOW_HOURS - elapsedHours;
+    return {
+      editable: remaining > 0,
+      hoursLeft: Math.max(0, Math.ceil(remaining))
+    };
+  }
+
   function safeUrl(url) {
     if (!url || typeof url !== 'string') return '';
     const trimmed = url.trim();
@@ -173,6 +207,9 @@
             <button type="button" class="btn-like-ad ${isLiked ? 'liked' : ''}" onclick="window.IsarMural && window.IsarMural.toggleLike('${cardId}')" data-id="${cardId}" title="Apoiar este anúncio da comunidade" style="background:${isLiked ? 'rgba(244,63,94,0.25)' : 'rgba(244,63,94,0.1)'};border:1px solid ${isLiked ? '#f43f5e' : 'rgba(244,63,94,0.3)'};color:${isLiked ? '#fff' : '#fb7185'};padding:2px 8px;border-radius:6px;cursor:pointer;font-size:0.74rem;display:inline-flex;align-items:center;gap:4px;font-weight:${isLiked ? '700' : '500'};transition:all 0.2s ease">
               <span>❤️</span> <strong class="ad-likes-num" data-id="${cardId}">${likes}</strong>
             </button>
+            <button type="button" class="btn-comment-ad" onclick="window.IsarMural && window.IsarMural.toggleComments('${cardId}')" data-id="${cardId}" title="Ver ou publicar comentários" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);color:#c4b5fd;padding:2px 8px;border-radius:6px;cursor:pointer;font-size:0.74rem;display:inline-flex;align-items:center;gap:4px;font-weight:500;transition:all 0.2s ease">
+              <span>💬</span> <strong class="ad-comments-num" data-id="${cardId}">0</strong>
+            </button>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
             <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('${cardId}', '${safeTitle.replace(/'/g, "\\'")}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
@@ -181,6 +218,7 @@
             <a href="pioneiro?u=${encodeURIComponent(safeAuthor.replace(/^@+/, ''))}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
           </div>
         </div>
+        <div class="ad-comments-drawer" id="comments-drawer-${cardId}" style="display:none"></div>
       </article>
     `;
   }
@@ -1353,8 +1391,8 @@
     window.addEventListener('focus', onReturnToPage, { once: true });
     document.addEventListener('visibilitychange', onReturnToPage, { once: true });
 
-    // ── FLUXO A: Dentro do Pi Browser ou com Pi SDK Carregado (Pagamento Nativo) ──
-    const canUsePi = window.HokagePi && (window.HokagePi.isPiBrowser() || Boolean(window.Pi));
+    // ── FLUXO A: Exclusivamente dentro do Pi Browser (Pagamento Nativo) ──
+    const canUsePi = Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
     if (canUsePi) {
       window.HokagePi.requestPiPayment({
         amount: priceInfo.pi,
@@ -1574,24 +1612,93 @@
     } catch (_) {}
   }
 
-  // --- PAINEL DO ANUNCIANTE (MEUS ANÚNCIOS SAAS) ---
+  // --- PAINEL DO ANUNCIANTE (MEUS ANÚNCIOS SAAS — BLINDADO) ---
   let myCachedAds = [];
+
+  function renderMyAdsAuthGate(container, isPiBrowser) {
+    const countEl = document.getElementById('my-ads-count');
+    const viewsEl = document.getElementById('my-ads-views');
+    const clicksEl = document.getElementById('my-ads-clicks');
+    if (countEl) countEl.textContent = '0';
+    if (viewsEl) viewsEl.textContent = '0';
+    if (clicksEl) clicksEl.textContent = '0';
+
+    if (!container) return;
+
+    if (!isPiBrowser) {
+      container.innerHTML = `
+        <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.35);border-radius:10px;padding:18px;text-align:center">
+          <div style="font-size:1.5rem;margin-bottom:6px">🔒</div>
+          <strong style="color:#fcd34d;display:block;margin-bottom:6px">Painel Protegido — Exclusivo Pi Browser</strong>
+          <p style="font-size:0.84rem;color:var(--text-secondary);line-height:1.5;margin:0">
+            Por segurança, a gestão, edição e renovação de anúncios exige autenticação criptográfica via <strong>Pi SDK</strong> dentro do <strong>Pi Browser</strong>.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = `
+      <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.35);border-radius:10px;padding:18px;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:6px">🛡️</div>
+        <strong style="color:#c4b5fd;display:block;margin-bottom:6px">Conecte sua conta Pi para continuar</strong>
+        <p style="font-size:0.84rem;color:var(--text-secondary);line-height:1.5;margin:0 0 12px">
+          Somente o titular autenticado pode visualizar métricas privadas, editar (até 24h) ou renovar seus anúncios.
+        </p>
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural && window.IsarMural.connectPiForMyAds()" style="padding:10px 18px;font-weight:700">
+          ⚡ Conectar via Pi Login
+        </button>
+      </div>
+    `;
+  }
+
+  function updateMyAdsAuthBar() {
+    const authBar = document.getElementById('my-ads-auth-status');
+    const authUser = getAuthenticatedPiUser();
+    const isPi = Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
+    if (!authBar) return { authUser: authUser, isPi: isPi };
+
+    if (authUser) {
+      authBar.innerHTML = `
+        <span style="color:#34d399;font-weight:700;font-size:0.84rem">✓ Sessão verificada: ${escapeHtml(authUser.username)}</span>
+        <button type="button" class="btn btn-outline btn-sm" onclick="window.IsarMural && window.IsarMural.loadMyAds()" style="padding:6px 12px;font-size:0.78rem">
+          🔄 Atualizar
+        </button>
+      `;
+    } else if (isPi) {
+      authBar.innerHTML = `
+        <span style="color:#fcd34d;font-size:0.82rem">Sessão Pi não conectada</span>
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural && window.IsarMural.connectPiForMyAds()" style="padding:6px 12px;font-size:0.78rem">
+          ⚡ Conectar Pi
+        </button>
+      `;
+    } else {
+      authBar.innerHTML = `
+        <span style="color:#fca5a5;font-size:0.8rem">🔒 Abra no Pi Browser para gerenciar seus anúncios</span>
+      `;
+    }
+    return { authUser: authUser, isPi: isPi };
+  }
+
+  async function connectPiForMyAds() {
+    if (!window.HokagePi || !window.HokagePi.isPiBrowser || !window.HokagePi.isPiBrowser()) {
+      alert('A autenticação Pi só pode ser feita dentro do aplicativo oficial Pi Browser.');
+      return;
+    }
+    try {
+      const user = await window.HokagePi.loginWithPi();
+      if (user && user.username) {
+        loadMyAds();
+      }
+    } catch (err) {
+      alert('Não foi possível conectar via Pi Login: ' + (err && err.message ? err.message : 'erro desconhecido'));
+    }
+  }
 
   function openMyAdsModal() {
     const modal = document.getElementById('my-ads-modal');
     if (modal) modal.classList.add('active');
-
-    const input = document.getElementById('my-ads-username-input');
-    try {
-      const piUser = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
-      if (piUser && piUser.username && input && !input.value) {
-        input.value = '@' + piUser.username.replace('@', '');
-      }
-    } catch (_) {}
-
-    if (input && input.value) {
-      loadMyAds();
-    }
+    loadMyAds();
   }
 
   function closeMyAdsModal() {
@@ -1600,30 +1707,31 @@
   }
 
   async function loadMyAds() {
-    const input = document.getElementById('my-ads-username-input');
     const container = document.getElementById('my-ads-list-container');
-    const user = (input && input.value.trim()) || '';
+    const state = updateMyAdsAuthBar();
 
-    if (!user) {
-      alert('Por favor, informe seu @usuário da Pi Network.');
+    if (!state.isPi || !state.authUser) {
+      myCachedAds = [];
+      renderMyAdsAuthGate(container, state.isPi);
       return;
     }
 
-    container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted)">Consultando seus anúncios no banco...</div>';
+    const user = state.authUser.username;
+    container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted)">Consultando seus anúncios autenticados...</div>';
 
     try {
       const ads = await window.IsarDB.getMyAds(user);
-      myCachedAds = ads || [];
+      myCachedAds = (ads || []).filter(function (a) {
+        return normalizeHandle(a.pioneer_username) === normalizeHandle(user);
+      });
 
       let totalViews = 0;
       let totalClicks = 0;
       let totalProfileVisits = 0;
-      let totalLikes = 0;
       myCachedAds.forEach(a => {
         totalViews += (Number(a.views_count) || 0);
         totalClicks += (Number(a.clicks_count) || 0);
         totalProfileVisits += (Number(a.profile_visits || a.profile_clicks) || 0);
-        totalLikes += (Number(a.likes_count) || 0);
       });
 
       const countEl = document.getElementById('my-ads-count');
@@ -1647,22 +1755,26 @@
       }
 
       container.innerHTML = myCachedAds.map(ad => {
-        const statusBadge = ad.status === 'ativo' 
-          ? '<span style="color:#10b981;font-weight:700">● Ativo</span>' 
+        const statusBadge = ad.status === 'ativo'
+          ? '<span style="color:#10b981;font-weight:700">● Ativo</span>'
           : '<span style="color:#f59e0b;font-weight:700">● Moderação</span>';
         const daysLeft = ad.days_left !== undefined ? ad.days_left : 30;
+        const editStatus = getAdEditStatus(ad);
+        const editButtonHtml = editStatus.editable
+          ? `<button type="button" class="btn btn-outline btn-sm" onclick="window.IsarMural.openEditModal('${escapeHtml(ad.id)}')" style="font-size:0.78rem;padding:6px 10px">✏️ Editar (${editStatus.hoursLeft}h)</button>`
+          : `<button type="button" class="btn btn-outline btn-sm" disabled title="Prazo máximo de edição de 24h expirado" style="font-size:0.75rem;padding:6px 10px;opacity:0.45;cursor:not-allowed">🔒 Edição 24h</button>`;
 
         return `
-          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-            <div style="max-width:340px">
-              <div style="font-size:0.75rem;color:var(--text-muted);display:flex;gap:8px;align-items:center;margin-bottom:4px">
+          <div class="my-ad-item-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+            <div style="flex:1 1 240px;min-width:0">
+              <div style="font-size:0.75rem;color:var(--text-muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
                 ${statusBadge}
                 <span>·</span>
-                <span style="color:var(--amber-light);font-weight:600">${ad.plan_tier ? ad.plan_tier.toUpperCase() : 'PRATA'}</span>
+                <span style="color:var(--amber-light);font-weight:600">${escapeHtml(ad.plan_tier ? ad.plan_tier.toUpperCase() : 'PRATA')}</span>
                 <span>·</span>
                 <span>Expira em: <strong>${daysLeft} dias</strong></span>
               </div>
-              <strong style="color:#fff;font-size:0.95rem;display:block">${escapeHtml(ad.title || '')}</strong>
+              <strong style="color:#fff;font-size:0.95rem;display:block;word-break:break-word">${escapeHtml(ad.title || '')}</strong>
               <div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap">
                 <span>👁️ <strong>${Number(ad.views_count) || 0}</strong> views</span>
                 ${ad.plan_tier === 'bronze' ? '' : `<span>🖱️ <strong style="color:var(--amber-light)">${Number(ad.clicks_count) || 0}</strong> cliques</span>`}
@@ -1670,11 +1782,9 @@
                 <span>❤️ <strong style="color:#f43f5e">${Number(ad.likes_count) || 0}</strong> apoios</span>
               </div>
             </div>
-            <div style="display:flex;gap:6px">
-              <button type="button" class="btn btn-outline btn-sm" onclick="window.IsarMural.openEditModal('${ad.id}')" style="font-size:0.78rem;padding:6px 10px">
-                ✏️ Editar
-              </button>
-              <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural.renewAdPrompt('${ad.id}')" style="font-size:0.78rem;padding:6px 10px">
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              ${editButtonHtml}
+              <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural.renewAdPrompt('${escapeHtml(ad.id)}')" style="font-size:0.78rem;padding:6px 10px">
                 🚀 +30 dias
               </button>
             </div>
@@ -1688,14 +1798,36 @@
   }
 
   function openEditModal(adId) {
+    const authUser = getAuthenticatedPiUser();
+    if (!authUser) {
+      alert('Autenticação no Pi Browser obrigatória para editar anúncios.');
+      return;
+    }
+
     const ad = myCachedAds.find(a => a.id === adId);
     if (!ad) return;
+
+    if (normalizeHandle(ad.pioneer_username) !== normalizeHandle(authUser.username)) {
+      alert('Você não tem permissão para editar este anúncio.');
+      return;
+    }
+
+    const editStatus = getAdEditStatus(ad);
+    if (!editStatus.editable) {
+      alert('O prazo de 24 horas para edição deste anúncio expirou. Isso garante a transparência e credibilidade da Gazeta.');
+      return;
+    }
 
     document.getElementById('edit-ad-id').value = ad.id;
     document.getElementById('edit-ad-input-title').value = ad.title || '';
     document.getElementById('edit-ad-input-desc').value = ad.description || '';
     document.getElementById('edit-ad-input-link').value = ad.link_url || '';
     document.getElementById('edit-ad-input-image').value = ad.image_url || '';
+
+    const deadlineHint = document.getElementById('edit-ad-deadline-hint');
+    if (deadlineHint) {
+      deadlineHint.textContent = `⏱️ Janela de edição ativa: restam aproximadamente ${editStatus.hoursLeft}h (máx. 24h após publicação).`;
+    }
 
     const editModal = document.getElementById('edit-ad-modal');
     if (editModal) editModal.classList.add('active');
@@ -1707,32 +1839,63 @@
   }
 
   async function saveEditedAd() {
+    const authUser = getAuthenticatedPiUser();
+    if (!authUser) {
+      alert('Sessão Pi expirada ou fora do Pi Browser. Conecte-se novamente.');
+      return;
+    }
+
     const id = document.getElementById('edit-ad-id').value;
+    const ad = myCachedAds.find(a => a.id === id);
+    if (!ad || normalizeHandle(ad.pioneer_username) !== normalizeHandle(authUser.username)) {
+      alert('Anúncio não encontrado ou sem permissão de propriedade.');
+      return;
+    }
+
+    const editStatus = getAdEditStatus(ad);
+    if (!editStatus.editable) {
+      alert('Prazo de edição de 24 horas expirado.');
+      closeEditModal();
+      loadMyAds();
+      return;
+    }
+
     const title = document.getElementById('edit-ad-input-title').value.trim();
     const desc = document.getElementById('edit-ad-input-desc').value.trim();
-    const link = document.getElementById('edit-ad-input-link').value.trim();
-    const img = document.getElementById('edit-ad-input-image').value.trim();
-    const user = (document.getElementById('my-ads-username-input').value || '').trim();
+    const rawLink = document.getElementById('edit-ad-input-link').value.trim();
+    const rawImg = document.getElementById('edit-ad-input-image').value.trim();
 
-    if (!title || !desc) {
-      alert('Preencha pelo menos título e descrição.');
+    if (title.length < 2 || desc.length < 5) {
+      alert('Preencha um título (mín. 2 caracteres) e descrição (mín. 5 caracteres).');
+      return;
+    }
+
+    const cleanLink = rawLink ? normalizeUrl(rawLink) : '';
+    const cleanImg = rawImg ? normalizeUrl(rawImg) : '';
+    if (rawLink && !/^https?:\/\//i.test(cleanLink)) {
+      alert('Link de destino inválido. Informe uma URL iniciando com https:// ou http://.');
+      return;
+    }
+    if (rawImg && !/^https?:\/\//i.test(cleanImg)) {
+      alert('URL de imagem inválida. Informe uma URL iniciando com https:// ou http://.');
       return;
     }
 
     try {
-      const ok = await window.IsarDB.updateMyAd(id, user, {
-        title: title,
-        description: desc,
-        link_url: link,
-        image_url: img
+      const ok = await window.IsarDB.updateMyAd(id, authUser.username, {
+        title: title.slice(0, 60),
+        description: desc.slice(0, 160),
+        link_url: cleanLink,
+        image_url: cleanImg
       });
 
       if (ok) {
         if (window.showToast) window.showToast('✓ Anúncio atualizado com sucesso!', '💾');
         closeEditModal();
         loadMyAds();
+        syncRemoteAds();
       } else {
-        alert('Não foi possível atualizar o anúncio. Verifique o usuário.');
+        alert('Não foi possível atualizar o anúncio (prazo de 24h expirado ou permissão negada).');
       }
     } catch (err) {
       alert('Erro ao salvar: ' + err.message);
@@ -1740,28 +1903,58 @@
   }
 
   async function renewAdPrompt(adId) {
-    const user = (document.getElementById('my-ads-username-input').value || '').trim();
-    if (!confirm('Deseja renovar a exibição deste anúncio por mais 30 dias na Gazeta?')) return;
+    const authUser = getAuthenticatedPiUser();
+    if (!authUser) {
+      alert('Autenticação no Pi Browser obrigatória para renovar anúncios.');
+      return;
+    }
 
-    if (window.HokagePi && window.HokagePi.showManualP2PModal) {
-      window.HokagePi.showManualP2PModal({
-        amount: 1.0,
-        memo: `Renovacao Anuncio 30d: ${adId}`,
-        metadata: { adId: adId, action: 'renew', tier: 'prata', expectedPrice: 1.0 },
-        onSuccess: async function (paymentResult) {
-          const ok = await window.IsarDB.renewMyAd(adId, user, paymentResult && paymentResult.txid ? paymentResult.txid : null);
-          if (ok) {
-            if (window.showToast) window.showToast('✓ Anúncio renovado com sucesso por +30 dias!', '🚀');
-            loadMyAds();
-          }
-        }
-      });
-    } else {
-      const ok = await window.IsarDB.renewMyAd(adId, user);
+    const ad = myCachedAds.find(a => a.id === adId);
+    if (!ad || normalizeHandle(ad.pioneer_username) !== normalizeHandle(authUser.username)) {
+      alert('Você não tem permissão para renovar este anúncio.');
+      return;
+    }
+
+    const tierInfo = tierPrices[ad.plan_tier] || tierPrices.prata;
+    if (!confirm(`Deseja renovar este anúncio (${(ad.plan_tier || 'prata').toUpperCase()}) por mais 30 dias por ${tierInfo.pi} π?`)) return;
+
+    const handleRenewSuccess = async function (txid) {
+      if (!txid) {
+        alert('Pagamento sem TXID confirmado. Renovação cancelada.');
+        return;
+      }
+      const ok = await window.IsarDB.renewMyAd(adId, authUser.username, txid);
       if (ok) {
         if (window.showToast) window.showToast('✓ Anúncio renovado com sucesso por +30 dias!', '🚀');
         loadMyAds();
+      } else {
+        alert('Não foi possível registrar a renovação no banco.');
       }
+    };
+
+    if (window.HokagePi && window.HokagePi.requestPiPayment) {
+      window.HokagePi.requestPiPayment({
+        amount: tierInfo.pi,
+        memo: `Renovação Anúncio 30d (${ad.plan_tier || 'prata'}): ${adId}`,
+        metadata: { adId: adId, action: 'renew', tier: ad.plan_tier || 'prata', pioneer_username: authUser.username },
+        onSuccess: function (paymentResult) {
+          handleRenewSuccess(paymentResult && paymentResult.txid ? paymentResult.txid : null);
+        },
+        onError: function (err) {
+          alert('Pagamento de renovação não concluído: ' + ((err && err.message) || 'erro'));
+        }
+      });
+    } else if (window.HokagePi && window.HokagePi.showManualP2PModal) {
+      window.HokagePi.showManualP2PModal({
+        amount: tierInfo.pi,
+        memo: `Renovacao Anuncio 30d: ${adId}`,
+        metadata: { adId: adId, action: 'renew', tier: ad.plan_tier || 'prata', expectedPrice: tierInfo.pi },
+        onSuccess: function (paymentResult) {
+          handleRenewSuccess(paymentResult && paymentResult.txid ? paymentResult.txid : null);
+        }
+      });
+    } else {
+      alert('Módulo de pagamento Pi indisponível no momento.');
     }
   }
 
@@ -1884,6 +2077,197 @@
     }
   }
 
+  // --- Sistema de Comentários Comunitários (Anti-XSS + Auth Pi Browser) ---
+  const commentLastPostMap = {};
+
+  function getLocalCommentsMap() {
+    try {
+      return JSON.parse(localStorage.getItem('isar_mural_comments') || '{}');
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function saveLocalComment(adId, commentObj) {
+    try {
+      const map = getLocalCommentsMap();
+      if (!Array.isArray(map[adId])) map[adId] = [];
+      map[adId].push(commentObj);
+      localStorage.setItem('isar_mural_comments', JSON.stringify(map));
+    } catch (_) {}
+  }
+
+  function formatCommentTime(iso) {
+    if (!iso) return 'agora';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return 'agora';
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) + ' ' +
+      d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function renderCommentsDrawerHtml(adId, comments) {
+    const authUser = getAuthenticatedPiUser();
+    const isPi = Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
+
+    const listHtml = (!comments || comments.length === 0)
+      ? '<div class="ad-comments-empty">Nenhum comentário ainda. Seja o primeiro pioneiro a comentar!</div>'
+      : comments.map(function (c) {
+          const author = escapeHtml(c.author_username || '@pioneiro');
+          const text = escapeHtml(c.content || '');
+          const when = escapeHtml(formatCommentTime(c.created_at));
+          return `
+            <div class="ad-comment-item">
+              <div class="ad-comment-item__head">
+                <a href="pioneiro?u=${encodeURIComponent(author.replace(/^@+/, ''))}" class="ad-comment-item__author">${author}</a>
+                <span class="ad-comment-item__time">${when}</span>
+              </div>
+              <div class="ad-comment-item__body">${text}</div>
+            </div>
+          `;
+        }).join('');
+
+    let formHtml = '';
+    if (authUser) {
+      formHtml = `
+        <form class="ad-comment-form" onsubmit="event.preventDefault(); window.IsarMural && window.IsarMural.submitComment('${escapeHtml(adId)}');">
+          <input type="text" id="comment-input-${escapeHtml(adId)}" class="ad-comment-input" maxlength="280" placeholder="Comentar como ${escapeHtml(authUser.username)}..." required />
+          <button type="submit" class="btn btn-primary btn-sm ad-comment-submit">Enviar</button>
+        </form>
+      `;
+    } else if (isPi) {
+      formHtml = `
+        <div class="ad-comment-auth-note">
+          <span>Conecte sua conta Pi para comentar com segurança:</span>
+          <button type="button" class="btn btn-primary btn-sm" onclick="window.HokagePi && window.HokagePi.loginWithPi().then(function(){ window.IsarMural && window.IsarMural.toggleComments('${escapeHtml(adId)}', true); })">
+            ⚡ Conectar Pi
+          </button>
+        </div>
+      `;
+    } else {
+      formHtml = `
+        <div class="ad-comment-auth-note">
+          <span>🔒 Comentários verificados disponíveis exclusivamente dentro do <strong>Pi Browser</strong>.</span>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="ad-comments-list">${listHtml}</div>
+      ${formHtml}
+    `;
+  }
+
+  async function hydrateCommentCounts() {
+    const numEls = document.querySelectorAll('.ad-comments-num[data-id]');
+    const ids = [];
+    numEls.forEach(function (el) {
+      const id = el.getAttribute('data-id');
+      if (id && id !== 'preview_card_mock' && ids.indexOf(id) === -1) {
+        ids.push(id);
+      }
+    });
+    if (ids.length === 0) return;
+
+    let remoteCounts = {};
+    if (window.IsarDB && window.IsarDB.getAdCommentCounts) {
+      remoteCounts = await window.IsarDB.getAdCommentCounts(ids);
+    }
+    const localMap = getLocalCommentsMap();
+
+    numEls.forEach(function (el) {
+      const id = el.getAttribute('data-id');
+      const remoteCount = Number(remoteCounts[id]) || 0;
+      const localCount = Array.isArray(localMap[id]) ? localMap[id].length : 0;
+      el.textContent = Math.max(remoteCount, localCount);
+    });
+  }
+
+  async function toggleComments(adId, forceOpen) {
+    if (!adId || adId === 'preview_card_mock') return;
+    const drawer = document.getElementById('comments-drawer-' + adId);
+    if (!drawer) return;
+
+    const isOpen = drawer.style.display === 'block';
+    if (isOpen && !forceOpen) {
+      drawer.style.display = 'none';
+      return;
+    }
+
+    drawer.style.display = 'block';
+    drawer.innerHTML = '<div class="ad-comments-loading">Carregando comentários...</div>';
+
+    let comments = [];
+    if (window.IsarDB && window.IsarDB.getAdComments) {
+      comments = await window.IsarDB.getAdComments(adId);
+    }
+    if (!comments || comments.length === 0) {
+      const localMap = getLocalCommentsMap();
+      if (Array.isArray(localMap[adId]) && localMap[adId].length > 0) {
+        comments = localMap[adId];
+      }
+    }
+
+    document.querySelectorAll(`.ad-comments-num[data-id="${adId}"]`).forEach(function (el) {
+      el.textContent = comments.length;
+    });
+
+    drawer.innerHTML = renderCommentsDrawerHtml(adId, comments);
+  }
+
+  async function submitComment(adId) {
+    const authUser = getAuthenticatedPiUser();
+    if (!authUser) {
+      alert('Conecte-se no Pi Browser para comentar.');
+      return;
+    }
+
+    const now = Date.now();
+    if (commentLastPostMap[adId] && (now - commentLastPostMap[adId]) < 15000) {
+      alert('Aguarde alguns segundos antes de enviar outro comentário neste anúncio.');
+      return;
+    }
+
+    const input = document.getElementById('comment-input-' + adId);
+    if (!input) return;
+    const content = input.value.trim();
+    if (content.length < 2) {
+      alert('Escreva um comentário com pelo menos 2 caracteres.');
+      return;
+    }
+    if (content.length > 280) {
+      alert('O comentário deve ter no máximo 280 caracteres.');
+      return;
+    }
+
+    commentLastPostMap[adId] = now;
+    let saved = null;
+    if (window.IsarDB && window.IsarDB.createAdComment) {
+      try {
+        saved = await window.IsarDB.createAdComment({
+          ad_id: adId,
+          author_username: authUser.username,
+          content: content
+        });
+      } catch (err) {
+        console.warn('Fallback local para comentário:', err);
+      }
+    }
+
+    if (!saved) {
+      saved = {
+        id: 'local_' + now,
+        ad_id: adId,
+        author_username: authUser.username,
+        content: content,
+        created_at: new Date().toISOString()
+      };
+      saveLocalComment(adId, saved);
+    }
+
+    if (window.showToast) window.showToast('💬 Comentário publicado!', 'success');
+    await toggleComments(adId, true);
+  }
+
   let isInitialized = false;
 
   window.IsarMural = {
@@ -1894,6 +2278,7 @@
       initFilters();
       loadSavedLocalAds();
       syncRemoteAds();
+      setTimeout(hydrateCommentCounts, 1200);
       selectTier('prata');
       initFileUpload();
       syncProfileButton();
@@ -1973,10 +2358,14 @@
     openMyAdsModal: openMyAdsModal,
     closeMyAdsModal: closeMyAdsModal,
     loadMyAds: loadMyAds,
+    connectPiForMyAds: connectPiForMyAds,
     openEditModal: openEditModal,
     closeEditModal: closeEditModal,
     saveEditedAd: saveEditedAd,
     renewAdPrompt: renewAdPrompt,
+    // Comentários Comunitários
+    toggleComments: toggleComments,
+    submitComment: submitComment,
     // Moderação Descentralizada e Denúncias
     openReportModal: openReportModal,
     closeReportModal: closeReportModal,
