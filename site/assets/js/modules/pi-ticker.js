@@ -149,6 +149,18 @@
     container.appendChild(select);
 
     container.style.display = 'inline-flex';
+
+    document.querySelectorAll('[data-pi-inline-price]').forEach(function (el) {
+      el.textContent = '1 π ≈ ' + formatFiat(price, activeCurrency);
+    });
+    document.querySelectorAll('[data-pi-inline-change]').forEach(function (el) {
+      if (change === null) {
+        el.textContent = '';
+        return;
+      }
+      el.textContent = ' (' + (isUp ? '+' : '') + change.toFixed(1) + '% em 24h)';
+      el.style.color = isUp ? '#34d399' : '#fca5a5';
+    });
   }
 
   document.addEventListener('DOMContentLoaded', async function () {
@@ -160,3 +172,4 @@
     renderTicker(target, data, typeof data[currency] === 'number' ? currency : 'usd');
   });
 })();
+

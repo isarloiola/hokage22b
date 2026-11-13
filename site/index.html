@@ -632,6 +632,44 @@
             </a>
           </div>
         </div>
+
+        <details style="margin-top:14px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);overflow:hidden">
+          <summary style="padding:13px 18px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:0.86rem;font-weight:600;color:#e4e4e7">
+            <span>📈 Por que o Pi tem valor hoje? Entenda a trajetória até a cotação atual</span>
+            <span style="font-size:0.75rem;color:#fcd34d;white-space:nowrap">Ver linha do tempo ▾</span>
+          </summary>
+          <div style="padding:0 18px 18px;border-top:1px solid rgba(255,255,255,0.06)">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:14px">
+              <div style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)">
+                <div style="font-size:0.74rem;font-weight:700;color:#a78bfa;margin-bottom:4px">2019 · Início no Celular</div>
+                <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin:0">
+                  Criado por doutores de Stanford para permitir mineração mobile acessível, formando dezenas de milhões de Pioneiros pelo mundo.
+                </p>
+              </div>
+              <div style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)">
+                <div style="font-size:0.74rem;font-weight:700;color:#60a5fa;margin-bottom:4px">2021–2024 · Mainnet Fechada &amp; KYC</div>
+                <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin:0">
+                  Verificação de identidade em massa (KYC), segurança da blockchain e desenvolvimento dos primeiros aplicativos dentro do ecossistema.
+                </p>
+              </div>
+              <div style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)">
+                <div style="font-size:0.74rem;font-weight:700;color:#34d399;margin-bottom:4px">Fev/2025 · Open Network</div>
+                <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin:0">
+                  Abertura da rede para o mercado externo, permitindo liquidez em exchanges globais e formação livre de preço por oferta e demanda.
+                </p>
+              </div>
+              <div style="padding:12px;border-radius:8px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2)">
+                <div style="font-size:0.74rem;font-weight:700;color:#fcd34d;margin-bottom:4px">Hoje · Preço Atual &amp; Economia Real</div>
+                <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin:0">
+                  Cotação ao vivo: <strong data-pi-inline-price style="color:#fcd34d">acompanhando mercado</strong><span data-pi-inline-change style="font-weight:600"></span>. A utilidade em serviços, vitrines e apps reais é o que sustenta o ecossistema.
+                </p>
+              </div>
+            </div>
+            <p style="font-size:0.72rem;color:var(--text-muted,#71717a);margin:12px 0 0;line-height:1.45">
+              Dados em tempo real via CoinGecko (atualização automática na moeda local). Conteúdo meramente informativo — não constitui recomendação financeira.
+            </p>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -1782,7 +1820,7 @@
   <script src="assets/js/modules/db.js?v=4.8"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.1"></script>
   <script src="assets/js/modules/portal.js?v=3.1"></script>
-  <script src="assets/js/modules/pi-ticker.js?v=1.0"></script>
+  <script src="assets/js/modules/pi-ticker.js?v=1.1"></script>
   <script>
     // Sincroniza foto personalizada do fundador no mockup da vitrine
     document.addEventListener('DOMContentLoaded', async function () {
