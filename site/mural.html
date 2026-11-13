@@ -230,11 +230,24 @@
           <button class="mural-filter-btn" data-category="produto" type="button">🛍️ Produtos &amp; Lojas</button>
           <button class="mural-filter-btn" data-category="servico" type="button">🛠️ Serviços Profissionais</button>
           <button class="mural-filter-btn" data-category="mensagem" type="button">💬 Recados da Comunidade</button>
-          <select id="mural-payment-filter" onchange="window.IsarMural && window.IsarMural.filterPaymentMode(this.value)" aria-label="Filtrar por moeda aceita" style="padding:8px 12px;border-radius:20px;background:rgba(15,23,42,0.85);border:1px solid rgba(245,158,11,0.35);color:#fcd34d;font-size:0.82rem;font-weight:600;cursor:pointer">
-            <option value="todos">💰 Todas Moedas</option>
+          <select id="mural-payment-filter" onchange="window.IsarMural && window.IsarMural.filterPaymentMode(this.value)" aria-label="Filtrar por formato Pi" style="padding:8px 12px;border-radius:20px;background:rgba(15,23,42,0.85);border:1px solid rgba(245,158,11,0.35);color:#fcd34d;font-size:0.82rem;font-weight:600;cursor:pointer">
+            <option value="todos">⚡ Todos (Aceitam Pi)</option>
             <option value="pi">⚡ 100% Pi</option>
-            <option value="pi_reais">⚡💵 Pi + Reais</option>
-            <option value="reais">💵 Só Reais</option>
+            <option value="pi_fiat">⚡💵 Pi + Ref. Local</option>
+          </select>
+          <select id="mural-country-filter" onchange="window.IsarMural && window.IsarMural.filterCountry(this.value)" aria-label="Filtrar por país ou alcance global" style="padding:8px 12px;border-radius:20px;background:rgba(15,23,42,0.85);border:1px solid rgba(139,92,246,0.38);color:#c4b5fd;font-size:0.82rem;font-weight:600;cursor:pointer">
+            <option value="todos">🌎 Todos Países</option>
+            <option value="GLOBAL">🌐 Global / Online</option>
+            <option value="BR">🇧🇷 Brasil</option>
+            <option value="US">🇺🇸 USA</option>
+            <option value="PT">🇵🇹 Portugal</option>
+            <option value="ES">🇪🇸 España</option>
+            <option value="NG">🇳🇬 Nigeria</option>
+            <option value="PH">🇵🇭 Philippines</option>
+            <option value="VN">🇻🇳 Vietnam</option>
+            <option value="IN">🇮🇳 India</option>
+            <option value="EU">🇪🇺 Europe</option>
+            <option value="OTHER">🌍 Outro</option>
           </select>
         </div>
       </div>
@@ -603,17 +616,32 @@
           <textarea id="ad-input-desc" required rows="3" placeholder="Explique o que você oferece ou deixe seu recado para os pioneiros..." maxlength="160" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff"></textarea>
         </div>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:14px">
           <div class="form-group">
-            <label for="ad-input-location" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">📍 Cidade / Atendimento</label>
-            <input type="text" id="ad-input-location" placeholder="Ex: São Paulo - SP ou Online / Brasil" maxlength="60" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+            <label for="ad-input-country" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">🌎 País / Alcance</label>
+            <select id="ad-input-country" style="width:100%;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff">
+              <option value="GLOBAL">🌐 Global / Online</option>
+              <option value="BR">🇧🇷 Brasil</option>
+              <option value="US">🇺🇸 USA</option>
+              <option value="PT">🇵🇹 Portugal</option>
+              <option value="ES">🇪🇸 España</option>
+              <option value="NG">🇳🇬 Nigeria</option>
+              <option value="PH">🇵🇭 Philippines</option>
+              <option value="VN">🇻🇳 Vietnam</option>
+              <option value="IN">🇮🇳 India</option>
+              <option value="EU">🇪🇺 Europe</option>
+              <option value="OTHER">🌍 Outro</option>
+            </select>
           </div>
           <div class="form-group">
-            <label for="ad-input-payment-modes" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">💰 Forma de Pagamento</label>
-            <select id="ad-input-payment-modes" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff">
-              <option value="pi">⚡ Aceita 100% Pi</option>
-              <option value="pi_reais">⚡💵 Aceita Pi + Reais</option>
-              <option value="reais">💵 Apenas Reais (R$)</option>
+            <label for="ad-input-location" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">📍 Cidade / Região</label>
+            <input type="text" id="ad-input-location" placeholder="Ex: São Paulo, Manila ou Online" maxlength="60" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+          </div>
+          <div class="form-group">
+            <label for="ad-input-payment-modes" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">⚡ Pagamento em Pi</label>
+            <select id="ad-input-payment-modes" style="width:100%;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff">
+              <option value="pi">⚡ 100% Pi</option>
+              <option value="pi_fiat">⚡💵 Pi + Ref. Moeda Local</option>
             </select>
           </div>
         </div>
@@ -864,7 +892,7 @@
   <script src="assets/js/modules/ui.js?v=4.6"></script>
   <script src="assets/js/modules/db.js?v=5.5"></script>
   <script src="assets/js/modules/pi-pay.js?v=6.0"></script>
-  <script src="assets/js/modules/mural.v4.js?v=7.4"></script>
+  <script src="assets/js/modules/mural.v4.js?v=7.5"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');

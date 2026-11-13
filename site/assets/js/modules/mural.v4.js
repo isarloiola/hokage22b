@@ -188,12 +188,35 @@
       `;
     }
 
-    const rawPayMode = (ad.payment_modes === 'pi_reais' || ad.payment_modes === 'reais') ? ad.payment_modes : 'pi';
-    const payModeLabel = rawPayMode === 'pi_reais' ? '⚡💵 Pi + R$' : (rawPayMode === 'reais' ? '💵 R$' : '⚡ 100% Pi');
-    const safeLocation = escapeHtml((ad.location && String(ad.location).trim()) || 'Online / Digital');
+    const COUNTRY_MAP = {
+      GLOBAL: '🌐 Global',
+      BR: '🇧🇷 Brasil',
+      US: '🇺🇸 USA',
+      PT: '🇵🇹 Portugal',
+      ES: '🇪🇸 España',
+      NG: '🇳🇬 Nigeria',
+      PH: '🇵🇭 Philippines',
+      VN: '🇻🇳 Vietnam',
+      IN: '🇮🇳 India',
+      EU: '🇪🇺 Europe',
+      OTHER: '🌍 Global'
+    };
+    const rawCountry = String(ad.country_code || 'GLOBAL').trim().toUpperCase();
+    const countryCode = COUNTRY_MAP[rawCountry] ? rawCountry : 'GLOBAL';
+    const countryLabel = COUNTRY_MAP[countryCode];
+
+    let normalizedPayMode = 'pi';
+    if (ad.payment_modes === 'pi_fiat' || ad.payment_modes === 'pi_reais' || ad.payment_modes === 'fiat' || ad.payment_modes === 'reais') {
+      normalizedPayMode = 'pi_fiat';
+    }
+
+    const payModeLabel = normalizedPayMode === 'pi_fiat'
+      ? '⚡💵 Pi + Ref. Local'
+      : '⚡ 100% Pi';
+    const safeLocation = escapeHtml((ad.location && String(ad.location).trim()) || 'Online');
 
     return `
-      <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" data-payment-mode="${rawPayMode}" id="card-${cardId}">
+      <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" data-payment-mode="${normalizedPayMode}" data-country="${countryCode}" id="card-${cardId}">
         ${bannerHtml}
         <div class="pioneer-card__top">
           <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
@@ -202,7 +225,7 @@
         <h3 class="pioneer-card__title">${safeTitle}</h3>
         <p class="pioneer-card__desc">${safeDesc}</p>
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-size:0.72rem">
-          <span style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:var(--text-secondary);padding:2px 8px;border-radius:999px">📍 ${safeLocation}</span>
+          <span style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:var(--text-secondary);padding:2px 8px;border-radius:999px">${countryLabel} · ${safeLocation}</span>
           <span style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--amber-light);padding:2px 8px;border-radius:999px;font-weight:600">${payModeLabel}</span>
         </div>
         <div class="pioneer-card__footer">
@@ -265,13 +288,19 @@
 
   let currentSearchQuery = '';
   let currentPaymentFilter = 'todos';
+  let currentCountryFilter = 'todos';
 
   function filterPaymentMode(mode) {
     currentPaymentFilter = mode || 'todos';
     applyFilters();
   }
 
-  // Filtragem combinada em tempo real por Categoria, Moeda e Busca Textual
+  function filterCountry(code) {
+    currentCountryFilter = code || 'todos';
+    applyFilters();
+  }
+
+  // Filtragem combinada em tempo real por Categoria, Moeda, País e Busca Textual
   function applyFilters() {
     const query = (currentSearchQuery || '').trim().toLowerCase();
     const featuredSec = document.getElementById('section-destaques');
@@ -293,13 +322,16 @@
       const cardPayMode = card.getAttribute('data-payment-mode') || 'pi';
       const matchesPay = (currentPaymentFilter === 'todos' || cardPayMode === currentPaymentFilter);
 
+      const cardCountry = card.getAttribute('data-country') || 'GLOBAL';
+      const matchesCountry = (currentCountryFilter === 'todos' || cardCountry === currentCountryFilter);
+
       let matchesSearch = true;
       if (query) {
         const textContent = (card.textContent || '').toLowerCase();
         matchesSearch = textContent.includes(query);
       }
 
-      const matches = matchesCat && matchesPay && matchesSearch;
+      const matches = matchesCat && matchesPay && matchesCountry && matchesSearch;
 
       if (matches) {
         card.classList.remove('pioneer-card--hidden', 'ad-card--hidden');
@@ -1327,6 +1359,7 @@
     const isFounder = username.toLowerCase() === '@hokage22b' || username.toLowerCase() === 'hokage22b';
 
     const locInput = document.getElementById('ad-input-location');
+    const countryInput = document.getElementById('ad-input-country');
     const payModeInput = document.getElementById('ad-input-payment-modes');
 
     const newAd = {
@@ -1336,7 +1369,8 @@
       link_url: validatedLink,
       image_url: validatedImg,
       category: catInput ? catInput.value : 'geral',
-      location: (locInput && locInput.value.trim()) ? locInput.value.trim().slice(0, 60) : 'Online / Digital',
+      country_code: (countryInput && countryInput.value) ? countryInput.value : 'GLOBAL',
+      location: (locInput && locInput.value.trim()) ? locInput.value.trim().slice(0, 60) : 'Online',
       payment_modes: (payModeInput && payModeInput.value) ? payModeInput.value : 'pi',
       pioneer_username: username,
       pioneer_name: username.replace('@', ''),
@@ -2391,6 +2425,7 @@
     },
     filterCategory: filterCategory,
     filterPaymentMode: filterPaymentMode,
+    filterCountry: filterCountry,
     handleSearchInput: handleSearchInput,
     clearSearch: clearSearch,
     applyFilters: applyFilters,

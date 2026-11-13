@@ -149,9 +149,11 @@ serve(async (req) => {
       const linkUrl = tier === "bronze" ? null : validateHttpUrl(payload?.link_url);
       const imageUrl = tier === "bronze" ? null : validateHttpUrl(payload?.image_url);
       const category = String(payload?.category || "geral").trim().slice(0, 32);
-      const location = String(payload?.location || "Online / Digital").trim().slice(0, 60) || "Online / Digital";
+      const location = String(payload?.location || "Online / Global").trim().slice(0, 60) || "Online / Global";
+      const rawCountry = String(payload?.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6);
+      const countryCode = rawCountry || "GLOBAL";
       const rawPayMode = String(payload?.payment_modes || "pi").trim().toLowerCase();
-      const paymentModes = (rawPayMode === "pi_reais" || rawPayMode === "reais") ? rawPayMode : "pi";
+      const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
       const insertRow = {
@@ -161,6 +163,7 @@ serve(async (req) => {
         image_url: imageUrl,
         category,
         location,
+        country_code: countryCode,
         payment_modes: paymentModes,
         pioneer_username: piUser.username,
         pioneer_name: piUser.username.replace(/^@+/, ""),

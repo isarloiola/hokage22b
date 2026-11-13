@@ -962,7 +962,7 @@
             <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:700">
               🛍️ Produtos &amp; Serviços
             </div>
-            <span style="font-size:0.72rem;color:var(--text-muted)">Em Pi (π) ou Real (R$)</span>
+            <span style="font-size:0.72rem;color:var(--text-muted)">Em Pi (π) e Moeda Local (USD / EUR / BRL)</span>
           </div>
           <div id="pioneer-products-list" style="display:flex;flex-direction:column;gap:12px">
             <!-- Injetado dinamicamente -->
@@ -2450,7 +2450,8 @@
           const safeTitle = escapeHtml(p.title || 'Produto / Serviço');
           const rawPrice = String(p.price || 'Sob Consulta').trim();
           const safePrice = escapeHtml(rawPrice);
-          const isBrl = /^R\$|BRL/i.test(rawPrice);
+          const safePriceFiat = p.price_fiat ? escapeHtml(String(p.price_fiat).trim()) : '';
+          const isBrl = /^(R\$|\$|€|USD|EUR|BRL)/i.test(rawPrice);
           const isPi = /π|\bpi\b/i.test(rawPrice);
           const priceClass = isBrl ? 'product-price product-price--brl' : (isPi ? 'product-price product-price--pi' : 'product-price');
           const safeBadge = p.badge ? escapeHtml(p.badge) : '';
@@ -2468,6 +2469,7 @@
                   <strong class="product-title">${safeTitle}</strong>
                   <div class="product-meta-row">
                     <span class="${priceClass}">${safePrice}</span>
+                    ${safePriceFiat ? `<span class="product-price product-price--brl">${safePriceFiat}</span>` : ''}
                     ${safeBadge ? `<span class="product-badge-pill">${safeBadge}</span>` : ''}
                   </div>
                 </div>
@@ -2673,10 +2675,10 @@
 
       if (currentProfileData && Array.isArray(currentProfileData.products) && currentProfileData.products.length > 0) {
         currentProfileData.products.forEach(p => {
-          addProductRow(p.title || '', p.price || '', p.link || '', p.image_url || '');
+          addProductRow(p.title || '', p.price || '', p.link || '', p.image_url || '', p.price_fiat || '');
         });
       } else {
-        addProductRow('', '', '', '');
+        addProductRow('', '', '', '', '');
       }
 
       modal.classList.add('active');
@@ -2929,27 +2931,28 @@
       return list;
     }
 
-    // Adiciona uma linha de produto/serviço editável com seletor de moeda (R$ ou π) e foto
-    function addProductRow(title, price, link, imageUrl) {
+    // Adiciona uma linha de produto/serviço editável com preço principal (π/USD/EUR/BRL), 2º preço opcional e foto
+    function addProductRow(title, price, link, imageUrl, priceFiat) {
       const container = document.getElementById('prof-products-container');
       const itemEl = document.createElement('div');
       itemEl.className = 'product-edit-item';
 
-      const rawPrice = (price || '').trim();
-      let initCurrency = 'PI';
-      let cleanPriceVal = rawPrice;
-      if (/^R\$/i.test(rawPrice)) {
-        initCurrency = 'BRL';
-        cleanPriceVal = rawPrice.replace(/^R\$\s*/i, '').trim();
-      } else if (/π|\bpi\b/i.test(rawPrice)) {
-        initCurrency = 'PI';
-        cleanPriceVal = rawPrice.replace(/\s*(?:π|pi)\s*$/i, '').trim();
-      } else if (rawPrice) {
-        initCurrency = 'CUSTOM';
+      function parseCurrencyVal(raw) {
+        const text = (raw || '').trim();
+        if (/^R\$/i.test(text)) return { cur: 'BRL', val: text.replace(/^R\$\s*/i, '').trim() };
+        if (/^\$|USD/i.test(text)) return { cur: 'USD', val: text.replace(/^(\$|USD)\s*/i, '').replace(/\s*USD$/i, '').trim() };
+        if (/^€|EUR/i.test(text)) return { cur: 'EUR', val: text.replace(/^(€|EUR)\s*/i, '').replace(/\s*EUR$/i, '').trim() };
+        if (/π|\bpi\b/i.test(text)) return { cur: 'PI', val: text.replace(/\s*(?:π|pi)\s*$/i, '').trim() };
+        return { cur: text ? 'CUSTOM' : 'PI', val: text };
       }
 
+      const parsedPrimary = parseCurrencyVal(price);
+      const parsedFiat = parseCurrencyVal(priceFiat);
+      if (!priceFiat) parsedFiat.cur = 'USD';
+
       const safeTitle = title ? title.replace(/"/g, '&quot;') : '';
-      const safePrice = cleanPriceVal ? cleanPriceVal.replace(/"/g, '&quot;') : '';
+      const safePrice = parsedPrimary.val ? parsedPrimary.val.replace(/"/g, '&quot;') : '';
+      const safeFiat = parsedFiat.val ? parsedFiat.val.replace(/"/g, '&quot;') : '';
       const safeLink = link ? link.replace(/"/g, '&quot;') : '';
       const safeImg = imageUrl ? imageUrl.replace(/"/g, '&quot;') : '';
 
@@ -2960,12 +2963,24 @@
         <input type="text" class="prod-item-title" placeholder="Nome do produto ou serviço" value="${safeTitle}" style="width:100%;padding:8px 10px;margin-bottom:6px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem;box-sizing:border-box" />
         
         <div class="product-edit-row-grid">
-          <select class="prod-item-currency" aria-label="Moeda" style="padding:8px 6px;background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:var(--amber-light);font-size:0.8rem;font-weight:700;width:100%;box-sizing:border-box">
-            <option value="PI"${initCurrency === 'PI' ? ' selected' : ''}>π (Pi)</option>
-            <option value="BRL"${initCurrency === 'BRL' ? ' selected' : ''}>R$ (Real)</option>
-            <option value="CUSTOM"${initCurrency === 'CUSTOM' ? ' selected' : ''}>Outro</option>
+          <select class="prod-item-currency" aria-label="Moeda principal" style="padding:8px 6px;background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:var(--amber-light);font-size:0.8rem;font-weight:700;width:100%;box-sizing:border-box">
+            <option value="PI"${parsedPrimary.cur === 'PI' ? ' selected' : ''}>π (Pi)</option>
+            <option value="USD"${parsedPrimary.cur === 'USD' ? ' selected' : ''}>USD ($)</option>
+            <option value="EUR"${parsedPrimary.cur === 'EUR' ? ' selected' : ''}>EUR (€)</option>
+            <option value="BRL"${parsedPrimary.cur === 'BRL' ? ' selected' : ''}>R$ (Real)</option>
+            <option value="CUSTOM"${parsedPrimary.cur === 'CUSTOM' ? ' selected' : ''}>Outro</option>
           </select>
-          <input type="text" class="prod-item-price" placeholder="Valor (Ex: 3.14 ou 47,00)" value="${safePrice}" style="width:100%;padding:8px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem;box-sizing:border-box" />
+          <input type="text" class="prod-item-price" placeholder="Preço 1 (Ex: 3.14)" value="${safePrice}" style="width:100%;padding:8px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem;box-sizing:border-box" />
+        </div>
+
+        <div class="product-edit-row-grid" style="margin-top:4px">
+          <select class="prod-item-fiat-currency" aria-label="2º Preço opcional (Moeda Local)" style="padding:8px 6px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.14);border-radius:6px;color:#34d399;font-size:0.78rem;font-weight:700;width:100%;box-sizing:border-box">
+            <option value="USD"${parsedFiat.cur === 'USD' ? ' selected' : ''}>+ USD ($)</option>
+            <option value="EUR"${parsedFiat.cur === 'EUR' ? ' selected' : ''}>+ EUR (€)</option>
+            <option value="BRL"${parsedFiat.cur === 'BRL' ? ' selected' : ''}>+ R$ (BRL)</option>
+            <option value="CUSTOM"${parsedFiat.cur === 'CUSTOM' ? ' selected' : ''}>+ Outro</option>
+          </select>
+          <input type="text" class="prod-item-fiat-price" placeholder="2º preço opcional (Ex: 15.00)" value="${safeFiat}" style="width:100%;padding:8px 10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.14);border-radius:6px;color:#fff;font-size:0.82rem;box-sizing:border-box" />
         </div>
 
         <input type="url" class="prod-item-link" placeholder="Link de compra ou WhatsApp (https://...)" value="${safeLink}" style="width:100%;padding:8px 10px;margin-bottom:6px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:0.85rem;box-sizing:border-box" />
@@ -2980,6 +2995,16 @@
       container.appendChild(itemEl);
     }
 
+    function formatCurrencyValue(currency, rawVal) {
+      const val = (rawVal || '').trim();
+      if (!val) return '';
+      if (currency === 'BRL') return /^R\$/i.test(val) ? val : ('R$ ' + val);
+      if (currency === 'USD') return /^\$|USD/i.test(val) ? val : ('$ ' + val + ' USD');
+      if (currency === 'EUR') return /^€|EUR/i.test(val) ? val : ('€ ' + val);
+      if (currency === 'PI') return /π|\bpi\b/i.test(val) ? val : (val + ' π');
+      return val;
+    }
+
     function collectProductsFromForm() {
       const productElements = document.querySelectorAll('#prof-products-container .product-edit-item');
       const products = [];
@@ -2988,22 +3013,19 @@
         const currencyEl = el.querySelector('.prod-item-currency');
         const currency = currencyEl ? currencyEl.value : 'CUSTOM';
         const rawVal = el.querySelector('.prod-item-price').value.trim();
+
+        const fiatCurEl = el.querySelector('.prod-item-fiat-currency');
+        const fiatCur = fiatCurEl ? fiatCurEl.value : 'USD';
+        const rawFiatVal = (el.querySelector('.prod-item-fiat-price') && el.querySelector('.prod-item-fiat-price').value.trim()) || '';
+
         const link = el.querySelector('.prod-item-link').value.trim();
         const img = el.querySelector('.prod-item-img').value.trim();
 
-        let formattedPrice = rawVal;
-        if (rawVal) {
-          if (currency === 'BRL') {
-            formattedPrice = /^R\$/i.test(rawVal) ? rawVal : ('R$ ' + rawVal);
-          } else if (currency === 'PI') {
-            formattedPrice = /π|\bpi\b/i.test(rawVal) ? rawVal : (rawVal + ' π');
-          }
-        } else {
-          formattedPrice = 'Sob Consulta';
-        }
+        const formattedPrice = rawVal ? formatCurrencyValue(currency, rawVal) : 'Sob Consulta';
+        const formattedFiat = rawFiatVal ? formatCurrencyValue(fiatCur, rawFiatVal) : '';
 
         if (title || link) {
-          products.push({ title: title, price: formattedPrice, link: link, image_url: img });
+          products.push({ title: title, price: formattedPrice, price_fiat: formattedFiat, link: link, image_url: img });
         }
       });
       return products;
