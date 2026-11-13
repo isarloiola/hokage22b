@@ -251,8 +251,8 @@
               Desconectar / Trocar de Conta
             </button>
           ` : `
-            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow(true)" style="padding:14px;font-weight:700">
-              ⚡ Conectar no Pi Browser (Pi Testnet)
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow()" style="padding:14px;font-weight:700">
+              ⚡ Conectar no Pi Browser
             </button>
             <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="HokagePi.openTestnetInfoModal()" style="font-size:0.82rem;border-color:rgba(139,92,246,0.4);color:#c4b5fd;font-weight:700;margin-top:2px">
               ℹ️ Como funciona a Pi Testnet gratuita?
@@ -277,14 +277,14 @@
     // Se estiver de fato no Pi Browser e desconectado, tenta autenticar
     if (inPi && !authenticatedUser) {
       setTimeout(function () {
-        triggerAuthFlow(true);
+        triggerAuthFlow();
       }, 350);
     }
   }
 
   // 6. Disparo Real da Autenticação com Pi SDK (com Proteção de Timeout)
   async function triggerAuthFlow(isSandbox) {
-    if (isSandbox === undefined) isSandbox = true;
+    if (isSandbox === undefined) isSandbox = isSandboxMode();
 
     const feedbackBox = document.getElementById('diag-feedback-box');
     const triggerBtn = document.getElementById('diag-auth-trigger-btn');
@@ -331,14 +331,30 @@
 
     try {
       // Cria promessa com timeout de 25s para dar tempo ao pioneiro de aceitar no modal nativo
-      const authPromise = window.Pi.authenticate(scopes, onIncompletePaymentFound);
       const timeoutPromise = new Promise(function (_, reject) {
         setTimeout(function () {
           reject(new Error('TIMEOUT_STANDALONE'));
         }, 25000);
       });
 
-      const auth = await Promise.race([authPromise, timeoutPromise]);
+      let auth;
+      try {
+        auth = await Promise.race([
+          window.Pi.authenticate(scopes, onIncompletePaymentFound),
+          timeoutPromise
+        ]);
+      } catch (scopeErr) {
+        // Se o escopo 'payments' ainda não estiver liberado em produção no develop.pi,
+        // tenta autenticar apenas com ['username'] para garantir o login do pioneiro.
+        if (scopeErr && scopeErr.message !== 'TIMEOUT_STANDALONE') {
+          auth = await Promise.race([
+            window.Pi.authenticate(['username'], onIncompletePaymentFound),
+            timeoutPromise
+          ]);
+        } else {
+          throw scopeErr;
+        }
+      }
       authenticatedUser = auth.user;
       isSdkSessionAuthenticated = true;
 
@@ -394,7 +410,7 @@
           `;
         } else {
           const errMsg = (err && (err.message || err.error || (typeof err === 'string' ? err : ''))) || 'Autorização cancelada ou recusada.';
-          feedbackBox.innerHTML = `⚠️ <strong>Resposta do Pi Browser:</strong><br>${escapeHtml(errMsg)}<br><small style="color:#fff;margin-top:6px;display:block">Se o app no develop.pi for Sandbox, toque no botão de Testnet acima.</small>`;
+          feedbackBox.innerHTML = `⚠️ <strong>Resposta do Pi Browser:</strong><br>${escapeHtml(errMsg)}<br><small style="color:#fff;margin-top:6px;display:block">Confirme se a URL <strong>https://hokage22b.com</strong> está cadastrada no seu app em <strong>develop.pi</strong>.</small>`;
         }
       }
 
@@ -481,9 +497,9 @@
     // O Pi SDK oficial exige que window.Pi.authenticate(['username', 'payments'], ...)
     // tenha sido aprovado nesta sessão de navegador para carregar o escopo 'payments' na memória do SDK.
     if (!isSdkSessionAuthenticated || !authenticatedUser) {
-      showToast('Conectando escopo de pagamentos (Pi Testnet)...', 'info');
+      showToast('Conectando escopo de pagamentos Pi...', 'info');
       try {
-        const logged = await triggerAuthFlow(true);
+        const logged = await triggerAuthFlow();
         if (logged) {
           authenticatedUser = logged;
           isSdkSessionAuthenticated = true;
@@ -1011,7 +1027,7 @@
           if (isPiBrowser() && window.Pi) {
             setTimeout(function () {
               if (!isSdkSessionAuthenticated && !isAuthenticating) {
-                triggerAuthFlow(true).catch(function () { });
+                triggerAuthFlow().catch(function () { });
               }
             }, 450);
           }
