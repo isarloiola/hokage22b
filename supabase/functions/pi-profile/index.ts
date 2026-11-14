@@ -5,57 +5,35 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+import {
+  getCorsHeaders,
+  HttpPayloadError,
+  jsonError,
+  jsonOk,
+  parseJsonBody,
+} from "../_shared/http.ts";
+import { verifyPiAccessToken } from "../_shared/pi-auth.ts";
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req, false);
+
   // Trata requisições preflight OPTIONS (CORS)
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
+  if (req.method !== "POST") {
+    return jsonError("METHOD_NOT_ALLOWED", "Método não permitido.", corsHeaders, 405);
+  }
+
   try {
-    const { accessToken, profileData, refCode } = await req.json();
+    const body = await parseJsonBody(req, 512 * 1024);
+    const { accessToken, profileData, refCode } = body;
 
-    if (!accessToken || typeof accessToken !== "string") {
-      const msg = "accessToken da Pi Network é obrigatório para autenticação segura.";
-      return new Response(
-        JSON.stringify({ ok: false, code: "MISSING_ACCESS_TOKEN", error: msg, error_detail: { code: "MISSING_ACCESS_TOKEN", message: msg } }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
-      );
-    }
-
-    // 1. VALIDAÇÃO CRIPTOGRÁFICA DO TOKEN DIRETAMENTE NA API DA PI CORE TEAM
-    // Endpoint oficial: https://api.minepi.com/v2/me
-    const piResponse = await fetch("https://api.minepi.com/v2/me", {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!piResponse.ok) {
-      const msg = "Sessão Pi Network inválida ou expirada. Faça login novamente no Pi Browser.";
-      return new Response(
-        JSON.stringify({ ok: false, code: "PI_AUTH_EXPIRED", error: msg, error_detail: { code: "PI_AUTH_EXPIRED", message: msg } }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
-      );
-    }
-
-    const piUser = await piResponse.json();
-    if (!piUser || !piUser.uid || !piUser.username) {
-      return new Response(
-        JSON.stringify({ error: "Falha ao obter identidade verificada da Pi Network." }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
-      );
-    }
-
-    // Identidade autêntica extraída do servidor oficial do Pi
-    const verifiedUid = String(piUser.uid);
-    const verifiedUsername = "@" + String(piUser.username).replace(/^@+/, "").trim().toLowerCase();
+    // 1. VALIDAÇÃO CRIPTOGRÁFICA DO TOKEN DIRETAMENTE NA API DA PI CORE TEAM (/v2/me)
+    const piUser = await verifyPiAccessToken(accessToken);
+    const verifiedUid = piUser.uid;
+    const verifiedUsername = piUser.username;
 
     // 2. INICIALIZA CLIENT SUPABASE COM SERVICE_ROLE
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -70,9 +48,11 @@ serve(async (req) => {
       if (/^G[A-Z2-7]{55}$/.test(w)) {
         cleanWallet = w;
       } else {
-        return new Response(
-          JSON.stringify({ error: "Chave pública da Pi Wallet inválida. Deve iniciar com G e ter 56 caracteres." }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+        return jsonError(
+          "INVALID_WALLET_ADDRESS",
+          "Chave pública da Pi Wallet inválida. Deve iniciar com G e ter 56 caracteres.",
+          corsHeaders,
+          400
         );
       }
     }
@@ -80,7 +60,11 @@ serve(async (req) => {
     let cleanAvatar: string | null = null;
     if (safeData.avatar_url) {
       const a = String(safeData.avatar_url).trim();
-      if (/^https?:\/\/[^\s<>"'`]+$/i.test(a) || /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(a) || /^assets\/img\/[a-zA-Z0-9_\-\.]+\.(jpg|jpeg|png|webp|svg)$/i.test(a)) {
+      if (
+        /^https?:\/\/[^\s<>"'`]+$/i.test(a) ||
+        /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(a) ||
+        /^assets\/img\/[a-zA-Z0-9_\-\.]+\.(jpg|jpeg|png|webp|svg)$/i.test(a)
+      ) {
         cleanAvatar = a;
       }
     }
@@ -158,28 +142,21 @@ serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({
-      ok: true,
-      code: "PROFILE_SAVED",
-      success: true,
-      profile: data,
-      referral: referralResult,
-      data: { profile: data, referral: referralResult },
-    }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
+    return jsonOk(
+      "PROFILE_SAVED",
+      {
+        success: true,
+        profile: data,
+        referral: referralResult,
+      },
+      corsHeaders,
+      200
+    );
   } catch (err) {
+    if (err instanceof HttpPayloadError) {
+      return jsonError(err.code, err.message, corsHeaders, err.status);
+    }
     const msg = err && err.message ? String(err.message) : "Erro interno ao salvar perfil.";
-    return new Response(JSON.stringify({
-      ok: false,
-      code: "PROFILE_SAVE_FAILED",
-      error: msg,
-      error_detail: { code: "PROFILE_SAVE_FAILED", message: msg },
-    }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    return jsonError("PROFILE_SAVE_FAILED", msg, corsHeaders, 500);
   }
 });
-

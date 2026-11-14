@@ -6,36 +6,18 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const ALLOWED_ORIGINS = new Set([
-  "https://hokage22b.com",
-  "https://www.hokage22b.com",
-  "https://isarloiola.github.io",
-]);
-
-function getCorsHeaders(req: Request) {
-  const origin = req.headers.get("origin") || "";
-  const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
-  const allowOrigin = (ALLOWED_ORIGINS.has(origin) || isLocal) ? origin : "https://hokage22b.com";
-  return {
-    "Access-Control-Allow-Origin": allowOrigin,
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    "Vary": "Origin",
-  };
-}
+import {
+  getCorsHeaders,
+  HttpPayloadError,
+  jsonError as sharedJsonError,
+  jsonOk as sharedJsonOk,
+  jsonResponse as sharedJsonResponse,
+  MURAL_CONFIG,
+  parseJsonBody,
+} from "../_shared/http.ts";
+import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
 
 const MAX_BODY_BYTES = 32 * 1024; // 32 KB limit against payload-flood DoS
-const MURAL_CONFIG = {
-  plans: {
-    ouro: { price_pi: 3.14, duration_days: 7, allows_link: true, allows_image: true },
-    prata: { price_pi: 1.0, duration_days: 7, allows_link: true, allows_image: true },
-    bronze: { price_pi: 0.314, duration_days: 30, allows_link: false, allows_image: false },
-  },
-  categories: ["youtube", "produto", "servico", "mensagem", "geral"],
-  payment_modes: ["pi", "pi_fiat", "fiat", "pi_reais", "reais"],
-  countries: ["GLOBAL", "BR", "US", "PT", "ES", "NG", "PH", "VN", "IN", "EU", "OTHER"],
-};
-
 const TIER_PRICES: Record<string, number> = {
   ouro: MURAL_CONFIG.plans.ouro.price_pi,
   prata: MURAL_CONFIG.plans.prata.price_pi,
@@ -52,25 +34,15 @@ let currentCorsHeaders: Record<string, string> = {
 };
 
 function jsonResponse(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    headers: { ...currentCorsHeaders, "Content-Type": "application/json" },
-    status,
-  });
+  return sharedJsonResponse(body, currentCorsHeaders, status);
 }
 
 function jsonOk(code: string, data: Record<string, unknown> = {}, status = 200) {
-  return jsonResponse({ ok: true, code, data, ...data }, status);
+  return sharedJsonOk(code, data, currentCorsHeaders, status);
 }
 
 function jsonError(code: string, message: string, status = 400) {
-  return jsonResponse(
-    { ok: false, code, error: message, error_detail: { code, message } },
-    status
-  );
-}
-
-function normalizeHandle(handle: string): string {
-  return String(handle || "").trim().replace(/^@+/, "").toLowerCase();
+  return sharedJsonError(code, message, currentCorsHeaders, status);
 }
 
 function validateHttpUrl(raw: unknown): string | null {
@@ -81,24 +53,6 @@ function validateHttpUrl(raw: unknown): string | null {
     throw new Error("URL inválida. Utilize http:// ou https://.");
   }
   return trimmed.slice(0, 500);
-}
-
-async function verifyPiAccessToken(accessToken: string) {
-  const piResponse = await fetch("https://api.minepi.com/v2/me", {
-    method: "GET",
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  if (!piResponse.ok) {
-    throw new Error("Sessão Pi Network inválida ou expirada. Faça login novamente no Pi Browser.");
-  }
-  const piUser = await piResponse.json();
-  if (!piUser || !piUser.uid || !piUser.username) {
-    throw new Error("Falha ao verificar identidade na Pi Network.");
-  }
-  return {
-    uid: String(piUser.uid),
-    username: "@" + normalizeHandle(String(piUser.username)),
-  };
 }
 
 async function verifyPiPayment(paymentId: string, expectedMinAmount: number, expectedUid: string) {
@@ -135,28 +89,18 @@ async function verifyPiPayment(paymentId: string, expectedMinAmount: number, exp
 }
 
 serve(async (req) => {
-  currentCorsHeaders = getCorsHeaders(req);
+  currentCorsHeaders = getCorsHeaders(req, true);
 
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: currentCorsHeaders });
   }
 
   if (req.method !== "POST") {
-    return jsonResponse({ error: "Método não permitido." }, 405);
+    return jsonError("METHOD_NOT_ALLOWED", "Método não permitido.", 405);
   }
 
   try {
-    const contentLength = Number(req.headers.get("content-length") || "0");
-    if (contentLength > MAX_BODY_BYTES) {
-      return jsonResponse({ error: "Payload excede o limite de segurança (32 KB)." }, 413);
-    }
-
-    const rawText = await req.text();
-    if (rawText.length > MAX_BODY_BYTES) {
-      return jsonResponse({ error: "Payload excede o limite de segurança (32 KB)." }, 413);
-    }
-
-    const body = JSON.parse(rawText || "{}");
+    const body = await parseJsonBody(req, MAX_BODY_BYTES);
     const { action, accessToken, payload } = body || {};
 
     if (!action || typeof action !== "string") {
@@ -523,10 +467,13 @@ serve(async (req) => {
       return jsonResponse({ ok: true, review: data });
     }
 
-    return jsonResponse({ error: "Ação desconhecida." }, 400);
+    return jsonError("UNKNOWN_ACTION", "Ação desconhecida.", 400);
   } catch (err) {
+    if (err instanceof HttpPayloadError) {
+      return jsonError(err.code, err.message, err.status);
+    }
     const message = err instanceof Error ? err.message : "Erro interno no servidor.";
-    return jsonResponse({ error: message }, 400);
+    return jsonError("MURAL_ACTION_ERROR", message, 400);
   }
 });
 

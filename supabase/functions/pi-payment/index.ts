@@ -5,38 +5,55 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+import {
+  getCorsHeaders,
+  HttpPayloadError,
+  jsonError,
+  jsonOk,
+  MURAL_CONFIG,
+  parseJsonBody,
+} from "../_shared/http.ts";
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req, false);
+
   // Trata preflight CORS
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  try {
-    const { action, paymentId, txid, adPayload } = await req.json();
-    const PI_SERVER_API_KEY = Deno.env.get("PI_SERVER_API_KEY") || Deno.env.get("PI_API_KEY");
+  if (req.method !== "POST") {
+    return jsonError("METHOD_NOT_ALLOWED", "Método não permitido.", corsHeaders, 405);
+  }
 
+  try {
+    const body = await parseJsonBody(req, 64 * 1024);
+    const { action, paymentId, txid, adPayload } = body;
+
+    // Endpoint de catálogo/preços oficial (para consulta Agent-Ready)
+    if (action === "get_catalog") {
+      return jsonOk("PAYMENT_CATALOG", { catalog: MURAL_CONFIG }, corsHeaders, 200);
+    }
+
+    const PI_SERVER_API_KEY = Deno.env.get("PI_SERVER_API_KEY") || Deno.env.get("PI_API_KEY");
     if (!PI_SERVER_API_KEY) {
-      throw new Error("PI_SERVER_API_KEY não configurada no Supabase Secrets.");
+      return jsonError(
+        "SERVER_CONFIG_ERROR",
+        "PI_SERVER_API_KEY não configurada no Supabase Secrets.",
+        corsHeaders,
+        500
+      );
     }
 
     if (!paymentId || typeof paymentId !== "string") {
-      return new Response(JSON.stringify({ error: "paymentId é obrigatório." }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400,
-      });
+      return jsonError("MISSING_PAYMENT_ID", "paymentId é obrigatório.", corsHeaders, 400);
     }
 
     const piApiBase = "https://api.minepi.com/v2";
 
     // 1. APROVAÇÃO DO PAGAMENTO (onReadyForServerApproval)
     if (action === "approve") {
-      const response = await fetch(`${piApiBase}/payments/${paymentId}/approve`, {
+      const response = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}/approve`, {
         method: "POST",
         headers: {
           "Authorization": `Key ${PI_SERVER_API_KEY}`,
@@ -45,25 +62,33 @@ serve(async (req) => {
         body: "{}",
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       console.log(`Pi Payment Approve [${paymentId}]: HTTP ${response.status}`, data);
-      return new Response(JSON.stringify(data), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: response.status,
-      });
+      if (!response.ok) {
+        return jsonError(
+          "PI_APPROVE_FAILED",
+          data?.error_message || data?.error || "Falha ao aprovar pagamento na Pi Network.",
+          corsHeaders,
+          response.status,
+          { pi_response: data }
+        );
+      }
+      return jsonOk("PAYMENT_APPROVED", { ...(typeof data === "object" && data ? data : {}) }, corsHeaders, 200);
     }
 
     // 2. CONCLUSÃO DO PAGAMENTO (onReadyForServerCompletion)
     if (action === "complete") {
       if (!txid || typeof txid !== "string") {
-        return new Response(JSON.stringify({ error: "txid da transação blockchain é obrigatório para conclusão." }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        });
+        return jsonError(
+          "MISSING_TXID",
+          "txid da transação blockchain é obrigatório para conclusão.",
+          corsHeaders,
+          400
+        );
       }
 
       // Conclui oficialmente o pagamento na Pi Core Team Platform API
-      const response = await fetch(`${piApiBase}/payments/${paymentId}/complete`, {
+      const response = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}/complete`, {
         method: "POST",
         headers: {
           "Authorization": `Key ${PI_SERVER_API_KEY}`,
@@ -72,7 +97,7 @@ serve(async (req) => {
         body: JSON.stringify({ txid }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       // Processamento contábil e ativação de serviços no Supabase
       if (response.ok && data) {
@@ -98,13 +123,15 @@ serve(async (req) => {
             "bronze"
           ).toLowerCase();
 
-          let expectedPrice = 0.314;
+          let expectedPrice = MURAL_CONFIG.plans.bronze.price_pi;
           if (metadata.action === "renew") {
-            expectedPrice = (metadata.upgrade === "ouro") ? 3.14 : 1.00;
+            expectedPrice = (metadata.upgrade === "ouro")
+              ? MURAL_CONFIG.plans.ouro.price_pi
+              : MURAL_CONFIG.plans.prata.price_pi;
           } else {
-            let tierPrice = 0.314;
-            if (rawTier === "ouro") tierPrice = 3.14;
-            else if (rawTier === "prata") tierPrice = 1.00;
+            let tierPrice = MURAL_CONFIG.plans.bronze.price_pi;
+            if (rawTier === "ouro") tierPrice = MURAL_CONFIG.plans.ouro.price_pi;
+            else if (rawTier === "prata") tierPrice = MURAL_CONFIG.plans.prata.price_pi;
 
             const dbPrice = (ad && Number(ad.price_pi)) ? Number(ad.price_pi) : 0;
             expectedPrice = Math.max(tierPrice, dbPrice);
@@ -113,15 +140,12 @@ serve(async (req) => {
           if (paidAmount + 0.0001 < expectedPrice) {
             console.error(`[Security Alert] Montante insuficiente: pago ${paidAmount} Pi, esperado ${expectedPrice} Pi (tier=${rawTier}).`);
             const msg = `Montante pago (${paidAmount} Pi) inferior ao plano selecionado (${expectedPrice} Pi).`;
-            return new Response(
-              JSON.stringify({
-                ok: false,
-                code: "PAYMENT_AMOUNT_MISMATCH",
-                error: msg,
-                error_detail: { code: "PAYMENT_AMOUNT_MISMATCH", message: msg },
-                security_rejected: true,
-              }),
-              { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+            return jsonError(
+              "PAYMENT_AMOUNT_MISMATCH",
+              msg,
+              corsHeaders,
+              400,
+              { security_rejected: true }
             );
           } else {
             const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
@@ -166,20 +190,32 @@ serve(async (req) => {
             }
           }
         } else if (metadata.type === "ebook") {
-          // B. Registro de compra de E-book com verificação de montante (mínimo 3.14 Pi)
-          const expectedEbookPrice = 3.14;
-          if (paidAmount >= expectedEbookPrice) {
-            await supabase
-              .from("doacoes")
-              .insert([{
-                donor_identifier: metadata.pioneer_username || "Pioneiro Pi",
-                currency: "PI",
-                amount: paidAmount,
-                status: "recebido"
-              }]);
-          } else {
-            console.error(`[Security Alert] Montante insuficiente para E-book: pago ${paidAmount} Pi.`);
+          // B. Validação de compra de E-book pelo Catálogo Oficial do Servidor (3.14 π ou 7.50 π)
+          const rawProductId = String(metadata.productId || metadata.product_id || metadata.product || "pi-para-seu-negocio").toLowerCase();
+          const catalogItem = (rawProductId === "ia-na-pratica")
+            ? MURAL_CONFIG.products["ia-na-pratica"]
+            : MURAL_CONFIG.products["pi-para-seu-negocio"];
+          const expectedEbookPrice = catalogItem.price_pi;
+
+          if (paidAmount + 0.0001 < expectedEbookPrice) {
+            console.error(`[Security Alert] Montante insuficiente para E-book (${catalogItem.id}): pago ${paidAmount} Pi, esperado ${expectedEbookPrice} Pi.`);
+            return jsonError(
+              "PAYMENT_AMOUNT_MISMATCH",
+              `Montante pago (${paidAmount} Pi) inferior ao preço oficial de ${catalogItem.title} (${expectedEbookPrice} Pi).`,
+              corsHeaders,
+              400,
+              { security_rejected: true, product_id: catalogItem.id, expected_price_pi: expectedEbookPrice }
+            );
           }
+
+          await supabase
+            .from("doacoes")
+            .insert([{
+              donor_identifier: metadata.pioneer_username || "Pioneiro Pi",
+              currency: "PI",
+              amount: paidAmount,
+              status: "recebido"
+            }]);
         }
 
         // C. Ledger Imutável de Transações (Idempotente)
@@ -202,15 +238,21 @@ serve(async (req) => {
         }
       }
 
-      return new Response(JSON.stringify(data), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: response.status,
-      });
+      if (!response.ok) {
+        return jsonError(
+          "PI_COMPLETE_FAILED",
+          data?.error_message || data?.error || "Falha ao concluir pagamento na Pi Network.",
+          corsHeaders,
+          response.status,
+          { pi_response: data }
+        );
+      }
+      return jsonOk("PAYMENT_COMPLETED", { ...(typeof data === "object" && data ? data : {}) }, corsHeaders, 200);
     }
 
     // 3. CANCELAMENTO DO PAGAMENTO (onCancel ou limpeza de pendência com idempotência)
     if (action === "cancel") {
-      const response = await fetch(`${piApiBase}/payments/${paymentId}/cancel`, {
+      const response = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}/cancel`, {
         method: "POST",
         headers: {
           "Authorization": `Key ${PI_SERVER_API_KEY}`,
@@ -228,26 +270,32 @@ serve(async (req) => {
       );
 
       if (isAlreadyCancelled) {
-        return new Response(JSON.stringify({ status: "cancelled", message: "Pagamento já cancelado ou expirado na Pi Network.", data }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 200,
-        });
+        return jsonOk(
+          "PAYMENT_ALREADY_CANCELLED",
+          { status: "cancelled", message: "Pagamento já cancelado ou expirado na Pi Network.", data },
+          corsHeaders,
+          200
+        );
       }
 
-      return new Response(JSON.stringify(data), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: response.status,
-      });
+      if (!response.ok) {
+        return jsonError(
+          "PI_CANCEL_FAILED",
+          data?.error_message || data?.error || "Falha ao cancelar pagamento na Pi Network.",
+          corsHeaders,
+          response.status,
+          { pi_response: data }
+        );
+      }
+      return jsonOk("PAYMENT_CANCELLED", { status: "cancelled", ...(typeof data === "object" && data ? data : {}) }, corsHeaders, 200);
     }
 
-    return new Response(JSON.stringify({ error: "Ação inválida." }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 400,
-    });
+    return jsonError("INVALID_ACTION", "Ação inválida.", corsHeaders, 400);
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    if (err instanceof HttpPayloadError) {
+      return jsonError(err.code, err.message, corsHeaders, err.status);
+    }
+    const msg = err && err.message ? String(err.message) : "Erro interno ao processar pagamento.";
+    return jsonError("PAYMENT_INTERNAL_ERROR", msg, corsHeaders, 500);
   }
 });
