@@ -104,11 +104,8 @@
 
     // 2. Pontes e objetos nativos injetados pelo app oficial Pi Browser (Flutter InAppWebView / Bridge)
     if (typeof window !== 'undefined') {
-      if (window.flutter_inappwebview || window.PiNetwork || window.isPiBrowser) return true;
+      if (window.PiNetwork || window.flutter_inappwebview) return true;
       if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
-
-      // 3. Usuário autenticado anteriormente com Pi SDK neste dispositivo/sessão
-      if (localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user') || localStorage.getItem('pioneer_auth_type') === 'pi-sdk') return true;
     }
     return false;
   }

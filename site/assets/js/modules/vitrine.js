@@ -499,7 +499,7 @@
       const ua = navigator.userAgent || navigator.vendor || window.opera || '';
       if (/PiBrowser|PiNetwork|minepi/i.test(ua)) return true;
       if (typeof window !== 'undefined') {
-        if (window.flutter_inappwebview || window.PiNetwork || window.isPiBrowser) return true;
+        if (window.PiNetwork || window.flutter_inappwebview) return true;
         if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
       }
       return false;
