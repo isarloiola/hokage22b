@@ -2,14 +2,17 @@
 
 Conteúdo-fonte do e-book em Markdown e os scripts que geram o PDF e o EPUB. Edite os arquivos `.md`, rode os scripts e publique os arquivos de `dist/`.
 
-## Estrutura
+## Estrutura Padronizada
 
-- `abertura.md`: ficha técnica, aviso legal (minuta), rotas de leitura, legenda das etiquetas e bônus.
-- `chapters/01.md` a `chapters/23.md`: os 23 capítulos (título do capítulo em `##`, seções em `###`).
-- `style.css`: estilo do PDF.
-- `build.py`: gera o PDF (capa, sumário com páginas, partes, capítulos, rodapé e numeração).
-- `build_epub.sh`: gera o EPUB a partir dos mesmos arquivos.
-- `stamp_buyer.py`: carimba uma cópia do PDF com os dados do comprador (nome, e-mail, pedido), para uso na entrega.
+- `assets/style.css`: estilo do PDF.
+- `build/build.py`: gera o PDF (capa, sumário com páginas, partes, capítulos, rodapé e numeração).
+- `build/build_epub.sh`: gera o EPUB completo a partir dos mesmos arquivos.
+- `build/build_epub_site.js`: gera o EPUB enxuto publicado em `site/downloads/`.
+- `build/stamp_buyer.py`: carimba uma cópia do PDF com os dados do comprador (nome, e-mail, pedido), para uso na entrega.
+- `content/abertura.md`: ficha técnica, aviso legal (minuta), rotas de leitura, legenda das etiquetas e bônus.
+- `content/chapters/01.md` a `23.md`: os 23 capítulos (título do capítulo em `##`, seções em `###`).
+- `dist/`: cópias mestras dos arquivos finais (`.pdf`, `.epub`, `.html`, capa).
+- `plan/produto.json`: metadados e estrutura editorial completa.
 
 ## Requisitos (Linux)
 

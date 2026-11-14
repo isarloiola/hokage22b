@@ -1,0 +1,16 @@
+{
+  "product": {
+    "id": "pi-para-seu-negocio",
+    "slug": "pi-para-seu-negocio",
+    "brand": "HOKAGE22B",
+    "title": "Pi para seu negócio",
+    "subtitle": "O Guia Prático para Empreendedores e Comerciantes",
+    "price_pi": 3.14,
+    "price_brl": 19.90,
+    "hotmart_id": "A108356534I",
+    "hotmart_checkout_url": "https://pay.hotmart.com/A108356534I",
+    "sales_page_url": "https://go.hotmart.com/A108356534I?dp=1",
+    "affiliate_recruiting_url": "https://affiliate.hotmart.com/affiliate-recruiting/view/9871P108356555",
+    "public_cover_site_path": "site/assets/img/ebook-pago-negocios.jpg"
+  }
+}

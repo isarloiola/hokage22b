@@ -7,7 +7,10 @@ from reportlab.lib import colors
 DRAFT = os.environ.get("DRAFT", "1") == "1"
 RC = os.environ.get("RC", "0") == "1"
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.environ.get("OUT_DIR", os.path.join(HERE, "dist"))
+BASE_DIR = os.path.abspath(os.path.join(HERE, ".."))
+CONTENT_DIR = os.path.join(BASE_DIR, "content")
+ASSETS_DIR = os.path.join(BASE_DIR, "assets")
+OUT = os.environ.get("OUT_DIR", os.path.join(BASE_DIR, "dist"))
 os.makedirs(OUT, exist_ok=True)
 EDITION = "Edição 1.0" + (" (rascunho v0.1)" if DRAFT else (" (RC1)" if RC else ""))
 TITLE = "Manual Pi Network"
@@ -27,7 +30,7 @@ def read(path):
     return open(path, encoding="utf-8").read()
 
 def chap_title(n):
-    first = read(os.path.join(HERE, "chapters", f"{n:02d}.md")).splitlines()[0]
+    first = read(os.path.join(CONTENT_DIR, "chapters", f"{n:02d}.md")).splitlines()[0]
     return first.replace("## ", "").strip()
 
 def pandoc(md, extra=None):
@@ -48,7 +51,7 @@ def body_html():
         listing = "<br>".join(f"Capítulo {n} — {chap_title(n).split(' — ',1)[1]}" for n in chs)
         out.append(f'<div class="part"><div class="pn">{pn.upper()}</div><div class="pt">{pt}</div><div class="pc">{listing}</div></div>')
         for n in chs:
-            out.append(pandoc(read(os.path.join(HERE, "chapters", f"{n:02d}.md"))))
+            out.append(pandoc(read(os.path.join(CONTENT_DIR, "chapters", f"{n:02d}.md"))))
     return dot("\n".join(out))
 
 def toc_html(pages):
@@ -68,7 +71,7 @@ def doc(inner, toc):
         banner = '<div class="draft"><b>VERSÃO CANDIDATA À PUBLICAÇÃO (RC1).</b> Antes de publicar: preencher os campos entre colchetes desta página, concluir as revisões de contador e advogado e conferir os itens pendentes da Lista mestra.</div>'
     if DRAFT:
         banner = '<div class="draft"><b>RASCUNHO DE DESENVOLVIMENTO (v0.1).</b> Esta versão serve para testar diagramação, entrega e download. Não publicar nem vender: faltam verificação em fontes primárias e revisão de contador e advogado.</div>'
-    front = pandoc(read(os.path.join(HERE, "abertura.md")))
+    front = pandoc(read(os.path.join(CONTENT_DIR, "abertura.md")))
     return f"""<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>{TITLE}</title>
 <link rel="stylesheet" href="style.css"></head><body>
 {banner}{front}
@@ -158,7 +161,7 @@ def main():
     html_path = os.path.join(work, "book.html")
     cover_path = os.path.join(work, "cover.html")
     open(cover_path, "w", encoding="utf-8").write(cover_html())
-    open(os.path.join(work, "style.css"), "w", encoding="utf-8").write(read(os.path.join(HERE, "style.css")))
+    open(os.path.join(work, "style.css"), "w", encoding="utf-8").write(read(os.path.join(ASSETS_DIR, "style.css")))
     for pas in (1, 2):
         open(html_path, "w", encoding="utf-8").write(doc(inner, toc_html(pages)))
         wk(html_path, os.path.join(work, "main.pdf"))

@@ -100,6 +100,9 @@ admin_secret*.txt
 
 # 10. Produtos Digitais Pagos (Fontes/Builds Privados) & Cache CLI
 ebook-ia-na-pratica/
+ebooks/ia-na-pratica/
+!ebooks/manual-pi-network/build/
+!ebooks/manual-pi-network/build/**
 supabase/.temp/
 
 
