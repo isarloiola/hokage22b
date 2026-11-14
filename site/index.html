@@ -262,57 +262,152 @@
             </a>
           </div>
 
-          <!-- MOCKUP AO VIVO / EXEMPLO VISUAL DA VITRINE (ALTA CONVERSÃO) -->
-          <div class="hero-vitrine-mockup" style="max-width:440px;margin:28px auto 36px;background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98));border:1px solid rgba(139,92,246,0.45);border-radius:24px;padding:24px 20px;box-shadow:0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(139,92,246,0.22);text-align:center;position:relative">
+          <!-- MOCKUP AO VIVO / EXEMPLO VISUAL DA VITRINE (FIEL À VITRINE ORIGINAL) -->
+          <div class="hero-vitrine-mockup" style="max-width:480px;margin:28px auto 36px;background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98));border:1px solid rgba(139,92,246,0.45);border-radius:24px;padding:24px 20px;box-shadow:0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(139,92,246,0.22);text-align:center;position:relative">
             
             <!-- Badge superior flutuante -->
-            <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;font-size:0.75rem;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:16px;max-width:100%;box-sizing:border-box;line-height:1.3">
+            <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;font-size:0.74rem;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:16px;max-width:100%;box-sizing:border-box;line-height:1.3">
               <span style="width:6px;height:6px;background:#10b981;border-radius:50%;box-shadow:0 0 8px #10b981;flex-shrink:0"></span>
               <span>Exemplo Real: Veja como fica a sua Vitrine</span>
             </div>
 
-            <!-- Avatar + Handle + Badge KYC -->
-            <div style="width:68px;height:68px;border-radius:50%;margin:0 auto 10px;overflow:hidden;box-shadow:0 0 20px rgba(139,92,246,0.5);border:2px solid rgba(255,255,255,0.3);background:#0a0113">
+            <!-- Avatar + Handle + Bio + Badges KYC & Embaixador -->
+            <div style="width:76px;height:76px;border-radius:50%;margin:0 auto 12px;overflow:hidden;box-shadow:0 0 24px rgba(139,92,246,0.55);border:2px solid rgba(255,255,255,0.3);background:#0a0113">
               <img src="assets/img/founder-profile.jpg" id="hero-founder-avatar-img" class="pioneer-founder-avatar-img" alt="Avatar @hokage22b" style="width:100%;height:100%;object-fit:cover;display:block" />
             </div>
-            <h3 style="font-size:1.25rem;font-weight:800;color:#fff;margin:0 0 4px;display:flex;align-items:center;justify-content:center;gap:6px">
+            <h3 class="notranslate" translate="no" style="font-size:1.35rem;font-weight:800;color:#fff;margin:0 0 6px;letter-spacing:-0.01em">
               @hokage22b
-              <span style="font-size:0.7rem;background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.5);color:#34d399;padding:2px 8px;border-radius:12px;font-weight:700">✓ KYC</span>
             </h3>
-            <p style="font-size:0.82rem;color:var(--text-secondary);margin:0 0 14px;line-height:1.4">
-              Pioneiro Web3 &amp; Loja aceitando Pi na Mainnet com envio para todo o Brasil.
+            <p style="font-size:0.82rem;color:var(--text-secondary);margin:0 0 12px;line-height:1.45">
+              Fundador do HOKAGE22B.COM · Educação Web3, ferramentas para pioneiros e comércio seguro na Pi Network. Aceitando 100% Pi na Mainnet.
             </p>
 
-            <!-- Mini Caixa de Pagamento Pi -->
-            <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-sizing:border-box">
-              <span class="notranslate" translate="no" style="font-size:0.72rem;color:var(--amber-light);font-family:var(--font-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;text-align:left" title="GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR">
-                ⚡ Pi: GA5FXF675WIQ4...
-              </span>
-              <button type="button" onclick="navigator.clipboard.writeText('GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR');this.textContent='✓ Copiado!';setTimeout(()=>this.textContent='Copiar',2000)" style="font-size:0.68rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 8px;border-radius:4px;font-weight:700;cursor:pointer;flex-shrink:0">Copiar</button>
+            <!-- Selos Verificados (KYC + Embaixador) -->
+            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+              <span style="font-size:0.7rem;background:rgba(16,185,129,0.16);border:1px solid rgba(16,185,129,0.45);color:#34d399;padding:3px 10px;border-radius:999px;font-weight:700">🛡️ Humano Verificado via Pi KYC</span>
+              <span style="font-size:0.7rem;background:rgba(245,158,11,0.16);border:1px solid rgba(245,158,11,0.45);color:#fcd34d;padding:3px 10px;border-radius:999px;font-weight:700">🏅 Embaixador HOKAGE22B</span>
             </div>
 
-            <!-- Botões Verticais de Exemplo (WhatsApp & YouTube) -->
-            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
-              <a href="pioneiro?u=@hokage22b" style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);border:1px solid rgba(37,211,102,0.35);border-radius:10px;padding:10px 14px;color:#fff;text-decoration:none;font-weight:600;font-size:0.85rem">
-                <span>💬 Conversar no WhatsApp</span> <span style="color:#25d366">↗</span>
+            <!-- Link Curto Oficial da Vitrine -->
+            <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.12);border-radius:999px;padding:4px 12px;font-size:0.74rem;max-width:100%;box-sizing:border-box">
+              <span style="color:var(--text-muted)">Link:</span>
+              <span class="notranslate" translate="no" style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@hokage22b</span>
+            </div>
+
+            <!-- Barra de Ícones das Redes Sociais (Idêntica à Vitrine Original) -->
+            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;margin:14px auto 0">
+              <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&amp;p=a&amp;iam=2" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z"/></svg>
               </a>
-              <a href="pioneiro?u=@hokage22b" style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);border:1px solid rgba(239,68,68,0.35);border-radius:10px;padding:10px 14px;color:#fff;text-decoration:none;font-weight:600;font-size:0.85rem">
-                <span>📺 Canal Oficial no YouTube</span> <span style="color:#ef4444">↗</span>
+              <a href="https://www.youtube.com/@justhokage22b" target="_blank" rel="noopener noreferrer" title="YouTube" aria-label="YouTube" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              </a>
+              <a href="https://instagram.com/hokage22b" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(225,48,108,0.12);border:1px solid rgba(225,48,108,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+              </a>
+              <a href="https://twitter.com/hokage22b" target="_blank" rel="noopener noreferrer" title="X / Twitter" aria-label="X / Twitter" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.28);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+              <a href="pioneiro?u=@hokage22b" title="Telegram" aria-label="Telegram" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(36,161,222,0.12);border:1px solid rgba(36,161,222,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="#24a1de"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.818 8.234-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.211-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.833.941z"/></svg>
+              </a>
+              <a href="pioneiro?u=@hokage22b" title="Site Oficial" aria-label="Site Oficial" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
               </a>
             </div>
 
-            <!-- Mini Card de Produto com Foto Real -->
-            <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;display:flex;gap:10px;align-items:center;margin-bottom:16px;text-align:left">
-              <img src="assets/img/ebook-pago-negocios.jpg" alt="E-book Pi para Negócios" style="width:44px;height:44px;border-radius:6px;object-fit:cover;flex-shrink:0" />
-              <div style="flex:1;min-width:0">
-                <strong style="font-size:0.82rem;color:#fff;display:block;line-height:1.25;word-break:break-word;margin-bottom:2px">E-book Pi para seu Negócio</strong>
-                <span style="font-size:0.75rem;color:var(--amber-light);font-weight:700">3.14 π</span>
+            <!-- Barra Compacta de Pagamento Direto com Pi Wallet (Mainnet P2P) -->
+            <div style="background:rgba(0,0,0,0.55);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:10px 12px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;text-align:left;box-sizing:border-box">
+              <div style="display:flex;align-items:center;gap:8px;min-width:140px;flex:1">
+                <span style="font-size:1.1rem;color:var(--amber-light);flex-shrink:0">⚡</span>
+                <div style="line-height:1.2">
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <span style="font-size:0.66rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);font-weight:700">Carteira Pi (P2P)</span>
+                    <span style="font-size:0.66rem;color:#10b981;font-weight:700">✓ Válida</span>
+                  </div>
+                  <div style="font-family:var(--font-mono);font-size:0.8rem;color:#fff;font-weight:700;display:flex;align-items:center;gap:4px">
+                    <span class="notranslate" translate="no" style="color:var(--amber-light)">GA5F...XPUR</span>
+                    <span title="Proteção Anti-Clipper Guard" style="font-size:0.72rem">🛡️</span>
+                  </div>
+                </div>
               </div>
-              <a href="#produtos" style="font-size:0.72rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light);padding:5px 10px;border-radius:6px;font-weight:700;text-decoration:none">Reservar</a>
+              <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+                <button type="button" onclick="navigator.clipboard.writeText('GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR');this.textContent='✓ Copiado!';setTimeout(()=>this.textContent='📋 Copiar',2000)" style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.18);color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;cursor:pointer">📋 Copiar</button>
+                <a href="pioneiro?u=@hokage22b&amp;pay=1" style="font-size:0.74rem;background:linear-gradient(135deg,#f59e0b,#d97706);color:#09090b;padding:6px 11px;border-radius:8px;font-weight:800;text-decoration:none">⚡ Pagar / QR</a>
+              </div>
+            </div>
+
+            <!-- Seção: Produtos & Serviços (Fiel à Vitrine Original) -->
+            <div style="margin-top:20px;text-align:left">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px">
+                <div style="font-size:0.76rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:800">
+                  🛍️ Produtos &amp; Serviços
+                </div>
+                <span style="font-size:0.68rem;color:var(--text-muted)">Em Pi (π) e Moeda Local (USD / EUR / BRL)</span>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <!-- Produto 1: IA na Prática -->
+                <div style="background:rgba(0,0,0,0.52);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box">
+                  <div style="display:flex;align-items:center;gap:12px;width:100%;min-width:0">
+                    <img src="assets/img/ebook-ia-na-pratica.png" alt="IA na Prática" style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid rgba(255,255,255,0.15);flex-shrink:0" />
+                    <div style="flex:1;min-width:0">
+                      <strong style="display:block;font-size:0.86rem;color:#fff;line-height:1.3;margin-bottom:5px">IA na Prática: O Seu Assistente Pessoal (293 pág.)</strong>
+                      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                        <span style="font-size:0.74rem;font-weight:800;color:var(--amber-light);background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);padding:2px 7px;border-radius:6px">7.50 π</span>
+                        <span style="font-size:0.74rem;font-weight:800;color:#34d399;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.35);padding:2px 7px;border-radius:6px">R$ 47,00</span>
+                        <span style="font-size:0.66rem;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:2px 7px;border-radius:6px;font-weight:700">Lançamento · 50 Prompts</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <a href="#produto-ia-na-pratica" style="flex:1;min-width:120px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#09090b;font-size:0.76rem;font-weight:800;padding:7px 10px;border-radius:8px;text-align:center;text-decoration:none">Ver Lançamento →</a>
+                    <a href="mural" style="flex:1;min-width:120px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light);font-size:0.74rem;font-weight:700;padding:7px 10px;border-radius:8px;text-align:center;text-decoration:none">📢 Impulsionar no Mural</a>
+                  </div>
+                </div>
+
+                <!-- Produto 2: E-book Pi para seu Negócio -->
+                <div style="background:rgba(0,0,0,0.52);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box">
+                  <div style="display:flex;align-items:center;gap:12px;width:100%;min-width:0">
+                    <img src="assets/img/ebook-pago-negocios.jpg" alt="E-book Pi para seu Negócio" style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid rgba(255,255,255,0.15);flex-shrink:0" />
+                    <div style="flex:1;min-width:0">
+                      <strong style="display:block;font-size:0.86rem;color:#fff;line-height:1.3;margin-bottom:5px">E-book Pi para seu Negócio (Edição Comercial)</strong>
+                      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                        <span style="font-size:0.74rem;font-weight:800;color:var(--amber-light);background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);padding:2px 7px;border-radius:6px">3.14 π</span>
+                        <span style="font-size:0.74rem;font-weight:800;color:#34d399;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.35);padding:2px 7px;border-radius:6px">R$ 19,90</span>
+                        <span style="font-size:0.66rem;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:2px 7px;border-radius:6px;font-weight:700">Manual Comercial</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <a href="#produtos" style="flex:1;min-width:120px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#09090b;font-size:0.76rem;font-weight:800;padding:7px 10px;border-radius:8px;text-align:center;text-decoration:none">Adquirir (3.14 π) →</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Seção: Anúncios no Mural Pi (Fiel à Vitrine Original) -->
+            <div style="margin-top:20px;margin-bottom:16px;text-align:left">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px">
+                <div style="font-size:0.76rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:800">
+                  📢 Anúncios em Destaque no Mural Pi
+                </div>
+                <a href="mural" style="font-size:0.72rem;color:var(--accent-light);text-decoration:none;font-weight:600">Ver todos no Mural →</a>
+              </div>
+
+              <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(245,158,11,0.32);border-radius:14px;padding:12px;text-align:left">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:4px">
+                  <span style="font-size:0.7rem;color:var(--amber-light);font-weight:800;background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);padding:2px 8px;border-radius:999px">📢 OURO · PERMANENTE</span>
+                  <span style="font-size:0.68rem;color:var(--text-muted)">👁️ 1.420 visualizações · 🖱️ 318 cliques</span>
+                </div>
+                <h4 style="color:#fff;font-size:0.88rem;font-weight:800;margin:0 0 4px;line-height:1.3">Consultoria Web3 &amp; Lojas Aceitando Pi na Mainnet</h4>
+                <p style="color:var(--text-secondary);font-size:0.76rem;margin:0 0 10px;line-height:1.4">Configure sua vitrine verificada, QR Code POS e catálogo de produtos com suporte direto na comunidade.</p>
+                <a href="mural" style="display:inline-block;background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light);font-size:0.74rem;font-weight:700;padding:5px 12px;border-radius:8px;text-decoration:none">Acessar Oferta no Mural →</a>
+              </div>
             </div>
 
             <!-- Chamada Final do Mockup -->
-            <a href="pioneiro?u=@hokage22b" style="display:block;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);border-radius:10px;padding:11px;color:var(--accent-light);font-size:0.85rem;font-weight:700;text-decoration:none;transition:all 0.2s ease">
+            <a href="pioneiro?u=@hokage22b" style="display:block;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.45);border-radius:12px;padding:12px;color:var(--accent-light);font-size:0.86rem;font-weight:800;text-decoration:none;transition:all 0.2s ease">
               👀 Explorar esta Vitrine Completa ao Vivo ↗
             </a>
           </div>
