@@ -151,7 +151,8 @@
     } else if (tier === 'prata' && cleanUrl) {
       linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" onclick="window.IsarMural && window.IsarMural.trackClick('${cardId}')" class="pioneer-card__link">Acessar Anúncio →</a>`;
     } else {
-      linkHtml = `<span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">💬 Recado Fraterno da Comunidade</span>`;
+      const cleanProfileSlug = safeAuthor.replace(/^@+/, '');
+      linkHtml = `<a href="pioneiro?u=${encodeURIComponent(cleanProfileSlug)}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__link" style="font-size:0.78rem;color:var(--accent-light);text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-weight:700">👤 Ver Vitrine de ${safeAuthor} →</a>`;
     }
 
     let bannerHtml = '';
@@ -1231,8 +1232,18 @@
   function updateReferralButtonVisibility() {
     const btn = document.getElementById('ad-referral-credit-btn');
     if (!btn) return;
-    if (selectedTier === 'bronze' && availableReferralCredits > 0) {
-      btn.textContent = `🎁 Usar 1 Crédito de Indicação (Grátis · Você tem ${availableReferralCredits})`;
+    if (availableReferralCredits > 0) {
+      if (selectedTier === 'bronze') {
+        btn.textContent = `🎁 Usar 1 Crédito de Indicação (Grátis · Você tem ${availableReferralCredits})`;
+        btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+        btn.style.borderColor = '#059669';
+        btn.onclick = function () { redeemReferralAd(); };
+      } else {
+        btn.textContent = `🎁 Você tem ${availableReferralCredits} Crédito(s) Bronze Grátis! Toque para mudar para o Plano Bronze (0.00 π)`;
+        btn.style.background = 'linear-gradient(135deg,#f59e0b,#d97706)';
+        btn.style.borderColor = '#f59e0b';
+        btn.onclick = function () { selectTier('bronze'); };
+      }
       btn.style.display = 'block';
     } else {
       btn.style.display = 'none';
@@ -1925,6 +1936,10 @@
           ? `<button type="button" class="btn btn-outline btn-sm" onclick="window.IsarMural.openEditModal('${escapeHtml(ad.id)}')" style="font-size:0.78rem;padding:6px 10px">✏️ Editar (${editStatus.hoursLeft}h)</button>`
           : `<button type="button" class="btn btn-outline btn-sm" disabled title="Prazo máximo de edição de 24h expirado" style="font-size:0.75rem;padding:6px 10px;opacity:0.45;cursor:not-allowed">🔒 Edição 24h</button>`;
 
+        const upgradeButtonHtml = (ad.plan_tier === 'bronze')
+          ? `<button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural.upgradeBronzeAd('${escapeHtml(ad.id)}')" style="font-size:0.76rem;padding:6px 11px;font-weight:800;background:linear-gradient(135deg,#8b5cf6,#f59e0b);border:none">🚀 Impulsionar (Prata/Ouro)</button>`
+          : '';
+
         return `
           <div class="my-ad-item-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
             <div style="flex:1 1 240px;min-width:0">
@@ -1944,6 +1959,7 @@
               </div>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap">
+              ${upgradeButtonHtml}
               ${editButtonHtml}
             </div>
           </div>
@@ -1952,6 +1968,31 @@
 
     } catch (err) {
       container.innerHTML = `<div style="text-align:center;padding:18px;color:#ef4444">Erro: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  function upgradeBronzeAd(adId) {
+    const ad = myCachedAds.find(function (a) { return String(a.id) === String(adId); });
+    closeMyAdsModal();
+    openModal();
+    selectTier('prata');
+    if (ad) {
+      const titleEl = document.getElementById('ad-input-title');
+      const descEl = document.getElementById('ad-input-desc');
+      const catEl = document.getElementById('ad-input-cat');
+      const locEl = document.getElementById('ad-input-location');
+      const ctryEl = document.getElementById('ad-input-country');
+      const payEl = document.getElementById('ad-input-payment-modes');
+      if (titleEl && ad.title) titleEl.value = ad.title;
+      if (descEl && ad.description) descEl.value = ad.description;
+      if (catEl && ad.category) catEl.value = ad.category;
+      if (locEl && ad.location) locEl.value = ad.location;
+      if (ctryEl && ad.country_code) ctryEl.value = ad.country_code;
+      if (payEl && ad.payment_modes) payEl.value = ad.payment_modes;
+      updateLivePreview();
+    }
+    if (window.HokagePi && typeof window.HokagePi.showToast === 'function') {
+      window.HokagePi.showToast('🚀 Anúncio carregado no Plano Prata! Adicione seu link/foto ou escolha Ouro VIP.', 'info');
     }
   }
 
@@ -2604,6 +2645,7 @@
     closeEditModal: closeEditModal,
     saveEditedAd: saveEditedAd,
     renewAdPrompt: renewAdPrompt,
+    upgradeBronzeAd: upgradeBronzeAd,
     // Comentários Comunitários
     toggleComments: toggleComments,
     submitComment: submitComment,

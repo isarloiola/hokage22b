@@ -20,34 +20,40 @@
         return;
       }
 
+      function appendSearch(baseUrl) {
+        var extra = (window.location.search || '').replace(/^\?/, '');
+        if (!extra) return baseUrl;
+        return baseUrl + (baseUrl.indexOf('?') === -1 ? '?' : '&') + extra;
+      }
+
       // Atalhos especiais para o Simulador Interativo
       if (first.toLowerCase() === 'simulador' || first.toLowerCase() === 'teste') {
-        window.location.replace('/pioneiro.html?teste=1' + window.location.hash);
+        window.location.replace(appendSearch('/pioneiro.html?teste=1') + window.location.hash);
         return;
       }
 
       // Caso 1: hokage22b.com/@usuario ou hokage22b.com/@usuario/
       if (first.startsWith('@')) {
-        window.location.replace('/pioneiro.html?u=' + encodeURIComponent(first) + window.location.hash);
+        window.location.replace(appendSearch('/pioneiro.html?u=' + encodeURIComponent(first)) + window.location.hash);
         return;
       }
 
       // Caso 2: hokage22b.com/pioneiro/@usuario ou hokage22b.com/pioneiro/usuario
       if (first.toLowerCase() === 'pioneiro' && second) {
         var u = second.startsWith('@') ? second : ('@' + second);
-        window.location.replace('/pioneiro.html?u=' + encodeURIComponent(u) + window.location.hash);
+        window.location.replace(appendSearch('/pioneiro.html?u=' + encodeURIComponent(u)) + window.location.hash);
         return;
       }
 
       // Caso 3: hokage22b.com/usuario (ex: hokage22b.com/hokage22b)
       // Qualquer slug único que não contenha ponto e não seja página do sistema
       if (segments.length === 1 && first && first.indexOf('.') === -1 && knownRootPages.indexOf(first.toLowerCase()) === -1) {
-        window.location.replace('/pioneiro.html?u=' + encodeURIComponent('@' + first) + window.location.hash);
+        window.location.replace(appendSearch('/pioneiro.html?u=' + encodeURIComponent('@' + first)) + window.location.hash);
         return;
       }
 
-      // Caso não identificado, envia para a página inicial
-      window.location.replace('/index.html');
+      // Caso não identificado, envia para a página inicial preservando parâmetros (?ref=, etc.)
+      window.location.replace(appendSearch('/index.html') + window.location.hash);
     })();
   </script>
 </head>

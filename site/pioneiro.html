@@ -858,6 +858,7 @@
           <!-- Category Pills -->
           <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px;scrollbar-width:none">
             <button type="button" class="portal-btn portal-btn--sm dir-cat-pill active" onclick="filterDirectoryCategory('todos', this)" style="background:var(--accent);color:#fff;font-size:0.75rem;padding:5px 12px;border-radius:20px;white-space:nowrap;font-weight:700">Todos</button>
+            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('embaixadores', this)" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:5px 12px;border-radius:20px;white-space:nowrap">🏅 Embaixadores</button>
             <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('lojas', this)" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:5px 12px;border-radius:20px;white-space:nowrap">🛍️ Lojas &amp; Produtos</button>
             <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('servicos', this)" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:5px 12px;border-radius:20px;white-space:nowrap">💼 Serviços &amp; Tech</button>
             <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('criadores', this)" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:5px 12px;border-radius:20px;white-space:nowrap">🎨 Criadores de Conteúdo</button>
@@ -1038,18 +1039,21 @@
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button type="button" id="btn-copy-ref-link" class="portal-btn portal-btn--primary portal-btn--sm" style="flex:1;min-width:160px;justify-content:center;font-weight:700" onclick="copyReferralInviteLink()">
+            <button type="button" id="btn-copy-ref-link" class="portal-btn portal-btn--primary portal-btn--sm" style="flex:1;min-width:150px;justify-content:center;font-weight:700" onclick="copyReferralInviteLink()">
               📋 Copiar Link de Convite
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="flex:1;min-width:150px;justify-content:center;font-weight:700;border-color:rgba(16,185,129,0.45);color:#34d399" onclick="shareReferralWhatsapp()">
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="flex:1;min-width:145px;justify-content:center;font-weight:700;border-color:rgba(16,185,129,0.45);color:#34d399" onclick="shareReferralWhatsapp()">
               💬 Convidar no WhatsApp
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="flex:1;min-width:140px;justify-content:center;font-weight:700;border-color:rgba(139,92,246,0.45);color:#c4b5fd" onclick="openInviteQrModal()">
+              📱 QR Code do Convite
             </button>
             <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="width:100%;justify-content:center;font-weight:700;border-color:rgba(245,158,11,0.4);color:#fbbf24" onclick="previewReferralWelcomeScreen()">
               👁️ Ver Tela de Boas-Vindas do Meu Convite
             </button>
           </div>
           <div id="ref-use-credit-wrap" style="display:none;margin-top:10px">
-            <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm" style="width:100%;justify-content:center;font-weight:700;text-decoration:none">
+            <a href="mural?tier=bronze&amp;publish=1" class="portal-btn portal-btn--amber portal-btn--sm" style="width:100%;justify-content:center;font-weight:700;text-decoration:none">
               🚀 Usar 1 Crédito Grátis no Mural Agora →
             </a>
           </div>
@@ -1070,7 +1074,7 @@
       <div id="pioneer-footer" style="text-align:center;color:var(--text-muted);font-size:0.82rem;margin-top:24px;display:none">
         <p>✦ Vitrine Web3 Oficial criada com a plataforma <a href="./" style="color:var(--accent-light);font-weight:600">HOKAGE22B</a>.</p>
         <p style="margin-top:8px">
-          <a href="pioneiro" style="color:var(--amber-light);font-weight:700;text-decoration:none">
+          <a href="pioneiro" id="pioneer-footer-create-link" style="color:var(--amber-light);font-weight:700;text-decoration:none">
             🚀 Crie sua vitrine grátis com seu @usuário Pi ↗
           </a>
         </p>
@@ -1422,6 +1426,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/modules/db.js?v=5.8"></script>
 
-  <script src="assets/js/modules/vitrine.js?v=2.2"></script>
+  <script src="assets/js/modules/vitrine.js?v=2.3"></script>
 </body>
 </html>

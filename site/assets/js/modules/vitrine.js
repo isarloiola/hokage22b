@@ -113,6 +113,43 @@
       return '@' + String(raw).replace(/@+/g, '').trim().toLowerCase();
     }
 
+    function showVitrineToast(msg, type) {
+      if (window.HokagePi && typeof window.HokagePi.showToast === 'function') {
+        window.HokagePi.showToast(msg, type || 'info');
+        return;
+      }
+      let toast = document.getElementById('hokage-vitrine-floating-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'hokage-vitrine-floating-toast';
+        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10090;padding:12px 20px;border-radius:12px;font-size:0.86rem;font-weight:700;max-width:92vw;box-shadow:0 12px 36px rgba(0,0,0,0.85);transition:all 0.25s ease;text-align:center;pointer-events:none;';
+        document.body.appendChild(toast);
+      }
+      if (type === 'success') {
+        toast.style.background = '#065f46';
+        toast.style.color = '#a7f3d0';
+        toast.style.border = '1px solid #10b981';
+      } else if (type === 'error') {
+        toast.style.background = '#7f1d1d';
+        toast.style.color = '#fecaca';
+        toast.style.border = '1px solid #ef4444';
+      } else {
+        toast.style.background = '#312e81';
+        toast.style.color = '#c7d2fe';
+        toast.style.border = '1px solid #6366f1';
+      }
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      if (window._vitrineToastTimer) clearTimeout(window._vitrineToastTimer);
+      window._vitrineToastTimer = setTimeout(function () {
+        if (toast) {
+          toast.style.opacity = '0';
+          setTimeout(function () { toast.style.display = 'none'; }, 260);
+        }
+      }, 4200);
+    }
+
     // =========================================================================
     // BLINDAGEM CRIPTOGRÁFICA & SEGURANÇA WEB3 (ZERO-TRUST)
     // =========================================================================
@@ -933,6 +970,7 @@
         } else {
           const logged = getLoggedUser();
           const cleanLogged = logged && logged.username ? cleanUsername(logged.username).replace(/^@+/, '') : '';
+          const cleanOwnerRef = cleanUsername(prof.username || currentPioneerUser || 'hokage22b').replace(/^@+/, '');
           if (cleanLogged) {
             topbarActions.innerHTML = `
               <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="font-size:0.75rem;padding:6px 12px;font-weight:700;text-decoration:none">
@@ -941,8 +979,8 @@
             `;
           } else {
             topbarActions.innerHTML = `
-              <a href="pioneiro" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;text-decoration:none">
-                Criar Minha Vitrine Grátis →
+              <a href="pioneiro?ref=${encodeURIComponent(cleanOwnerRef)}" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(245,158,11,0.5);color:#fbbf24;font-weight:700;text-decoration:none">
+                🎁 Criar Vitrine + 1 Anúncio Grátis →
               </a>
             `;
           }
@@ -950,6 +988,17 @@
       }
 
       const username = cleanUsername(prof.username || currentPioneerUser || '@pioneiro');
+      const footerCreateLink = document.getElementById('pioneer-footer-create-link');
+      if (footerCreateLink) {
+        const ownerRefSlug = username.replace(/^@+/, '');
+        if (!isOwner && ownerRefSlug) {
+          footerCreateLink.href = `pioneiro?ref=${encodeURIComponent(ownerRefSlug)}`;
+          footerCreateLink.textContent = `🎁 Crie sua vitrine grátis pelo convite de ${username} e ganhe 1 Anúncio Bronze (0.314 π) ↗`;
+        } else {
+          footerCreateLink.href = 'pioneiro';
+          footerCreateLink.textContent = '🚀 Crie sua vitrine grátis com seu @usuário Pi ↗';
+        }
+      }
       document.getElementById('pioneer-handle').textContent = username;
       document.title = `${username} — Vitrine Oficial na Pi Network | HOKAGE22B`;
 
@@ -1513,6 +1562,7 @@
         const avatar = sanitizeImageUrl(p.avatar_url || '');
         const hasWallet = Boolean(p.wallet_address);
         const prodCount = Array.isArray(p.products) ? p.products.length : 0;
+        const isAmb = Boolean(p.is_ambassador || Number(p.referral_qualified_count || 0) >= 5 || uSlug === 'hokage22b');
 
         html += `
           <div class="dir-card">
@@ -1524,6 +1574,7 @@
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
                   <strong style="color:#fff;font-size:0.9rem;word-break:break-word" class="notranslate">${escapeHtml(uName)}</strong>
                   <span style="font-size:0.65rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:1px 6px;border-radius:10px;font-weight:700">✓ KYC</span>
+                  ${isAmb ? `<span style="font-size:0.65rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.5);color:#fcd34d;padding:1px 6px;border-radius:10px;font-weight:700">🏅 Embaixador</span>` : ''}
                   ${hasWallet ? `<span style="font-size:0.65rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:1px 6px;border-radius:10px;font-weight:700">⚡ Pi</span>` : ''}
                   ${prodCount > 0 ? `<span style="font-size:0.65rem;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:1px 6px;border-radius:10px;font-weight:700">🛍️ ${prodCount}</span>` : ''}
                 </div>
@@ -1579,6 +1630,7 @@
         if (!matchesTerm) return false;
 
         if (currentDirCategory === 'todos') return true;
+        if (currentDirCategory === 'embaixadores') return Boolean(p.is_ambassador || Number(p.referral_qualified_count || 0) >= 5 || u === 'hokage22b');
         if (currentDirCategory === 'lojas') return (Array.isArray(p.products) && p.products.length > 0) || b.includes('loja') || b.includes('produto') || b.includes('venda') || b.includes('comércio') || b.includes('ecommerce');
         if (currentDirCategory === 'servicos') return b.includes('serviço') || b.includes('design') || b.includes('dev') || b.includes('consultoria') || b.includes('advogado') || b.includes('tecnologia');
         if (currentDirCategory === 'criadores') return b.includes('criador') || b.includes('canal') || b.includes('youtube') || b.includes('vídeo') || b.includes('conteúdo') || b.includes('influencer');
@@ -1926,9 +1978,9 @@
           window.history.replaceState(null, '', `?u=${encodeURIComponent(cleanSlug)}`);
 
           if (savedResp && savedResp._referralResult && savedResp._referralResult.awarded) {
-            alert('🎉 Vitrine oficial salva na rede Pi!\n\n🎁 Bônus de Convite Desbloqueado: Você ganhou +1 Crédito de Anúncio Bronze Grátis (0.314 π) para publicar seu negócio na Gazeta dos Pioneiros (Mural)!');
+            showVitrineToast('🎉 Vitrine salva! Você ganhou +1 Crédito de Anúncio Bronze Grátis (0.314 π) no Mural!', 'success');
           } else {
-            alert('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!');
+            showVitrineToast('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!', 'success');
           }
           closeProfileEditModal();
           loadPioneerProfile();
@@ -2523,6 +2575,58 @@
       if (window.HokageReferral && typeof window.HokageReferral.openWelcomeModal === 'function') {
         window.HokageReferral.openWelcomeModal(username);
       }
+    }
+
+    function closeInviteQrModal() {
+      const m = document.getElementById('hokage-invite-qr-modal');
+      if (m) m.remove();
+    }
+
+    function openInviteQrModal() {
+      const sectionEl = document.getElementById('pioneer-referral-section');
+      const rawUser = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || 'hokage22b';
+      const clean = cleanUsername(rawUser).replace(/^@+/, '');
+      const inviteUrl = window.HokageReferral
+        ? window.HokageReferral.buildInviteUrl(clean)
+        : ('https://hokage22b.com/pioneiro?ref=' + encodeURIComponent(clean));
+      const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=' + encodeURIComponent(inviteUrl);
+
+      closeInviteQrModal();
+      const overlay = document.createElement('div');
+      overlay.id = 'hokage-invite-qr-modal';
+      overlay.className = 'pi-modal-overlay active';
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:10060;background:rgba(5,5,10,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px';
+      overlay.addEventListener('click', function (ev) {
+        if (ev.target === overlay) closeInviteQrModal();
+      });
+
+      overlay.innerHTML = `
+        <div class="pi-modal" style="max-width:380px;width:100%;text-align:center;padding:22px 18px;background:#11111a;border:1.5px solid rgba(139,92,246,0.45);border-radius:20px;position:relative">
+          <button type="button" onclick="closeInviteQrModal()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer">✕</button>
+          <div style="font-size:0.72rem;font-weight:800;color:#fbbf24;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px">
+            🎁 QR Code Oficial de Convite
+          </div>
+          <h3 style="font-size:1.1rem;font-weight:800;color:#fff;margin:0 0 6px">
+            Convite de @${escapeHtml(clean)}
+          </h3>
+          <p style="font-size:0.78rem;color:var(--text-secondary);margin:0 0 14px;line-height:1.4">
+            Peça para o cliente ou pioneiro apontar a câmera do celular. Ele ganha <strong>1 Anúncio Bronze Grátis (0.314 π)</strong> e você ganha de <strong>20% a 25% em Pi</strong>!
+          </p>
+          <div style="background:#fff;padding:12px;border-radius:16px;display:inline-block;margin-bottom:12px;box-shadow:0 8px 25px rgba(0,0,0,0.5)">
+            <img src="${qrSrc}" alt="QR Code do Convite" width="210" height="210" style="display:block;border-radius:8px" />
+          </div>
+          <code style="display:block;font-size:0.7rem;color:#c4b5fd;background:rgba(255,255,255,0.05);padding:7px 10px;border-radius:8px;word-break:break-all;margin-bottom:12px;user-select:all">${escapeHtml(inviteUrl)}</code>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" style="flex:1;justify-content:center;font-weight:700" onclick="copyReferralInviteLink(); showVitrineToast('✓ Link de convite copiado!', 'success');">
+              📋 Copiar Link
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="flex:1;justify-content:center;font-weight:700" onclick="closeInviteQrModal()">
+              Fechar
+            </button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
     }
 
     async function loadPioneerReviews(targetUsername, isOwner) {

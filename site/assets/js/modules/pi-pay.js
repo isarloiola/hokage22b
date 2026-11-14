@@ -1081,13 +1081,45 @@
 
   async function syncOwnedEbooksUi() {
     const owned = await checkMyLibrary();
-    if (!owned || !owned.length) return;
+    if (!owned || !owned.length) return [];
     owned.forEach(function (prodId) {
       const box = document.getElementById('pi-owned-library-' + prodId);
       if (box) {
         box.style.display = 'block';
       }
     });
+    return owned;
+  }
+
+  async function restoreOwnedEbooks() {
+    let token = '';
+    try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+    if (!token) {
+      if (isPiBrowser()) {
+        showToast('Autenticando sua conta no Pi Browser...', 'info');
+        await triggerAuthFlow();
+        try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+      } else {
+        showToast('Abra no aplicativo oficial Pi Browser para restaurar seus E-books adquiridos em Pi.', 'error');
+        openPiConnectModal();
+        return;
+      }
+    }
+    if (!token) {
+      showToast('Conecte sua carteira no Pi Browser para verificar suas compras.', 'error');
+      return;
+    }
+    showToast('⏳ Verificando compras na sua conta Pi...', 'info');
+    const owned = await syncOwnedEbooksUi();
+    if (owned && owned.length > 0) {
+      showToast('✓ Compra(s) encontrada(s)! Seus botões de download vitalício foram liberados abaixo.', 'success');
+      const firstBox = document.getElementById('pi-owned-library-' + owned[0]);
+      if (firstBox) {
+        firstBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    } else {
+      showToast('Nenhuma compra de E-book em Pi localizada para esta conta até o momento.', 'info');
+    }
   }
 
   // 13. Expõe na API global
@@ -1107,6 +1139,7 @@
     checkMyLibrary: checkMyLibrary,
     downloadOwnedEbook: downloadOwnedEbook,
     syncOwnedEbooksUi: syncOwnedEbooksUi,
+    restoreOwnedEbooks: restoreOwnedEbooks,
     isPaymentInFlight: function () { return isPaymentRequestInFlight; },
     getUser: function () { return authenticatedUser; },
     getAccessToken: function () {
@@ -1136,9 +1169,15 @@
           if (isPiBrowser() && window.Pi) {
             setTimeout(function () {
               if (!isSdkSessionAuthenticated && !isAuthenticating) {
-                triggerAuthFlow().catch(function () { });
+                triggerAuthFlow().then(function () {
+                  syncOwnedEbooksUi();
+                }).catch(function () { });
+              } else {
+                syncOwnedEbooksUi();
               }
             }, 450);
+          } else {
+            syncOwnedEbooksUi();
           }
         }
       }
