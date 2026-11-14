@@ -5,9 +5,10 @@ Conteúdo-fonte do e-book em Markdown e os scripts que geram o PDF e o EPUB. Edi
 ## Estrutura Padronizada
 
 - `assets/style.css`: estilo do PDF.
-- `build/build.py`: gera o PDF (capa, sumário com páginas, partes, capítulos, rodapé e numeração).
-- `build/build_epub.sh`: gera o EPUB completo a partir dos mesmos arquivos.
-- `build/build_epub_site.js`: gera o EPUB enxuto publicado em `site/downloads/`.
+- `build/compile_book.js`: compilador nativo Node.js (zero dependências externas) que unifica os 23 capítulos.
+- `build/build_epub.js`: gerador nativo Node.js do arquivo `.epub` sem dependências externas.
+- `build/build.py`: script auxiliar Python opcional (Linux/wkhtmltopdf/pypdf/reportlab).
+- `build/build_epub.sh`: script auxiliar Bash opcional (pandoc).
 - `build/stamp_buyer.py`: carimba uma cópia do PDF com os dados do comprador (nome, e-mail, pedido), para uso na entrega.
 - `content/abertura.md`: ficha técnica, aviso legal (minuta), rotas de leitura, legenda das etiquetas e bônus.
 - `content/chapters/01.md` a `23.md`: os 23 capítulos (título do capítulo em `##`, seções em `###`).

@@ -1,8 +1,18 @@
+# pyright: reportMissingImports=false, reportMissingModuleSource=false
 import os, re, subprocess, sys, io
-from pypdf import PdfReader, PdfWriter, Transformation
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
+try:
+    from pypdf import PdfReader, PdfWriter, Transformation  # type: ignore
+    from reportlab.pdfgen import canvas  # type: ignore
+    from reportlab.lib.pagesizes import A4  # type: ignore
+    from reportlab.lib import colors  # type: ignore
+except ImportError as _err:
+    raise SystemExit(
+        f"[Aviso] Dependência Python ausente ({_err}).\n"
+        "No Windows, utilize os compiladores Node.js nativos (zero dependências):\n"
+        "  node ebooks/manual-pi-network/build/compile_book.js\n"
+        "  node ebooks/manual-pi-network/build/build_epub.js\n"
+        "Ou instale os pacotes Python opcionais: pip install pypdf reportlab pillow"
+    )
 
 DRAFT = os.environ.get("DRAFT", "1") == "1"
 RC = os.environ.get("RC", "0") == "1"

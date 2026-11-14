@@ -8,10 +8,17 @@ O carimbo aparece no rodapé de todas as páginas (exceto a capa) e nos metadado
 Uso previsto: gerar uma cópia por compra, no momento da entrega, para desencorajar o compartilhamento.
 Não substitui contrato, termos de uso nem proteção por link assinado e com prazo.
 """
+# pyright: reportMissingImports=false, reportMissingModuleSource=false
 import argparse, io, subprocess, os
-from pypdf import PdfReader, PdfWriter
-from reportlab.pdfgen import canvas
-from reportlab.lib import colors
+try:
+    from pypdf import PdfReader, PdfWriter  # type: ignore
+    from reportlab.pdfgen import canvas  # type: ignore
+    from reportlab.lib import colors  # type: ignore
+except ImportError as _err:
+    raise SystemExit(
+        f"[Aviso] Dependência Python ausente ({_err}). "
+        "Instale com: pip install pypdf reportlab"
+    )
 
 def stamp_page(w, h, text):
     buf = io.BytesIO()

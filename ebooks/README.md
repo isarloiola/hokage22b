@@ -14,7 +14,7 @@ ebooks/
 ├── manual-pi-network/                 # E-book 1: Manual Pi Network / Além do Clique (Gratuito)
 │   ├── README.md
 │   ├── assets/                        # Folhas de estilo (style.css) e recursos gráficos
-│   ├── build/                         # Scripts de compilação (build.py, build_epub.sh, build_epub_site.js, stamp_buyer.py)
+│   ├── build/                         # Compiladores Node.js (compile_book.js, build_epub.js) + scripts Python opcionais
 │   ├── content/                       # Textos-fonte em Markdown (abertura.md + chapters/01.md..23.md)
 │   ├── dist/                          # Cópias mestras compiladas (.pdf, .epub, .html e capa)
 │   └── plan/                          # Ficha técnica e metadados (produto.json)
