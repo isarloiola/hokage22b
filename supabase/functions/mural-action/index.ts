@@ -218,6 +218,48 @@ serve(async (req) => {
       return jsonResponse({ ok: true, ad: data });
     }
 
+    // ── 1B. CRIAR ANÚNCIO BRONZE COM CRÉDITO DE INDICAÇÃO ─────────
+    if (action === "redeem_referral_ad") {
+      const title = String(payload?.title || "").trim();
+      const description = String(payload?.description || "").trim();
+      if (title.length < 2 || title.length > 80) {
+        return jsonResponse({ error: "O título deve ter entre 2 e 80 caracteres." }, 400);
+      }
+      if (description.length < 5 || description.length > 300) {
+        return jsonResponse({ error: "A descrição deve ter entre 5 e 300 caracteres." }, 400);
+      }
+
+      const category = String(payload?.category || "geral").trim().slice(0, 32);
+      const location = String(payload?.location || "Online / Global").trim().slice(0, 60) || "Online / Global";
+      const rawCountry = String(payload?.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6);
+      const countryCode = rawCountry || "GLOBAL";
+      const rawPayMode = String(payload?.payment_modes || "pi").trim().toLowerCase();
+      const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
+
+      const { data: rpcRes, error: rpcErr } = await supabase.rpc("redeem_referral_credit_for_ad", {
+        p_uid: piUser.uid,
+        p_username: piUser.username,
+        p_title: title,
+        p_description: description,
+        p_category: category,
+        p_location: location,
+        p_country_code: countryCode,
+        p_payment_modes: paymentModes,
+      });
+
+      if (rpcErr) {
+        const msg = String(rpcErr.message || "");
+        const status = msg.includes("insuficiente") ? 409 : 400;
+        return jsonResponse({ error: msg || "Não foi possível resgatar o crédito de indicação." }, status);
+      }
+
+      return jsonResponse({
+        ok: true,
+        ad: rpcRes?.ad || null,
+        remaining_credits: rpcRes?.remaining_credits ?? 0,
+      });
+    }
+
     // ── 2. EDITAR ANÚNCIO (PROPRIEDADE + PRAZO 24H) ─────────────
     if (action === "update_ad") {
       const adId = String(payload?.ad_id || "").trim();

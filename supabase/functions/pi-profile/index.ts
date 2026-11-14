@@ -18,7 +18,7 @@ serve(async (req) => {
   }
 
   try {
-    const { accessToken, profileData } = await req.json();
+    const { accessToken, profileData, refCode } = await req.json();
 
     if (!accessToken || typeof accessToken !== "string") {
       return new Response(
@@ -128,7 +128,35 @@ serve(async (req) => {
       throw error;
     }
 
-    return new Response(JSON.stringify({ success: true, profile: data }), {
+    // 5. PROCESSAMENTO SEGURO DE INDICAÇÃO (Somente se a vitrine estiver minimamente qualificada)
+    let referralResult: unknown = null;
+    if (refCode && typeof refCode === "string") {
+      const cleanRef = refCode.trim().replace(/^@+/, "").toLowerCase();
+      const hasBio = Boolean(updatePayload.bio && updatePayload.bio.trim().length >= 10);
+      const hasProducts = Array.isArray(updatePayload.products) && updatePayload.products.length > 0;
+      const hasContact = Boolean(
+        updatePayload.whatsapp_url ||
+        updatePayload.youtube_url ||
+        updatePayload.instagram_url ||
+        updatePayload.twitter_url ||
+        updatePayload.wallet_address
+      );
+
+      if (/^[a-z0-9_]{2,32}$/.test(cleanRef) && (hasBio || hasProducts || hasContact)) {
+        const { data: refData, error: refErr } = await supabase.rpc("process_pioneer_referral", {
+          p_referrer_username: "@" + cleanRef,
+          p_referred_uid: verifiedUid,
+          p_referred_username: verifiedUsername,
+        });
+        if (!refErr) {
+          referralResult = refData;
+        } else {
+          console.warn("Erro ao processar indicação:", refErr.message);
+        }
+      }
+    }
+
+    return new Response(JSON.stringify({ success: true, profile: data, referral: referralResult }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });

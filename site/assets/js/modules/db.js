@@ -759,13 +759,26 @@
       }
       if (token) {
         try {
+          var pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')
+            ? window.HokageReferral.getPendingRef()
+            : null;
           var edgeRes = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ accessToken: token, profileData: profileData })
+            body: JSON.stringify({
+              accessToken: token,
+              profileData: profileData,
+              refCode: pendingRef
+            })
           });
           if (edgeRes.ok) {
             var edgeJson = await edgeRes.json();
+            if (edgeJson && edgeJson.referral && window.HokageReferral && typeof window.HokageReferral.clearPendingRef === 'function') {
+              var r = edgeJson.referral;
+              if (r.awarded || r.reason === 'already_referred' || r.reason === 'self_referral' || r.reason === 'self_referral_uid') {
+                window.HokageReferral.clearPendingRef();
+              }
+            }
             if (edgeJson && edgeJson.profile) {
               return edgeJson.profile;
             }
@@ -1011,6 +1024,20 @@
     savePioneerProfile: savePioneerProfile,
     getPioneerFullProfile: getPioneerFullProfile,
     getPioneersDirectory: getPioneersDirectory,
+    getReferralStats: async function (username) {
+      var db = getClient();
+      if (!db || !username) return null;
+      try {
+        var { data, error } = await db.rpc('get_pioneer_referral_stats', { p_username: username });
+        if (error) return null;
+        return data;
+      } catch (_) {
+        return null;
+      }
+    },
+    redeemReferralAd: async function (adPayload) {
+      return await callMuralAction('redeem_referral_ad', adPayload);
+    },
     // Métodos Admin com Proteção Zero-Trust
     verifyAdminAccess: verifyAdminAccess,
     getAllAnuncios: getAllAnuncios,

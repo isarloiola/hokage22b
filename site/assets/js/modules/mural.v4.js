@@ -86,6 +86,7 @@
 
   let currentCategory = 'todos';
   let selectedTier = 'prata';
+  let availableReferralCredits = 0;
 
   const tierPrices = {
     ouro:   { pi: 3.14, name: '🥇 Destaque Ouro (Campanha 7 dias · Topo VIP & Card Duplo)' },
@@ -1208,6 +1209,87 @@
 
     restoreDraft();
     updateLivePreview();
+    refreshReferralCreditUi();
+  }
+
+  async function refreshReferralCreditUi() {
+    const btn = document.getElementById('ad-referral-credit-btn');
+    if (!btn) return;
+    try {
+      const piUser = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
+      const username = piUser && piUser.username ? piUser.username : '';
+      if (username && window.HokageReferral && typeof window.HokageReferral.fetchStats === 'function') {
+        const stats = await window.HokageReferral.fetchStats(username);
+        availableReferralCredits = Number((stats && stats.referral_credits) || 0);
+      } else {
+        availableReferralCredits = 0;
+      }
+    } catch (_) {
+      availableReferralCredits = 0;
+    }
+    updateReferralButtonVisibility();
+  }
+
+  function updateReferralButtonVisibility() {
+    const btn = document.getElementById('ad-referral-credit-btn');
+    if (!btn) return;
+    if (selectedTier === 'bronze' && availableReferralCredits > 0) {
+      btn.textContent = `🎁 Usar 1 Crédito de Indicação (Grátis · Você tem ${availableReferralCredits})`;
+      btn.style.display = 'block';
+    } else {
+      btn.style.display = 'none';
+    }
+  }
+
+  async function redeemReferralAd() {
+    if (selectedTier !== 'bronze' || availableReferralCredits <= 0) return;
+    const titleEl = document.getElementById('ad-input-title');
+    const descEl  = document.getElementById('ad-input-desc');
+    const catEl   = document.getElementById('ad-input-cat');
+    const locEl   = document.getElementById('ad-input-location');
+    const ctryEl  = document.getElementById('ad-input-country');
+    const payEl   = document.getElementById('ad-input-payment-modes');
+
+    const title = titleEl ? titleEl.value.trim() : '';
+    const description = descEl ? descEl.value.trim() : '';
+    if (title.length < 2 || description.length < 5) {
+      alert('Preencha o título (mín. 2 caracteres) e a descrição (mín. 5 caracteres) antes de usar seu crédito.');
+      return;
+    }
+
+    const btn = document.getElementById('ad-referral-credit-btn');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '⏳ Validando crédito no servidor...';
+    }
+
+    try {
+      if (!window.IsarDB || typeof window.IsarDB.redeemReferralAd !== 'function') {
+        throw new Error('Módulo de banco de dados indisponível.');
+      }
+      const res = await window.IsarDB.redeemReferralAd({
+        title: title,
+        description: description,
+        category: catEl ? catEl.value : 'geral',
+        location: locEl ? locEl.value.trim() : 'Online / Global',
+        country_code: ctryEl ? ctryEl.value : 'GLOBAL',
+        payment_modes: payEl ? payEl.value : 'pi'
+      });
+
+      availableReferralCredits = Number((res && res.remaining_credits) || 0);
+      clearDraft(false);
+      closeModal();
+      if (typeof loadAds === 'function') {
+        loadAds();
+      } else {
+        window.location.reload();
+      }
+    } catch (err) {
+      alert((err && err.message) || 'Não foi possível resgatar o crédito de indicação.');
+      updateReferralButtonVisibility();
+    } finally {
+      if (btn) btn.disabled = false;
+    }
   }
 
   function closeModal() {
@@ -1239,6 +1321,8 @@
     if (founderPayBtn) {
       founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${info.pi} π Testnet)`;
     }
+
+    updateReferralButtonVisibility();
 
     const linkInput = document.getElementById('ad-input-link');
     const badgeEl   = document.getElementById('ad-link-status-badge');
@@ -2463,6 +2547,7 @@
     closeModal: closeModal,
     selectTier: selectTier,
     handleAdSubmit: handleAdSubmit,
+    redeemReferralAd: redeemReferralAd,
     updateLivePreview: updateLivePreview,
     simulateTestnetPublish: simulateTestnetPublish,
     returnFromPreview: returnFromPreview,

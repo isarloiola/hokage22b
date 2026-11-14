@@ -788,6 +788,9 @@
 
         <!-- BLOCO 2: Ações Padrão para Pioneiros / Anunciantes Gerais (Validação Instantânea) -->
         <div id="standard-actions-box" style="display:flex;flex-direction:column;gap:10px">
+          <button type="button" class="btn btn-primary" id="ad-referral-credit-btn" onclick="window.IsarMural && window.IsarMural.redeemReferralAd()" style="display:none;width:100%;padding:13px;font-weight:800;background:linear-gradient(135deg,#10b981,#059669);border-color:#059669;color:#fff">
+            🎁 Usar 1 Crédito de Indicação (Grátis)
+          </button>
           <button type="button" class="btn btn-primary" id="ad-submit-btn" onclick="window.IsarMural && window.IsarMural.handleAdSubmit(event)" style="width:100%;padding:14px;font-weight:700">
             🚀 Pagar e Publicar com Pi Wallet (1.0 π Testnet)
           </button>
@@ -942,8 +945,9 @@
   <script src="assets/js/modules/i18n.js?v=4.6"></script>
   <script src="assets/js/modules/ui.js?v=4.6"></script>
   <script src="assets/js/modules/db.js?v=5.5"></script>
+  <script src="assets/js/modules/referral.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.1"></script>
-  <script src="assets/js/modules/mural.v4.js?v=7.7"></script>
+  <script src="assets/js/modules/mural.v4.js?v=7.8"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');

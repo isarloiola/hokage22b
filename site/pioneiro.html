@@ -898,6 +898,7 @@
           Pioneiro Verificado na comunidade independente HOKAGE22B.
         </p>
         <span class="pioneer-badge-verified" id="pioneer-badge">🛡️ Humano Verificado via Pi KYC</span>
+        <span class="pioneer-badge-verified" id="pioneer-ambassador-badge" style="display:none;margin-left:6px;background:rgba(245,158,11,0.16);border-color:rgba(245,158,11,0.45);color:#fcd34d">🏅 Embaixador HOKAGE22B</span>
 
         <!-- Link Curto Oficial da Vitrine (Estilo Linktree com Proteção Anti-Overflow) -->
         <div class="short-link-pill">
@@ -995,6 +996,44 @@
           </div>
           <div id="pioneer-reviews-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
           <div id="pioneer-review-form-box"></div>
+        </div>
+
+        <!-- Seção: Programa de Indicação & Recompensas (Exclusivo do Dono) -->
+        <div id="pioneer-referral-section" style="display:none;margin-top:26px;padding:18px;border-radius:16px;background:linear-gradient(145deg,rgba(16,185,129,0.08),rgba(139,92,246,0.08));border:1px solid rgba(16,185,129,0.28);text-align:left">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+            <div style="font-size:0.84rem;font-weight:800;color:#34d399;letter-spacing:0.04em;text-transform:uppercase">
+              🎁 Convidar Pioneiros &amp; Ganhar Créditos
+            </div>
+            <span id="ref-ambassador-status" style="font-size:0.74rem;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,0.06);color:#e4e4e7">
+              0 / 5 para Selo Embaixador
+            </span>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;margin:0 0 12px">
+            Convide outros Pioneiros para criar a Vitrine grátis: no <strong>1º indicado ativo</strong> você ganha <strong>1 Impulsionamento Bronze grátis (0.314 π)</strong> no Mural, e depois <strong>+1 crédito a cada 2 novos indicados</strong>. Com <strong>5 indicados</strong>, você desbloqueia o <strong>Selo Embaixador</strong>!
+          </p>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px">
+            <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08)">
+              <div style="font-size:0.72rem;color:var(--text-muted)">Indicados Qualificados</div>
+              <div id="ref-count-value" style="font-size:1.25rem;font-weight:800;color:#fff">0</div>
+            </div>
+            <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(245,158,11,0.22)">
+              <div style="font-size:0.72rem;color:var(--text-muted)">Créditos Bronze Disponíveis</div>
+              <div id="ref-credits-value" style="font-size:1.25rem;font-weight:800;color:#fcd34d">0</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" id="btn-copy-ref-link" class="portal-btn portal-btn--primary portal-btn--sm" style="flex:1;min-width:160px;justify-content:center;font-weight:700" onclick="copyReferralInviteLink()">
+              📋 Copiar Link de Convite
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="flex:1;min-width:150px;justify-content:center;font-weight:700;border-color:rgba(16,185,129,0.45);color:#34d399" onclick="shareReferralWhatsapp()">
+              💬 Convidar no WhatsApp
+            </button>
+          </div>
+          <div id="ref-use-credit-wrap" style="display:none;margin-top:10px">
+            <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm" style="width:100%;justify-content:center;font-weight:700;text-decoration:none">
+              🚀 Usar 1 Crédito Grátis no Mural Agora →
+            </a>
+          </div>
         </div>
 
         <!-- Botão Único de Compartilhamento no Rodapé do Card -->
@@ -1359,6 +1398,7 @@
 
   <!-- Scripts -->
   <script src="assets/js/config.js?v=7.0"></script>
+  <script src="assets/js/modules/referral.js?v=1.0"></script>
   <script src="assets/js/modules/i18n.js?v=4.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/modules/db.js?v=5.5"></script>
@@ -2518,6 +2558,7 @@
       }
 
       loadPioneerReviews(prof.username, isOwner);
+      loadPioneerReferralPanel(prof.username, isOwner);
 
       // Anúncios Reais no Mural Pi (Com fotos, métricas e integração)
       const adsSection = document.getElementById('pioneer-ads-section');
@@ -3663,6 +3704,77 @@
     }
 
     // Reputação & Avaliações Verificadas (Pi Browser Zero-Trust)
+    async function loadPioneerReferralPanel(targetUsername, isOwner) {
+      const badgeEl = document.getElementById('pioneer-ambassador-badge');
+      const sectionEl = document.getElementById('pioneer-referral-section');
+      if (badgeEl) badgeEl.style.display = 'none';
+      if (sectionEl) sectionEl.style.display = 'none';
+
+      if (!window.HokageReferral || !targetUsername) return;
+      const stats = await window.HokageReferral.fetchStats(targetUsername);
+      if (!stats) return;
+
+      if (badgeEl && stats.is_ambassador) {
+        badgeEl.style.display = 'inline-flex';
+      }
+
+      if (!isOwner || isSimulatorMode || !sectionEl) return;
+
+      const count = Number(stats.referral_qualified_count || 0);
+      const credits = Number(stats.referral_credits || 0);
+      const isAmb = Boolean(stats.is_ambassador);
+
+      const countEl = document.getElementById('ref-count-value');
+      const creditsEl = document.getElementById('ref-credits-value');
+      const statusEl = document.getElementById('ref-ambassador-status');
+      const useWrap = document.getElementById('ref-use-credit-wrap');
+
+      if (countEl) countEl.textContent = String(count);
+      if (creditsEl) creditsEl.textContent = String(credits);
+      if (statusEl) {
+        statusEl.textContent = isAmb
+          ? '🏅 Selo Embaixador Ativo!'
+          : `${Math.min(count, 5)} / 5 para Selo Embaixador`;
+        if (isAmb) {
+          statusEl.style.background = 'rgba(245,158,11,0.18)';
+          statusEl.style.color = '#fcd34d';
+        }
+      }
+      if (useWrap) {
+        useWrap.style.display = credits > 0 ? 'block' : 'none';
+      }
+      sectionEl.dataset.inviteUsername = targetUsername;
+      sectionEl.style.display = 'block';
+    }
+
+    function copyReferralInviteLink() {
+      const sectionEl = document.getElementById('pioneer-referral-section');
+      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfile && currentProfile.username) || '';
+      const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () {
+          const btn = document.getElementById('btn-copy-ref-link');
+          if (btn) {
+            const orig = btn.textContent;
+            btn.textContent = '✅ Link Copiado!';
+            setTimeout(function () { btn.textContent = orig; }, 2200);
+          }
+        }).catch(function () {
+          prompt('Copie seu link de convite:', url);
+        });
+      } else {
+        prompt('Copie seu link de convite:', url);
+      }
+    }
+
+    function shareReferralWhatsapp() {
+      const sectionEl = document.getElementById('pioneer-referral-section');
+      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfile && currentProfile.username) || '';
+      const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
+      const msg = 'Crie sua Vitrine Web3 grátis na Pi Network pelo meu convite e apareça para a comunidade: ' + url;
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
+    }
+
     async function loadPioneerReviews(targetUsername, isOwner) {
       const section = document.getElementById('pioneer-reviews-section');
       const listEl = document.getElementById('pioneer-reviews-list');
