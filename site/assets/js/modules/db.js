@@ -733,13 +733,17 @@
       if (!edgeRes.ok || !edgeJson.ok) {
         throw new Error((edgeJson && edgeJson.error) || 'Falha ao salvar perfil no servidor.');
       }
-      if (edgeJson.referral && window.HokageReferral && typeof window.HokageReferral.clearPendingRef === 'function') {
-        var r = edgeJson.referral;
-        if (r.awarded || r.reason === 'already_referred' || r.reason === 'self_referral' || r.reason === 'self_referral_uid') {
-          window.HokageReferral.clearPendingRef();
+      var savedProf = edgeJson.profile || (edgeJson.data && edgeJson.data.profile) || {};
+      if (edgeJson.referral) {
+        savedProf._referralResult = edgeJson.referral;
+        if (window.HokageReferral && typeof window.HokageReferral.clearPendingRef === 'function') {
+          var r = edgeJson.referral;
+          if (r.awarded || r.reason === 'already_referred' || r.reason === 'self_referral' || r.reason === 'self_referral_uid') {
+            window.HokageReferral.clearPendingRef();
+          }
         }
       }
-      return edgeJson.profile || (edgeJson.data && edgeJson.data.profile) || null;
+      return savedProf;
     } catch (err) {
       console.warn('Erro ao salvar perfil do pioneiro:', err && err.message ? err.message : err);
       throw err;

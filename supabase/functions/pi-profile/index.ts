@@ -153,6 +153,26 @@ serve(async (req) => {
           });
           if (!refErr) {
             referralResult = refData;
+            // Garante que o convidado também receba +1 Crédito Bronze de Boas-Vindas (Give & Get)
+            // mesmo se a versão da função SQL no banco ainda não tiver retornado invitee_credit_added
+            if (refData && typeof refData === "object" && (refData as Record<string, unknown>).awarded === true) {
+              const rObj = refData as Record<string, unknown>;
+              if (!rObj.invitee_credit_added) {
+                const newCredits = Number(data?.referral_credits || 0) + 1;
+                await supabase
+                  .from("pioneiros")
+                  .update({
+                    referral_credits: newCredits,
+                    referred_by_username: data?.referred_by_username || ("@" + cleanRef),
+                  })
+                  .eq("uid", verifiedUid);
+                if (data) {
+                  data.referral_credits = newCredits;
+                  data.referred_by_username = data.referred_by_username || ("@" + cleanRef);
+                }
+                rObj.invitee_credit_added = 1;
+              }
+            }
           } else {
             console.warn("Erro ao processar indicação:", refErr.message);
           }

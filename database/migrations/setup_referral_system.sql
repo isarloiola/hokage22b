@@ -208,15 +208,19 @@ BEGIN
     updated_at = now()
   WHERE uid = v_referrer.uid;
 
-  -- Registra quem indicou no perfil do convidado
+  -- Registra quem indicou no perfil do convidado e concede +1 Crédito Bronze de Boas-Vindas (Give & Get)
   UPDATE public.pioneiros
-  SET referred_by_username = v_referrer.username
-  WHERE uid = p_referred_uid AND referred_by_username IS NULL;
+  SET
+    referred_by_username = coalesce(referred_by_username, v_referrer.username),
+    referral_credits = coalesce(referral_credits, 0) + 1,
+    updated_at = now()
+  WHERE uid = p_referred_uid;
 
   RETURN jsonb_build_object(
     'awarded', true,
     'referrer_username', v_referrer.username,
     'credits_added', v_credit_delta,
+    'invitee_credit_added', 1,
     'new_qualified_count', v_new_count,
     'is_ambassador', v_ambassador
   );

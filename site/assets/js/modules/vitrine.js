@@ -665,12 +665,12 @@
                   <span style="font-size:0.74rem;font-weight:800;color:#fbbf24;text-transform:uppercase;letter-spacing:0.04em">
                     🎁 Convite Oficial de @${safeActiveRef} Ativo
                   </span>
-                  <span style="font-size:0.7rem;background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.45);color:#6ee7b7;padding:2px 8px;border-radius:999px;font-weight:700">
-                    ✓ Bônus Afiliado Liberado
+                  <span style="font-size:0.7rem;background:rgba(245,158,11,0.22);border:1px solid rgba(245,158,11,0.55);color:#fde68a;padding:2px 8px;border-radius:999px;font-weight:800">
+                    🎁 +1 Anúncio Bronze Grátis (0.314 π)
                   </span>
                 </div>
                 <p style="font-size:0.82rem;color:#e4e4e7;margin:0 0 10px;line-height:1.45">
-                  Crie sua Vitrine 100% grátis abaixo e receba seu próprio link para ganhar <strong>20% a 25% em Pi</strong> sobre anúncios no Mural e E-books dos seus indicados + <strong>Créditos Bronze Grátis</strong>!
+                  Ative sua Vitrine 100% grátis abaixo e ganhe na hora <strong>1 Crédito de Anúncio Bronze Grátis (0.314 π)</strong> no Mural + seu próprio link para ganhar <strong>20% a 25% em Pi</strong> sobre indicações!
                 </p>
                 <div style="display:flex;gap:8px;flex-wrap:wrap">
                   <button type="button" onclick="if(window.HokageReferral && window.HokageReferral.openWelcomeModal) window.HokageReferral.openWelcomeModal('${safeActiveRef}')" class="btn btn-outline btn-sm" style="padding:6px 12px;font-size:0.76rem;font-weight:700;border-color:rgba(245,158,11,0.5);color:#fbbf24">
@@ -1893,7 +1893,7 @@
 
       try {
         if (window.IsarDB && window.IsarDB.savePioneerProfile) {
-          await window.IsarDB.savePioneerProfile(username, {
+          const savedResp = await window.IsarDB.savePioneerProfile(username, {
             bio: bio,
             avatar_url: avatarUrl,
             wallet_address: wallet,
@@ -1925,7 +1925,11 @@
           applyAvatarOnScreen(avatarUrl, username);
           window.history.replaceState(null, '', `?u=${encodeURIComponent(cleanSlug)}`);
 
-          alert('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!');
+          if (savedResp && savedResp._referralResult && savedResp._referralResult.awarded) {
+            alert('🎉 Vitrine oficial salva na rede Pi!\n\n🎁 Bônus de Convite Desbloqueado: Você ganhou +1 Crédito de Anúncio Bronze Grátis (0.314 π) para publicar seu negócio na Gazeta dos Pioneiros (Mural)!');
+          } else {
+            alert('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!');
+          }
           closeProfileEditModal();
           loadPioneerProfile();
         } else {
@@ -2509,7 +2513,7 @@
       const sectionEl = document.getElementById('pioneer-referral-section');
       const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || '';
       const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
-      const msg = '🚀 Crie sua Vitrine Web3 100% grátis na Pi Network pelo meu convite, divulgue seus produtos/serviços e ganhe de 20% a 25% em Pi indicando outros pioneiros: ' + url;
+      const msg = '🎁 Crie sua Vitrine Web3 100% grátis na Pi Network pelo meu convite oficial e ganhe na hora 1 Anúncio Bronze Grátis (0.314 π) no Mural + comissões de 20% a 25% em Pi: ' + url;
       window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
     }
 

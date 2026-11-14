@@ -433,14 +433,14 @@
         <button type="button" class="hk-ref-close" onclick="window.HokageReferral.closeWelcomeModal()" aria-label="Fechar">✕</button>
 
         <div class="hk-ref-pill">
-          <span>🎁</span> Convite VIP de Pioneiro Ativo
+          <span>🎁</span> Presente Exclusivo de Convite Ativo
         </div>
 
         <h2 style="font-size:clamp(1.18rem, 4vw, 1.42rem);font-weight:800;color:#fff;margin:0 0 6px;line-height:1.25">
-          Crie sua Vitrine Web3 Grátis &amp; Ganhe Pi Indicando Pioneiros!
+          Ative sua Vitrine Grátis &amp; Ganhe 1 Anúncio Bronze + Comissões em Pi!
         </h2>
         <p style="font-size:0.83rem;color:#a1a1aa;margin:0 0 12px;line-height:1.45">
-          Você recebeu um convite oficial para entrar no ecossistema comercial <strong>HOKAGE22B</strong> na Pi Network. Veja tudo o que você libera gratuitamente:
+          Por entrar através de um <strong>convite oficial</strong> no ecossistema <strong>HOKAGE22B</strong>, você desbloqueia vantagens exclusivas que quem entra sem convite não recebe:
         </p>
 
         <div class="hk-ref-inviter-box">
@@ -451,18 +451,18 @@
               <div style="font-size:0.95rem;font-weight:800;color:#fff">@${safeRef}</div>
             </div>
           </div>
-          <span style="font-size:0.7rem;background:rgba(16,185,129,0.18);border:1px solid rgba(16,185,129,0.45);color:#6ee7b7;padding:3px 9px;border-radius:999px;font-weight:700">
-            ✓ Bônus Vinculado
+          <span style="font-size:0.7rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.55);color:#fde68a;padding:3px 9px;border-radius:999px;font-weight:800">
+            🎁 +1 Anúncio Bronze Grátis (0.314 π)
           </span>
         </div>
 
-        <!-- 3 Vantagens Reais -->
-        <div class="hk-ref-benefit">
-          <div class="hk-ref-benefit-icon" style="background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.4)">🌟</div>
+        <!-- 3 Vantagens Reais (Give & Get) -->
+        <div class="hk-ref-benefit" style="border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.07)">
+          <div class="hk-ref-benefit-icon" style="background:rgba(245,158,11,0.22);border:1px solid rgba(245,158,11,0.5)">🎁</div>
           <div>
-            <div style="font-size:0.86rem;font-weight:800;color:#fff;margin-bottom:2px">1. Sua Vitrine Web3 100% Grátis para Sempre</div>
-            <div style="font-size:0.76rem;color:#a1a1aa;line-height:1.4">
-              Tenha seu próprio link (<code style="color:#c4b5fd">hokage22b.com/@voce</code>), receba Pi direto na sua <strong>Pi Wallet P2P</strong> com QR Code, divulgue produtos, serviços e redes sociais.
+            <div style="font-size:0.86rem;font-weight:800;color:#fbbf24;margin-bottom:2px">1. Seu Presente Imediato: 1 Anúncio Bronze Grátis (0.314 π)</div>
+            <div style="font-size:0.76rem;color:#e4e4e7;line-height:1.4">
+              Ao conectar o <strong>Pi Browser</strong> e salvar sua <strong>Vitrine 100% Grátis</strong> (<code style="color:#c4b5fd">hokage22b.com/@voce</code>), você ganha na hora <strong>1 Crédito de Anúncio Bronze Grátis (0.314 π)</strong> para publicar seu negócio na Gazeta dos Pioneiros (Mural)!
             </div>
           </div>
         </div>
@@ -472,17 +472,17 @@
           <div>
             <div style="font-size:0.86rem;font-weight:800;color:#6ee7b7;margin-bottom:2px">2. Ganhe de 20% a 25% em Pi Real (Comissão P2P)</div>
             <div style="font-size:0.76rem;color:#d4d4d8;line-height:1.4">
-              Ao criar sua Vitrine, você recebe seu próprio link de convite. Ganhe <strong>20% em Pi</strong> (ou <strong>25% como Embaixador</strong>) sobre cada <strong>Anúncio no Mural</strong> e cada <strong>E-book</strong> adquirido pelos seus indicados!
+              Você também recebe seu próprio link de convite e ganha <strong>20% em Pi</strong> (ou <strong>25% como Embaixador</strong>) sobre cada <strong>Anúncio no Mural</strong> e cada <strong>E-book</strong> adquirido pelos seus indicados!
             </div>
           </div>
         </div>
 
-        <div class="hk-ref-benefit" style="border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05)">
-          <div class="hk-ref-benefit-icon" style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.45)">🎟️</div>
+        <div class="hk-ref-benefit">
+          <div class="hk-ref-benefit-icon" style="background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.4)">🏅</div>
           <div>
-            <div style="font-size:0.86rem;font-weight:800;color:#fbbf24;margin-bottom:2px">3. Anúncios Grátis no Mural + Selo Embaixador</div>
-            <div style="font-size:0.76rem;color:#d4d4d8;line-height:1.4">
-              Seu <strong>1º convidado</strong> já libera <strong>1 Crédito de Anúncio Bronze Grátis (0.314 π)</strong> na Gazeta dos Pioneiros, +1 crédito a cada 2 novos indicados e o <strong>Selo Embaixador Web3</strong> com 5 indicados!
+            <div style="font-size:0.86rem;font-weight:800;color:#fff;margin-bottom:2px">3. Ganha-Ganha: Mais Créditos + Selo Embaixador</div>
+            <div style="font-size:0.76rem;color:#a1a1aa;line-height:1.4">
+              Cada amigo que entrar pelo seu link também ganha <strong>1 Anúncio Bronze Grátis</strong>, enquanto você acumula novos créditos Bronze e conquista o <strong>Selo Oficial de Embaixador Web3</strong> com 5 indicados!
             </div>
           </div>
         </div>
