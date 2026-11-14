@@ -384,19 +384,20 @@
       flex-shrink: 0;
     }
     .product-info {
-      flex: 1;
+      flex: 1 1 0%;
       min-width: 0;
     }
+    .product-mini-card .product-title,
     .product-title {
       color: #fff;
-      font-size: 0.94rem;
+      font-size: 0.94rem !important;
       font-weight: 700;
       display: block;
-      line-height: 1.35;
-      word-break: normal;
-      overflow-wrap: break-word;
-      white-space: normal;
-      margin-bottom: 4px;
+      line-height: 1.35 !important;
+      word-break: normal !important;
+      overflow-wrap: break-word !important;
+      white-space: normal !important;
+      margin-bottom: 4px !important;
     }
     .product-meta-row {
       display: flex;
@@ -1402,6 +1403,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/modules/db.js?v=5.7"></script>
 
-  <script src="assets/js/modules/vitrine.js?v=1.0"></script>
+  <script src="assets/js/modules/vitrine.js?v=1.1"></script>
 </body>
 </html>

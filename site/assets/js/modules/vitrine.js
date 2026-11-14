@@ -1094,13 +1094,13 @@
           };
 
           return `
-            <div class="product-mini-card" id="vitrine-product-${idx}">
-              <div class="product-card-top">
+            <div class="product-mini-card" id="vitrine-product-${idx}" style="display:flex;flex-direction:column;gap:12px;align-items:stretch;width:100%;box-sizing:border-box">
+              <div class="product-card-top" style="display:flex;align-items:center;gap:14px;width:100%;min-width:0">
                 ${safeImg 
                   ? `<img src="${safeImg}" alt="${safeTitle}" class="product-thumb" />` 
                   : `<div class="product-thumb-fallback">🛍️</div>`}
-                <div class="product-info">
-                  <strong class="product-title">${safeTitle}</strong>
+                <div class="product-info" style="flex:1;min-width:0">
+                  <strong class="product-title" style="display:block;font-size:0.95rem !important;line-height:1.35 !important;margin-bottom:4px !important;word-break:normal !important;overflow-wrap:break-word !important;white-space:normal !important">${safeTitle}</strong>
                   <div class="product-meta-row">
                     <span class="${priceClass}">${safePrice}</span>
                     ${safePriceFiat ? `<span class="product-price product-price--brl">${safePriceFiat}</span>` : ''}
@@ -1108,7 +1108,7 @@
                   </div>
                 </div>
               </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;width:100%">
                 ${safeLink && safeLink !== '#' ? `<a href="${safeLink}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm product-action-btn" style="flex:1;min-width:120px">${safeCta}</a>` : ''}
                 ${isOwner ? `<button type="button" onclick="window.promoteVitrineProduct(${idx})" class="btn btn-outline btn-sm" style="flex:1;min-width:130px;border-color:rgba(245,158,11,0.5);color:var(--amber-light);text-align:center;font-weight:700">📢 Impulsionar no Mural</button>` : ''}
               </div>
