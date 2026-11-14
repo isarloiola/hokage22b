@@ -10,13 +10,11 @@
   'use strict';
 
   function escapeHtml(str) {
+    if (window.HokageUtils && typeof window.HokageUtils.escapeHtml === 'function') {
+      return window.HokageUtils.escapeHtml(str);
+    }
     if (!str || typeof str !== 'string') return '';
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   const AD_EDIT_WINDOW_HOURS = 24;
@@ -2514,6 +2512,8 @@
         const urlTier = (urlParams.get('tier') || '').toLowerCase();
         const urlCat = (urlParams.get('cat') || '').toLowerCase();
         const urlCountry = (urlParams.get('country') || '').toUpperCase();
+        const urlAction = (urlParams.get('action') || '').toLowerCase();
+        const urlPublish = urlParams.get('publish') === '1' || urlAction === 'publish';
         if (urlTier === 'ouro' || urlTier === 'prata' || urlTier === 'bronze') {
           selectTier(urlTier);
         }
@@ -2523,6 +2523,9 @@
         const countryFilterEl = document.getElementById('mural-filter-country');
         if (urlCountry && countryFilterEl) {
           countryFilterEl.value = urlCountry;
+        }
+        if (urlPublish) {
+          setTimeout(function () { openModal(); }, 150);
         }
       } catch (_) {}
 

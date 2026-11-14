@@ -1393,15 +1393,13 @@
 
     </div>
   </div>
-    </div>
-  </div>
 
   <!-- Scripts -->
-  <script src="assets/js/config.js?v=7.0"></script>
+  <script src="assets/js/config.js?v=7.2"></script>
   <script src="assets/js/modules/referral.js?v=1.0"></script>
   <script src="assets/js/modules/i18n.js?v=4.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/modules/db.js?v=5.6"></script>
+  <script src="assets/js/modules/db.js?v=5.7"></script>
 
   <script>
     // =========================================================================
@@ -1523,8 +1521,11 @@
     // BLINDAGEM CRIPTOGRÁFICA & SEGURANÇA WEB3 (ZERO-TRUST)
     // =========================================================================
 
-    // Sanitização Rígida de HTML contra Stored XSS
+    // Sanitização Rígida de HTML contra Stored XSS (Unificada via HokageUtils)
     function escapeHtml(str) {
+      if (window.HokageUtils && typeof window.HokageUtils.escapeHtml === 'function') {
+        return window.HokageUtils.escapeHtml(str);
+      }
       if (str === null || str === undefined) return '';
       return String(str)
         .replace(/&/g, '&amp;')
@@ -1560,50 +1561,16 @@
       return '';
     }
 
-    // Validador Criptográfico estrito de Chave Pública Pi Network (Stellar ed25519)
+    // Validador Criptográfico estrito de Chave Pública Pi Network (Unificado via HokageUtils / IsarDB)
     function isValidPiPublicKey(address) {
-      if (!address || typeof address !== 'string') return false;
-      const clean = address.trim();
-      // 1. Deve começar com 'G' maiúsculo e ter exatamente 56 caracteres Base32
-      if (!/^G[A-Z2-7]{55}$/.test(clean)) return false;
-
-      // 2. Validação Criptográfica do Checksum CRC16-XModem
-      try {
-        const RFC4648 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-        let bits = 0;
-        let value = 0;
-        const bytes = [];
-        for (let i = 0; i < clean.length; i++) {
-          const idx = RFC4648.indexOf(clean[i]);
-          if (idx === -1) return false;
-          value = (value << 5) | idx;
-          bits += 5;
-          if (bits >= 8) {
-            bytes.push((value >>> (bits - 8)) & 255);
-            bits -= 8;
-          }
-        }
-        if (bytes.length !== 35) return false;
-        if (bytes[0] !== 48) return false; // 0x30 = ed25519 public key version byte
-
-        let crc = 0x0000;
-        for (let i = 0; i < 33; i++) {
-          let code = (crc >>> 8) & 0xff;
-          code ^= bytes[i] & 0xff;
-          code ^= code >>> 4;
-          crc = (crc << 8) & 0xffff;
-          crc ^= code;
-          code = (code << 5) & 0xffff;
-          crc ^= code;
-          code = (code << 7) & 0xffff;
-          crc ^= code;
-        }
-
-        const expectedCrc = bytes[33] | (bytes[34] << 8);
-        return crc === expectedCrc;
-      } catch (_) {
-        return false;
+      if (window.HokageUtils && typeof window.HokageUtils.isValidPiPublicKey === 'function') {
+        return window.HokageUtils.isValidPiPublicKey(address);
       }
+      if (window.IsarDB && typeof window.IsarDB.isValidPiPublicKey === 'function') {
+        return window.IsarDB.isValidPiPublicKey(address);
+      }
+      if (!address || typeof address !== 'string') return false;
+      return /^G[A-Z2-7]{55}$/.test(address.trim());
     }
 
     // Validador em tempo real do campo de carteira no formulário de edição
@@ -2531,7 +2498,7 @@
           };
 
           return `
-            <div class="product-mini-card">
+            <div class="product-mini-card" id="vitrine-product-${idx}">
               <div class="product-card-top">
                 ${safeImg 
                   ? `<img src="${safeImg}" alt="${safeTitle}" class="product-thumb" />` 
@@ -2615,13 +2582,29 @@
       // Incrementa métrica de visualizações da vitrine
       incrementProfileMetric('views');
 
-      // Verifica se a vitrine foi aberta com parâmetros de cobrança direta do POS (?pay=X&memo=Y)
-      const payParam = getQueryParam('pay') || getQueryParam('cobrar') || getQueryParam('amount');
+      // Verifica se a vitrine foi aberta com parâmetros diretos (?pay=1, ?pay=X&memo=Y ou ?product=0)
+      const payParam = getQueryParam('pay') || getQueryParam('cobrar') || getQueryParam('amount') || getQueryParam('pos');
       const memoParam = getQueryParam('memo') || getQueryParam('motivo') || '';
       if (payParam && currentPioneerWallet) {
         setTimeout(() => {
-          openWalletQrModal(payParam, memoParam);
+          const presetAmt = (payParam === '1' && !getQueryParam('amount')) ? undefined : payParam;
+          openWalletQrModal(presetAmt, memoParam);
         }, 400);
+      }
+
+      const prodParam = getQueryParam('product') || getQueryParam('produto');
+      if (prodParam !== null && prodParam !== '') {
+        const prodIdx = parseInt(prodParam, 10);
+        if (!isNaN(prodIdx)) {
+          setTimeout(() => {
+            const prodEl = document.getElementById('vitrine-product-' + prodIdx);
+            if (prodEl) {
+              prodEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              prodEl.style.borderColor = 'rgba(245,158,11,0.75)';
+              prodEl.style.boxShadow = '0 0 22px rgba(245,158,11,0.25)';
+            }
+          }, 350);
+        }
       }
     }
 

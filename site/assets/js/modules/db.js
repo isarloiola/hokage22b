@@ -58,43 +58,11 @@
 
   // Validador Criptográfico de Chave Pública Pi Network (Stellar Ed25519)
   function isValidPiPublicKey(address) {
-    if (!address || typeof address !== 'string') return false;
-    const clean = address.trim();
-    if (!/^G[A-Z2-7]{55}$/.test(clean)) return false;
-    try {
-      const RFC4648 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-      let bits = 0;
-      let value = 0;
-      const bytes = [];
-      for (let i = 0; i < clean.length; i++) {
-        const idx = RFC4648.indexOf(clean[i]);
-        if (idx === -1) return false;
-        value = (value << 5) | idx;
-        bits += 5;
-        if (bits >= 8) {
-          bytes.push((value >>> (bits - 8)) & 255);
-          bits -= 8;
-        }
-      }
-      if (bytes.length !== 35) return false;
-      if (bytes[0] !== 48) return false; // 0x30 = ed25519
-      let crc = 0x0000;
-      for (let i = 0; i < 33; i++) {
-        let code = (crc >>> 8) & 0xff;
-        code ^= bytes[i] & 0xff;
-        code ^= code >>> 4;
-        crc = (crc << 8) & 0xffff;
-        crc ^= code;
-        code = (code << 5) & 0xffff;
-        crc ^= code;
-        code = (code << 7) & 0xffff;
-        crc ^= code;
-      }
-      const expectedCrc = bytes[33] | (bytes[34] << 8);
-      return crc === expectedCrc;
-    } catch (_) {
-      return false;
+    if (window.HokageUtils && typeof window.HokageUtils.isValidPiPublicKey === 'function') {
+      return window.HokageUtils.isValidPiPublicKey(address);
     }
+    if (!address || typeof address !== 'string') return false;
+    return /^G[A-Z2-7]{55}$/.test(address.trim());
   }
 
   // Sincroniza o perfil do Pioneiro (pontuação, checklist e nível)

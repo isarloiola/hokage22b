@@ -9,6 +9,60 @@
 (function () {
   'use strict';
 
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function isValidPiPublicKey(address) {
+    if (!address || typeof address !== 'string') return false;
+    var clean = address.trim();
+    if (!/^G[A-Z2-7]{55}$/.test(clean)) return false;
+    try {
+      var RFC4648 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      var bits = 0;
+      var value = 0;
+      var bytes = [];
+      for (var i = 0; i < clean.length; i++) {
+        var idx = RFC4648.indexOf(clean[i]);
+        if (idx === -1) return false;
+        value = (value << 5) | idx;
+        bits += 5;
+        if (bits >= 8) {
+          bytes.push((value >>> (bits - 8)) & 255);
+          bits -= 8;
+        }
+      }
+      if (bytes.length !== 35 || bytes[0] !== 48) return false;
+      var crc = 0x0000;
+      for (var j = 0; j < 33; j++) {
+        var code = (crc >>> 8) & 0xff;
+        code ^= bytes[j] & 0xff;
+        code ^= code >>> 4;
+        crc = (crc << 8) & 0xffff;
+        crc ^= code;
+        code = (code << 5) & 0xffff;
+        crc ^= code;
+        code = (code << 7) & 0xffff;
+        crc ^= code;
+      }
+      var expectedCrc = bytes[33] | (bytes[34] << 8);
+      return crc === expectedCrc;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  window.HokageUtils = {
+    escapeHtml: escapeHtml,
+    isValidPiPublicKey: isValidPiPublicKey
+  };
+
   window.HOKAGE_CONFIG = {
     piNetwork: {
       // false = Pi Browser direto em produção (hokage22b.com)

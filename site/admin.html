@@ -756,8 +756,8 @@
   <div id="admin-toast"></div>
 
   <!-- SCRIPTS DE INTEGRAÇÃO & AUTENTICAÇÃO -->
-  <script src="assets/js/config.js?v=7.0"></script>
-  <script src="assets/js/modules/db.js?v=5.2"></script>
+  <script src="assets/js/config.js?v=7.2"></script>
+  <script src="assets/js/modules/db.js?v=5.7"></script>
   <script>
     (function () {
       'use strict';
@@ -1362,6 +1362,9 @@
       }
 
       function escapeHtml(str) {
+        if (window.HokageUtils && typeof window.HokageUtils.escapeHtml === 'function') {
+          return window.HokageUtils.escapeHtml(str);
+        }
         if (!str) return '';
         return String(str)
           .replace(/&/g, '&amp;')

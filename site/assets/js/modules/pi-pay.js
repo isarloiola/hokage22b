@@ -933,6 +933,9 @@
   }
 
   function escapeHtml(str) {
+    if (window.HokageUtils && typeof window.HokageUtils.escapeHtml === 'function') {
+      return window.HokageUtils.escapeHtml(str);
+    }
     if (!str || typeof str !== 'string') return '';
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
