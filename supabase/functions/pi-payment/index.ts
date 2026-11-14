@@ -86,6 +86,180 @@ async function getOwnedEbooksForUser(supabase: any, username: string): Promise<s
   return Array.from(owned);
 }
 
+const MIN_AFFILIATE_PAYOUT_PI = 0.2;
+
+async function verifyAdminOrFounder(
+  supabase: any,
+  accessToken?: string,
+  adminSecret?: string
+): Promise<boolean> {
+  if (adminSecret && String(adminSecret).trim().length >= 8) {
+    try {
+      const { data: ok, error } = await supabase.rpc("admin_verify_access", {
+        p_secret: String(adminSecret).trim(),
+      });
+      if (!error && Boolean(ok)) {
+        return true;
+      }
+    } catch (_) {}
+  }
+  if (accessToken && String(accessToken).trim()) {
+    try {
+      const piUser = await verifyPiAccessToken(String(accessToken));
+      if (normalizeHandle(piUser.username) === "hokage22b") {
+        return true;
+      }
+    } catch (_) {}
+  }
+  return false;
+}
+
+interface AffiliateCommissionOpts {
+  paymentId: string;
+  txid: string | null;
+  paidAmount: number;
+  buyerUsername: string;
+  buyerUid?: string | null;
+  buyerWallet?: string | null;
+  purpose: "anuncio_mural" | "ebook";
+  description: string;
+  fallbackRefCode?: string | null;
+}
+
+async function processAffiliateCommission(
+  supabase: any,
+  opts: AffiliateCommissionOpts
+): Promise<Record<string, unknown> | null> {
+  try {
+    const paidAmount = Number(opts.paidAmount) || 0;
+    if (paidAmount <= 0 || String(opts.paymentId || "").startsWith("REF_CREDIT_")) {
+      return null;
+    }
+
+    const cleanBuyer = normalizeHandle(opts.buyerUsername);
+    if (!cleanBuyer) return null;
+
+    // 1. Consulta comprador na tabela pioneiros
+    const { data: buyerRow } = await supabase
+      .from("pioneiros")
+      .select("uid, username, wallet_address, referred_by_username")
+      .ilike("username", "@" + cleanBuyer)
+      .maybeSingle();
+
+    let rawReferrer = buyerRow?.referred_by_username ? String(buyerRow.referred_by_username) : "";
+
+    // 2. Fallback: consulta na tabela indicacoes caso referred_by_username não esteja preenchido
+    if (!rawReferrer) {
+      const { data: indRow } = await supabase
+        .from("indicacoes")
+        .select("referrer_username")
+        .ilike("referred_username", "@" + cleanBuyer)
+        .maybeSingle();
+      if (indRow?.referrer_username) {
+        rawReferrer = String(indRow.referrer_username);
+      }
+    }
+
+    // 3. Fallback: convite pendente (refCode enviado na compra caso o comprador ainda não tenha criado Vitrine)
+    if (!rawReferrer && opts.fallbackRefCode) {
+      rawReferrer = String(opts.fallbackRefCode);
+    }
+
+    const cleanReferrer = normalizeHandle(rawReferrer);
+    if (!cleanReferrer || cleanReferrer === cleanBuyer) {
+      return null;
+    }
+
+    // 4. Localiza o indicador real na tabela pioneiros
+    const { data: refRow } = await supabase
+      .from("pioneiros")
+      .select("uid, username, wallet_address, is_ambassador, referral_qualified_count")
+      .ilike("username", "@" + cleanReferrer)
+      .maybeSingle();
+
+    if (!refRow || !refRow.username) {
+      return null;
+    }
+
+    // 5. Blindagem Anti-Autoindicação (3 Camadas: Username, UID e Carteira Pi)
+    if (normalizeHandle(refRow.username) === cleanBuyer) {
+      return null;
+    }
+    const effectiveBuyerUid = opts.buyerUid || buyerRow?.uid || null;
+    if (effectiveBuyerUid && refRow.uid && String(refRow.uid) === String(effectiveBuyerUid)) {
+      return null;
+    }
+    const refWallet = refRow.wallet_address ? String(refRow.wallet_address).trim() : "";
+    const buyWallet = String(opts.buyerWallet || buyerRow?.wallet_address || "").trim();
+    if (refWallet && buyWallet && refWallet.toUpperCase() === buyWallet.toUpperCase()) {
+      return null;
+    }
+
+    // 6. Persiste o vínculo referred_by_username no comprador se ainda estava vazio
+    if (buyerRow && !buyerRow.referred_by_username) {
+      await supabase
+        .from("pioneiros")
+        .update({ referred_by_username: "@" + cleanReferrer })
+        .eq("uid", buyerRow.uid);
+    }
+
+    // 7. Verifica Idempotência: 1 única comissão por paymentId original
+    const commId = `comm_${opts.paymentId}`;
+    const { data: existingComm } = await supabase
+      .from("transacoes_pi")
+      .select("payment_id, amount, status, metadata")
+      .eq("payment_id", commId)
+      .maybeSingle();
+
+    if (existingComm) {
+      return existingComm;
+    }
+
+    // 8. Cálculo de Comissão: 20% Padrão | 25% Embaixador (5+ indicados qualificados)
+    const isAmbassador = Boolean(refRow.is_ambassador) || Number(refRow.referral_qualified_count || 0) >= 5;
+    const commissionRate = isAmbassador ? 0.25 : 0.20;
+    const commissionPi = Math.round(paidAmount * commissionRate * 10000) / 10000;
+    if (commissionPi <= 0) return null;
+
+    const commRecord = {
+      payment_id: commId,
+      txid: opts.txid || null,
+      from_address: buyWallet || null,
+      to_address: refWallet || null,
+      amount: commissionPi,
+      status: "pending",
+      purpose: "affiliate_commission",
+      metadata: {
+        referrer_username: "@" + cleanReferrer,
+        referred_username: "@" + cleanBuyer,
+        is_ambassador_rate: isAmbassador,
+        commission_rate: commissionRate,
+        source_payment_id: opts.paymentId,
+        source_txid: opts.txid || null,
+        source_purpose: opts.purpose,
+        source_description: opts.description,
+        source_amount_pi: paidAmount,
+        referrer_wallet: refWallet || null,
+        payout_status: "pending",
+      },
+      created_at: new Date().toISOString(),
+    };
+
+    await supabase.from("transacoes_pi").insert(commRecord);
+    return commRecord;
+  } catch (err) {
+    console.warn("[Affiliate Warning] Erro ao calcular comissão de afiliado:", err);
+    return null;
+  }
+}
+
+function maskHandle(handle: string): string {
+  const clean = normalizeHandle(handle);
+  if (!clean) return "@pioneiro";
+  if (clean.length <= 4) return "@" + clean.slice(0, 2) + "***";
+  return "@" + clean.slice(0, 3) + "***" + clean.slice(-2);
+}
+
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req, false);
 
@@ -101,7 +275,22 @@ serve(async (req) => {
   try {
     // Limite de 800KB para suportar adPayload com fotos Base64 durante o complete do Mural
     const body = await parseJsonBody(req, 800 * 1024);
-    const { action, paymentId, txid, adPayload, accessToken, productId, format, targetUsername } = body;
+    const {
+      action,
+      paymentId,
+      txid,
+      adPayload,
+      accessToken,
+      adminSecret,
+      productId,
+      format,
+      targetUsername,
+      username,
+      refCode,
+      walletAddress,
+      commissionIds,
+      payoutTxid,
+    } = body;
 
     // Endpoint de catálogo/preços oficial (para consulta Agent-Ready)
     if (action === "get_catalog") {
@@ -111,6 +300,300 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // ============================================================
+    // PAINEL DE AFILIADOS & COMISSÕES EM PI (20% PADRÃO / 25% EMBAIXADOR)
+    // ============================================================
+    if (action === "affiliate_summary") {
+      let cleanUser = normalizeHandle(String(username || targetUsername || ""));
+      let isVerifiedOwner = false;
+
+      if (accessToken && String(accessToken).trim()) {
+        try {
+          const piUser = await verifyPiAccessToken(String(accessToken));
+          const tokenHandle = normalizeHandle(piUser.username);
+          if (!cleanUser) cleanUser = tokenHandle;
+          if (tokenHandle && tokenHandle === cleanUser) {
+            isVerifiedOwner = true;
+          }
+        } catch (_) {}
+      }
+
+      if (!cleanUser) {
+        return jsonError("MISSING_USERNAME", "Informe o @username para consultar as comissões.", corsHeaders, 400);
+      }
+
+      const { data: profRow } = await supabase
+        .from("pioneiros")
+        .select("username, wallet_address, is_ambassador, referral_qualified_count, referral_credits")
+        .ilike("username", "@" + cleanUser)
+        .maybeSingle();
+
+      const isAmb = Boolean(profRow?.is_ambassador) || Number(profRow?.referral_qualified_count || 0) >= 5;
+      const ratePct = isAmb ? 25 : 20;
+
+      const { data: rows } = await supabase
+        .from("transacoes_pi")
+        .select("payment_id, txid, to_address, amount, status, metadata, created_at")
+        .eq("purpose", "affiliate_commission")
+        .order("created_at", { ascending: false });
+
+      let pendingPi = 0;
+      let requestedPi = 0;
+      let paidPi = 0;
+      const userCommissions: Record<string, unknown>[] = [];
+
+      if (Array.isArray(rows)) {
+        for (const r of rows) {
+          const meta = (r && typeof r.metadata === "object" && r.metadata) ? r.metadata : {};
+          const refHandle = normalizeHandle(String(meta.referrer_username || ""));
+          if (refHandle !== cleanUser) continue;
+
+          const amt = Number(r.amount) || 0;
+          const st = String(r.status || "pending").toLowerCase();
+          if (st === "paid") paidPi += amt;
+          else if (st === "requested") requestedPi += amt;
+          else pendingPi += amt;
+
+          if (userCommissions.length < 30) {
+            const rawBuyer = String(meta.referred_username || "@pioneiro");
+            userCommissions.push({
+              id: r.payment_id,
+              created_at: r.created_at,
+              referred_username: isVerifiedOwner ? rawBuyer : maskHandle(rawBuyer),
+              source_purpose: meta.source_purpose || "anuncio_mural",
+              source_description: meta.source_description || "Comissão de Indicação",
+              source_amount_pi: Number(meta.source_amount_pi) || 0,
+              commission_rate: Number(meta.commission_rate) || 0.20,
+              amount_pi: Math.round(amt * 10000) / 10000,
+              status: st,
+              paid_txid: meta.paid_txid || (st === "paid" ? r.txid : null),
+            });
+          }
+        }
+      }
+
+      pendingPi = Math.round(pendingPi * 10000) / 10000;
+      requestedPi = Math.round(requestedPi * 10000) / 10000;
+      paidPi = Math.round(paidPi * 10000) / 10000;
+      const totalEarnedPi = Math.round((pendingPi + requestedPi + paidPi) * 10000) / 10000;
+
+      return jsonOk(
+        "AFFILIATE_SUMMARY",
+        {
+          username: "@" + cleanUser,
+          is_ambassador: isAmb,
+          commission_rate_pct: ratePct,
+          pending_pi: pendingPi,
+          requested_pi: requestedPi,
+          paid_pi: paidPi,
+          total_earned_pi: totalEarnedPi,
+          min_payout_pi: MIN_AFFILIATE_PAYOUT_PI,
+          wallet_address: profRow?.wallet_address || null,
+          commissions: userCommissions,
+        },
+        corsHeaders,
+        200
+      );
+    }
+
+    if (action === "request_affiliate_payout") {
+      const piUser = await verifyPiAccessToken(String(accessToken || ""));
+      const cleanUser = normalizeHandle(piUser.username);
+      if (!cleanUser) {
+        return jsonError("UNAUTHORIZED", "Autenticação Pi inválida.", corsHeaders, 401);
+      }
+
+      const { data: profRow } = await supabase
+        .from("pioneiros")
+        .select("uid, username, wallet_address")
+        .ilike("username", "@" + cleanUser)
+        .maybeSingle();
+
+      let cleanWallet = profRow?.wallet_address ? String(profRow.wallet_address).trim() : "";
+      if (walletAddress && /^G[A-Z2-7]{55}$/.test(String(walletAddress).trim())) {
+        cleanWallet = String(walletAddress).trim();
+        if (profRow?.uid) {
+          await supabase
+            .from("pioneiros")
+            .update({ wallet_address: cleanWallet })
+            .eq("uid", profRow.uid);
+        }
+      }
+
+      if (!cleanWallet || !/^G[A-Z2-7]{55}$/.test(cleanWallet)) {
+        return jsonError(
+          "MISSING_VALID_WALLET",
+          "Cadastre sua Chave Pública da Pi Wallet (iniciada com G, 56 caracteres) na sua Vitrine antes de solicitar o saque.",
+          corsHeaders,
+          400
+        );
+      }
+
+      const { data: rows } = await supabase
+        .from("transacoes_pi")
+        .select("payment_id, amount, status, metadata")
+        .eq("purpose", "affiliate_commission")
+        .eq("status", "pending");
+
+      const targetIds: string[] = [];
+      let pendingSum = 0;
+
+      if (Array.isArray(rows)) {
+        for (const r of rows) {
+          const meta = (r && typeof r.metadata === "object" && r.metadata) ? r.metadata : {};
+          if (normalizeHandle(String(meta.referrer_username || "")) === cleanUser) {
+            targetIds.push(r.payment_id);
+            pendingSum += Number(r.amount) || 0;
+          }
+        }
+      }
+
+      pendingSum = Math.round(pendingSum * 10000) / 10000;
+      if (targetIds.length === 0 || pendingSum + 1e-6 < MIN_AFFILIATE_PAYOUT_PI) {
+        return jsonError(
+          "MIN_PAYOUT_NOT_REACHED",
+          `Saldo disponível (${pendingSum} π) abaixo do mínimo para saque (${MIN_AFFILIATE_PAYOUT_PI} π).`,
+          corsHeaders,
+          400
+        );
+      }
+
+      const requestedAt = new Date().toISOString();
+      for (const id of targetIds) {
+        const row = rows!.find((x: any) => x.payment_id === id);
+        const oldMeta = (row && typeof row.metadata === "object" && row.metadata) ? row.metadata : {};
+        await supabase
+          .from("transacoes_pi")
+          .update({
+            status: "requested",
+            to_address: cleanWallet,
+            metadata: {
+              ...oldMeta,
+              referrer_wallet: cleanWallet,
+              payout_status: "requested",
+              requested_at: requestedAt,
+            },
+          })
+          .eq("payment_id", id);
+      }
+
+      return jsonOk(
+        "PAYOUT_REQUESTED",
+        {
+          username: "@" + cleanUser,
+          requested_pi: pendingSum,
+          wallet_address: cleanWallet,
+          commissions_count: targetIds.length,
+        },
+        corsHeaders,
+        200
+      );
+    }
+
+    if (action === "admin_list_commissions") {
+      const isAdmin = await verifyAdminOrFounder(supabase, accessToken, adminSecret);
+      if (!isAdmin) {
+        return jsonError("FORBIDDEN", "Acesso restrito ao administrador @hokage22b.", corsHeaders, 403);
+      }
+
+      const { data: rows } = await supabase
+        .from("transacoes_pi")
+        .select("payment_id, txid, from_address, to_address, amount, status, metadata, created_at")
+        .eq("purpose", "affiliate_commission")
+        .order("created_at", { ascending: false });
+
+      const { data: pioneers } = await supabase
+        .from("pioneiros")
+        .select("username, wallet_address, is_ambassador, referral_qualified_count");
+
+      const walletMap = new Map<string, string>();
+      if (Array.isArray(pioneers)) {
+        for (const p of pioneers) {
+          const h = normalizeHandle(p.username);
+          if (h && p.wallet_address) {
+            walletMap.set(h, String(p.wallet_address).trim());
+          }
+        }
+      }
+
+      const list = (Array.isArray(rows) ? rows : []).map((r: any) => {
+        const meta = (r && typeof r.metadata === "object" && r.metadata) ? r.metadata : {};
+        const refClean = normalizeHandle(String(meta.referrer_username || ""));
+        const wallet = r.to_address || meta.referrer_wallet || walletMap.get(refClean) || "";
+        return {
+          id: r.payment_id,
+          created_at: r.created_at,
+          referrer_username: "@" + refClean,
+          referred_username: String(meta.referred_username || "@pioneiro"),
+          source_purpose: meta.source_purpose || "anuncio_mural",
+          source_description: meta.source_description || "Comissão",
+          source_amount_pi: Number(meta.source_amount_pi) || 0,
+          commission_rate: Number(meta.commission_rate) || 0.20,
+          amount_pi: Number(r.amount) || 0,
+          status: String(r.status || "pending").toLowerCase(),
+          wallet_address: wallet,
+          requested_at: meta.requested_at || null,
+          paid_at: meta.paid_at || null,
+          paid_txid: meta.paid_txid || (r.status === "paid" ? r.txid : null),
+        };
+      });
+
+      return jsonOk("ADMIN_COMMISSIONS_LIST", { commissions: list }, corsHeaders, 200);
+    }
+
+    if (action === "admin_mark_commission_paid") {
+      const isAdmin = await verifyAdminOrFounder(supabase, accessToken, adminSecret);
+      if (!isAdmin) {
+        return jsonError("FORBIDDEN", "Acesso restrito ao administrador @hokage22b.", corsHeaders, 403);
+      }
+
+      const ids: string[] = Array.isArray(commissionIds)
+        ? commissionIds.map((x: unknown) => String(x || "").trim()).filter(Boolean)
+        : (paymentId ? [String(paymentId).trim()] : []);
+
+      if (ids.length === 0) {
+        return jsonError("MISSING_COMMISSION_IDS", "Informe o ID da comissão para marcar como paga.", corsHeaders, 400);
+      }
+
+      const cleanPaidTxid = payoutTxid ? String(payoutTxid).trim() : `payout_mainnet_${Date.now()}`;
+      const paidAt = new Date().toISOString();
+
+      const { data: rows } = await supabase
+        .from("transacoes_pi")
+        .select("payment_id, metadata")
+        .in("payment_id", ids);
+
+      if (Array.isArray(rows)) {
+        for (const r of rows) {
+          const oldMeta = (r && typeof r.metadata === "object" && r.metadata) ? r.metadata : {};
+          await supabase
+            .from("transacoes_pi")
+            .update({
+              status: "paid",
+              txid: cleanPaidTxid,
+              metadata: {
+                ...oldMeta,
+                payout_status: "paid",
+                paid_at: paidAt,
+                paid_txid: cleanPaidTxid,
+              },
+            })
+            .eq("payment_id", r.payment_id);
+        }
+      }
+
+      return jsonOk(
+        "COMMISSION_MARKED_PAID",
+        {
+          updated_ids: ids,
+          paid_txid: cleanPaidTxid,
+          paid_at: paidAt,
+        },
+        corsHeaders,
+        200
+      );
+    }
 
     // ============================================================
     // BIBLIOTECA VITALÍCIA DO PIONEIRO (E-BOOKS PRIVADOS)
@@ -179,8 +662,8 @@ serve(async (req) => {
     }
 
     if (action === "grant_ebook_access") {
-      const piUser = await verifyPiAccessToken(String(accessToken || ""));
-      if (normalizeHandle(piUser.username) !== "hokage22b") {
+      const isAdmin = await verifyAdminOrFounder(supabase, accessToken, adminSecret);
+      if (!isAdmin) {
         return jsonError("FORBIDDEN", "Apenas o fundador @hokage22b pode conceder acesso manual P2P.", corsHeaders, 403);
       }
 
@@ -194,10 +677,11 @@ serve(async (req) => {
         : "ia-na-pratica";
       const catalogItem = MURAL_CONFIG.products[cleanProd as "ia-na-pratica" | "pi-para-seu-negocio"];
       const grantPaymentId = `p2p_grant_${cleanProd}_${cleanTarget}`;
+      const grantTxid = String(txid || `p2p_mainnet_${Date.now()}`);
 
       await supabase.from("transacoes_pi").upsert({
         payment_id: grantPaymentId,
-        txid: String(txid || `p2p_mainnet_${Date.now()}`),
+        txid: grantTxid,
         amount: catalogItem.price_pi,
         status: "completed",
         purpose: "ebook",
@@ -205,11 +689,21 @@ serve(async (req) => {
           type: "ebook",
           productId: cleanProd,
           pioneer_username: "@" + cleanTarget,
-          granted_by: piUser.username,
+          granted_by: "@hokage22b",
           channel: "p2p_mainnet",
         },
         created_at: new Date().toISOString(),
       }, { onConflict: "payment_id" });
+
+      const affiliateComm = await processAffiliateCommission(supabase, {
+        paymentId: grantPaymentId,
+        txid: grantTxid,
+        paidAmount: catalogItem.price_pi,
+        buyerUsername: "@" + cleanTarget,
+        purpose: "ebook",
+        description: `E-book: ${catalogItem.title} (P2P)`,
+        fallbackRefCode: refCode ? String(refCode) : null,
+      });
 
       return jsonOk(
         "EBOOK_ACCESS_GRANTED",
@@ -217,6 +711,7 @@ serve(async (req) => {
           username: "@" + cleanTarget,
           product_id: cleanProd,
           payment_id: grantPaymentId,
+          affiliate_commission: affiliateComm,
         },
         corsHeaders,
         200
@@ -421,6 +916,7 @@ serve(async (req) => {
         }
 
         // C. Ledger Imutável de Transações (Idempotente)
+        const txPurpose = metadata.type === "ebook" ? "ebook" : (metadata.adId ? "anuncio_mural" : "pagamento_geral");
         try {
           await supabase
             .from("transacoes_pi")
@@ -431,12 +927,42 @@ serve(async (req) => {
               to_address: data.to_address || null,
               amount: paidAmount,
               status: "completed",
-              purpose: metadata.type || (metadata.adId ? "anuncio_mural" : "pagamento_geral"),
+              purpose: txPurpose,
               metadata: metadata,
               created_at: new Date().toISOString()
             }, { onConflict: "payment_id" });
         } catch (ledgerErr) {
           console.warn("[Ledger Warning] Erro ao registrar na tabela transacoes_pi:", ledgerErr);
+        }
+
+        // D. Motor de Comissão de Afiliados (20% Padrão / 25% Embaixador para Anúncios no Mural e E-books)
+        if (txPurpose === "anuncio_mural" || txPurpose === "ebook") {
+          const buyerUser = String(
+            (adPayload && adPayload.pioneer_username) ||
+            metadata.pioneer_username ||
+            ""
+          );
+          const fallbackRef = String(
+            refCode ||
+            metadata.ref_code ||
+            (adPayload && adPayload.ref_code) ||
+            ""
+          );
+          const descLabel = txPurpose === "ebook"
+            ? `E-book (${metadata.productId || "Catálogo"})`
+            : `Anúncio no Mural (${String((adPayload && adPayload.plan_tier) || metadata.tier || "Destaque").toUpperCase()})`;
+
+          await processAffiliateCommission(supabase, {
+            paymentId: paymentId,
+            txid: txid || (data.transaction && data.transaction.txid) || null,
+            paidAmount: paidAmount,
+            buyerUsername: buyerUser,
+            buyerUid: data.user_uid ? String(data.user_uid) : null,
+            buyerWallet: data.from_address ? String(data.from_address) : null,
+            purpose: txPurpose,
+            description: descLabel,
+            fallbackRefCode: fallbackRef || null,
+          });
         }
       }
 

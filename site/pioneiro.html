@@ -1000,18 +1000,20 @@
           <div id="pioneer-review-form-box"></div>
         </div>
 
-        <!-- Seção: Programa de Indicação & Recompensas (Exclusivo do Dono) -->
+        <!-- Seção: Programa de Indicação, Comissões em Pi & Créditos (Exclusivo do Dono) -->
         <div id="pioneer-referral-section" style="display:none;margin-top:26px;padding:18px;border-radius:16px;background:linear-gradient(145deg,rgba(16,185,129,0.08),rgba(139,92,246,0.08));border:1px solid rgba(16,185,129,0.28);text-align:left">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
             <div style="font-size:0.84rem;font-weight:800;color:#34d399;letter-spacing:0.04em;text-transform:uppercase">
-              🎁 Convidar Pioneiros &amp; Ganhar Créditos
+              🎁 Convidar Pioneiros: Ganhe Pi (π) &amp; Créditos
             </div>
             <span id="ref-ambassador-status" style="font-size:0.74rem;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,0.06);color:#e4e4e7">
-              0 / 5 para Selo Embaixador
+              0 / 5 para Selo Embaixador (25% π)
             </span>
           </div>
           <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;margin:0 0 12px">
-            Convide outros Pioneiros para criar a Vitrine grátis: no <strong>1º indicado ativo</strong> você ganha <strong>1 Impulsionamento Bronze grátis (0.314 π)</strong> no Mural, e depois <strong>+1 crédito a cada 2 novos indicados</strong>. Com <strong>5 indicados</strong>, você desbloqueia o <strong>Selo Embaixador</strong>!
+            Compartilhe seu link de convite e receba <strong>recompensa dupla</strong>:<br>
+            • 💰 <strong>Comissão Real em Pi (<span id="ref-rate-label">20%</span>):</strong> Ganhe <strong>20% em Pi</strong> (ou <strong>25% como Embaixador</strong>) toda vez que um indicado seu anunciar no Mural ou adquirir um E-book em Pi!<br>
+            • 🎟️ <strong>Créditos Grátis + Selo:</strong> Ganhe <strong>1 Crédito Bronze (0.314 π)</strong> no 1º indicado ativo, <strong>+1 a cada 2 novos indicados</strong> e desbloqueie o <strong>🏅 Selo Embaixador</strong> com 5 indicados!
           </p>
           <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px">
             <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08)">
@@ -1019,8 +1021,16 @@
               <div id="ref-count-value" style="font-size:1.25rem;font-weight:800;color:#fff">0</div>
             </div>
             <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(245,158,11,0.22)">
-              <div style="font-size:0.72rem;color:var(--text-muted)">Créditos Bronze Disponíveis</div>
+              <div style="font-size:0.72rem;color:var(--text-muted)">Créditos Bronze Grátis</div>
               <div id="ref-credits-value" style="font-size:1.25rem;font-weight:800;color:#fcd34d">0</div>
+            </div>
+            <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.4);border:1px solid rgba(16,185,129,0.35)">
+              <div style="font-size:0.72rem;color:var(--text-muted)">Saldo Pi Disponível</div>
+              <div id="ref-pending-pi-value" style="font-size:1.25rem;font-weight:800;color:#34d399">0.00 π</div>
+            </div>
+            <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.35)">
+              <div style="font-size:0.72rem;color:var(--text-muted)">Total Ganho em Pi</div>
+              <div id="ref-total-pi-value" style="font-size:1.25rem;font-weight:800;color:#c4b5fd">0.00 π</div>
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -1036,6 +1046,8 @@
               🚀 Usar 1 Crédito Grátis no Mural Agora →
             </a>
           </div>
+          <div id="ref-payout-box" style="display:none;margin-top:10px"></div>
+          <div id="ref-commissions-list-wrap" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08)"></div>
         </div>
 
         <!-- Botão Único de Compartilhamento no Rodapé do Card -->

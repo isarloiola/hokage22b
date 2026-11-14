@@ -129,15 +129,33 @@ serve(async (req) => {
       );
 
       if (/^[a-z0-9_]{2,32}$/.test(cleanRef) && (hasBio || hasProducts || hasContact)) {
-        const { data: refData, error: refErr } = await supabase.rpc("process_pioneer_referral", {
-          p_referrer_username: "@" + cleanRef,
-          p_referred_uid: verifiedUid,
-          p_referred_username: verifiedUsername,
-        });
-        if (!refErr) {
-          referralResult = refData;
-        } else {
-          console.warn("Erro ao processar indicação:", refErr.message);
+        let sameWalletBlocked = false;
+        if (cleanWallet) {
+          const { data: refProf } = await supabase
+            .from("pioneiros")
+            .select("wallet_address")
+            .ilike("username", "@" + cleanRef)
+            .maybeSingle();
+          if (
+            refProf?.wallet_address &&
+            String(refProf.wallet_address).trim().toUpperCase() === cleanWallet.toUpperCase()
+          ) {
+            sameWalletBlocked = true;
+            referralResult = { awarded: false, reason: "self_referral_wallet" };
+          }
+        }
+
+        if (!sameWalletBlocked) {
+          const { data: refData, error: refErr } = await supabase.rpc("process_pioneer_referral", {
+            p_referrer_username: "@" + cleanRef,
+            p_referred_uid: verifiedUid,
+            p_referred_username: verifiedUsername,
+          });
+          if (!refErr) {
+            referralResult = refData;
+          } else {
+            console.warn("Erro ao processar indicação:", refErr.message);
+          }
         }
       }
     }

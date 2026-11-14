@@ -9,6 +9,9 @@
 --      A partir do 2º, ganha +1 Crédito Bronze a cada 2 indicados (2, 4, 6...).
 --      Ao atingir 5 indicados qualificados = Selo Embaixador na Vitrine.
 --   4. Créditos são consumidos atomicamente via RPC ao publicar no Mural.
+--   5. Comissões reais em Pi (20% Padrão / 25% Embaixador) sobre Anúncios no
+--      Mural e E-books pagos pelos indicados são contabilizadas de forma
+--      idempotente e Zero-Trust no ledger public.transacoes_pi (service_role).
 -- ============================================================
 
 -- 1. Colunas de recompensa na tabela pioneiros
@@ -290,7 +293,7 @@ BEGIN
     0,
     'ativo',
     v_txid,
-    now() + interval '30 days'
+    '2099-12-31T23:59:59.000Z'::timestamptz
   )
   RETURNING * INTO v_ad;
 

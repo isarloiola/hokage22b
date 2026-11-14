@@ -2282,7 +2282,7 @@
       });
     }
 
-    // Reputação & Avaliações Verificadas (Pi Browser Zero-Trust)
+    // Reputação & Avaliações Verificadas + Programa de Afiliados em Pi (Zero-Trust)
     async function loadPioneerReferralPanel(targetUsername, isOwner) {
       const badgeEl = document.getElementById('pioneer-ambassador-badge');
       const sectionEl = document.getElementById('pioneer-referral-section');
@@ -2290,30 +2290,51 @@
       if (sectionEl) sectionEl.style.display = 'none';
 
       if (!window.HokageReferral || !targetUsername) return;
-      const stats = await window.HokageReferral.fetchStats(targetUsername);
-      if (!stats) return;
+      const [stats, affSummary] = await Promise.all([
+        window.HokageReferral.fetchStats(targetUsername),
+        window.HokageReferral.fetchAffiliateSummary
+          ? window.HokageReferral.fetchAffiliateSummary(targetUsername)
+          : Promise.resolve(null)
+      ]);
+      if (!stats && !affSummary) return;
 
-      if (badgeEl && stats.is_ambassador) {
+      const count = Number((stats && stats.referral_qualified_count) || 0);
+      const credits = Number((stats && stats.referral_credits) || 0);
+      const isAmb = Boolean((stats && stats.is_ambassador) || (affSummary && affSummary.is_ambassador) || count >= 5);
+
+      if (badgeEl && isAmb) {
         badgeEl.style.display = 'inline-flex';
       }
 
       if (!isOwner || isSimulatorMode || !sectionEl) return;
 
-      const count = Number(stats.referral_qualified_count || 0);
-      const credits = Number(stats.referral_credits || 0);
-      const isAmb = Boolean(stats.is_ambassador);
+      const pendingPi = Number((affSummary && affSummary.pending_pi) || 0);
+      const requestedPi = Number((affSummary && affSummary.requested_pi) || 0);
+      const paidPi = Number((affSummary && affSummary.paid_pi) || 0);
+      const totalEarnedPi = Number((affSummary && affSummary.total_earned_pi) || (pendingPi + requestedPi + paidPi));
+      const minPayoutPi = Number((affSummary && affSummary.min_payout_pi) || 0.20);
+      const ratePct = isAmb ? 25 : 20;
 
       const countEl = document.getElementById('ref-count-value');
       const creditsEl = document.getElementById('ref-credits-value');
+      const pendingPiEl = document.getElementById('ref-pending-pi-value');
+      const totalPiEl = document.getElementById('ref-total-pi-value');
+      const rateLabelEl = document.getElementById('ref-rate-label');
       const statusEl = document.getElementById('ref-ambassador-status');
       const useWrap = document.getElementById('ref-use-credit-wrap');
+      const payoutBox = document.getElementById('ref-payout-box');
+      const commListWrap = document.getElementById('ref-commissions-list-wrap');
 
       if (countEl) countEl.textContent = String(count);
       if (creditsEl) creditsEl.textContent = String(credits);
+      if (pendingPiEl) pendingPiEl.textContent = pendingPi.toFixed(4).replace(/\.?0+$/, (m) => m.length >= 3 ? '.00' : m) + ' π';
+      if (totalPiEl) totalPiEl.textContent = totalEarnedPi.toFixed(4).replace(/\.?0+$/, (m) => m.length >= 3 ? '.00' : m) + ' π';
+      if (rateLabelEl) rateLabelEl.textContent = ratePct + '%';
+
       if (statusEl) {
         statusEl.textContent = isAmb
-          ? '🏅 Selo Embaixador Ativo!'
-          : `${Math.min(count, 5)} / 5 para Selo Embaixador`;
+          ? '🏅 Embaixador Ativo (Comissão 25% π)'
+          : `${Math.min(count, 5)} / 5 para Embaixador (25% π)`;
         if (isAmb) {
           statusEl.style.background = 'rgba(245,158,11,0.18)';
           statusEl.style.color = '#fcd34d';
@@ -2322,13 +2343,103 @@
       if (useWrap) {
         useWrap.style.display = credits > 0 ? 'block' : 'none';
       }
+
+      if (payoutBox) {
+        let payoutHtml = '';
+        if (pendingPi + 1e-6 >= minPayoutPi) {
+          payoutHtml += `
+            <button type="button" id="btn-request-affiliate-payout" onclick="requestAffiliatePayoutUi()" class="portal-btn portal-btn--sm" style="width:100%;justify-content:center;font-weight:800;background:linear-gradient(135deg,#10b981,#059669);color:#042f2e;padding:10px 14px;border-radius:10px;border:none;cursor:pointer">
+              ⚡ Solicitar Saque de ${pendingPi.toFixed(4)} π para Minha Carteira Pi
+            </button>
+          `;
+        } else if (pendingPi > 0) {
+          payoutHtml += `
+            <div style="font-size:0.75rem;color:var(--text-muted);background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;text-align:center">
+              💡 Saldo acumulando: <strong>${pendingPi.toFixed(4)} π</strong> (saque liberado a partir de <strong>${minPayoutPi.toFixed(2)} π</strong>).
+            </div>
+          `;
+        }
+        if (requestedPi > 0) {
+          payoutHtml += `
+            <div style="margin-top:6px;font-size:0.76rem;color:#fcd34d;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:8px;padding:8px 10px;text-align:center;font-weight:700">
+              ⏳ Saque solicitado em processamento: ${requestedPi.toFixed(4)} π
+            </div>
+          `;
+        }
+        payoutBox.innerHTML = payoutHtml;
+        payoutBox.style.display = payoutHtml ? 'block' : 'none';
+      }
+
+      if (commListWrap) {
+        const comms = (affSummary && Array.isArray(affSummary.commissions)) ? affSummary.commissions : [];
+        if (comms.length > 0) {
+          commListWrap.innerHTML = `
+            <div style="font-size:0.75rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">
+              📊 Histórico de Comissões em Pi (${comms.length})
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;max-height:190px;overflow-y:auto">
+              ${comms.slice(0, 10).map(c => {
+                const st = String(c.status || 'pending').toLowerCase();
+                const badgeColor = st === 'paid' ? '#34d399' : (st === 'requested' ? '#fcd34d' : '#a78bfa');
+                const badgeText = st === 'paid' ? '✓ Pago' : (st === 'requested' ? '⏳ Solicitado' : '🟢 Disponível');
+                const pct = Math.round((Number(c.commission_rate) || 0.20) * 100);
+                return `
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:7px 10px;font-size:0.76rem">
+                    <div style="min-width:0">
+                      <strong style="color:#fff;display:block">${escapeHtml(c.source_description || 'Comissão')} · <span style="color:var(--accent-light)">${escapeHtml(c.referred_username || '@pioneiro')}</span></strong>
+                      <span style="font-size:0.68rem;color:var(--text-muted)">Base: ${Number(c.source_amount_pi || 0)} π (${pct}%)</span>
+                    </div>
+                    <div style="text-align:right;flex-shrink:0">
+                      <strong style="color:#34d399;display:block">+${Number(c.amount_pi || 0).toFixed(4)} π</strong>
+                      <span style="font-size:0.66rem;color:${badgeColor};font-weight:700">${badgeText}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `;
+          commListWrap.style.display = 'block';
+        } else {
+          commListWrap.style.display = 'none';
+        }
+      }
+
       sectionEl.dataset.inviteUsername = targetUsername;
       sectionEl.style.display = 'block';
     }
 
+    async function requestAffiliatePayoutUi() {
+      const btn = document.getElementById('btn-request-affiliate-payout');
+      const wallet = (currentProfileData && currentProfileData.wallet_address) || currentPioneerWallet || '';
+      if (!wallet || !isValidPiPublicKey(wallet)) {
+        alert('Cadastre sua Chave Pública da Pi Wallet (iniciada com G, 56 caracteres) clicando em "Editar Minha Vitrine" antes de solicitar o saque.');
+        openProfileEditModal();
+        return;
+      }
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Solicitando saque...';
+      }
+      try {
+        let token = (window.HokagePi && window.HokagePi.getAccessToken) ? window.HokagePi.getAccessToken() : '';
+        if (!token) {
+          try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+        }
+        const res = await window.HokageReferral.requestPayout(token, wallet);
+        alert(`✓ Saque de ${Number(res.requested_pi || 0).toFixed(4)} π solicitado com sucesso!\n\nSua transferência será enviada diretamente para sua carteira Pi:\n${wallet}`);
+        await loadPioneerReferralPanel(currentPioneerUser, true);
+      } catch (err) {
+        alert(err && err.message ? err.message : 'Erro ao solicitar saque.');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = '⚡ Solicitar Saque para Minha Carteira Pi';
+        }
+      }
+    }
+
     function copyReferralInviteLink() {
       const sectionEl = document.getElementById('pioneer-referral-section');
-      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfile && currentProfile.username) || '';
+      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || '';
       const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(function () {
@@ -2348,9 +2459,9 @@
 
     function shareReferralWhatsapp() {
       const sectionEl = document.getElementById('pioneer-referral-section');
-      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfile && currentProfile.username) || '';
+      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || '';
       const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
-      const msg = 'Crie sua Vitrine Web3 grátis na Pi Network pelo meu convite e apareça para a comunidade: ' + url;
+      const msg = '🚀 Crie sua Vitrine Web3 100% grátis na Pi Network pelo meu convite, divulgue seus produtos/serviços e ganhe Pi indicando outros pioneiros: ' + url;
       window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
     }
 

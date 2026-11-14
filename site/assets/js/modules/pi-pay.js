@@ -461,9 +461,15 @@
 
   async function completePaymentOnServer(paymentId, txid, adPayload) {
     try {
+      const pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')
+        ? window.HokageReferral.getPendingRef()
+        : null;
       const payload = { action: 'complete', paymentId: paymentId, txid: txid };
       if (adPayload && typeof adPayload === 'object') {
         payload.adPayload = adPayload;
+      }
+      if (pendingRef) {
+        payload.refCode = pendingRef;
       }
       const res = await fetch(SUPABASE_FUNCTIONS_URL, {
         method: 'POST',
@@ -550,6 +556,10 @@
     }
 
     metadata.pioneer_username = user.username;
+    if (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function') {
+      const pendingRef = window.HokageReferral.getPendingRef();
+      if (pendingRef) metadata.ref_code = pendingRef;
+    }
 
     const paymentData = {
       amount: amount,

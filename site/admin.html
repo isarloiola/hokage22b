@@ -588,6 +588,9 @@
       <button class="tab-btn active" onclick="switchTab('tab-ads', this)">
         📢 Moderação de Anúncios (<span id="tab-count-ads">0</span>)
       </button>
+      <button class="tab-btn" onclick="switchTab('tab-affiliates', this)">
+        💸 Comissões de Afiliados (<span id="tab-count-affiliates">0</span>)
+      </button>
       <button class="tab-btn" onclick="switchTab('tab-leads', this)">
         👥 Leads &amp; Contatos (<span id="tab-count-leads">0</span>)
       </button>
@@ -667,6 +670,48 @@
             <tr>
               <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted)">
                 Carregando leads...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 2B: COMISSÕES DE AFILIADOS EM PI (20% PADRÃO / 25% EMBAIXADOR) -->
+    <section id="tab-affiliates" class="tab-pane">
+      <div class="actions-bar">
+        <p style="color:var(--text-muted);font-size:0.86rem">
+          Repasse de comissões geradas automaticamente sobre Anúncios no Mural e E-books (<strong>20% Padrão</strong> · <strong>25% Embaixador</strong>).
+        </p>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:0.8rem;color:#34d399;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);padding:5px 10px;border-radius:6px;font-weight:700">
+            A Pagar: <strong id="aff-stat-pending">0.0000 π</strong>
+          </span>
+          <span style="font-size:0.8rem;color:var(--amber-light);background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);padding:5px 10px;border-radius:6px;font-weight:700">
+            Já Pago: <strong id="aff-stat-paid">0.0000 π</strong>
+          </span>
+          <button class="btn btn-outline btn-sm" onclick="loadAllCommissions()">🔄 Atualizar</button>
+        </div>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Afiliado (Indicador)</th>
+              <th>Indicado (Comprador)</th>
+              <th>Origem &amp; Base</th>
+              <th>Comissão (π)</th>
+              <th>Carteira Pi (P2P)</th>
+              <th>Data</th>
+              <th style="text-align:right">Ação de Pagamento</th>
+            </tr>
+          </thead>
+          <tbody id="affiliates-table-body">
+            <tr>
+              <td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">
+                Carregando comissões de afiliados...
               </td>
             </tr>
           </tbody>
@@ -879,6 +924,7 @@
         document.getElementById('admin-user-tag').textContent = '🛡️ ' + tag;
         document.getElementById('sess-active-info').textContent = 'Ativa (' + tag + ')';
         loadAllAds();
+        loadAllCommissions();
         loadAllLeads();
       }
 
@@ -1373,6 +1419,133 @@
         showToast('Planilha CSV baixada com sucesso!');
       };
 
+      window.loadAllCommissions = async function () {
+        const tbody = document.getElementById('affiliates-table-body');
+        if (!tbody) return;
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text-muted)">Consultando comissões de afiliados...</td></tr>';
+
+        try {
+          let token = '';
+          try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+          const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'admin_list_commissions',
+              adminSecret: currentSecret,
+              accessToken: token || undefined
+            })
+          });
+          const json = await res.json().catch(() => ({}));
+          const list = (json && json.commissions) || (json && json.data && json.data.commissions) || [];
+
+          const countEl = document.getElementById('tab-count-affiliates');
+          if (countEl) countEl.textContent = list.length;
+
+          let pendingTotal = 0;
+          let paidTotal = 0;
+          list.forEach(item => {
+            const amt = Number(item.amount_pi) || 0;
+            if (String(item.status || '').toLowerCase() === 'paid') paidTotal += amt;
+            else pendingTotal += amt;
+          });
+
+          const pendEl = document.getElementById('aff-stat-pending');
+          const paidEl = document.getElementById('aff-stat-paid');
+          if (pendEl) pendEl.textContent = pendingTotal.toFixed(4) + ' π';
+          if (paidEl) paidEl.textContent = paidTotal.toFixed(4) + ' π';
+
+          if (!list.length) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">Nenhuma comissão de afiliado gerada ainda.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = list.map(c => {
+            const st = String(c.status || 'pending').toLowerCase();
+            const isPaid = st === 'paid';
+            const isReq = st === 'requested';
+            const badgeCls = isPaid ? 'badge-ativo' : (isReq ? 'badge-pausado' : 'badge-pendente');
+            const badgeText = isPaid ? '✓ Pago' : (isReq ? '⚡ Saque Solicitado' : '🟢 Acumulando');
+            const pct = Math.round((Number(c.commission_rate) || 0.20) * 100);
+            const dateStr = c.created_at ? new Date(c.created_at).toLocaleDateString('pt-BR') : '—';
+            const wallet = c.wallet_address ? String(c.wallet_address).trim() : '';
+            const shortWallet = wallet.length > 14 ? (wallet.slice(0, 6) + '...' + wallet.slice(-5)) : (wallet || 'Não informada');
+            const safeId = escapeHtml(String(c.id || '')).replace(/'/g, '&#39;');
+            const amtFixed = Number(c.amount_pi || 0).toFixed(4);
+            const qrUrl = wallet
+              ? `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(`pi://pay?recipient=${wallet}&amount=${amtFixed}&memo=Comissao_HOKAGE22B`)}`
+              : '';
+
+            return `
+              <tr>
+                <td><span class="badge ${badgeCls}">${badgeText}</span></td>
+                <td>
+                  <a href="pioneiro?u=${encodeURIComponent(c.referrer_username || '')}" target="_blank" rel="noopener noreferrer" style="color:var(--amber-light);font-weight:700;font-family:var(--font-mono);text-decoration:none">
+                    ${escapeHtml(c.referrer_username || '@pioneiro')} ↗
+                  </a>
+                </td>
+                <td><span style="font-family:var(--font-mono);color:#fff">${escapeHtml(c.referred_username || '@pioneiro')}</span></td>
+                <td>
+                  <strong style="color:#fff;display:block;font-size:0.84rem">${escapeHtml(c.source_description || 'Venda')}</strong>
+                  <span style="font-size:0.74rem;color:var(--text-muted)">Pago: ${Number(c.source_amount_pi || 0)} π · Taxa: ${pct}%</span>
+                </td>
+                <td><strong style="color:#34d399;font-size:0.95rem">${amtFixed} π</strong></td>
+                <td>
+                  ${wallet ? `
+                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                      <code style="font-size:0.75rem;color:var(--amber-light)" title="${escapeHtml(wallet)}">${escapeHtml(shortWallet)}</code>
+                      <button type="button" class="btn btn-outline btn-sm" style="padding:3px 7px;font-size:0.7rem" onclick="navigator.clipboard.writeText('${escapeHtml(wallet)}');showToast('Carteira copiada!')">📋</button>
+                      <a href="${qrUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" style="padding:3px 7px;font-size:0.7rem" title="Abrir QR Code POS com valor preenchido">⚡ QR</a>
+                    </div>
+                  ` : `<span style="font-size:0.75rem;color:var(--text-muted)">Sem carteira na Vitrine</span>`}
+                </td>
+                <td style="font-size:0.75rem;color:var(--text-muted)">${dateStr}</td>
+                <td style="text-align:right;white-space:nowrap">
+                  ${isPaid ? `
+                    <span style="font-size:0.74rem;color:#34d399;font-family:var(--font-mono)" title="${escapeHtml(c.paid_txid || '')}">✓ Liquidado</span>
+                  ` : `
+                    <button type="button" class="btn btn-success btn-sm" onclick="markCommissionPaid('${safeId}', '${escapeHtml(c.referrer_username || '')}', '${amtFixed}')">
+                      ✓ Marcar Pago
+                    </button>
+                  `}
+                </td>
+              </tr>
+            `;
+          }).join('');
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--red)">Erro ao carregar comissões: ${escapeHtml(err.message)}</td></tr>`;
+        }
+      };
+
+      window.markCommissionPaid = async function (commId, refUser, amtStr) {
+        const txid = prompt(`Confirmar pagamento de ${amtStr} π para ${refUser}?\n\nOpcional: cole o TXID da transferência (ou deixe em branco para confirmar):`, '');
+        if (txid === null) return;
+        try {
+          let token = '';
+          try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+          const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'admin_mark_commission_paid',
+              adminSecret: currentSecret,
+              accessToken: token || undefined,
+              commissionIds: [commId],
+              payoutTxid: txid.trim() || undefined
+            })
+          });
+          const json = await res.json().catch(() => ({}));
+          if (res.ok && json.ok) {
+            showToast(`✓ Comissão de ${amtStr} π marcada como paga para ${refUser}!`);
+            loadAllCommissions();
+          } else {
+            showToast('Erro: ' + ((json && json.error) || 'Falha ao atualizar comissão.'), true);
+          }
+        } catch (err) {
+          showToast('Erro de comunicação com o servidor.', true);
+        }
+      };
+
       window.grantEbookAccessAdmin = async function () {
         const userInp = document.getElementById('grant-ebook-user');
         const prodSel = document.getElementById('grant-ebook-product');
@@ -1384,7 +1557,7 @@
         }
         let token = '';
         try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
-        if (!token && window.Pi && window.Pi.authenticate) {
+        if (!currentSecret && !token && window.Pi && window.Pi.authenticate) {
           try {
             const auth = await window.Pi.authenticate(['username', 'payments'], function () {});
             if (auth && auth.accessToken) {
@@ -1393,8 +1566,8 @@
             }
           } catch (_) {}
         }
-        if (!token) {
-          showToast('Conecte sua conta @hokage22b no Pi Browser para assinar a liberação.');
+        if (!currentSecret && !token) {
+          showToast('Desbloqueie o console com sua Chave Mestra ou conecte no Pi Browser.', true);
           return;
         }
         try {
@@ -1403,7 +1576,8 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               action: 'grant_ebook_access',
-              accessToken: token,
+              adminSecret: currentSecret || undefined,
+              accessToken: token || undefined,
               targetUsername: rawUser,
               productId: prodId
             })
@@ -1412,11 +1586,12 @@
           if (res.ok && json.ok) {
             showToast('✓ Acesso vitalício liberado para ' + rawUser + '!');
             if (userInp) userInp.value = '';
+            loadAllCommissions();
           } else {
-            showToast('Erro: ' + ((json && json.error) || 'Falha ao liberar acesso.'));
+            showToast('Erro: ' + ((json && json.error) || 'Falha ao liberar acesso.'), true);
           }
         } catch (err) {
-          showToast('Erro de comunicação com o servidor.');
+          showToast('Erro de comunicação com o servidor.', true);
         }
       };
 
