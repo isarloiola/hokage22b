@@ -98,3 +98,8 @@ tmp/
 sys_access_vault_hkg22b.txt
 admin_secret*.txt
 
+# 10. Produtos Digitais Pagos (Fontes/Builds Privados) & Cache CLI
+ebook-ia-na-pratica/
+supabase/.temp/
+
+

@@ -1,6 +1,6 @@
 // ============================================================
 // isar.pi by hokage22b — Application Bootstrap
-// Modular Architecture (UI, Auth, Checklist, Lead, Reputation)
+// Inicializa módulos globais leves (i18n e UI) nas páginas institucionais/legais
 // ============================================================
 
 (function () {
@@ -23,39 +23,7 @@
       window.IsarUI.initCookieBanner();
     }
 
-    // 2. Pi Network SDK & Auth
-    if (window.IsarAuth) {
-      window.IsarAuth.initPiSdk();
-      window.IsarAuth.initModalListeners();
-      window.IsarAuth.checkStoredSession();
-    }
-
-    // 3. Lead Unlock Form
-    if (window.IsarLead) {
-      window.IsarLead.initLeadUnlockForm();
-    }
-
-    // 4. Checklist Mainnet
-    if (window.IsarChecklist) {
-      window.IsarChecklist.updateChecklistUI();
-    }
-
-    // 5. Pioneer Reputation Calculation
-    if (window.calculateAndUpdateReputation) {
-      window.calculateAndUpdateReputation();
-    }
-
-    // 6. Pioneer Tools, Tabs & Mining Calculator
-    if (window.IsarTools) {
-      window.IsarTools.init();
-    }
-
-    // 7. Interactive Onboarding & Conversion Flow
-    if (window.IsarOnboarding) {
-      window.IsarOnboarding.init();
-    }
-
-    // 8. Pioneer Ads Mural — Gazeta Web3
+    // 2. Pioneer Ads Mural — Gazeta Web3 (caso presente na página)
     if (window.IsarMural) {
       window.IsarMural.init();
     }
