@@ -17,13 +17,41 @@
     return /^[a-z0-9_]{2,32}$/.test(clean) ? clean : '';
   }
 
+  function escapeHtml(str) {
+    if (window.HokageUtils && typeof window.HokageUtils.escapeHtml === 'function') {
+      return window.HokageUtils.escapeHtml(str);
+    }
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function isPiBrowserEnv() {
+    const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+    if (/PiBrowser|PiNetwork|minepi/i.test(ua)) return true;
+    if (typeof window !== 'undefined') {
+      if (window.flutter_inappwebview || window.PiNetwork || window.isPiBrowser) return true;
+      if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
+    }
+    return false;
+  }
+
+  let capturedUrlRef = '';
+
   function captureFromUrl() {
     try {
       const params = new URLSearchParams(window.location.search);
       const ref = normalizeHandle(params.get('ref'));
-      if (!ref) return;
+      if (!ref) return '';
+      capturedUrlRef = ref;
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ ref: ref, ts: Date.now() }));
-    } catch (_) {}
+      return ref;
+    } catch (_) {
+      return '';
+    }
   }
 
   function getPendingRef() {
@@ -116,7 +144,372 @@
     return json.data || json;
   }
 
+  function injectWelcomeStyles() {
+    if (document.getElementById('hokage-ref-welcome-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'hokage-ref-welcome-styles';
+    style.textContent = `
+      .hk-ref-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 10050;
+        background: rgba(5, 5, 10, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px;
+        overflow-y: auto;
+        animation: hkRefFadeIn 0.25s ease-out;
+      }
+      @keyframes hkRefFadeIn {
+        from { opacity: 0; transform: scale(0.96); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      .hk-ref-card {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        max-height: 92vh;
+        overflow-y: auto;
+        background: linear-gradient(165deg, #131122 0%, #09090f 100%);
+        border: 1.5px solid rgba(245, 158, 11, 0.45);
+        border-radius: 22px;
+        padding: 24px 20px 20px;
+        color: #f4f4f5;
+        box-shadow: 0 22px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(139, 92, 246, 0.22);
+        text-align: left;
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        box-sizing: border-box;
+      }
+      .hk-ref-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.06);
+        color: #e4e4e7;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .hk-ref-close:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+      .hk-ref-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(16, 185, 129, 0.18));
+        border: 1px solid rgba(245, 158, 11, 0.5);
+        color: #fbbf24;
+        font-size: 0.75rem;
+        font-weight: 800;
+        padding: 5px 12px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 10px;
+      }
+      .hk-ref-inviter-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background: rgba(139, 92, 246, 0.12);
+        border: 1px solid rgba(139, 92, 246, 0.35);
+        border-radius: 12px;
+        padding: 10px 14px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .hk-ref-benefit {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 13px;
+        padding: 11px 13px;
+        margin-bottom: 9px;
+      }
+      .hk-ref-benefit-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+      .hk-ref-btn-primary {
+        width: 100%;
+        padding: 13px 16px;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 50%, #f59e0b 100%);
+        color: #fff;
+        font-weight: 800;
+        font-size: 0.94rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35);
+        box-sizing: border-box;
+        text-align: center;
+      }
+      .hk-ref-btn-outline {
+        width: 100%;
+        padding: 11px 14px;
+        border-radius: 11px;
+        border: 1px solid rgba(16, 185, 129, 0.45);
+        background: rgba(16, 185, 129, 0.1);
+        color: #6ee7b7;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        text-decoration: none;
+        box-sizing: border-box;
+        text-align: center;
+      }
+      .hk-ref-btn-ghost {
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.04);
+        color: #d4d4d8;
+        font-weight: 700;
+        font-size: 0.8rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-decoration: none;
+        box-sizing: border-box;
+        text-align: center;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function closeWelcomeModal() {
+    const existing = document.getElementById('hokage-ref-welcome-modal');
+    if (existing) {
+      existing.remove();
+    }
+  }
+
+  function copyWelcomeInviteLink(refHandle) {
+    const clean = normalizeHandle(refHandle) || getPendingRef() || 'hokage22b';
+    const url = buildInviteUrl(clean);
+    const btn = document.getElementById('hk-ref-copy-btn');
+    function showCopied() {
+      if (btn) {
+        btn.innerHTML = '✓ Link Copiado! Abra o Pi Browser e cole na barra';
+        btn.style.borderColor = '#10b981';
+        btn.style.background = 'rgba(16,185,129,0.22)';
+        btn.style.color = '#a7f3d0';
+      }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(showCopied).catch(function () {
+        window.prompt('Copie o link abaixo e cole no aplicativo Pi Browser:', url);
+      });
+    } else {
+      window.prompt('Copie o link abaixo e cole no aplicativo Pi Browser:', url);
+    }
+  }
+
+  function startFromWelcomeModal(refHandle) {
+    const clean = normalizeHandle(refHandle) || getPendingRef() || '';
+    closeWelcomeModal();
+    if (typeof window.connectPiBrowserAndStart === 'function') {
+      window.connectPiBrowserAndStart();
+      return;
+    }
+    const target = clean ? ('pioneiro?ref=' + encodeURIComponent(clean) + '&autostart=1') : 'pioneiro?autostart=1';
+    window.location.href = target;
+  }
+
+  function startSimFromWelcomeModal(refHandle) {
+    const clean = normalizeHandle(refHandle) || getPendingRef() || '';
+    closeWelcomeModal();
+    if (typeof window.startSimulatorMode === 'function') {
+      window.startSimulatorMode();
+      return;
+    }
+    const target = clean ? ('pioneiro?ref=' + encodeURIComponent(clean) + '&simulador=1') : 'pioneiro?simulador=1';
+    window.location.href = target;
+  }
+
+  function openWelcomeModal(customRef) {
+    const ref = normalizeHandle(customRef) || capturedUrlRef || getPendingRef();
+    if (!ref) return;
+
+    injectWelcomeStyles();
+    closeWelcomeModal();
+
+    const safeRef = escapeHtml(ref);
+    const inviteFullUrl = buildInviteUrl(ref);
+    const piDeepLink = 'pi://hokage22b.com/pioneiro?ref=' + encodeURIComponent(ref);
+    const vitrineRefUrl = 'pioneiro?u=' + encodeURIComponent(ref) + '&ref=' + encodeURIComponent(ref);
+    const inPiBrowser = isPiBrowserEnv();
+
+    let ctaHtml = '';
+    if (inPiBrowser) {
+      ctaHtml = `
+        <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.35);border-radius:12px;padding:9px 12px;margin:12px 0 10px;font-size:0.78rem;color:#6ee7b7;display:flex;align-items:center;gap:8px;font-weight:700">
+          <span>🟢</span>
+          <span>Pi Browser detectado! Seu convite de @${safeRef} será vinculado automaticamente.</span>
+        </div>
+        <button type="button" class="hk-ref-btn-primary" onclick="window.HokageReferral.startFromWelcomeModal('${safeRef}')">
+          <span>⚡</span> Conectar Pi Browser &amp; Criar Minha Vitrine Grátis
+        </button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <a href="${vitrineRefUrl}" class="hk-ref-btn-ghost" onclick="window.HokageReferral.closeWelcomeModal()">
+            <span>👀</span> Ver Vitrine de @${safeRef}
+          </a>
+          <button type="button" class="hk-ref-btn-ghost" onclick="window.HokageReferral.startSimFromWelcomeModal('${safeRef}')">
+            <span>🧪</span> Testar no Simulador
+          </button>
+        </div>
+      `;
+    } else {
+      ctaHtml = `
+        <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);border-radius:12px;padding:10px 12px;margin:12px 0 10px;font-size:0.77rem;color:#fde68a;line-height:1.45">
+          <strong style="color:#fbbf24;display:block;margin-bottom:2px">📱 Você está em um navegador comum</strong>
+          Para criar sua Vitrine oficial com 1 clique e ativar seu convite de <strong>@${safeRef}</strong>, abra direto no aplicativo <strong>Pi Browser</strong> ou copie o link abaixo:
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <a href="${piDeepLink}" class="hk-ref-btn-primary">
+            <span>🚀</span> Abrir Direto no Pi Browser (Com Convite)
+          </a>
+          <button type="button" id="hk-ref-copy-btn" class="hk-ref-btn-outline" onclick="window.HokageReferral.copyWelcomeInviteLink('${safeRef}')">
+            <span>📋</span> Copiar Link com Convite para o Pi Browser
+          </button>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px">
+            <button type="button" class="hk-ref-btn-ghost" onclick="window.HokageReferral.startSimFromWelcomeModal('${safeRef}')">
+              <span>🧪</span> Testar no Simulador
+            </button>
+            <a href="${vitrineRefUrl}" class="hk-ref-btn-ghost" onclick="window.HokageReferral.closeWelcomeModal()">
+              <span>👀</span> Vitrine de @${safeRef}
+            </a>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-size:0.7rem;color:#a1a1aa;text-align:center">
+          Link do seu convite: <code style="color:#c4b5fd;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;user-select:all">${escapeHtml(inviteFullUrl)}</code>
+        </div>
+      `;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'hokage-ref-welcome-modal';
+    overlay.className = 'hk-ref-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.addEventListener('click', function (ev) {
+      if (ev.target === overlay) closeWelcomeModal();
+    });
+
+    overlay.innerHTML = `
+      <div class="hk-ref-card">
+        <button type="button" class="hk-ref-close" onclick="window.HokageReferral.closeWelcomeModal()" aria-label="Fechar">✕</button>
+
+        <div class="hk-ref-pill">
+          <span>🎁</span> Convite VIP de Pioneiro Ativo
+        </div>
+
+        <h2 style="font-size:clamp(1.18rem, 4vw, 1.42rem);font-weight:800;color:#fff;margin:0 0 6px;line-height:1.25">
+          Crie sua Vitrine Web3 Grátis &amp; Ganhe Pi Indicando Pioneiros!
+        </h2>
+        <p style="font-size:0.83rem;color:#a1a1aa;margin:0 0 12px;line-height:1.45">
+          Você recebeu um convite oficial para entrar no ecossistema comercial <strong>HOKAGE22B</strong> na Pi Network. Veja tudo o que você libera gratuitamente:
+        </p>
+
+        <div class="hk-ref-inviter-box">
+          <div style="display:flex;align-items:center;gap:9px">
+            <span style="font-size:1.3rem">🤝</span>
+            <div>
+              <div style="font-size:0.68rem;color:#c4b5fd;text-transform:uppercase;font-weight:700;letter-spacing:0.04em">Convidado(a) Oficialmente por</div>
+              <div style="font-size:0.95rem;font-weight:800;color:#fff">@${safeRef}</div>
+            </div>
+          </div>
+          <span style="font-size:0.7rem;background:rgba(16,185,129,0.18);border:1px solid rgba(16,185,129,0.45);color:#6ee7b7;padding:3px 9px;border-radius:999px;font-weight:700">
+            ✓ Bônus Vinculado
+          </span>
+        </div>
+
+        <!-- 3 Vantagens Reais -->
+        <div class="hk-ref-benefit">
+          <div class="hk-ref-benefit-icon" style="background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.4)">🌟</div>
+          <div>
+            <div style="font-size:0.86rem;font-weight:800;color:#fff;margin-bottom:2px">1. Sua Vitrine Web3 100% Grátis para Sempre</div>
+            <div style="font-size:0.76rem;color:#a1a1aa;line-height:1.4">
+              Tenha seu próprio link (<code style="color:#c4b5fd">hokage22b.com/@voce</code>), receba Pi direto na sua <strong>Pi Wallet P2P</strong> com QR Code, divulgue produtos, serviços e redes sociais.
+            </div>
+          </div>
+        </div>
+
+        <div class="hk-ref-benefit" style="border-color:rgba(16,185,129,0.35);background:rgba(16,185,129,0.06)">
+          <div class="hk-ref-benefit-icon" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.45)">💰</div>
+          <div>
+            <div style="font-size:0.86rem;font-weight:800;color:#6ee7b7;margin-bottom:2px">2. Ganhe de 20% a 25% em Pi Real (Comissão P2P)</div>
+            <div style="font-size:0.76rem;color:#d4d4d8;line-height:1.4">
+              Ao criar sua Vitrine, você recebe seu próprio link de convite. Ganhe <strong>20% em Pi</strong> (ou <strong>25% como Embaixador</strong>) sobre cada <strong>Anúncio no Mural</strong> e cada <strong>E-book</strong> adquirido pelos seus indicados!
+            </div>
+          </div>
+        </div>
+
+        <div class="hk-ref-benefit" style="border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05)">
+          <div class="hk-ref-benefit-icon" style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.45)">🎟️</div>
+          <div>
+            <div style="font-size:0.86rem;font-weight:800;color:#fbbf24;margin-bottom:2px">3. Anúncios Grátis no Mural + Selo Embaixador</div>
+            <div style="font-size:0.76rem;color:#d4d4d8;line-height:1.4">
+              Seu <strong>1º convidado</strong> já libera <strong>1 Crédito de Anúncio Bronze Grátis (0.314 π)</strong> na Gazeta dos Pioneiros, +1 crédito a cada 2 novos indicados e o <strong>Selo Embaixador Web3</strong> com 5 indicados!
+            </div>
+          </div>
+        </div>
+
+        ${ctaHtml}
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+  }
+
   captureFromUrl();
+
+  if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', function () {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlRef = normalizeHandle(params.get('ref'));
+        const isAutoStart = params.get('autostart') === '1' || params.get('simulador') === '1' || params.get('teste') === '1';
+        if (urlRef && !isAutoStart) {
+          setTimeout(function () {
+            openWelcomeModal(urlRef);
+          }, 180);
+        }
+      } catch (_) {}
+    });
+  }
 
   window.HokageReferral = {
     normalizeHandle: normalizeHandle,
@@ -125,6 +518,12 @@
     buildInviteUrl: buildInviteUrl,
     fetchStats: fetchStats,
     fetchAffiliateSummary: fetchAffiliateSummary,
-    requestPayout: requestPayout
+    requestPayout: requestPayout,
+    openWelcomeModal: openWelcomeModal,
+    closeWelcomeModal: closeWelcomeModal,
+    copyWelcomeInviteLink: copyWelcomeInviteLink,
+    startFromWelcomeModal: startFromWelcomeModal,
+    startSimFromWelcomeModal: startSimFromWelcomeModal,
+    isPiBrowserEnv: isPiBrowserEnv
   };
 })();

@@ -522,7 +522,12 @@
     }
 
     function copyPiBrowserLink() {
-      const url = 'https://hokage22b.com/pioneiro';
+      const pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')
+        ? window.HokageReferral.getPendingRef()
+        : null;
+      const url = pendingRef
+        ? ('https://hokage22b.com/pioneiro?ref=' + encodeURIComponent(pendingRef))
+        : 'https://hokage22b.com/pioneiro';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(function() {
           const btn = document.getElementById('btn-copy-pi-link');
@@ -631,19 +636,57 @@
       }
 
       const loggedUser = getLoggedUser();
+      const explicitRef = getQueryParam('ref');
 
-      // Se não passou na URL, mas está logado, usa a conta logada
-      if (!username && loggedUser && loggedUser.username) {
+      // Se não passou ?u= na URL e NÃO é um link explícito de convite (?ref=), usa a conta logada
+      if (!username && !explicitRef && loggedUser && loggedUser.username) {
         username = loggedUser.username;
       }
 
-      // Se NÃO tem parâmetro: tela de onboarding
+      // Se NÃO tem parâmetro de perfil (?u=): tela de onboarding / boas-vindas
       if (!username) {
         document.getElementById('onboarding-navbar').style.display = 'block';
         document.getElementById('vitrine-topbar').style.display = 'none';
         document.getElementById('onboarding-view').style.display = 'block';
         document.getElementById('pioneer-card').style.display = 'none';
         document.getElementById('pioneer-footer').style.display = 'none';
+
+        // Renderiza Banner Persistente de Convite Oficial caso exista ?ref= ou convite pendente
+        const activeRef = (window.HokageReferral && typeof window.HokageReferral.normalizeHandle === 'function')
+          ? (window.HokageReferral.normalizeHandle(explicitRef) || (window.HokageReferral.getPendingRef ? window.HokageReferral.getPendingRef() : ''))
+          : '';
+        const refBanner = document.getElementById('onboarding-referral-banner');
+        if (refBanner) {
+          if (activeRef) {
+            const safeActiveRef = escapeHtml(activeRef);
+            refBanner.innerHTML = `
+              <div style="background:linear-gradient(135deg, rgba(245,158,11,0.14), rgba(16,185,129,0.12), rgba(139,92,246,0.16));border:1.5px solid rgba(245,158,11,0.5);border-radius:16px;padding:14px 16px;margin-bottom:18px;text-align:left;box-shadow:0 10px 28px rgba(0,0,0,0.35)">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+                  <span style="font-size:0.74rem;font-weight:800;color:#fbbf24;text-transform:uppercase;letter-spacing:0.04em">
+                    🎁 Convite Oficial de @${safeActiveRef} Ativo
+                  </span>
+                  <span style="font-size:0.7rem;background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.45);color:#6ee7b7;padding:2px 8px;border-radius:999px;font-weight:700">
+                    ✓ Bônus Afiliado Liberado
+                  </span>
+                </div>
+                <p style="font-size:0.82rem;color:#e4e4e7;margin:0 0 10px;line-height:1.45">
+                  Crie sua Vitrine 100% grátis abaixo e receba seu próprio link para ganhar <strong>20% a 25% em Pi</strong> sobre anúncios no Mural e E-books dos seus indicados + <strong>Créditos Bronze Grátis</strong>!
+                </p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button type="button" onclick="if(window.HokageReferral && window.HokageReferral.openWelcomeModal) window.HokageReferral.openWelcomeModal('${safeActiveRef}')" class="btn btn-outline btn-sm" style="padding:6px 12px;font-size:0.76rem;font-weight:700;border-color:rgba(245,158,11,0.5);color:#fbbf24">
+                    ✨ Ver Todas as Vantagens do Convite
+                  </button>
+                  <a href="?u=${encodeURIComponent(activeRef)}&ref=${encodeURIComponent(activeRef)}" class="btn btn-outline btn-sm" style="padding:6px 12px;font-size:0.76rem;font-weight:700;border-color:rgba(255,255,255,0.2);color:#fff;text-decoration:none">
+                    👀 Ver Vitrine de @${safeActiveRef}
+                  </a>
+                </div>
+              </div>
+            `;
+            refBanner.style.display = 'block';
+          } else {
+            refBanner.style.display = 'none';
+          }
+        }
 
         // Mostra atalho de 1 clique caso já esteja logado
         const logged = getLoggedUser();
@@ -668,6 +711,11 @@
           }
         }
         loadPioneersDirectory();
+        if (getQueryParam('autostart') === '1') {
+          setTimeout(function () {
+            connectPiBrowserAndStart();
+          }, 250);
+        }
         return;
       }
 
@@ -2461,8 +2509,16 @@
       const sectionEl = document.getElementById('pioneer-referral-section');
       const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || '';
       const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
-      const msg = '🚀 Crie sua Vitrine Web3 100% grátis na Pi Network pelo meu convite, divulgue seus produtos/serviços e ganhe Pi indicando outros pioneiros: ' + url;
+      const msg = '🚀 Crie sua Vitrine Web3 100% grátis na Pi Network pelo meu convite, divulgue seus produtos/serviços e ganhe de 20% a 25% em Pi indicando outros pioneiros: ' + url;
       window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
+    }
+
+    function previewReferralWelcomeScreen() {
+      const sectionEl = document.getElementById('pioneer-referral-section');
+      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || 'hokage22b';
+      if (window.HokageReferral && typeof window.HokageReferral.openWelcomeModal === 'function') {
+        window.HokageReferral.openWelcomeModal(username);
+      }
     }
 
     async function loadPioneerReviews(targetUsername, isOwner) {

@@ -797,6 +797,9 @@
           O seu <strong>Linktree descentralizado</strong> e seguro: receba pagamentos diretamente na sua <strong>Pi Wallet</strong>, reúna produtos com fotos, WhatsApp e redes sem risco de robôs ou contas falsas.
         </p>
 
+        <!-- Banner Persistente de Convite Oficial (?ref=usuario) -->
+        <div id="onboarding-referral-banner" style="display:none"></div>
+
         <!-- Atalho Rápido para Usuário Conectado -->
         <div id="onboarding-logged-box" style="display:none"></div>
 
@@ -1039,6 +1042,9 @@
             </button>
             <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="flex:1;min-width:150px;justify-content:center;font-weight:700;border-color:rgba(16,185,129,0.45);color:#34d399" onclick="shareReferralWhatsapp()">
               💬 Convidar no WhatsApp
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="width:100%;justify-content:center;font-weight:700;border-color:rgba(245,158,11,0.4);color:#fbbf24" onclick="previewReferralWelcomeScreen()">
+              👁️ Ver Tela de Boas-Vindas do Meu Convite
             </button>
           </div>
           <div id="ref-use-credit-wrap" style="display:none;margin-top:10px">
@@ -1410,11 +1416,11 @@
 
   <!-- Scripts -->
   <script src="assets/js/config.js?v=7.2"></script>
-  <script src="assets/js/modules/referral.js?v=1.0"></script>
+  <script src="assets/js/modules/referral.js?v=2.0"></script>
   <script src="assets/js/modules/i18n.js?v=4.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/modules/db.js?v=5.7"></script>
 
-  <script src="assets/js/modules/vitrine.js?v=1.1"></script>
+  <script src="assets/js/modules/vitrine.js?v=2.0"></script>
 </body>
 </html>
