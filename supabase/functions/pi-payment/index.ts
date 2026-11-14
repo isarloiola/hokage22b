@@ -1,6 +1,7 @@
 // ============================================================
-// HOKAGE22B — Supabase Edge Function: Pi Network Payment Server
-// Endpoint seguro para aprovar, validar montantes e completar pagamentos na Pi Network
+// HOKAGE22B — Supabase Edge Function: Pi Network Payment Server & E-book Vault
+// Endpoint seguro para aprovar, validar montantes, completar pagamentos na Pi Network
+// e liberar downloads vitalícios de E-books via Signed URLs (Bucket Privado)
 // ============================================================
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -13,6 +14,77 @@ import {
   MURAL_CONFIG,
   parseJsonBody,
 } from "../_shared/http.ts";
+import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
+
+const EBOOK_BUCKET = "ebooks-privados";
+
+const EBOOK_VAULT_FILES: Record<string, Record<string, { path: string; downloadName: string }>> = {
+  "ia-na-pratica": {
+    pdf: {
+      path: "ia-na-pratica/IA-na-Pratica_Hokage22b.pdf",
+      downloadName: "IA-na-Pratica_Hokage22b.pdf",
+    },
+    epub: {
+      path: "ia-na-pratica/IA-na-Pratica_Hokage22b.epub",
+      downloadName: "IA-na-Pratica_Hokage22b.epub",
+    },
+    bonus: {
+      path: "ia-na-pratica/Bonus_Checklist_Seguranca_e_Assistentes.pdf",
+      downloadName: "Bonus_Checklist_Seguranca_e_Assistentes.pdf",
+    },
+  },
+  "pi-para-seu-negocio": {
+    pdf: {
+      path: "pi-para-seu-negocio/Pi-para-seu-Negocio_Hokage22b.pdf",
+      downloadName: "Pi-para-seu-Negocio_Hokage22b.pdf",
+    },
+    epub: {
+      path: "pi-para-seu-negocio/Pi-para-seu-Negocio_Hokage22b.epub",
+      downloadName: "Pi-para-seu-Negocio_Hokage22b.epub",
+    },
+  },
+};
+
+function sanitizeAdImageUrl(raw: unknown): string | null {
+  if (!raw || typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith("data:image/")) {
+    return trimmed.length <= 350000 ? trimmed : null;
+  }
+  return trimmed.slice(0, 500);
+}
+
+async function getOwnedEbooksForUser(supabase: any, username: string): Promise<string[]> {
+  const clean = normalizeHandle(username);
+  if (!clean) return [];
+
+  // O fundador @hokage22b sempre possui acesso vitalício a todo o catálogo editorial
+  if (clean === "hokage22b") {
+    return ["ia-na-pratica", "pi-para-seu-negocio"];
+  }
+
+  const { data: rows } = await supabase
+    .from("transacoes_pi")
+    .select("payment_id, amount, status, purpose, metadata")
+    .eq("status", "completed")
+    .eq("purpose", "ebook");
+
+  const owned = new Set<string>();
+  if (Array.isArray(rows)) {
+    for (const row of rows) {
+      const meta = (row && typeof row.metadata === "object" && row.metadata) ? row.metadata : {};
+      const buyer = normalizeHandle(String(meta.pioneer_username || meta.buyer_username || ""));
+      if (buyer && buyer === clean) {
+        const prodId = String(meta.productId || meta.product_id || meta.product || "pi-para-seu-negocio").toLowerCase();
+        if (prodId === "ia-na-pratica" || prodId === "pi-para-seu-negocio") {
+          owned.add(prodId);
+        }
+      }
+    }
+  }
+  return Array.from(owned);
+}
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req, false);
@@ -27,12 +99,128 @@ serve(async (req) => {
   }
 
   try {
-    const body = await parseJsonBody(req, 64 * 1024);
-    const { action, paymentId, txid, adPayload } = body;
+    // Limite de 800KB para suportar adPayload com fotos Base64 durante o complete do Mural
+    const body = await parseJsonBody(req, 800 * 1024);
+    const { action, paymentId, txid, adPayload, accessToken, productId, format, targetUsername } = body;
 
     // Endpoint de catálogo/preços oficial (para consulta Agent-Ready)
     if (action === "get_catalog") {
       return jsonOk("PAYMENT_CATALOG", { catalog: MURAL_CONFIG }, corsHeaders, 200);
+    }
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // ============================================================
+    // BIBLIOTECA VITALÍCIA DO PIONEIRO (E-BOOKS PRIVADOS)
+    // ============================================================
+    if (action === "my_library") {
+      const piUser = await verifyPiAccessToken(String(accessToken || ""));
+      const ownedProducts = await getOwnedEbooksForUser(supabase, piUser.username);
+      return jsonOk(
+        "LIBRARY_STATUS",
+        {
+          username: piUser.username,
+          owned_products: ownedProducts,
+        },
+        corsHeaders,
+        200
+      );
+    }
+
+    if (action === "download_ebook") {
+      const piUser = await verifyPiAccessToken(String(accessToken || ""));
+      const cleanProd = String(productId || "").trim().toLowerCase();
+      const cleanFormat = String(format || "pdf").trim().toLowerCase();
+
+      const productFiles = EBOOK_VAULT_FILES[cleanProd];
+      if (!productFiles || !productFiles[cleanFormat]) {
+        return jsonError("EBOOK_FORMAT_NOT_FOUND", "Produto ou formato de arquivo inválido.", corsHeaders, 404);
+      }
+
+      const ownedProducts = await getOwnedEbooksForUser(supabase, piUser.username);
+      if (!ownedProducts.includes(cleanProd)) {
+        return jsonError(
+          "EBOOK_NOT_OWNED",
+          `A conta ${piUser.username} ainda não possui compra confirmada para este e-book.`,
+          corsHeaders,
+          403
+        );
+      }
+
+      const targetFile = productFiles[cleanFormat];
+      const { data: signedData, error: signErr } = await supabase.storage
+        .from(EBOOK_BUCKET)
+        .createSignedUrl(targetFile.path, 3600, { download: targetFile.downloadName });
+
+      if (signErr || !signedData || !signedData.signedUrl) {
+        return jsonError(
+          "EBOOK_FILE_UNAVAILABLE",
+          "O arquivo deste e-book ainda está sendo sincronizado no cofre privado. Tente novamente em instantes.",
+          corsHeaders,
+          404,
+          { storage_error: signErr?.message || null }
+        );
+      }
+
+      return jsonOk(
+        "EBOOK_DOWNLOAD_READY",
+        {
+          product_id: cleanProd,
+          format: cleanFormat,
+          download_url: signedData.signedUrl,
+          file_name: targetFile.downloadName,
+          expires_in_seconds: 3600,
+        },
+        corsHeaders,
+        200
+      );
+    }
+
+    if (action === "grant_ebook_access") {
+      const piUser = await verifyPiAccessToken(String(accessToken || ""));
+      if (normalizeHandle(piUser.username) !== "hokage22b") {
+        return jsonError("FORBIDDEN", "Apenas o fundador @hokage22b pode conceder acesso manual P2P.", corsHeaders, 403);
+      }
+
+      const cleanTarget = normalizeHandle(String(targetUsername || ""));
+      if (!cleanTarget) {
+        return jsonError("INVALID_USERNAME", "Informe o @username do pioneiro comprador.", corsHeaders, 400);
+      }
+
+      const cleanProd = (String(productId || "").toLowerCase() === "pi-para-seu-negocio")
+        ? "pi-para-seu-negocio"
+        : "ia-na-pratica";
+      const catalogItem = MURAL_CONFIG.products[cleanProd as "ia-na-pratica" | "pi-para-seu-negocio"];
+      const grantPaymentId = `p2p_grant_${cleanProd}_${cleanTarget}`;
+
+      await supabase.from("transacoes_pi").upsert({
+        payment_id: grantPaymentId,
+        txid: String(txid || `p2p_mainnet_${Date.now()}`),
+        amount: catalogItem.price_pi,
+        status: "completed",
+        purpose: "ebook",
+        metadata: {
+          type: "ebook",
+          productId: cleanProd,
+          pioneer_username: "@" + cleanTarget,
+          granted_by: piUser.username,
+          channel: "p2p_mainnet",
+        },
+        created_at: new Date().toISOString(),
+      }, { onConflict: "payment_id" });
+
+      return jsonOk(
+        "EBOOK_ACCESS_GRANTED",
+        {
+          username: "@" + cleanTarget,
+          product_id: cleanProd,
+          payment_id: grantPaymentId,
+        },
+        corsHeaders,
+        200
+      );
     }
 
     const PI_SERVER_API_KEY = Deno.env.get("PI_SERVER_API_KEY") || Deno.env.get("PI_API_KEY");
@@ -87,7 +275,7 @@ serve(async (req) => {
         );
       }
 
-      // Conclui oficialmente o pagamento na Pi Core Team Platform API
+      // Conclui oficialmente o pagamento na Pi Core Team Platform API IMEDIATAMENTE
       const response = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}/complete`, {
         method: "POST",
         headers: {
@@ -97,14 +285,25 @@ serve(async (req) => {
         body: JSON.stringify({ txid }),
       });
 
-      const data = await response.json().catch(() => ({}));
+      let data = await response.json().catch(() => ({}));
+
+      // Idempotência: se a Pi Network informar que o pagamento já foi completado anteriormente, busca os dados do pagamento
+      const isAlreadyCompleted = !response.ok && (
+        (data?.error && String(data.error).includes("already_completed")) ||
+        (data?.error_message && String(data.error_message).toLowerCase().includes("already"))
+      );
+      if (isAlreadyCompleted) {
+        const getRes = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}`, {
+          method: "GET",
+          headers: { "Authorization": `Key ${PI_SERVER_API_KEY}` },
+        });
+        if (getRes.ok) {
+          data = await getRes.json().catch(() => data);
+        }
+      }
 
       // Processamento contábil e ativação de serviços no Supabase
-      if (response.ok && data) {
-        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-        const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-        const supabase = createClient(supabaseUrl, supabaseKey);
-
+      if ((response.ok || isAlreadyCompleted) && data) {
         const paidAmount = Number(data.amount) || 0;
         const metadata = data.metadata || {};
 
@@ -150,7 +349,7 @@ serve(async (req) => {
           } else {
             const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
             if (!ad && adPayload && typeof adPayload === "object") {
-              // Cria e ativa o anúncio diretamente via service_role com TXID verificado (schema unificado)
+              // Cria e ativa o anúncio diretamente via service_role com TXID verificado (suporta foto Base64 até 350KB)
               const cleanTier = (rawTier === "ouro" || rawTier === "prata") ? rawTier : "bronze";
               const rawCountry = String(adPayload.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6) || "GLOBAL";
               const rawPayMode = String(adPayload.payment_modes || "pi").trim().toLowerCase();
@@ -160,7 +359,7 @@ serve(async (req) => {
                 title: String(adPayload.title || "").slice(0, 120),
                 description: String(adPayload.description || "").slice(0, 600),
                 link_url: cleanTier !== "bronze" && adPayload.link_url ? String(adPayload.link_url).slice(0, 500) : null,
-                image_url: cleanTier !== "bronze" && adPayload.image_url ? String(adPayload.image_url).slice(0, 500) : null,
+                image_url: cleanTier !== "bronze" ? sanitizeAdImageUrl(adPayload.image_url) : null,
                 category: String(adPayload.category || "geral").slice(0, 40),
                 location: String(adPayload.location || "Online / Global").slice(0, 60) || "Online / Global",
                 country_code: rawCountry,
@@ -175,7 +374,7 @@ serve(async (req) => {
                 pi_payment_id: paymentId,
                 expires_at: expiresAt,
               }, { onConflict: "id" });
-            } else {
+            } else if (ad) {
               // Ativa o anúncio existente com verificação de montante aprovada
               await supabase
                 .from("anuncios")
@@ -208,6 +407,8 @@ serve(async (req) => {
             );
           }
 
+          metadata.productId = catalogItem.id;
+
           await supabase
             .from("doacoes")
             .insert([{
@@ -238,7 +439,7 @@ serve(async (req) => {
         }
       }
 
-      if (!response.ok) {
+      if (!response.ok && !isAlreadyCompleted) {
         return jsonError(
           "PI_COMPLETE_FAILED",
           data?.error_message || data?.error || "Falha ao concluir pagamento na Pi Network.",

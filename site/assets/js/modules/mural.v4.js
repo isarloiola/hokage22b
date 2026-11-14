@@ -1534,17 +1534,20 @@
           ` : ''}
         `
       );
-    }, 25000);
+    }, 90000);
 
     // Listener de retorno à página no celular (Samsung S20 / Pi Browser)
     const onReturnToPage = function () {
       setTimeout(function () {
+        if (window.HokagePi && typeof window.HokagePi.isPaymentInFlight === 'function' && window.HokagePi.isPaymentInFlight()) {
+          return;
+        }
         if ((submitBtn && submitBtn.disabled && submitBtn.textContent.includes('Processando')) ||
             (founderPayBtn && founderPayBtn.disabled && founderPayBtn.textContent.includes('Processando'))) {
           if (watchdogTimer) clearTimeout(watchdogTimer);
           resetSubmitButtons();
         }
-      }, 2000);
+      }, 4000);
     };
     window.addEventListener('focus', onReturnToPage, { once: true });
     document.addEventListener('visibilitychange', onReturnToPage, { once: true });

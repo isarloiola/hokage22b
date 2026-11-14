@@ -73,14 +73,23 @@
   }
 
   // Callback global do Pi SDK para recuperar ou cancelar pagamentos pendentes/travados na carteira
-  function onIncompletePaymentFound(payment) {
+  async function onIncompletePaymentFound(payment) {
     console.log('Pagamento incompleto detectado:', payment);
     if (!payment || !payment.identifier) return;
     const st = payment.status || {};
     if (st.developer_completed) return;
 
     if (payment.transaction && payment.transaction.txid) {
-      completePaymentOnServer(payment.identifier, payment.transaction.txid);
+      let savedAdPayload = null;
+      try {
+        const rawSaved = localStorage.getItem('hokage_pending_ad_payload');
+        if (rawSaved) savedAdPayload = JSON.parse(rawSaved);
+      } catch (_) {}
+      const res = await completePaymentOnServer(payment.identifier, payment.transaction.txid, savedAdPayload);
+      if (res && (res.ok || res.code === 'PAYMENT_COMPLETED')) {
+        try { localStorage.removeItem('hokage_pending_ad_payload'); } catch (_) {}
+        showToast('✓ Pagamento pendente recuperado e confirmado na blockchain!', 'success');
+      }
     } else {
       console.log('Limpando pagamento pendente sem txid:', payment.identifier);
       cancelPaymentOnServer(payment.identifier);
@@ -367,6 +376,7 @@
 
       const cleanAuthName = formatUserHandle(auth.user.username);
       updateAuthUi(authenticatedUser);
+      syncOwnedEbooksUi();
       showToast(`🎉 Conectado como @${cleanAuthName}!`, 'success');
 
       if (feedbackBox) {
@@ -580,6 +590,8 @@
           return;
         }
 
+        try { localStorage.removeItem('hokage_pending_ad_payload'); } catch (_) {}
+
         if (typeof options.onSuccess === 'function') {
           options.onSuccess({
             paymentId: paymentId,
@@ -638,6 +650,11 @@
     };
 
     try {
+      if (options.adPayload && typeof options.adPayload === 'object') {
+        try {
+          localStorage.setItem('hokage_pending_ad_payload', JSON.stringify(options.adPayload));
+        } catch (_) {}
+      }
       // Fecha outros modais informativos, mas NUNCA fecha o modal de criação de anúncio
       document.querySelectorAll('.portal-modal-overlay.active, .pi-modal-overlay.active').forEach(function (m) {
         if (m.id !== 'ad-create-modal') {
@@ -995,6 +1012,77 @@
     }
   }
 
+  async function checkMyLibrary() {
+    let token = '';
+    try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+    if (!token) return [];
+    try {
+      const res = await fetch(SUPABASE_FUNCTIONS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'my_library', accessToken: token })
+      });
+      const json = await res.json();
+      const data = json && json.data ? json.data : json;
+      if (data && Array.isArray(data.owned_products)) {
+        return data.owned_products;
+      }
+    } catch (err) {
+      console.warn('Erro ao consultar biblioteca Pi:', err);
+    }
+    return [];
+  }
+
+  async function downloadOwnedEbook(productId, format) {
+    let token = '';
+    try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+    if (!token && isPiBrowser()) {
+      await triggerAuthFlow();
+      try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+    }
+    if (!token) {
+      showToast('Conecte sua carteira no Pi Browser para validar sua compra.', 'error');
+      openPiConnectModal();
+      return;
+    }
+
+    showToast('Gerando link assinado exclusivo de download...', 'info');
+    try {
+      const res = await fetch(SUPABASE_FUNCTIONS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'download_ebook',
+          accessToken: token,
+          productId: productId,
+          format: format || 'pdf'
+        })
+      });
+      const json = await res.json();
+      const data = json && json.data ? json.data : json;
+      if (res.ok && data && data.download_url) {
+        showToast('✓ Compra verificada! Iniciando download...', 'success');
+        window.open(data.download_url, '_blank');
+      } else {
+        const msg = (json && json.error) || 'Arquivo ainda não disponível ou compra não localizada.';
+        showToast(msg, 'error');
+      }
+    } catch (err) {
+      showToast('Erro ao gerar download seguro.', 'error');
+    }
+  }
+
+  async function syncOwnedEbooksUi() {
+    const owned = await checkMyLibrary();
+    if (!owned || !owned.length) return;
+    owned.forEach(function (prodId) {
+      const box = document.getElementById('pi-owned-library-' + prodId);
+      if (box) {
+        box.style.display = 'block';
+      }
+    });
+  }
+
   // 13. Expõe na API global
   window.HokagePi = {
     initPiSdk: initPiSdk,
@@ -1009,6 +1097,10 @@
     showManualP2PModal: showManualP2PModal,
     openExternalDeepLink: openExternalDeepLink,
     showToast: showToast,
+    checkMyLibrary: checkMyLibrary,
+    downloadOwnedEbook: downloadOwnedEbook,
+    syncOwnedEbooksUi: syncOwnedEbooksUi,
+    isPaymentInFlight: function () { return isPaymentRequestInFlight; },
     getUser: function () { return authenticatedUser; },
     getAccessToken: function () {
       try {
