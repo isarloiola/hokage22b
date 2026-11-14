@@ -819,9 +819,10 @@ serve(async (req) => {
 
           let expectedPrice = MURAL_CONFIG.plans.bronze.price_pi;
           if (metadata.action === "renew") {
-            expectedPrice = (metadata.upgrade === "ouro")
-              ? MURAL_CONFIG.plans.ouro.price_pi
-              : MURAL_CONFIG.plans.prata.price_pi;
+            const renewTier = String(metadata.upgrade || metadata.tier || rawTier || "prata").toLowerCase();
+            if (renewTier === "ouro") expectedPrice = MURAL_CONFIG.plans.ouro.price_pi;
+            else if (renewTier === "bronze") expectedPrice = MURAL_CONFIG.plans.bronze.price_pi;
+            else expectedPrice = MURAL_CONFIG.plans.prata.price_pi;
           } else {
             let tierPrice = MURAL_CONFIG.plans.bronze.price_pi;
             if (rawTier === "ouro") tierPrice = MURAL_CONFIG.plans.ouro.price_pi;

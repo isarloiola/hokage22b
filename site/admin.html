@@ -750,7 +750,7 @@
         <p style="color:var(--text-muted);font-size:0.86rem;margin-bottom:16px">
           Quando um pioneiro realizar o pagamento P2P na Mainnet (<strong>3.14 π</strong> ou <strong>7.50 π</strong>), informe o <code>@username</code> dele abaixo para liberar o download vitalício assinado na conta Pi dele:
         </p>
-        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;flex-wrap:wrap">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(170px, 1fr));gap:10px;align-items:end">
           <div class="form-group" style="margin-bottom:0">
             <label class="form-label" for="grant-ebook-user">@Username do Comprador Pi</label>
             <input type="text" id="grant-ebook-user" class="form-input" placeholder="Ex: @joaopioneiro" />
@@ -761,6 +761,10 @@
               <option value="ia-na-pratica">🚀 IA na Prática (7.50 π)</option>
               <option value="pi-para-seu-negocio">💼 Pi para seu Negócio (3.14 π)</option>
             </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="grant-ebook-ref">@Indicador (Opcional)</label>
+            <input type="text" id="grant-ebook-ref" class="form-input" placeholder="Auto (ou @afiliado)" />
           </div>
           <button type="button" class="btn btn-primary" onclick="grantEbookAccessAdmin()" style="padding:10px 18px;height:40px">
             🔓 Liberar Acesso Vitalício
@@ -1278,16 +1282,16 @@
         }
       };
 
-      // Renovar duração do anúncio por +30 dias
+      // Renovar / Reativar anúncio como permanente
       window.extendAdDuration = async function (id) {
-        if (!confirm('Deseja renovar este anúncio por mais 30 dias a partir de hoje?')) return;
+        if (!confirm('Deseja reativar este anúncio com validade permanente no Mural?')) return;
         try {
           const ok = await window.IsarDB.updateAnuncio(id, { 
             status: 'ativo',
-            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+            expires_at: '2099-12-31T23:59:59.000Z'
           }, currentSecret);
           if (ok) {
-            showToast('✓ Anúncio renovado com sucesso por +30 dias!');
+            showToast('✓ Anúncio reativado com validade permanente!');
             await loadAllAds();
           }
         } catch (err) {
@@ -1549,8 +1553,10 @@
       window.grantEbookAccessAdmin = async function () {
         const userInp = document.getElementById('grant-ebook-user');
         const prodSel = document.getElementById('grant-ebook-product');
+        const refInp = document.getElementById('grant-ebook-ref');
         const rawUser = userInp ? userInp.value.trim() : '';
         const prodId = prodSel ? prodSel.value : 'ia-na-pratica';
+        const rawRef = refInp ? refInp.value.trim() : '';
         if (!rawUser) {
           showToast('Informe o @username do pioneiro comprador.');
           return;
@@ -1579,13 +1585,15 @@
               adminSecret: currentSecret || undefined,
               accessToken: token || undefined,
               targetUsername: rawUser,
-              productId: prodId
+              productId: prodId,
+              refCode: rawRef || undefined
             })
           });
           const json = await res.json();
           if (res.ok && json.ok) {
             showToast('✓ Acesso vitalício liberado para ' + rawUser + '!');
             if (userInp) userInp.value = '';
+            if (refInp) refInp.value = '';
             loadAllCommissions();
           } else {
             showToast('Erro: ' + ((json && json.error) || 'Falha ao liberar acesso.'), true);

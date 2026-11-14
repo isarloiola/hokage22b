@@ -271,12 +271,9 @@ serve(async (req) => {
         return jsonResponse({ error: "A descrição deve ter entre 5 e 300 caracteres." }, 400);
       }
 
-      const linkUrl = validateHttpUrl(payload?.link_url);
-      const imageUrl = validateAdImageUrl(payload?.image_url);
-
       const { data: ad, error: fetchErr } = await supabase
         .from("anuncios")
-        .select("id, pioneer_username, created_at")
+        .select("id, pioneer_username, created_at, plan_tier")
         .eq("id", adId)
         .single();
 
@@ -292,13 +289,17 @@ serve(async (req) => {
         return jsonResponse({ error: "Prazo de edição expirado (máximo 24h após a publicação)." }, 403);
       }
 
+      const isBronzeTier = String(ad.plan_tier || "bronze").toLowerCase() === "bronze";
+      const safeLinkUrl = isBronzeTier ? null : validateHttpUrl(payload?.link_url);
+      const safeImageUrl = isBronzeTier ? null : validateAdImageUrl(payload?.image_url);
+
       const { error: updErr } = await supabase
         .from("anuncios")
         .update({
           title,
           description,
-          link_url: linkUrl,
-          image_url: imageUrl,
+          link_url: safeLinkUrl,
+          image_url: safeImageUrl,
         })
         .eq("id", adId);
 
@@ -486,6 +487,23 @@ serve(async (req) => {
         .single();
 
       if (error) throw error;
+
+      // Sincroniza reputation_score na tabela pioneiros (total de recomendações positivas >= 4 estrelas)
+      try {
+        const { count: positiveCount } = await supabase
+          .from("pioneer_reviews")
+          .select("id", { count: "exact", head: true })
+          .ilike("target_username", targetUsername)
+          .gte("rating", 4);
+
+        if (typeof positiveCount === "number") {
+          await supabase
+            .from("pioneiros")
+            .update({ reputation_score: positiveCount })
+            .ilike("username", targetUsername);
+        }
+      } catch (_) {}
+
       return jsonResponse({ ok: true, review: data });
     }
 

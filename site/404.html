@@ -14,7 +14,11 @@
       var second = segments[1] || '';
 
       // Páginas conhecidas da raiz do portal
-      var knownRootPages = ['zero', 'mural', 'pioneiro'];
+      var knownRootPages = ['zero', 'mural', 'pioneiro', 'construir', 'hackathon', 'obrigado', 'admin'];
+      if (segments.length === 1 && first.toLowerCase() === 'alem-do-clique') {
+        window.location.replace('/construir.html' + window.location.search + window.location.hash);
+        return;
+      }
       if (segments.length === 1 && knownRootPages.indexOf(first.toLowerCase()) !== -1) {
         window.location.replace('/' + first.toLowerCase() + '.html' + window.location.search + window.location.hash);
         return;

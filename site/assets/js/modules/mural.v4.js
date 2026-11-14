@@ -2017,15 +2017,31 @@
       return;
     }
 
+    const isBronzeAd = String(ad.plan_tier || 'bronze').toLowerCase() === 'bronze';
+    const linkInp = document.getElementById('edit-ad-input-link');
+    const imgInp = document.getElementById('edit-ad-input-image');
+
     document.getElementById('edit-ad-id').value = ad.id;
     document.getElementById('edit-ad-input-title').value = ad.title || '';
     document.getElementById('edit-ad-input-desc').value = ad.description || '';
-    document.getElementById('edit-ad-input-link').value = ad.link_url || '';
-    document.getElementById('edit-ad-input-image').value = ad.image_url || '';
+    if (linkInp) {
+      linkInp.value = isBronzeAd ? '' : (ad.link_url || '');
+      linkInp.disabled = isBronzeAd;
+      linkInp.placeholder = isBronzeAd ? '🔒 Exclusivo nos planos Prata e Ouro (use 🚀 Impulsionar)' : 'https://...';
+      linkInp.style.opacity = isBronzeAd ? '0.5' : '1';
+    }
+    if (imgInp) {
+      imgInp.value = isBronzeAd ? '' : (ad.image_url || '');
+      imgInp.disabled = isBronzeAd;
+      imgInp.placeholder = isBronzeAd ? '🔒 Banner exclusivo nos planos Prata e Ouro' : 'https://...';
+      imgInp.style.opacity = isBronzeAd ? '0.5' : '1';
+    }
 
     const deadlineHint = document.getElementById('edit-ad-deadline-hint');
     if (deadlineHint) {
-      deadlineHint.textContent = `⏱️ Janela de edição ativa: restam aproximadamente ${editStatus.hoursLeft}h (máx. 24h após publicação).`;
+      deadlineHint.textContent = isBronzeAd
+        ? `⏱️ Janela de edição ativa (${editStatus.hoursLeft}h restantes). Nota: Link externo e foto são exclusivos dos planos Prata/Ouro.`
+        : `⏱️ Janela de edição ativa: restam aproximadamente ${editStatus.hoursLeft}h (máx. 24h após publicação).`;
     }
 
     const editModal = document.getElementById('edit-ad-modal');
@@ -2059,10 +2075,11 @@
       return;
     }
 
+    const isBronzeAd = String(ad.plan_tier || 'bronze').toLowerCase() === 'bronze';
     const title = document.getElementById('edit-ad-input-title').value.trim();
     const desc = document.getElementById('edit-ad-input-desc').value.trim();
-    const rawLink = document.getElementById('edit-ad-input-link').value.trim();
-    const rawImg = document.getElementById('edit-ad-input-image').value.trim();
+    const rawLink = isBronzeAd ? '' : document.getElementById('edit-ad-input-link').value.trim();
+    const rawImg = isBronzeAd ? '' : document.getElementById('edit-ad-input-image').value.trim();
 
     if (title.length < 2 || desc.length < 5) {
       alert('Preencha um título (mín. 2 caracteres) e descrição (mín. 5 caracteres).');
@@ -2558,12 +2575,13 @@
         if (urlTier === 'ouro' || urlTier === 'prata' || urlTier === 'bronze') {
           selectTier(urlTier);
         }
-        if (urlCat && typeof filterByCategory === 'function') {
-          filterByCategory(urlCat);
+        if (urlCat && typeof filterCategory === 'function') {
+          filterCategory(urlCat);
         }
         const countryFilterEl = document.getElementById('mural-filter-country');
-        if (urlCountry && countryFilterEl) {
-          countryFilterEl.value = urlCountry;
+        if (urlCountry) {
+          if (countryFilterEl) countryFilterEl.value = urlCountry;
+          if (typeof filterCountry === 'function') filterCountry(urlCountry);
         }
         if (urlPublish) {
           setTimeout(function () { openModal(); }, 150);

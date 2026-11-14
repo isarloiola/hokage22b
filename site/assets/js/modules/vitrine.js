@@ -617,10 +617,12 @@
 
     function setLoggedUser(username, uid, authType, accessToken) {
       const clean = cleanUsername(username);
+      const existing = getLoggedUser();
+      const preservedUid = uid || (existing && cleanUsername(existing.username) === clean ? existing.uid : null) || ('user_' + clean.replace('@', ''));
       const userObj = { 
         username: clean, 
-        uid: uid || ('user_' + clean.replace('@', '')),
-        authType: authType || 'demo'
+        uid: preservedUid,
+        authType: authType || (existing && existing.authType) || 'demo'
       };
       try {
         localStorage.setItem('hokage_pi_user', JSON.stringify(userObj));
@@ -629,6 +631,28 @@
           sessionStorage.setItem('hokage_pi_access_token', accessToken);
         }
       } catch (_) {}
+    }
+
+    async function ensurePiAccessToken() {
+      let token = '';
+      try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+      if (token) return token;
+      if (isPiBrowser() && window.Pi && typeof window.Pi.authenticate === 'function') {
+        try {
+          let auth;
+          try {
+            auth = await window.Pi.authenticate(['username', 'payments', 'wallet_address'], function () {});
+          } catch (_) {
+            auth = await window.Pi.authenticate(['username'], function () {});
+          }
+          if (auth && auth.accessToken) {
+            token = auth.accessToken;
+            const authHandle = (auth.user && auth.user.username) ? cleanUsername(auth.user.username) : currentPioneerUser;
+            setLoggedUser(authHandle, auth.user && auth.user.uid, 'pi-sdk', token);
+          }
+        } catch (_) {}
+      }
+      return token;
     }
 
     function logoutPioneer() {
@@ -667,7 +691,7 @@
           username = lastSeg;
         } else if (pathSegments.length === 2 && pathSegments[0].toLowerCase() === 'pioneiro') {
           username = '@' + lastSeg;
-        } else if (pathSegments.length === 1 && !['zero', 'mural', 'pioneiro', 'legal', 'index'].includes(pathSegments[0].toLowerCase()) && !pathSegments[0].includes('.')) {
+        } else if (pathSegments.length === 1 && !['zero', 'mural', 'pioneiro', 'legal', 'index', 'construir', 'hackathon', 'obrigado', 'admin', 'alem-do-clique'].includes(pathSegments[0].toLowerCase()) && !pathSegments[0].includes('.')) {
           username = '@' + pathSegments[0];
         }
       }
@@ -1907,16 +1931,15 @@
         return;
       }
 
-      // Se estiver no Pi Browser mas não autenticado ainda, autentica primeiro
-      if (inPi && !isAuth && window.Pi) {
-        try {
-          const auth = await window.Pi.authenticate(['username', 'payments', 'wallet_address'], function(p) { console.log('Pendência:', p); });
-          if (auth && auth.user && auth.user.username) {
-            username = cleanUsername(auth.user.username);
-            setLoggedUser(username, auth.user.uid, 'pi-sdk', auth.accessToken || '');
-          }
-        } catch (err) {
-          alert('Falha na autenticação Pi. Confirme o acesso dentro do Pi Browser.');
+      // Garante token Pi SDK ativo (mesmo se o pioneiro fechou e reabriu o Pi Browser em outro dia)
+      if (inPi && window.Pi) {
+        const freshToken = await ensurePiAccessToken();
+        const refreshedUser = getLoggedUser();
+        if (refreshedUser && refreshedUser.username) {
+          username = cleanUsername(refreshedUser.username);
+        }
+        if (!freshToken) {
+          alert('Falha na autenticação Pi. Confirme a autorização da sua conta dentro do Pi Browser para salvar oficialmente.');
           return;
         }
       }
@@ -2394,13 +2417,18 @@
       if (sectionEl) sectionEl.style.display = 'none';
 
       if (!window.HokageReferral || !targetUsername) return;
-      const [stats, affSummary] = await Promise.all([
-        window.HokageReferral.fetchStats(targetUsername),
-        window.HokageReferral.fetchAffiliateSummary
-          ? window.HokageReferral.fetchAffiliateSummary(targetUsername)
-          : Promise.resolve(null)
-      ]);
-      if (!stats && !affSummary) return;
+      let stats = null;
+      let affSummary = null;
+      if (!isSimulatorMode) {
+        try {
+          [stats, affSummary] = await Promise.all([
+            window.HokageReferral.fetchStats(targetUsername),
+            window.HokageReferral.fetchAffiliateSummary
+              ? window.HokageReferral.fetchAffiliateSummary(targetUsername)
+              : Promise.resolve(null)
+          ]);
+        } catch (_) {}
+      }
 
       const count = Number((stats && stats.referral_qualified_count) || 0);
       const credits = Number((stats && stats.referral_credits) || 0);
@@ -2410,7 +2438,7 @@
         badgeEl.style.display = 'inline-flex';
       }
 
-      if (!isOwner || isSimulatorMode || !sectionEl) return;
+      if (!isOwner || !sectionEl) return;
 
       const pendingPi = Number((affSummary && affSummary.pending_pi) || 0);
       const requestedPi = Number((affSummary && affSummary.requested_pi) || 0);
@@ -2525,9 +2553,9 @@
         btn.textContent = '⏳ Solicitando saque...';
       }
       try {
-        let token = (window.HokagePi && window.HokagePi.getAccessToken) ? window.HokagePi.getAccessToken() : '';
-        if (!token) {
-          try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+        let token = await ensurePiAccessToken();
+        if (!token && window.HokagePi && window.HokagePi.getAccessToken) {
+          token = window.HokagePi.getAccessToken();
         }
         const res = await window.HokageReferral.requestPayout(token, wallet);
         alert(`✓ Saque de ${Number(res.requested_pi || 0).toFixed(4)} π solicitado com sucesso!\n\nSua transferência será enviada diretamente para sua carteira Pi:\n${wallet}`);
@@ -2669,8 +2697,8 @@
         return;
       }
 
-      const isPi = Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
-      const piUser = (window.HokagePi && window.HokagePi.getUser) ? window.HokagePi.getUser() : null;
+      const isPi = isPiBrowser() || Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
+      const piUser = getLoggedUser() || ((window.HokagePi && window.HokagePi.getUser) ? window.HokagePi.getUser() : null);
       if (isPi && piUser && piUser.username) {
         formBox.innerHTML = `
           <form onsubmit="handleReviewSubmit(event, '${escapeHtml(targetUsername)}')" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.22);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
@@ -2688,9 +2716,23 @@
             <button type="submit" class="portal-btn portal-btn--sm" style="align-self:flex-end;background:#10b981;color:#052e16;font-weight:700;padding:7px 14px">Enviar Avaliação</button>
           </form>
         `;
+      } else if (isPi) {
+        formBox.innerHTML = `
+          <div style="font-size:0.78rem;color:var(--text-secondary);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <span>🛡️ Conecte sua conta no <strong>Pi Browser</strong> para avaliar esta Vitrine:</span>
+            <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="connectPiForReview('${escapeHtml(targetUsername)}')" style="padding:6px 12px;font-size:0.76rem;font-weight:800">
+              ⚡ Conectar Pi
+            </button>
+          </div>
+        `;
       } else {
         formBox.innerHTML = `<div style="font-size:0.76rem;color:var(--text-muted);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px">🔒 Avaliações verificadas disponíveis exclusivamente para usuários conectados no <strong>Pi Browser</strong>.</div>`;
       }
+    }
+
+    async function connectPiForReview(targetUsername) {
+      await ensurePiAccessToken();
+      await loadPioneerReviews(targetUsername, false);
     }
 
     async function handleReviewSubmit(event, targetUsername) {
@@ -2702,13 +2744,14 @@
         return;
       }
       try {
+        await ensurePiAccessToken();
         await window.IsarDB.submitPioneerReview({
           target_username: targetUsername,
           rating: ratingEl ? Number(ratingEl.value) : 5,
           comment: commentEl.value.trim()
         });
         await loadPioneerReviews(targetUsername, false);
-        alert('✓ Avaliação verificada registrada com sucesso!');
+        showVitrineToast('✓ Avaliação verificada registrada com sucesso!', 'success');
       } catch (err) {
         alert(err && err.message ? err.message : 'Não foi possível enviar a avaliação.');
       }

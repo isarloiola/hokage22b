@@ -13,9 +13,23 @@
   const MURAL_ACTION_URL = SUPABASE_URL + '/functions/v1/mural-action';
 
   async function callMuralAction(action, payload) {
-    const accessToken = (window.HokagePi && window.HokagePi.getAccessToken)
+    let accessToken = (window.HokagePi && window.HokagePi.getAccessToken)
       ? window.HokagePi.getAccessToken()
-      : null;
+      : '';
+
+    if (!accessToken) {
+      try { accessToken = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+    }
+
+    if (!accessToken && window.Pi && typeof window.Pi.authenticate === 'function') {
+      try {
+        const auth = await window.Pi.authenticate(['username'], function () {});
+        if (auth && auth.accessToken) {
+          accessToken = auth.accessToken;
+          try { sessionStorage.setItem('hokage_pi_access_token', accessToken); } catch (_) {}
+        }
+      } catch (_) {}
+    }
 
     if (!accessToken) {
       throw new Error('Sessão Pi Network não autenticada. Conecte-se no Pi Browser.');
@@ -791,7 +805,7 @@
     try {
       var query = db
         .from('pioneiros')
-        .select('uid, username, bio, avatar_url, wallet_address, whatsapp_url, youtube_url, instagram_url, twitter_url, products, reputation_score, created_at, updated_at')
+        .select('username, bio, avatar_url, wallet_address, whatsapp_url, youtube_url, instagram_url, twitter_url, products, reputation_score, is_ambassador, referral_qualified_count, created_at, updated_at')
         .order('updated_at', { ascending: false })
         .limit(limit);
 
