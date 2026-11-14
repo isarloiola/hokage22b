@@ -347,7 +347,8 @@ serve(async (req) => {
               { security_rejected: true }
             );
           } else {
-            const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+            // Todos os anúncios são permanentes (validade perpétua até 2099 para compatibilidade com triggers/RLS)
+            const expiresAt = "2099-12-31T23:59:59.000Z";
             if (!ad && adPayload && typeof adPayload === "object") {
               // Cria e ativa o anúncio diretamente via service_role com TXID verificado (suporta foto Base64 até 350KB)
               const cleanTier = (rawTier === "ouro" || rawTier === "prata") ? rawTier : "bronze";

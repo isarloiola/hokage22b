@@ -87,9 +87,9 @@
   let availableReferralCredits = 0;
 
   const tierPrices = {
-    ouro:   { pi: 3.14, name: '🥇 Destaque Ouro (Campanha 7 dias · Topo VIP & Card Duplo)' },
-    prata:  { pi: 1.00, name: '🥈 Destaque Prata (Campanha 7 dias · Card Médio)' },
-    bronze: { pi: 0.314, name: '🥉 Classificado Bronze (Validade 30 dias · Comunitário)' }
+    ouro:   { pi: 3.14, name: '🥇 Destaque Ouro (Publicação Permanente · Topo VIP & Card Duplo)' },
+    prata:  { pi: 1.00, name: '🥈 Destaque Prata (Publicação Permanente · Card Médio)' },
+    bronze: { pi: 0.314, name: '🥉 Classificado Bronze (Publicação Permanente · Comunitário)' }
   };
 
   // Helper para localização dos grids das duas áreas comerciais
@@ -1933,7 +1933,7 @@
                 <span>·</span>
                 <span style="color:var(--amber-light);font-weight:600">${escapeHtml(ad.plan_tier ? ad.plan_tier.toUpperCase() : 'PRATA')}</span>
                 <span>·</span>
-                <span>Expira em: <strong>${daysLeft} dias</strong></span>
+                <span style="color:#10b981;font-weight:700">✓ Permanente</span>
               </div>
               <strong style="color:#fff;font-size:0.95rem;display:block;word-break:break-word">${escapeHtml(ad.title || '')}</strong>
               <div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap">
@@ -1945,9 +1945,6 @@
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap">
               ${editButtonHtml}
-              <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural.renewAdPrompt('${escapeHtml(ad.id)}')" style="font-size:0.78rem;padding:6px 10px">
-                🚀 +30 dias
-              </button>
             </div>
           </div>
         `;

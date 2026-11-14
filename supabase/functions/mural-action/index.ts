@@ -17,7 +17,7 @@ import {
 } from "../_shared/http.ts";
 import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
 
-const MAX_BODY_BYTES = 32 * 1024; // 32 KB limit against payload-flood DoS
+const MAX_BODY_BYTES = 800 * 1024; // 800 KB para suportar fotos Base64 de produtos/anúncios
 const TIER_PRICES: Record<string, number> = {
   ouro: MURAL_CONFIG.plans.ouro.price_pi,
   prata: MURAL_CONFIG.plans.prata.price_pi,
@@ -53,6 +53,19 @@ function validateHttpUrl(raw: unknown): string | null {
     throw new Error("URL inválida. Utilize http:// ou https://.");
   }
   return trimmed.slice(0, 500);
+}
+
+function validateAdImageUrl(raw: unknown): string | null {
+  if (!raw || typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith("data:image/")) {
+    return trimmed.length <= 350000 ? trimmed : null;
+  }
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed.slice(0, 500);
+  }
+  return null;
 }
 
 async function verifyPiPayment(paymentId: string, expectedMinAmount: number, expectedUid: string) {
@@ -153,14 +166,15 @@ serve(async (req) => {
       }
 
       const linkUrl = tier === "bronze" ? null : validateHttpUrl(payload?.link_url);
-      const imageUrl = tier === "bronze" ? null : validateHttpUrl(payload?.image_url);
+      const imageUrl = tier === "bronze" ? null : validateAdImageUrl(payload?.image_url);
       const category = String(payload?.category || "geral").trim().slice(0, 32);
       const location = String(payload?.location || "Online / Global").trim().slice(0, 60) || "Online / Global";
       const rawCountry = String(payload?.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6);
       const countryCode = rawCountry || "GLOBAL";
       const rawPayMode = String(payload?.payment_modes || "pi").trim().toLowerCase();
       const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
-      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+      // Todos os anúncios são permanentes (validade perpétua até 2099 para compatibilidade com triggers/RLS)
+      const expiresAt = "2099-12-31T23:59:59.000Z";
 
       const insertRow = {
         title,
@@ -229,6 +243,14 @@ serve(async (req) => {
         );
       }
 
+      if (rpcRes?.ad?.id) {
+        await supabase
+          .from("anuncios")
+          .update({ expires_at: "2099-12-31T23:59:59.000Z" })
+          .eq("id", rpcRes.ad.id);
+        rpcRes.ad.expires_at = "2099-12-31T23:59:59.000Z";
+      }
+
       return jsonOk("REFERRAL_AD_CREATED", {
         ad: rpcRes?.ad || null,
         remaining_credits: rpcRes?.remaining_credits ?? 0,
@@ -250,7 +272,7 @@ serve(async (req) => {
       }
 
       const linkUrl = validateHttpUrl(payload?.link_url);
-      const imageUrl = validateHttpUrl(payload?.image_url);
+      const imageUrl = validateAdImageUrl(payload?.image_url);
 
       const { data: ad, error: fetchErr } = await supabase
         .from("anuncios")

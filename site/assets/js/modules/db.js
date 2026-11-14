@@ -172,25 +172,14 @@
           .order('created_at', { ascending: false });
         if (fallbackRes.error) throw fallbackRes.error;
         return (fallbackRes.data || []).filter(function (ad) {
-          if (!ad) return false;
-          if (ad.expires_at) {
-            const exp = new Date(ad.expires_at).getTime();
-            if (!isNaN(exp) && exp <= Date.now()) return false;
-          }
-          return true;
+          return Boolean(ad && ad.status !== 'suspenso' && ad.status !== 'pendente');
         });
       }
 
-      // Validação defensiva client-side: garante que nenhum expirado ou suspenso seja exibido
-      const now = Date.now();
+      // Todos os anúncios aprovados/ativos são permanentes (apenas suspensos ou pendentes são ocultados)
       const validAds = (data || []).filter(function (ad) {
         if (!ad) return false;
         if (ad.status === 'suspenso' || ad.status === 'pendente') return false;
-        if (ad.is_founder_demo || ad.status === 'demonstracao') return true;
-        if (ad.expires_at) {
-          const expTime = new Date(ad.expires_at).getTime();
-          if (!isNaN(expTime) && expTime <= now) return false;
-        }
         return true;
       });
 

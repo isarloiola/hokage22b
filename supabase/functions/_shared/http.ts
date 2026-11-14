@@ -11,9 +11,9 @@ export const ALLOWED_ORIGINS = new Set([
 
 export const MURAL_CONFIG = {
   plans: {
-    ouro: { price_pi: 3.14, duration_days: 7, allows_link: true, allows_image: true },
-    prata: { price_pi: 1.0, duration_days: 7, allows_link: true, allows_image: true },
-    bronze: { price_pi: 0.314, duration_days: 30, allows_link: false, allows_image: false },
+    ouro: { price_pi: 3.14, permanent: true, allows_link: true, allows_image: true },
+    prata: { price_pi: 1.0, permanent: true, allows_link: true, allows_image: true },
+    bronze: { price_pi: 0.314, permanent: true, allows_link: false, allows_image: false },
   },
   products: {
     "pi-para-seu-negocio": { id: "pi-para-seu-negocio", title: "Pi para seu negócio", price_pi: 3.14, price_brl: 19.9 },
