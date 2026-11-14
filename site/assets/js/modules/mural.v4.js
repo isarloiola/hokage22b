@@ -1253,7 +1253,9 @@
     const title = titleEl ? titleEl.value.trim() : '';
     const description = descEl ? descEl.value.trim() : '';
     if (title.length < 2 || description.length < 5) {
-      alert('Preencha o título (mín. 2 caracteres) e a descrição (mín. 5 caracteres) antes de usar seu crédito.');
+      if (typeof showSubmitFeedback === 'function') {
+        showSubmitFeedback('warning', '<div style="font-weight:700;color:#fcd34d">Preencha o título (mín. 2 caracteres) e a descrição (mín. 5 caracteres) antes de usar seu crédito.</div>', '');
+      }
       return;
     }
 
@@ -1285,7 +1287,10 @@
         window.location.reload();
       }
     } catch (err) {
-      alert((err && err.message) || 'Não foi possível resgatar o crédito de indicação.');
+      const msg = (err && err.message) || 'Não foi possível resgatar o crédito de indicação.';
+      if (typeof showSubmitFeedback === 'function') {
+        showSubmitFeedback('warning', `<div style="font-weight:700;color:#fca5a5">${msg}</div>`, '');
+      }
       updateReferralButtonVisibility();
     } finally {
       if (btn) btn.disabled = false;
@@ -2491,6 +2496,35 @@
           saveDraft();
         });
       }
+
+      // Sincronização Backend-First de preços/planos e parâmetros de URL (?tier=, ?cat=, ?country=)
+      if (window.IsarDB && typeof window.IsarDB.getMuralConfig === 'function') {
+        window.IsarDB.getMuralConfig().then(function (cfg) {
+          if (cfg && cfg.plans) {
+            if (cfg.plans.ouro && typeof cfg.plans.ouro.price_pi === 'number') tierPrices.ouro.pi = cfg.plans.ouro.price_pi;
+            if (cfg.plans.prata && typeof cfg.plans.prata.price_pi === 'number') tierPrices.prata.pi = cfg.plans.prata.price_pi;
+            if (cfg.plans.bronze && typeof cfg.plans.bronze.price_pi === 'number') tierPrices.bronze.pi = cfg.plans.bronze.price_pi;
+            selectTier(selectedTier);
+          }
+        }).catch(function () {});
+      }
+
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlTier = (urlParams.get('tier') || '').toLowerCase();
+        const urlCat = (urlParams.get('cat') || '').toLowerCase();
+        const urlCountry = (urlParams.get('country') || '').toUpperCase();
+        if (urlTier === 'ouro' || urlTier === 'prata' || urlTier === 'bronze') {
+          selectTier(urlTier);
+        }
+        if (urlCat && typeof filterByCategory === 'function') {
+          filterByCategory(urlCat);
+        }
+        const countryFilterEl = document.getElementById('mural-filter-country');
+        if (urlCountry && countryFilterEl) {
+          countryFilterEl.value = urlCountry;
+        }
+      } catch (_) {}
 
       // Restauração inteligente ou pré-preenchimento vindo da Vitrine ("Impulsionar no Mural")
       try {

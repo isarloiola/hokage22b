@@ -248,22 +248,49 @@
     }
   }
 
-  // Cria um novo anúncio no mural (com enquadramento de tier e exposição comercial)
+  async function getMuralConfig() {
+    try {
+      const res = await fetch(MURAL_ACTION_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+        },
+        body: JSON.stringify({ action: 'get_config' })
+      });
+      const json = await res.json().catch(function () { return {}; });
+      return (json && json.ok && json.data && json.data.config) ? json.data.config : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // Cria um novo anúncio no mural (Backend-First: servidor valida pagamento/crédito via Edge Function)
   async function createAnuncio(adData) {
+    if (!adData) return null;
+
+    // Se já foi criado/liquidado no backend por pi-payment (com TXID verificado), não duplica via anon
+    if (adData.payment_txid && !adData.paymentId && !adData.is_founder_demo) {
+      return [adData];
+    }
+
+    // Se houver paymentId sem TXID pré-liquidado, delega à Edge Function mural-action
+    if (adData.paymentId) {
+      const res = await callMuralAction('create_ad', adData);
+      return res && res.ad ? [res.ad] : [adData];
+    }
+
+    // Apenas demonstração do fundador pode usar fallback explícito se configurado
+    if (!adData.is_founder_demo) {
+      throw new Error('Criação de anúncio exige validação no servidor (Pi Payment ou Crédito de Indicação).');
+    }
+
     const db = getClient();
-    if (!db || !adData) return null;
+    if (!db) return null;
 
     try {
       const tier = adData.plan_tier || 'bronze';
-      let exposure = 'chronological';
-      if (tier === 'ouro') exposure = 'priority';
-      else if (tier === 'prata') exposure = 'rotation';
-
-      // Higienização estrita de price_pi para garantir formato numérico no PostgreSQL
-      const numPrice = (typeof adData.price_pi === 'number')
-        ? adData.price_pi
-        : (parseFloat(adData.price_pi) || 0.0);
-
       const payload = {
         id: adData.id || ('ad_' + Date.now()),
         title: adData.title,
@@ -274,33 +301,20 @@
         pioneer_username: adData.pioneer_username || '@pioneiro',
         pioneer_name: adData.pioneer_name || 'Pioneiro',
         plan_tier: tier,
-        price_pi: numPrice,
-        status: adData.status || (adData.is_founder_demo ? 'demonstracao' : 'ativo'),
-        exposure_type: adData.exposure_type || exposure,
-        is_founder_demo: Boolean(adData.is_founder_demo),
-        payment_txid: adData.payment_txid || (adData.is_founder_demo ? 'FOUNDER_DEMO_OFFICIAL' : null),
-        views_count: adData.views_count || 0,
-        clicks_count: adData.clicks_count || 0,
-        profile_visits: adData.profile_visits || 0,
-        likes_count: adData.likes_count || 0,
+        price_pi: parseFloat(adData.price_pi) || 0.0,
+        status: adData.status || 'demonstracao',
+        exposure_type: adData.exposure_type || (tier === 'ouro' ? 'priority' : 'rotation'),
+        is_founder_demo: true,
+        payment_txid: adData.payment_txid || 'FOUNDER_DEMO_OFFICIAL',
         created_at: adData.created_at || new Date().toISOString()
       };
 
-      const { data, error } = await db
-        .from('anuncios')
-        .insert([payload]);
-
-      if (error) {
-        // Se a Edge Function pi-payment já tiver criado o anúncio no servidor (23505 = duplicate key), considera sucesso!
-        if (error.code === '23505' || (error.message && error.message.includes('duplicate key'))) {
-          return [payload];
-        }
-        console.warn('Supabase: Erro ao inserir anúncio:', error.message);
-        throw error;
-      }
-      return data;
+      const { data, error } = await db.from('anuncios').insert([payload]);
+      if (error && error.code === '23505') return [payload];
+      if (error) throw error;
+      return data || [payload];
     } catch (err) {
-      console.warn('Supabase: Falha ao criar anúncio:', err.message);
+      console.warn('Supabase: Falha ao criar demonstração:', err.message);
       return null;
     }
   }
@@ -750,107 +764,43 @@
         throw new Error('Chave pública da Pi Wallet inválida (checksum CRC16 não confere)');
       }
 
-      // 1. Tenta salvar via Edge Function segura com validação de token na Pi Core Team
+      // 1. Gravação exclusiva via Edge Function segura com validação de token na Pi Core Team
       var token = (window.HokagePi && window.HokagePi.getAccessToken) ? window.HokagePi.getAccessToken() : '';
       if (!token) {
         try {
           token = sessionStorage.getItem('hokage_pi_access_token') || '';
         } catch (_) {}
       }
-      if (token) {
-        try {
-          var pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')
-            ? window.HokageReferral.getPendingRef()
-            : null;
-          var edgeRes = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              accessToken: token,
-              profileData: profileData,
-              refCode: pendingRef
-            })
-          });
-          if (edgeRes.ok) {
-            var edgeJson = await edgeRes.json();
-            if (edgeJson && edgeJson.referral && window.HokageReferral && typeof window.HokageReferral.clearPendingRef === 'function') {
-              var r = edgeJson.referral;
-              if (r.awarded || r.reason === 'already_referred' || r.reason === 'self_referral' || r.reason === 'self_referral_uid') {
-                window.HokageReferral.clearPendingRef();
-              }
-            }
-            if (edgeJson && edgeJson.profile) {
-              return edgeJson.profile;
-            }
-          }
-        } catch (edgeErr) {
-          console.warn('Tentativa via Edge Function retornou erro, tentando fallback:', edgeErr);
+      if (!token) {
+        throw new Error('Sessão Pi Network não autenticada. Conecte-se no Pi Browser para salvar sua Vitrine.');
+      }
+
+      var pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')
+        ? window.HokageReferral.getPendingRef()
+        : null;
+      var edgeRes = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          accessToken: token,
+          profileData: profileData,
+          refCode: pendingRef
+        })
+      });
+      var edgeJson = await edgeRes.json().catch(function () { return {}; });
+      if (!edgeRes.ok || !edgeJson.ok) {
+        throw new Error((edgeJson && edgeJson.error) || 'Falha ao salvar perfil no servidor.');
+      }
+      if (edgeJson.referral && window.HokageReferral && typeof window.HokageReferral.clearPendingRef === 'function') {
+        var r = edgeJson.referral;
+        if (r.awarded || r.reason === 'already_referred' || r.reason === 'self_referral' || r.reason === 'self_referral_uid') {
+          window.HokageReferral.clearPendingRef();
         }
       }
-
-      // Descobre o UID real existente para evitar violação de UNIQUE no username
-      var targetUid = profileData.uid;
-      if (!targetUid) {
-        try {
-          var existQuery = await db.from('pioneiros')
-            .select('uid')
-            .ilike('username', '@' + clean)
-            .maybeSingle();
-          if (existQuery && existQuery.data && existQuery.data.uid) {
-            targetUid = existQuery.data.uid;
-          }
-        } catch (_) {}
-      }
-      if (!targetUid) targetUid = 'user_' + clean;
-
-      var updatePayload = {
-        uid: targetUid,
-        username: '@' + clean,
-        bio: profileData.bio || null,
-        avatar_url: profileData.avatar_url || null,
-        wallet_address: cleanWallet,
-        whatsapp_url: profileData.whatsapp_url || null,
-        youtube_url: profileData.youtube_url || null,
-        twitter_url: profileData.twitter_url || null,
-        instagram_url: profileData.instagram_url || null,
-        checklist_state: {
-          showcase_zero: profileData.showcase_zero !== false,
-          showcase_mural: profileData.showcase_mural !== false,
-          social_links: Array.isArray(profileData.social_links) ? profileData.social_links.slice(0, 12) : []
-        },
-        products: profileData.products || [],
-        updated_at: new Date().toISOString()
-      };
-
-      var res = await db.from('pioneiros').upsert(updatePayload, { onConflict: 'uid' });
-      if (res.error) {
-        // Tenta update direto por username caso exista conflito de chave
-        var updateRes = await db.from('pioneiros')
-          .update(updatePayload)
-          .ilike('username', '@' + clean);
-
-        if (updateRes.error) {
-          // Fallback para RPC
-          var rpcRes = await db.rpc('pioneer_save_profile', {
-            p_username: '@' + clean,
-            p_bio: profileData.bio || null,
-            p_wallet: profileData.wallet_address || null,
-            p_whatsapp: profileData.whatsapp_url || null,
-            p_youtube: profileData.youtube_url || null,
-            p_twitter: profileData.twitter_url || null,
-            p_instagram: profileData.instagram_url || null,
-            p_products: profileData.products || [],
-            p_avatar: profileData.avatar_url || null
-          });
-          if (rpcRes.error) throw rpcRes.error;
-          return rpcRes.data;
-        }
-        return updateRes.data || updatePayload;
-      }
-      return res.data || updatePayload;
+      return edgeJson.profile || (edgeJson.data && edgeJson.data.profile) || null;
     } catch (err) {
-      console.warn('Erro ao salvar perfil do pioneiro:', err.message);
-      return null;
+      console.warn('Erro ao salvar perfil do pioneiro:', err && err.message ? err.message : err);
+      throw err;
     }
   }
 
@@ -1021,6 +971,7 @@
     createAdComment: createAdComment,
     getPioneerReviews: getPioneerReviews,
     submitPioneerReview: submitPioneerReview,
+    getMuralConfig: getMuralConfig,
     savePioneerProfile: savePioneerProfile,
     getPioneerFullProfile: getPioneerFullProfile,
     getPioneersDirectory: getPioneersDirectory,

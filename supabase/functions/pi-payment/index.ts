@@ -112,17 +112,25 @@ serve(async (req) => {
 
           if (paidAmount + 0.0001 < expectedPrice) {
             console.error(`[Security Alert] Montante insuficiente: pago ${paidAmount} Pi, esperado ${expectedPrice} Pi (tier=${rawTier}).`);
+            const msg = `Montante pago (${paidAmount} Pi) inferior ao plano selecionado (${expectedPrice} Pi).`;
             return new Response(
               JSON.stringify({
-                error: `Montante pago (${paidAmount} Pi) inferior ao plano selecionado (${expectedPrice} Pi).`,
+                ok: false,
+                code: "PAYMENT_AMOUNT_MISMATCH",
+                error: msg,
+                error_detail: { code: "PAYMENT_AMOUNT_MISMATCH", message: msg },
                 security_rejected: true,
               }),
               { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
             );
           } else {
+            const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
             if (!ad && adPayload && typeof adPayload === "object") {
-              // Cria e ativa o anúncio diretamente via service_role com TXID verificado
+              // Cria e ativa o anúncio diretamente via service_role com TXID verificado (schema unificado)
               const cleanTier = (rawTier === "ouro" || rawTier === "prata") ? rawTier : "bronze";
+              const rawCountry = String(adPayload.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6) || "GLOBAL";
+              const rawPayMode = String(adPayload.payment_modes || "pi").trim().toLowerCase();
+              const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
               await supabase.from("anuncios").upsert({
                 id: String(metadata.adId),
                 title: String(adPayload.title || "").slice(0, 120),
@@ -130,19 +138,30 @@ serve(async (req) => {
                 link_url: cleanTier !== "bronze" && adPayload.link_url ? String(adPayload.link_url).slice(0, 500) : null,
                 image_url: cleanTier !== "bronze" && adPayload.image_url ? String(adPayload.image_url).slice(0, 500) : null,
                 category: String(adPayload.category || "geral").slice(0, 40),
+                location: String(adPayload.location || "Online / Global").slice(0, 60) || "Online / Global",
+                country_code: rawCountry,
+                payment_modes: paymentModes,
                 pioneer_username: String(adPayload.pioneer_username || metadata.pioneer_username || "@pioneiro").slice(0, 60),
                 pioneer_name: String(adPayload.pioneer_name || metadata.pioneer_username || "pioneiro").replace(/^@+/, "").slice(0, 60),
                 plan_tier: cleanTier,
                 price_pi: paidAmount,
                 status: "ativo",
+                payment_txid: txid,
                 pi_txid: txid,
                 pi_payment_id: paymentId,
+                expires_at: expiresAt,
               }, { onConflict: "id" });
             } else {
               // Ativa o anúncio existente com verificação de montante aprovada
               await supabase
                 .from("anuncios")
-                .update({ status: "ativo", pi_txid: txid, pi_payment_id: paymentId })
+                .update({
+                  status: "ativo",
+                  payment_txid: txid,
+                  pi_txid: txid,
+                  pi_payment_id: paymentId,
+                  expires_at: expiresAt,
+                })
                 .eq("id", metadata.adId);
             }
           }

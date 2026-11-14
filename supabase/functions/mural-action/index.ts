@@ -25,10 +25,21 @@ function getCorsHeaders(req: Request) {
 }
 
 const MAX_BODY_BYTES = 32 * 1024; // 32 KB limit against payload-flood DoS
+const MURAL_CONFIG = {
+  plans: {
+    ouro: { price_pi: 3.14, duration_days: 7, allows_link: true, allows_image: true },
+    prata: { price_pi: 1.0, duration_days: 7, allows_link: true, allows_image: true },
+    bronze: { price_pi: 0.314, duration_days: 30, allows_link: false, allows_image: false },
+  },
+  categories: ["youtube", "produto", "servico", "mensagem", "geral"],
+  payment_modes: ["pi", "pi_fiat", "fiat", "pi_reais", "reais"],
+  countries: ["GLOBAL", "BR", "US", "PT", "ES", "NG", "PH", "VN", "IN", "EU", "OTHER"],
+};
+
 const TIER_PRICES: Record<string, number> = {
-  ouro: 3.14,
-  prata: 1.0,
-  bronze: 0.314,
+  ouro: MURAL_CONFIG.plans.ouro.price_pi,
+  prata: MURAL_CONFIG.plans.prata.price_pi,
+  bronze: MURAL_CONFIG.plans.bronze.price_pi,
 };
 
 const AD_EDIT_WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -45,6 +56,17 @@ function jsonResponse(body: unknown, status = 200) {
     headers: { ...currentCorsHeaders, "Content-Type": "application/json" },
     status,
   });
+}
+
+function jsonOk(code: string, data: Record<string, unknown> = {}, status = 200) {
+  return jsonResponse({ ok: true, code, data, ...data }, status);
+}
+
+function jsonError(code: string, message: string, status = 400) {
+  return jsonResponse(
+    { ok: false, code, error: message, error_detail: { code, message } },
+    status
+  );
 }
 
 function normalizeHandle(handle: string): string {
@@ -138,10 +160,16 @@ serve(async (req) => {
     const { action, accessToken, payload } = body || {};
 
     if (!action || typeof action !== "string") {
-      return jsonResponse({ error: "Ação inválida." }, 400);
+      return jsonError("INVALID_ACTION", "Ação inválida.", 400);
     }
+
+    // Endpoint público Agent-Ready para descoberta de planos, preços e enums
+    if (action === "get_config") {
+      return jsonOk("MURAL_CONFIG", { config: MURAL_CONFIG });
+    }
+
     if (!accessToken || typeof accessToken !== "string") {
-      return jsonResponse({ error: "Autenticação Pi Browser obrigatória (accessToken ausente)." }, 401);
+      return jsonError("MISSING_ACCESS_TOKEN", "Autenticação Pi Browser obrigatória (accessToken ausente).", 401);
     }
 
     const piUser = await verifyPiAccessToken(accessToken);
@@ -215,7 +243,7 @@ serve(async (req) => {
         .single();
 
       if (error) throw error;
-      return jsonResponse({ ok: true, ad: data });
+      return jsonOk("AD_CREATED", { ad: data });
     }
 
     // ── 1B. CRIAR ANÚNCIO BRONZE COM CRÉDITO DE INDICAÇÃO ─────────
@@ -223,10 +251,10 @@ serve(async (req) => {
       const title = String(payload?.title || "").trim();
       const description = String(payload?.description || "").trim();
       if (title.length < 2 || title.length > 80) {
-        return jsonResponse({ error: "O título deve ter entre 2 e 80 caracteres." }, 400);
+        return jsonError("INVALID_TITLE", "O título deve ter entre 2 e 80 caracteres.", 400);
       }
       if (description.length < 5 || description.length > 300) {
-        return jsonResponse({ error: "A descrição deve ter entre 5 e 300 caracteres." }, 400);
+        return jsonError("INVALID_DESCRIPTION", "A descrição deve ter entre 5 e 300 caracteres.", 400);
       }
 
       const category = String(payload?.category || "geral").trim().slice(0, 32);
@@ -249,12 +277,15 @@ serve(async (req) => {
 
       if (rpcErr) {
         const msg = String(rpcErr.message || "");
-        const status = msg.includes("insuficiente") ? 409 : 400;
-        return jsonResponse({ error: msg || "Não foi possível resgatar o crédito de indicação." }, status);
+        const isInsufficient = msg.includes("insuficiente");
+        return jsonError(
+          isInsufficient ? "INSUFFICIENT_REFERRAL_CREDITS" : "REFERRAL_REDEEM_FAILED",
+          msg || "Não foi possível resgatar o crédito de indicação.",
+          isInsufficient ? 409 : 400
+        );
       }
 
-      return jsonResponse({
-        ok: true,
+      return jsonOk("REFERRAL_AD_CREATED", {
         ad: rpcRes?.ad || null,
         remaining_credits: rpcRes?.remaining_credits ?? 0,
       });

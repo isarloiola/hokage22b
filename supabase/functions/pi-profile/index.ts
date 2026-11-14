@@ -21,8 +21,9 @@ serve(async (req) => {
     const { accessToken, profileData, refCode } = await req.json();
 
     if (!accessToken || typeof accessToken !== "string") {
+      const msg = "accessToken da Pi Network é obrigatório para autenticação segura.";
       return new Response(
-        JSON.stringify({ error: "accessToken da Pi Network é obrigatório para autenticação segura." }),
+        JSON.stringify({ ok: false, code: "MISSING_ACCESS_TOKEN", error: msg, error_detail: { code: "MISSING_ACCESS_TOKEN", message: msg } }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
       );
     }
@@ -37,8 +38,9 @@ serve(async (req) => {
     });
 
     if (!piResponse.ok) {
+      const msg = "Sessão Pi Network inválida ou expirada. Faça login novamente no Pi Browser.";
       return new Response(
-        JSON.stringify({ error: "Sessão Pi Network inválida ou expirada. Faça login novamente no Pi Browser." }),
+        JSON.stringify({ ok: false, code: "PI_AUTH_EXPIRED", error: msg, error_detail: { code: "PI_AUTH_EXPIRED", message: msg } }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
       );
     }
@@ -156,12 +158,25 @@ serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ success: true, profile: data, referral: referralResult }), {
+    return new Response(JSON.stringify({
+      ok: true,
+      code: "PROFILE_SAVED",
+      success: true,
+      profile: data,
+      referral: referralResult,
+      data: { profile: data, referral: referralResult },
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
+    const msg = err && err.message ? String(err.message) : "Erro interno ao salvar perfil.";
+    return new Response(JSON.stringify({
+      ok: false,
+      code: "PROFILE_SAVE_FAILED",
+      error: msg,
+      error_detail: { code: "PROFILE_SAVE_FAILED", message: msg },
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });
