@@ -65,30 +65,15 @@
     return /^G[A-Z2-7]{55}$/.test(address.trim());
   }
 
-  // Sincroniza o perfil do Pioneiro (pontuação, checklist e nível)
+  // Sincroniza o perfil do Pioneiro (delega com segurança para savePioneerProfile via Edge Function)
   async function syncPioneerProfile(profile) {
-    const db = getClient();
-    if (!db || !profile || !profile.uid) return null;
-
+    if (!profile || !profile.username) return null;
     try {
-      const payload = {
-        uid: profile.uid,
-        username: profile.username || 'Pioneiro',
-        auth_type: profile.authType || 'pi-sdk',
-        reputation_score: profile.score || 50,
-        level_name: profile.levelName || 'Pioneiro Iniciante',
-        checklist_state: profile.checklist || {},
-        updated_at: new Date().toISOString()
-      };
-
-      const { data, error } = await db
-        .from('pioneiros')
-        .upsert(payload, { onConflict: 'uid' });
-
-      if (error) throw error;
-      return data;
+      return await savePioneerProfile(profile.username, {
+        checklist_state: profile.checklist || profile.checklist_state || {}
+      });
     } catch (err) {
-      console.warn('Supabase: Erro ao sincronizar pioneiro:', err.message);
+      console.warn('Supabase: Erro ao sincronizar pioneiro:', err && err.message ? err.message : err);
       return null;
     }
   }
