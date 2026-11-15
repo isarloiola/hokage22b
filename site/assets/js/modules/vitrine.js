@@ -797,6 +797,10 @@
       currentPioneerUser = username;
       isSimulatorMode = false;
 
+      if (!isAutoStartFlow && window.HokageReferral && typeof window.HokageReferral.ensureVitrineInvite === 'function') {
+        window.HokageReferral.ensureVitrineInvite(username, loggedUser && loggedUser.username);
+      }
+
       // Se for @hokage22b: Perfil Oficial do Fundador com merge dinâmico (avatar, bio customizada, produtos)
       if (username === '@hokage22b') {
         currentProfileData = JSON.parse(JSON.stringify(HOKAGE22B_OFFICIAL_PROFILE));

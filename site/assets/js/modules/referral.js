@@ -78,7 +78,7 @@
   function buildInviteUrl(username) {
     const clean = normalizeHandle(username);
     if (!clean) return 'https://hokage22b.com/pioneiro';
-    return 'https://hokage22b.com/pioneiro?u=' + encodeURIComponent(clean) + '&ref=' + encodeURIComponent(clean);
+    return 'https://hokage22b.com/@' + encodeURIComponent(clean);
   }
 
   async function fetchStats(username) {
@@ -378,6 +378,22 @@
     removeFloatingRefPill();
   }
 
+  function ensureVitrineInvite(ownerHandle, loggedHandle) {
+    const owner = normalizeHandle(ownerHandle);
+    if (!owner) return;
+    const logged = normalizeHandle(loggedHandle);
+    const existing = getPendingRef();
+    if (existing) {
+      showFloatingRefPill(existing);
+      return;
+    }
+    if (logged && logged === owner) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ref: owner, ts: Date.now() }));
+    } catch (_) {}
+    showFloatingRefPill(owner);
+  }
+
   function showFloatingRefPill(customRef) {
     if (typeof document === 'undefined' || !document.body) return;
     try {
@@ -636,6 +652,7 @@
     closeWelcomeModal: closeWelcomeModal,
     showFloatingRefPill: showFloatingRefPill,
     hideFloatingRefPill: hideFloatingRefPill,
+    ensureVitrineInvite: ensureVitrineInvite,
     copyWelcomeInviteLink: copyWelcomeInviteLink,
     startFromWelcomeModal: startFromWelcomeModal,
     startSimFromWelcomeModal: startSimFromWelcomeModal,
