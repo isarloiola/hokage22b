@@ -305,14 +305,117 @@
         box-sizing: border-box;
         text-align: center;
       }
+      .hk-ref-floating-pill {
+        position: fixed;
+        right: 14px;
+        bottom: 72px;
+        z-index: 999990;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: linear-gradient(135deg, rgba(24, 16, 42, 0.96), rgba(12, 12, 20, 0.96));
+        border: 1.5px solid rgba(245, 158, 11, 0.55);
+        border-radius: 999px;
+        padding: 5px 8px 5px 12px;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 18px rgba(245, 158, 11, 0.2);
+        backdrop-filter: blur(10px);
+        max-width: calc(100vw - 28px);
+        animation: hkRefFadeIn 0.2s ease-out;
+      }
+      .hk-ref-floating-pill-main {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        color: #fff;
+        font-family: inherit;
+      }
+      .hk-ref-floating-pill-close {
+        background: rgba(255, 255, 255, 0.08);
+        border: none;
+        color: #a1a1aa;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        font-size: 0.7rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 4px;
+        flex-shrink: 0;
+      }
+      .hk-ref-floating-pill-close:hover {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+      }
     `;
     document.head.appendChild(style);
   }
 
-  function closeWelcomeModal() {
+  const WELCOME_DISMISSED_KEY = 'hokage_ref_welcome_dismissed';
+  const PILL_HIDDEN_KEY = 'hokage_ref_pill_hidden';
+
+  function markWelcomeDismissed() {
+    try { sessionStorage.setItem(WELCOME_DISMISSED_KEY, '1'); } catch (_) {}
+  }
+
+  function isWelcomeDismissed() {
+    try { return sessionStorage.getItem(WELCOME_DISMISSED_KEY) === '1'; } catch (_) { return false; }
+  }
+
+  function removeFloatingRefPill() {
+    const pill = document.getElementById('hokage-ref-floating-pill');
+    if (pill) pill.remove();
+  }
+
+  function hideFloatingRefPill() {
+    try { sessionStorage.setItem(PILL_HIDDEN_KEY, '1'); } catch (_) {}
+    removeFloatingRefPill();
+  }
+
+  function showFloatingRefPill(customRef) {
+    if (typeof document === 'undefined' || !document.body) return;
+    try {
+      if (sessionStorage.getItem(PILL_HIDDEN_KEY) === '1') return;
+    } catch (_) {}
+    if (document.getElementById('hokage-ref-welcome-modal')) return;
+
+    const ref = normalizeHandle(customRef) || getPendingRef();
+    if (!ref) return;
+    const safeRef = escapeHtml(ref);
+
+    injectWelcomeStyles();
+    removeFloatingRefPill();
+
+    const pill = document.createElement('div');
+    pill.id = 'hokage-ref-floating-pill';
+    pill.className = 'hk-ref-floating-pill';
+    pill.innerHTML = `
+      <button type="button" class="hk-ref-floating-pill-main" onclick="window.HokageReferral.openWelcomeModal('${safeRef}')" title="Ver detalhes do convite e ativar presente">
+        <span style="font-size:1.05rem;line-height:1">🎁</span>
+        <span style="text-align:left;line-height:1.2">
+          <strong style="display:block;font-size:0.75rem;color:#fde68a">Convite de @${safeRef}</strong>
+          <span style="display:block;font-size:0.67rem;color:#d4d4d8">+1 Anúncio Grátis · Toque p/ ativar</span>
+        </span>
+      </button>
+      <button type="button" class="hk-ref-floating-pill-close" onclick="window.HokageReferral.hideFloatingRefPill()" aria-label="Ocultar aviso" title="Ocultar aviso">✕</button>
+    `;
+    document.body.appendChild(pill);
+  }
+
+  function closeWelcomeModal(showPillAfter) {
     const existing = document.getElementById('hokage-ref-welcome-modal');
     if (existing) {
       existing.remove();
+    }
+    markWelcomeDismissed();
+    if (showPillAfter !== false) {
+      showFloatingRefPill();
     }
   }
 
@@ -364,12 +467,13 @@
     if (!ref) return;
 
     injectWelcomeStyles();
-    closeWelcomeModal();
+    removeFloatingRefPill();
+    closeWelcomeModal(false);
 
     const safeRef = escapeHtml(ref);
     const inviteFullUrl = buildInviteUrl(ref);
     const piDeepLink = 'pi://hokage22b.com/pioneiro?ref=' + encodeURIComponent(ref);
-    const vitrineRefUrl = 'pioneiro?u=' + encodeURIComponent(ref) + '&ref=' + encodeURIComponent(ref);
+    const vitrineRefUrl = 'pioneiro?u=' + encodeURIComponent(ref) + '&ref=' + encodeURIComponent(ref) + '&ref_ack=1';
     const inPiBrowser = isPiBrowserEnv();
 
     let ctaHtml = '';
@@ -502,10 +606,16 @@
         const params = new URLSearchParams(window.location.search);
         const urlRef = normalizeHandle(params.get('ref'));
         const isAutoStart = params.get('autostart') === '1' || params.get('simulador') === '1' || params.get('teste') === '1';
-        if (urlRef && !isAutoStart) {
+        const isRefAck = params.get('ref_ack') === '1' || isWelcomeDismissed();
+        const activeRef = urlRef || getPendingRef();
+        if (urlRef && !isAutoStart && !isRefAck) {
           setTimeout(function () {
             openWelcomeModal(urlRef);
           }, 180);
+        } else if (activeRef && !isAutoStart) {
+          setTimeout(function () {
+            showFloatingRefPill(activeRef);
+          }, 220);
         }
       } catch (_) {}
     });
@@ -521,6 +631,8 @@
     requestPayout: requestPayout,
     openWelcomeModal: openWelcomeModal,
     closeWelcomeModal: closeWelcomeModal,
+    showFloatingRefPill: showFloatingRefPill,
+    hideFloatingRefPill: hideFloatingRefPill,
     copyWelcomeInviteLink: copyWelcomeInviteLink,
     startFromWelcomeModal: startFromWelcomeModal,
     startSimFromWelcomeModal: startSimFromWelcomeModal,
