@@ -601,11 +601,14 @@
   captureFromUrl();
 
   if (typeof document !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', function () {
+    function initReferralUi() {
       try {
         const params = new URLSearchParams(window.location.search);
         const urlRef = normalizeHandle(params.get('ref'));
         const isAutoStart = params.get('autostart') === '1' || params.get('simulador') === '1' || params.get('teste') === '1';
+        if (urlRef) {
+          try { sessionStorage.removeItem(PILL_HIDDEN_KEY); } catch (_) {}
+        }
         const activeRef = urlRef || getPendingRef();
         if (activeRef && !isAutoStart) {
           setTimeout(function () {
@@ -613,7 +616,12 @@
           }, 220);
         }
       } catch (_) {}
-    });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initReferralUi);
+    } else {
+      initReferralUi();
+    }
   }
 
   window.HokageReferral = {

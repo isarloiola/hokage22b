@@ -563,7 +563,9 @@
         ? window.HokageReferral.getPendingRef()
         : null;
       const url = pendingRef
-        ? ('https://hokage22b.com/pioneiro?ref=' + encodeURIComponent(pendingRef))
+        ? ((window.HokageReferral && typeof window.HokageReferral.buildInviteUrl === 'function')
+            ? window.HokageReferral.buildInviteUrl(pendingRef)
+            : ('https://hokage22b.com/pioneiro?u=' + encodeURIComponent(pendingRef) + '&ref=' + encodeURIComponent(pendingRef)))
         : 'https://hokage22b.com/pioneiro';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(function() {
@@ -698,6 +700,17 @@
 
       const loggedUser = getLoggedUser();
       const explicitRef = getQueryParam('ref');
+      const isAutoStartFlow = getQueryParam('autostart') === '1' || getQueryParam('simulador') === '1' || getQueryParam('teste') === '1';
+
+      // Se entrou por link de convite (?ref=usuario) sem ?u= e sem autostart/simulador, abre direto a vitrine de quem convidou
+      if (!username && explicitRef && !isAutoStartFlow) {
+        const cleanRefHandle = (window.HokageReferral && typeof window.HokageReferral.normalizeHandle === 'function')
+          ? window.HokageReferral.normalizeHandle(explicitRef)
+          : String(explicitRef).trim().replace(/^@+/, '').toLowerCase();
+        if (cleanRefHandle) {
+          username = '@' + cleanRefHandle;
+        }
+      }
 
       // Se não passou ?u= na URL e NÃO é um link explícito de convite (?ref=), usa a conta logada
       if (!username && !explicitRef && loggedUser && loggedUser.username) {
