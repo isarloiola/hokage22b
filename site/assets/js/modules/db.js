@@ -111,6 +111,21 @@
         .insert([payload]);
 
       if (error) throw error;
+
+      try {
+        fetch(SUPABASE_URL + '/functions/v1/pi-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'notify_lead',
+            name: payload.name,
+            email: payload.email,
+            source: payload.source,
+            pi_username: payload.pi_username
+          })
+        }).catch(function () {});
+      } catch (_) {}
+
       return data;
     } catch (err) {
       console.warn('Supabase: Erro ao salvar lead:', err.message);

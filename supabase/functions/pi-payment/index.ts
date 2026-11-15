@@ -15,6 +15,7 @@ import {
   parseJsonBody,
 } from "../_shared/http.ts";
 import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
+import { notifyAdmin } from "../_shared/notify.ts";
 
 const EBOOK_BUCKET = "ebooks-privados";
 
@@ -297,6 +298,31 @@ serve(async (req) => {
       return jsonOk("PAYMENT_CATALOG", { catalog: MURAL_CONFIG }, corsHeaders, 200);
     }
 
+    // Notificação de novo Lead / Lista de Espera / Proposta Comercial
+    if (action === "notify_lead") {
+      const leadName = String(body?.name || "Pioneiro").trim().slice(0, 80);
+      const leadEmail = String(body?.email || "").trim().slice(0, 120);
+      const leadSource = String(body?.source || "site").trim().slice(0, 60);
+      const leadPiUser = String(body?.pi_username || "").trim().slice(0, 60);
+      if (!leadEmail || !leadEmail.includes("@")) {
+        return jsonError("INVALID_LEAD", "E-mail inválido.", corsHeaders, 400);
+      }
+      await notifyAdmin({
+        priority: "normal",
+        tag: "NOVO LEAD / CONTATO",
+        title: `${leadName} (${leadSource})`,
+        lines: [
+          `Nome: ${leadName}`,
+          `E-mail: ${leadEmail}`,
+          `Origem: ${leadSource}`,
+          leadPiUser ? `Usuário Pi: ${leadPiUser}` : "",
+        ],
+        linkUrl: "https://hokage22b.com/admin",
+        linkLabel: "Ver Leads no Admin",
+      });
+      return jsonOk("LEAD_NOTIFIED", {}, corsHeaders, 200);
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -478,6 +504,20 @@ serve(async (req) => {
           .eq("payment_id", id);
       }
 
+      await notifyAdmin({
+        priority: "high",
+        tag: "SAQUE SOLICITADO",
+        title: `@${cleanUser} pediu saque de ${pendingSum.toFixed(4)} π`,
+        lines: [
+          `Afiliado: @${cleanUser}`,
+          `Valor pendente: ${pendingSum.toFixed(4)} π (${targetIds.length} comissões)`,
+          `Carteira Pi: ${cleanWallet}`,
+          `Ação: Envie a transferência P2P e clique em "Marcar Pago" no Admin.`,
+        ],
+        linkUrl: "https://hokage22b.com/admin",
+        linkLabel: "Abrir Aba Afiliados no Admin",
+      });
+
       return jsonOk(
         "PAYOUT_REQUESTED",
         {
@@ -491,7 +531,26 @@ serve(async (req) => {
       );
     }
 
-    if (action === "admin_list_commissions") {
+      if (action === "admin_test_notification") {
+        const isAdmin = await verifyAdminOrFounder(supabase, accessToken, adminSecret);
+        if (!isAdmin) {
+          return jsonError("FORBIDDEN", "Acesso restrito ao administrador @hokage22b.", corsHeaders, 403);
+        }
+        const delivery = await notifyAdmin({
+          priority: "normal",
+          tag: "TESTE DO SISTEMA",
+          title: "Notificações do HOKAGE22B ativas!",
+          lines: [
+            "Seu painel administrativo está conectado com sucesso.",
+            "Você receberá alertas em tempo real de saques, denúncias, novos pioneiros, vendas em Pi e leads.",
+          ],
+          linkUrl: "https://hokage22b.com/admin",
+          linkLabel: "Abrir Console Admin",
+        });
+        return jsonOk("TEST_NOTIFICATION_SENT", { delivery }, corsHeaders, 200);
+      }
+
+      if (action === "admin_list_commissions") {
       const isAdmin = await verifyAdminOrFounder(supabase, accessToken, adminSecret);
       if (!isAdmin) {
         return jsonError("FORBIDDEN", "Acesso restrito ao administrador @hokage22b.", corsHeaders, 403);
@@ -703,6 +762,19 @@ serve(async (req) => {
         purpose: "ebook",
         description: `E-book: ${catalogItem.title} (P2P)`,
         fallbackRefCode: refCode ? String(refCode) : null,
+      });
+
+      await notifyAdmin({
+        priority: "normal",
+        tag: "E-BOOK P2P LIBERADO",
+        title: `${catalogItem.title} → @${cleanTarget}`,
+        lines: [
+          `Comprador: @${cleanTarget}`,
+          `Produto: ${catalogItem.title} (${catalogItem.price_pi} π)`,
+          affiliateComm ? `Comissão gerada: +${(affiliateComm as Record<string, unknown>).amount || 0} π` : "Sem indicador vinculado",
+        ],
+        linkUrl: "https://hokage22b.com/admin",
+        linkLabel: "Abrir Console Admin",
       });
 
       return jsonOk(
@@ -937,6 +1009,7 @@ serve(async (req) => {
         }
 
         // D. Motor de Comissão de Afiliados (20% Padrão / 25% Embaixador para Anúncios no Mural e E-books)
+        let generatedComm: Record<string, unknown> | null = null;
         if (txPurpose === "anuncio_mural" || txPurpose === "ebook") {
           const buyerUser = String(
             (adPayload && adPayload.pioneer_username) ||
@@ -953,7 +1026,7 @@ serve(async (req) => {
             ? `E-book (${metadata.productId || "Catálogo"})`
             : `Anúncio no Mural (${String((adPayload && adPayload.plan_tier) || metadata.tier || "Destaque").toUpperCase()})`;
 
-          await processAffiliateCommission(supabase, {
+          generatedComm = await processAffiliateCommission(supabase, {
             paymentId: paymentId,
             txid: txid || (data.transaction && data.transaction.txid) || null,
             paidAmount: paidAmount,
@@ -965,6 +1038,25 @@ serve(async (req) => {
             fallbackRefCode: fallbackRef || null,
           });
         }
+
+        const buyerHandle = String(
+          (adPayload && adPayload.pioneer_username) ||
+          metadata.pioneer_username ||
+          "@pioneiro"
+        );
+        await notifyAdmin({
+          priority: "high",
+          tag: "PAGAMENTO PI",
+          title: `${paidAmount} π recebido (${txPurpose === "ebook" ? "E-book" : "Mural"})`,
+          lines: [
+            `Comprador: ${buyerHandle}`,
+            `Valor: ${paidAmount} π`,
+            `TXID: ${txid || (data.transaction && data.transaction.txid) || paymentId}`,
+            generatedComm ? `Comissão afiliado: +${generatedComm.amount || 0} π` : "",
+          ],
+          linkUrl: "https://hokage22b.com/admin",
+          linkLabel: "Ver no Console Admin",
+        });
       }
 
       if (!response.ok && !isAlreadyCompleted) {

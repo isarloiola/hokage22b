@@ -16,6 +16,7 @@ import {
   parseJsonBody,
 } from "../_shared/http.ts";
 import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
+import { notifyAdmin } from "../_shared/notify.ts";
 
 const MAX_BODY_BYTES = 800 * 1024; // 800 KB para suportar fotos Base64 de produtos/anúncios
 const TIER_PRICES: Record<string, number> = {
@@ -201,6 +202,19 @@ serve(async (req) => {
         .single();
 
       if (error) throw error;
+      await notifyAdmin({
+        priority: "normal",
+        tag: "ANÚNCIO MURAL",
+        title: `Novo Anúncio ${tier.toUpperCase()} (${piUser.username})`,
+        lines: [
+          `Autor: ${piUser.username}`,
+          `Plano: ${tier.toUpperCase()} (${expectedPrice} π)`,
+          `Título: ${title}`,
+          `Categoria: ${category} | País: ${countryCode}`,
+        ],
+        linkUrl: "https://hokage22b.com/mural",
+        linkLabel: "Ver no Mural",
+      });
       return jsonOk("AD_CREATED", { ad: data });
     }
 
@@ -250,6 +264,20 @@ serve(async (req) => {
           .eq("id", rpcRes.ad.id);
         rpcRes.ad.expires_at = "2099-12-31T23:59:59.000Z";
       }
+
+      await notifyAdmin({
+        priority: "normal",
+        tag: "MURAL CRÉDITO GRÁTIS",
+        title: `Novo Anúncio Bronze (${piUser.username})`,
+        lines: [
+          `Autor: ${piUser.username}`,
+          `Título: ${title}`,
+          `Categoria: ${category} | País: ${countryCode}`,
+          `Créditos restantes do usuário: ${rpcRes?.remaining_credits ?? 0}`,
+        ],
+        linkUrl: "https://hokage22b.com/mural",
+        linkLabel: "Ver no Mural",
+      });
 
       return jsonOk("REFERRAL_AD_CREATED", {
         ad: rpcRes?.ad || null,
@@ -378,6 +406,18 @@ serve(async (req) => {
         .single();
 
       if (error) throw error;
+      await notifyAdmin({
+        priority: "normal",
+        tag: "COMENTÁRIO NO MURAL",
+        title: `${piUser.username} comentou em um anúncio`,
+        lines: [
+          `Autor: ${piUser.username}`,
+          `Anúncio ID: ${adId}`,
+          `Comentário: ${content}`,
+        ],
+        linkUrl: "https://hokage22b.com/mural",
+        linkLabel: "Ver Mural",
+      });
       return jsonResponse({ ok: true, comment: data });
     }
 
@@ -429,14 +469,32 @@ serve(async (req) => {
         .select("id", { count: "exact", head: true })
         .eq("ad_id", adId);
 
-      if ((count || 0) >= AUTO_MODERATION_REPORT_THRESHOLD) {
+      const autoModerated = (count || 0) >= AUTO_MODERATION_REPORT_THRESHOLD;
+      if (autoModerated) {
         await supabase
           .from("anuncios")
           .update({ status: "moderacao" })
           .eq("id", adId);
       }
 
-      return jsonResponse({ ok: true, autoModerated: (count || 0) >= AUTO_MODERATION_REPORT_THRESHOLD });
+      await notifyAdmin({
+        priority: "high",
+        tag: autoModerated ? "AUTO-MODERAÇÃO" : "DENÚNCIA NO MURAL",
+        title: autoModerated
+          ? `Anúncio pausado após ${count} denúncias!`
+          : `Nova denúncia de ${piUser.username}`,
+        lines: [
+          `Denunciante: ${piUser.username}`,
+          `Anúncio: ${String(payload?.ad_title || adId).slice(0, 100)}`,
+          `Motivo: ${reason}`,
+          details ? `Detalhes: ${details}` : "",
+          `Total de denúncias neste anúncio: ${count || 1}`,
+        ],
+        linkUrl: "https://hokage22b.com/admin",
+        linkLabel: "Moderar no Console Admin",
+      });
+
+      return jsonResponse({ ok: true, autoModerated });
     }
 
     // ── 6. AVALIAÇÃO VERIFICADA DE PIONEIRO (REPUTAÇÃO P2P) ──────
@@ -503,6 +561,20 @@ serve(async (req) => {
             .ilike("username", targetUsername);
         }
       } catch (_) {}
+
+      await notifyAdmin({
+        priority: "normal",
+        tag: "AVALIAÇÃO P2P",
+        title: `${piUser.username} avaliou ${targetUsername} (${rating}/5 ★)`,
+        lines: [
+          `Avaliador: ${piUser.username}`,
+          `Vitrine avaliada: ${targetUsername}`,
+          `Nota: ${"★".repeat(rating)} (${rating}/5)`,
+          `Comentário: ${comment}`,
+        ],
+        linkUrl: `https://hokage22b.com/pioneiro?u=${encodeURIComponent(cleanTarget)}`,
+        linkLabel: "Ver Vitrine Avaliada",
+      });
 
       return jsonResponse({ ok: true, review: data });
     }

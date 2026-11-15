@@ -735,6 +735,9 @@
         </div>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button type="button" class="btn btn-primary btn-sm" onclick="testAdminNotification()">
+            🔔 Testar Notificação (Telegram / E-mail)
+          </button>
           <button type="button" class="btn btn-outline btn-sm" onclick="clearSavedDeviceKey()">
             🗑️ Esquecer Chave Salva Neste Aparelho
           </button>
@@ -1547,6 +1550,35 @@
           }
         } catch (err) {
           showToast('Erro de comunicação com o servidor.', true);
+        }
+      };
+
+      window.testAdminNotification = async function () {
+        let token = '';
+        try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+        try {
+          const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'admin_test_notification',
+              adminSecret: currentSecret || undefined,
+              accessToken: token || undefined
+            })
+          });
+          const json = await res.json().catch(() => ({}));
+          const delivery = (json && json.data && json.data.delivery) || (json && json.delivery) || {};
+          if (res.ok && json.ok) {
+            if (delivery.telegram || delivery.email) {
+              showToast(`✓ Teste enviado! Telegram: ${delivery.telegram ? 'OK' : 'Não config.'} | E-mail: ${delivery.email ? 'OK' : 'Não config.'}`);
+            } else {
+              showToast('⚠️ Função respondeu, mas TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID ainda não foram configurados no Supabase.', true);
+            }
+          } else {
+            showToast('Erro no teste: ' + ((json && json.error) || 'Verifique sua sessão admin.'), true);
+          }
+        } catch (err) {
+          showToast('Erro ao testar notificação.', true);
         }
       };
 

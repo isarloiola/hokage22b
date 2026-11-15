@@ -13,6 +13,7 @@ import {
   parseJsonBody,
 } from "../_shared/http.ts";
 import { verifyPiAccessToken } from "../_shared/pi-auth.ts";
+import { notifyAdmin } from "../_shared/notify.ts";
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req, false);
@@ -97,6 +98,14 @@ serve(async (req) => {
       .ilike("username", verifiedUsername)
       .maybeSingle();
 
+    const { data: existingByUid } = await supabase
+      .from("pioneiros")
+      .select("uid")
+      .eq("uid", verifiedUid)
+      .maybeSingle();
+
+    const isBrandNewPioneer = !existingByUser && !existingByUid;
+
     if (existingByUser && existingByUser.uid && existingByUser.uid !== verifiedUid) {
       await supabase
         .from("pioneiros")
@@ -178,6 +187,33 @@ serve(async (req) => {
           }
         }
       }
+    }
+
+    const refObj = (referralResult && typeof referralResult === "object")
+      ? (referralResult as Record<string, unknown>)
+      : null;
+    const referralAwarded = Boolean(refObj && refObj.awarded === true);
+
+    if (isBrandNewPioneer || referralAwarded) {
+      const slug = verifiedUsername.replace(/^@+/, "");
+      const bioPreview = updatePayload.bio ? updatePayload.bio.slice(0, 120) : "Sem bio ainda";
+      const lines = [
+        `Pioneiro: ${verifiedUsername}`,
+        `Carteira Pi: ${cleanWallet ? cleanWallet.slice(0, 8) + "..." + cleanWallet.slice(-6) : "Não informada"}`,
+        `Produtos no catálogo: ${updatePayload.products.length}`,
+        `Bio: ${bioPreview}`,
+      ];
+      if (referralAwarded && refObj) {
+        lines.push(`Indicado por: ${String(refObj.referrer_username || refCode || "")} (+1 Crédito Bronze para ambos!)`);
+      }
+      await notifyAdmin({
+        priority: "normal",
+        tag: isBrandNewPioneer ? "NOVO PIONEIRO" : "INDICAÇÃO ATIVADA",
+        title: isBrandNewPioneer ? `Nova Vitrine Criada (${verifiedUsername})` : `Indicação Qualificada (${verifiedUsername})`,
+        lines,
+        linkUrl: `https://hokage22b.com/pioneiro?u=${encodeURIComponent(slug)}`,
+        linkLabel: "Ver Vitrine do Pioneiro",
+      });
     }
 
     return jsonOk(
