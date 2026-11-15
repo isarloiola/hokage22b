@@ -10,6 +10,7 @@
       youtube_url: 'https://www.youtube.com/@justhokage22b',
       instagram_url: 'https://instagram.com/hokage22b',
       twitter_url: 'https://twitter.com/hokage22b',
+      github_url: 'https://github.com/isarloiola/hokage22b',
       featured_links: [
         {
           title: '📘 Pi Network do Zero (Guia Iniciante)',
