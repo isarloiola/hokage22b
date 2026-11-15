@@ -116,9 +116,9 @@ Deno.serve(async (req) => {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  const botToken = (Deno.env.get("TELEGRAM_BOT_TOKEN") || "").trim();
+  const botToken = (Deno.env.get("TELEGRAM_PUBLIC_BOT_TOKEN") || Deno.env.get("TELEGRAM_BOT_TOKEN") || "").trim();
   if (!botToken) {
-    return new Response(JSON.stringify({ ok: false, error: "TELEGRAM_BOT_TOKEN não configurado" }), {
+    return new Response(JSON.stringify({ ok: false, error: "TELEGRAM_PUBLIC_BOT_TOKEN ou TELEGRAM_BOT_TOKEN não configurado" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
