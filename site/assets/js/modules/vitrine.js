@@ -11,6 +11,11 @@
       instagram_url: 'https://instagram.com/hokage22b',
       twitter_url: 'https://twitter.com/hokage22b',
       github_url: 'https://github.com/isarloiola/hokage22b',
+      linkedin_url: 'https://www.linkedin.com/in/isarloiola/',
+      social_links: [
+        { network: 'github', url: 'https://github.com/isarloiola/hokage22b' },
+        { network: 'linkedin', url: 'https://www.linkedin.com/in/isarloiola/' }
+      ],
       featured_links: [
         {
           title: '📘 Pi Network do Zero (Guia Iniciante)',
@@ -1165,6 +1170,8 @@
         pushSocialEntry('youtube', prof.youtube_url);
         pushSocialEntry('instagram', prof.instagram_url);
         pushSocialEntry('twitter', prof.twitter_url);
+        pushSocialEntry('github', prof.github_url);
+        pushSocialEntry('linkedin', prof.linkedin_url);
 
         if (Array.isArray(prof.social_links)) {
           prof.social_links.forEach(item => {
