@@ -278,6 +278,51 @@
   }
 
   /**
+   * Calculadora de Balcão determinística (BRL / USD <-> Pi).
+   */
+  function convertPiAmount(options) {
+    const opts = options && typeof options === 'object' ? options : {};
+    const amount = Number(opts.amount);
+    const fromCurrency = String(opts.fromCurrency || 'BRL').trim().toUpperCase();
+    const piPriceBrl = Number(opts.piPriceBrl);
+    const piPriceUsd = Number(opts.piPriceUsd);
+
+    if (!Number.isFinite(amount) || amount < 0) {
+      return { ok: false, reasonCode: 'INVALID_AMOUNT', summary: 'Informe um valor numérico maior ou igual a zero.' };
+    }
+    if (!Number.isFinite(piPriceBrl) || piPriceBrl <= 0 || !Number.isFinite(piPriceUsd) || piPriceUsd <= 0) {
+      return { ok: false, reasonCode: 'INVALID_RATE', summary: 'Informe cotações válidas (> 0) para BRL e USD por 1 Pi.' };
+    }
+
+    let piAmount = 0;
+    let brlAmount = 0;
+    let usdAmount = 0;
+
+    if (fromCurrency === 'PI') {
+      piAmount = amount;
+      brlAmount = amount * piPriceBrl;
+      usdAmount = amount * piPriceUsd;
+    } else if (fromCurrency === 'USD') {
+      usdAmount = amount;
+      piAmount = amount / piPriceUsd;
+      brlAmount = piAmount * piPriceBrl;
+    } else {
+      brlAmount = amount;
+      piAmount = amount / piPriceBrl;
+      usdAmount = piAmount * piPriceUsd;
+    }
+
+    return {
+      ok: true,
+      fromCurrency: fromCurrency === 'PI' || fromCurrency === 'USD' ? fromCurrency : 'BRL',
+      piAmount: Number(piAmount.toFixed(4)),
+      brlAmount: Number(brlAmount.toFixed(2)),
+      usdAmount: Number(usdAmount.toFixed(2)),
+      rates: { piPriceBrl: piPriceBrl, piPriceUsd: piPriceUsd }
+    };
+  }
+
+  /**
    * Contratos JSON Schema prontos para Function Calling (Gemini / OpenAI / MCP).
    */
   const TOOL_SCHEMAS = [
@@ -315,6 +360,20 @@
         },
         required: ['username']
       }
+    },
+    {
+      name: 'convertPiAmount',
+      description: 'Converte valores entre Real (BRL), Dólar (USD) e Pi usando a cotação informada para uso em balcão ou orçamento.',
+      parameters: {
+        type: 'object',
+        properties: {
+          amount: { type: 'number', description: 'Valor a converter.' },
+          fromCurrency: { type: 'string', enum: ['BRL', 'USD', 'PI'], description: 'Moeda de origem.' },
+          piPriceBrl: { type: 'number', description: 'Valor de 1 Pi em BRL.' },
+          piPriceUsd: { type: 'number', description: 'Valor de 1 Pi em USD.' }
+        },
+        required: ['amount', 'fromCurrency', 'piPriceBrl', 'piPriceUsd']
+      }
     }
   ];
 
@@ -323,15 +382,17 @@
     if (toolName === 'inspectPiAddress') return inspectPiAddress(input.address);
     if (toolName === 'inspectPiLinkOrText') return inspectPiLinkOrText(input.input);
     if (toolName === 'buildVitrineQrPayload') return buildVitrineQrPayload(input);
+    if (toolName === 'convertPiAmount') return convertPiAmount(input);
     return { ok: false, reasonCode: 'UNKNOWN_TOOL', summary: 'Ferramenta desconhecida: ' + String(toolName) };
   }
 
   return {
-    version: '1.0.0',
+    version: '1.1.0',
     normalizeHandle: normalizeHandle,
     inspectPiAddress: inspectPiAddress,
     inspectPiLinkOrText: inspectPiLinkOrText,
     buildVitrineQrPayload: buildVitrineQrPayload,
+    convertPiAmount: convertPiAmount,
     TOOL_SCHEMAS: TOOL_SCHEMAS,
     executeTool: executeTool
   };

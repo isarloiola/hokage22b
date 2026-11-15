@@ -202,7 +202,47 @@
         <div id="tool-link-result" class="tool-result" style="display:none"></div>
       </article>
 
-      <!-- Ferramenta 3: Gerador de Placa / QR Code de Balcão -->
+      <!-- Ferramenta 3: Calculadora de Balcão (R$ / USD <-> Pi) -->
+      <article class="tool-card" style="grid-column: 1 / -1">
+        <div>
+          <h2>🧮 Calculadora de Balcão (R$ / USD ⇄ Pi)</h2>
+          <p class="tool-desc" style="margin-top:6px">
+            Converta valores na hora para fechar vendas presenciais ou no WhatsApp. Puxa a cotação ao vivo da CoinGecko automaticamente — ou ajuste para o valor combinado no seu balcão.
+          </p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px">
+          <div>
+            <label for="calc-amount" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px">Valor</label>
+            <input type="number" id="calc-amount" class="tool-input" value="50" min="0" step="any" oninput="runBalcaoCalc()" />
+          </div>
+          <div>
+            <label for="calc-currency" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px">Moeda de Origem</label>
+            <select id="calc-currency" class="tool-input" style="font-family:inherit" onchange="runBalcaoCalc()">
+              <option value="BRL" selected>🇧🇷 Real (R$)</option>
+              <option value="USD">🇺🇸 Dólar (US$)</option>
+              <option value="PI">π Pi (Pi Network)</option>
+            </select>
+          </div>
+          <div>
+            <label for="calc-rate-brl" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px">1 π em R$ (editável)</label>
+            <input type="number" id="calc-rate-brl" class="tool-input" value="3.50" min="0.0001" step="any" oninput="runBalcaoCalc()" />
+          </div>
+          <div>
+            <label for="calc-rate-usd" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px">1 π em US$ (editável)</label>
+            <input type="number" id="calc-rate-usd" class="tool-input" value="0.60" min="0.0001" step="any" oninput="runBalcaoCalc()" />
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <span id="calc-rate-status" style="font-size:0.76rem;color:var(--text-muted)">⏳ Buscando cotação ao vivo...</span>
+          <button type="button" class="btn btn-outline btn-sm" onclick="fetchLivePiRatesForCalc()">🔄 Atualizar Cotação Ao Vivo</button>
+        </div>
+
+        <div id="calc-result-box" class="tool-result safe"></div>
+      </article>
+
+      <!-- Ferramenta 4: Gerador de Placa / QR Code de Balcão -->
       <article class="tool-card" style="grid-column: 1 / -1">
         <div>
           <h2>📲 Gerador de Placa &amp; QR Code da Vitrine (/@usuario)</h2>
@@ -256,11 +296,32 @@
           </a>
         </div>
       </article>
+
+      <!-- Card 5: Onde Aceita Pi? + Sem KYC ainda -->
+      <article class="tool-card" style="grid-column: 1 / -1">
+        <div>
+          <h2>🛍️ Onde Aceita Pi? &amp; Acesso Rápido</h2>
+          <p class="tool-desc" style="margin-top:6px">
+            Encontre lojas, serviços e pioneiros com Vitrine Web3 ativa — ou crie a sua gratuitamente mesmo se ainda estiver aguardando o KYC/Mainnet.
+          </p>
+        </div>
+        <div class="tool-actions">
+          <a href="pioneiro#pioneer-directory-section" class="btn btn-primary btn-sm" style="text-decoration:none">
+            🌐 Explorar Diretório de Vitrines
+          </a>
+          <a href="mural" class="btn btn-outline btn-sm" style="text-decoration:none">
+            📢 Ver Anúncios no Mural
+          </a>
+          <a href="pioneiro?teste=1" class="btn btn-outline btn-sm" style="text-decoration:none">
+            🧪 Testar Vitrine no Simulador (Sem KYC)
+          </a>
+        </div>
+      </article>
     </section>
   </main>
 
   <script src="assets/js/config.js"></script>
-  <script src="assets/js/modules/pi-tools-core.js?v=1.0"></script>
+  <script src="assets/js/modules/pi-tools-core.js?v=1.1"></script>
   <script>
     (function () {
       'use strict';
@@ -357,6 +418,54 @@
         }
       };
 
+      window.runBalcaoCalc = function () {
+        const amount = document.getElementById('calc-amount').value;
+        const fromCurrency = document.getElementById('calc-currency').value;
+        const piPriceBrl = document.getElementById('calc-rate-brl').value;
+        const piPriceUsd = document.getElementById('calc-rate-usd').value;
+        const box = document.getElementById('calc-result-box');
+        const res = window.HokagePiTools.convertPiAmount({
+          amount: amount,
+          fromCurrency: fromCurrency,
+          piPriceBrl: piPriceBrl,
+          piPriceUsd: piPriceUsd
+        });
+        if (!res.ok) {
+          box.className = 'tool-result error';
+          box.innerHTML = '<strong>⚠️ Atenção:</strong> ' + esc(res.summary);
+          return;
+        }
+        box.className = 'tool-result safe';
+        box.innerHTML =
+          '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;text-align:center">' +
+            '<div style="background:rgba(0,0,0,0.25);padding:10px;border-radius:10px"><div style="font-size:0.72rem;opacity:0.8">Em Pi Network</div><strong style="font-size:1.25rem;color:#fbbf24">' + esc(res.piAmount) + ' π</strong></div>' +
+            '<div style="background:rgba(0,0,0,0.25);padding:10px;border-radius:10px"><div style="font-size:0.72rem;opacity:0.8">Em Reais (BRL)</div><strong style="font-size:1.25rem;color:#6ee7b7">R$ ' + esc(res.brlAmount.toFixed(2)) + '</strong></div>' +
+            '<div style="background:rgba(0,0,0,0.25);padding:10px;border-radius:10px"><div style="font-size:0.72rem;opacity:0.8">Em Dólar (USD)</div><strong style="font-size:1.25rem;color:#c4b5fd">US$ ' + esc(res.usdAmount.toFixed(2)) + '</strong></div>' +
+          '</div>';
+      };
+
+      window.fetchLivePiRatesForCalc = async function () {
+        const statusEl = document.getElementById('calc-rate-status');
+        try {
+          const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=brl,usd', {
+            headers: { Accept: 'application/json' }
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const json = await res.json();
+          const rates = json && json['pi-network'];
+          if (!rates || typeof rates.brl !== 'number' || typeof rates.usd !== 'number') {
+            throw new Error('Cotação indisponível');
+          }
+          document.getElementById('calc-rate-brl').value = rates.brl.toFixed(2);
+          document.getElementById('calc-rate-usd').value = rates.usd.toFixed(4);
+          if (statusEl) statusEl.textContent = '🟢 Cotação ao vivo atualizada (CoinGecko).';
+          runBalcaoCalc();
+        } catch (_) {
+          if (statusEl) statusEl.textContent = '🟡 Usando cotação de referência (você pode editar manualmente acima).';
+          runBalcaoCalc();
+        }
+      };
+
       document.addEventListener('DOMContentLoaded', function () {
         try {
           const saved = localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user');
@@ -368,6 +477,7 @@
           }
         } catch (_) {}
         generateVitrineQr();
+        fetchLivePiRatesForCalc();
       });
     })();
   </script>
