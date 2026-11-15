@@ -37,9 +37,12 @@ Se você é desenvolvedor construindo um dApp na Pi Network, os arquivos abaixo 
 
 - **Validação de identidade Pi no servidor (`/v2/me`):** [`supabase/functions/_shared/pi-auth.ts`](supabase/functions/_shared/pi-auth.ts)
 - **Ciclo de pagamento Pi (approve / complete / ledger):** [`supabase/functions/pi-payment/index.ts`](supabase/functions/pi-payment/index.ts) + [`site/assets/js/modules/pi-pay.js`](site/assets/js/modules/pi-pay.js)
+- **Kit Inicial "10 Minutos" (Starter Kit):** [`docs/starter-kit/README.md`](docs/starter-kit/README.md)
+- **Núcleo de Ferramentas Web3 (AI-Ready / Headless):** [`site/assets/js/modules/pi-tools-core.js`](site/assets/js/modules/pi-tools-core.js) + [`site/ferramentas.html`](site/ferramentas.html)
 - **Links curtos `/@usuario` em hospedagem estática:** [`site/404.html`](site/404.html)
-- **Notificações admin via Telegram / Resend:** [`supabase/functions/_shared/notify.ts`](supabase/functions/_shared/notify.ts)
+- **Notificações admin via Telegram / Resend:** [`supabase/functions/_shared/notify.ts`](supabase/functions/_shared/notify.ts) (modelo em [`supabase/functions/.env.example`](supabase/functions/.env.example))
 - **Hardening RLS e testes de segurança com `anon key`:** [`database/README.md`](database/README.md) e [`database/tests/run_security_tests.js`](database/tests/run_security_tests.js)
+- **Governança e Segurança:** [`LICENSE`](LICENSE) (MIT para código-fonte) e [`SECURITY.md`](SECURITY.md)
 
 ---
 

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pi dApp Starter Kit — HOKAGE22B</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #09090b; color: #f4f4f5; padding: 32px 16px; max-width: 520px; margin: 0 auto; }
+    .card { background: #13131f; border: 1px solid #27273a; border-radius: 16px; padding: 24px; }
+    button { width: 100%; padding: 12px 16px; border-radius: 10px; border: 0; font-weight: 700; cursor: pointer; margin-top: 10px; }
+    .btn-primary { background: #8b5cf6; color: #fff; }
+    .btn-pay { background: #f59e0b; color: #111; }
+    pre { background: #09090f; padding: 12px; border-radius: 10px; overflow-x: auto; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>⚡ Pi dApp Starter Kit</h1>
+    <p>Exemplo mínimo de Login + Pagamento Pi SDK v2.0 sem nunca pedir passphrase.</p>
+
+    <button class="btn-primary" onclick="connectPi()">1. Conectar com Pi Browser</button>
+    <button class="btn-pay" onclick="payTestPi()">2. Testar Pagamento (0.1 π)</button>
+
+    <pre id="log">Aguardando ação...</pre>
+  </div>
+
+  <script>
+    // Substitua pela URL da sua Edge Function no Supabase
+    const SUPABASE_FUNCTION_URL = 'https://SEU_PROJETO.supabase.co/functions/v1/pi-payment';
+    const IS_SANDBOX = window.location.search.includes('sandbox=true') || document.referrer.includes('sandbox.minepi.com');
+
+    let currentSession = null;
+
+    function writeLog(msg, data) {
+      const el = document.getElementById('log');
+      el.textContent = msg + (data ? '\n' + JSON.stringify(data, null, 2) : '');
+    }
+
+    if (window.Pi) {
+      window.Pi.init({ version: '2.0', sandbox: IS_SANDBOX });
+    }
+
+    async function connectPi() {
+      if (!window.Pi) return writeLog('Abra esta página dentro do Pi Browser.');
+      try {
+        currentSession = await window.Pi.authenticate(['username', 'payments'], function (incompletePayment) {
+          console.log('Pagamento incompleto detectado:', incompletePayment);
+        });
+        writeLog('Conectado como @' + currentSession.user.username, { uid: currentSession.user.uid });
+      } catch (err) {
+        writeLog('Erro ao autenticar:', { message: err.message });
+      }
+    }
+
+    async function callEdge(payload) {
+      const res = await fetch(SUPABASE_FUNCTION_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Falha no servidor');
+      return json;
+    }
+
+    function payTestPi() {
+      if (!window.Pi || !currentSession) return writeLog('Conecte com o Pi Browser primeiro.');
+      window.Pi.createPayment(
+        {
+          amount: 0.1,
+          memo: 'Teste Starter Kit HOKAGE22B',
+          metadata: { item: 'starter_demo' }
+        },
+        {
+          onReadyForServerApproval: async function (paymentId) {
+            writeLog('Aprovando no servidor...', { paymentId: paymentId });
+            await callEdge({ action: 'approve', paymentId: paymentId, accessToken: currentSession.accessToken });
+          },
+          onReadyForServerCompletion: async function (paymentId, txid) {
+            writeLog('Completando na blockchain...', { paymentId: paymentId, txid: txid });
+            const done = await callEdge({ action: 'complete', paymentId: paymentId, txid: txid, accessToken: currentSession.accessToken });
+            writeLog('Pagamento concluído com sucesso!', done);
+          },
+          onCancel: function (paymentId) {
+            writeLog('Pagamento cancelado pelo usuário.', { paymentId: paymentId });
+          },
+          onError: function (error) {
+            writeLog('Erro no pagamento:', { message: error && error.message ? error.message : String(error) });
+          }
+        }
+      );
+    }
+  </script>
+</body>
+</html>
