@@ -78,7 +78,7 @@
   function buildInviteUrl(username) {
     const clean = normalizeHandle(username);
     if (!clean) return 'https://hokage22b.com/pioneiro';
-    return 'https://hokage22b.com/pioneiro?ref=' + encodeURIComponent(clean);
+    return 'https://hokage22b.com/pioneiro?u=' + encodeURIComponent(clean) + '&ref=' + encodeURIComponent(clean);
   }
 
   async function fetchStats(username) {
@@ -472,7 +472,7 @@
 
     const safeRef = escapeHtml(ref);
     const inviteFullUrl = buildInviteUrl(ref);
-    const piDeepLink = 'pi://hokage22b.com/pioneiro?ref=' + encodeURIComponent(ref);
+    const piDeepLink = 'pi://hokage22b.com/pioneiro?u=' + encodeURIComponent(ref) + '&ref=' + encodeURIComponent(ref);
     const vitrineRefUrl = 'pioneiro?u=' + encodeURIComponent(ref) + '&ref=' + encodeURIComponent(ref) + '&ref_ack=1';
     const inPiBrowser = isPiBrowserEnv();
 
@@ -606,13 +606,8 @@
         const params = new URLSearchParams(window.location.search);
         const urlRef = normalizeHandle(params.get('ref'));
         const isAutoStart = params.get('autostart') === '1' || params.get('simulador') === '1' || params.get('teste') === '1';
-        const isRefAck = params.get('ref_ack') === '1' || isWelcomeDismissed();
         const activeRef = urlRef || getPendingRef();
-        if (urlRef && !isAutoStart && !isRefAck) {
-          setTimeout(function () {
-            openWelcomeModal(urlRef);
-          }, 180);
-        } else if (activeRef && !isAutoStart) {
+        if (activeRef && !isAutoStart) {
           setTimeout(function () {
             showFloatingRefPill(activeRef);
           }, 220);
