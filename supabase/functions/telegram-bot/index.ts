@@ -106,7 +106,27 @@ function buildPiNegocioPayload() {
 }
 
 Deno.serve(async (req) => {
+  const url = new URL(req.url);
   if (req.method === "GET") {
+    if (url.searchParams.get("setup") === "1") {
+      const botToken = (Deno.env.get("TELEGRAM_PUBLIC_BOT_TOKEN") || Deno.env.get("TELEGRAM_BOT_TOKEN") || "").trim();
+      if (!botToken) {
+        return new Response(JSON.stringify({ ok: false, error: "TELEGRAM_PUBLIC_BOT_TOKEN não encontrado nos Secrets." }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      const webhookUrl = "https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/telegram-bot";
+      const secretToken = (Deno.env.get("TELEGRAM_WEBHOOK_SECRET") || "").trim();
+      const body: Record<string, unknown> = { url: webhookUrl };
+      if (secretToken) body.secret_token = secretToken;
+      const tgRes = await callTelegram(botToken, "setWebhook", body);
+      const tgData = await tgRes.json().catch(() => ({ ok: false }));
+      return new Response(JSON.stringify({ ok: Boolean(tgData.ok), telegram: tgData, webhookUrl }), {
+        status: tgData.ok ? 200 : 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
     return new Response(JSON.stringify({ ok: true, service: "hokage22b-telegram-bot" }), {
       headers: { "Content-Type": "application/json" },
     });
