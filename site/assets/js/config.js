@@ -100,6 +100,7 @@
       twitter: 'https://twitter.com/hokage22b',
       github: 'https://github.com/isarloiola/hokage22b',
       linkedin: 'https://www.linkedin.com/in/isarloiola/',
+      telegram: 'https://t.me/hokage22b_oficial_bot',
       communityWhatsapp: 'https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2'
     },
 

@@ -12,7 +12,9 @@
       twitter_url: 'https://twitter.com/hokage22b',
       github_url: 'https://github.com/isarloiola/hokage22b',
       linkedin_url: 'https://www.linkedin.com/in/isarloiola/',
+      telegram_url: 'https://t.me/hokage22b_oficial_bot?start=ia_na_pratica',
       social_links: [
+        { network: 'telegram', url: 'https://t.me/hokage22b_oficial_bot?start=ia_na_pratica' },
         { network: 'github', url: 'https://github.com/isarloiola/hokage22b' },
         { network: 'linkedin', url: 'https://www.linkedin.com/in/isarloiola/' }
       ],
@@ -1170,6 +1172,7 @@
         pushSocialEntry('youtube', prof.youtube_url);
         pushSocialEntry('instagram', prof.instagram_url);
         pushSocialEntry('twitter', prof.twitter_url);
+        pushSocialEntry('telegram', prof.telegram_url);
         pushSocialEntry('github', prof.github_url);
         pushSocialEntry('linkedin', prof.linkedin_url);
 
