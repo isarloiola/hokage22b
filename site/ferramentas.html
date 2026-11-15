@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ferramentas Web3 &amp; Segurança Pi | HOKAGE22B</title>
+  <meta name="description" content="Validador criptográfico de Chave Pública Pi (G...), detector anti-golpe de links e gerador gratuito de QR Code/Placa de Balcão para sua Vitrine Web3." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
+  <link rel="stylesheet" href="assets/css/style.css?v=3.0" />
+  <link rel="stylesheet" href="assets/css/portal.css?v=3.0" />
+  <style>
+    .tools-hero {
+      padding: 108px 20px 36px;
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+      max-width: 1120px;
+      margin: 0 auto 64px;
+      padding: 0 20px;
+    }
+    .tool-card {
+      background: rgba(17, 17, 27, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .tool-card h2 {
+      font-size: 1.2rem;
+      margin: 0;
+      color: #fff;
+    }
+    .tool-desc {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .tool-input {
+      width: 100%;
+      background: rgba(9, 9, 15, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      box-sizing: border-box;
+    }
+    .tool-input:focus {
+      outline: none;
+      border-color: #8b5cf6;
+    }
+    .tool-result {
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .tool-result.safe {
+      border-color: rgba(16, 185, 129, 0.5);
+      background: rgba(16, 185, 129, 0.1);
+      color: #a7f3d0;
+    }
+    .tool-result.warn {
+      border-color: rgba(245, 158, 11, 0.5);
+      background: rgba(245, 158, 11, 0.1);
+      color: #fde68a;
+    }
+    .tool-result.critical, .tool-result.error {
+      border-color: rgba(239, 68, 68, 0.55);
+      background: rgba(239, 68, 68, 0.12);
+      color: #fecaca;
+    }
+    .qr-preview-card {
+      background: linear-gradient(160deg, #161329 0%, #0b0b14 100%);
+      border: 1.5px solid rgba(139, 92, 246, 0.45);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+      color: #fff;
+    }
+    .qr-preview-card img {
+      width: 200px;
+      height: 200px;
+      border-radius: 12px;
+      background: #fff;
+      padding: 8px;
+      margin: 12px auto;
+      display: block;
+    }
+    .tool-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    @media print {
+      body * { visibility: hidden; }
+      #qr-print-area, #qr-print-area * { visibility: visible; }
+      #qr-print-area {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 340px;
+        background: #fff !important;
+        color: #111 !important;
+        border: 2px solid #6d28d9 !important;
+      }
+      #qr-print-area h3, #qr-print-area p, #qr-print-area div {
+        color: #111 !important;
+      }
+    }
+  </style>
+</head>
+<body style="background:#09090b;color:#f4f4f5">
+  <header class="navbar" style="position:fixed;top:0;left:0;right:0;z-index:50">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px">
+      <a href="index.html" style="font-weight:800;font-size:1.05rem;color:#fff;text-decoration:none">✦ HOKAGE22B</a>
+      <nav style="display:flex;gap:14px;align-items:center;font-size:0.86rem">
+        <a href="pioneiro.html" style="color:#d4d4d8;text-decoration:none">Vitrine Web3</a>
+        <a href="mural.html" style="color:#d4d4d8;text-decoration:none">Mural</a>
+        <a href="zero.html" style="color:#d4d4d8;text-decoration:none">Guia Zero</a>
+        <a href="construir.html" style="color:#d4d4d8;text-decoration:none">Construir</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="tools-hero">
+      <span style="display:inline-block;padding:5px 12px;border-radius:999px;background:rgba(139,92,246,0.16);border:1px solid rgba(139,92,246,0.4);color:#c4b5fd;font-size:0.76rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px">
+        Utilitários Abertos · 100% Local no Navegador
+      </span>
+      <h1 style="font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin:0 0 12px;color:#fff">
+        Ferramentas Práticas para Pioneiros &amp; Comerciantes
+      </h1>
+      <p style="color:var(--text-secondary);font-size:0.96rem;line-height:1.55;margin:0">
+        Valide chaves públicas antes de transferir Pi, confira links suspeitos contra golpes e gere a placa com QR Code da sua Vitrine Web3. Tudo roda localmente no seu aparelho (nada é enviado ou salvo).
+      </p>
+    </section>
+
+    <section class="tools-grid">
+      <!-- Ferramenta 1: Validador de Chave Pública Pi & Detector de Seed/Passphrase -->
+      <article class="tool-card">
+        <div>
+          <h2>🔍 Validador de Chave Pública Pi (G...)</h2>
+          <p class="tool-desc" style="margin-top:6px">
+            Confere formato Base32 (56 caracteres) e checksum criptográfico CRC16 antes de você enviar ou salvar uma carteira. Também alerta se alguém colar uma chave secreta (<code>S...</code>) ou passphrase por engano.
+          </p>
+        </div>
+
+        <input
+          type="text"
+          id="tool-address-input"
+          class="tool-input"
+          placeholder="Cole aqui uma chave pública G... (56 caracteres)"
+          autocomplete="off"
+          spellcheck="false"
+        />
+
+        <div class="tool-actions">
+          <button type="button" class="btn btn-primary btn-sm" onclick="runAddressCheck()">Validar Chave</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="clearAddressCheck()">Limpar Tela</button>
+        </div>
+
+        <div id="tool-address-result" class="tool-result" style="display:none"></div>
+      </article>
+
+      <!-- Ferramenta 2: Detector Anti-Golpe de Links e Mensagens -->
+      <article class="tool-card">
+        <div>
+          <h2>🛡️ Verificador Anti-Golpe (Links &amp; Mensagens)</h2>
+          <p class="tool-desc" style="margin-top:6px">
+            Recebeu um link prometendo airdrop, desbloqueio ou verificação de carteira Pi? Cole aqui para checar se é um domínio oficial ou tentativa de phishing.
+          </p>
+        </div>
+
+        <input
+          type="text"
+          id="tool-link-input"
+          class="tool-input"
+          placeholder="Ex: https://hokage22b.com/@hokage22b"
+          autocomplete="off"
+          spellcheck="false"
+        />
+
+        <div class="tool-actions">
+          <button type="button" class="btn btn-primary btn-sm" onclick="runLinkCheck()">Analisar Segurança</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="clearLinkCheck()">Limpar</button>
+        </div>
+
+        <div id="tool-link-result" class="tool-result" style="display:none"></div>
+      </article>
+
+      <!-- Ferramenta 3: Gerador de Placa / QR Code de Balcão -->
+      <article class="tool-card" style="grid-column: 1 / -1">
+        <div>
+          <h2>📲 Gerador de Placa &amp; QR Code da Vitrine (/@usuario)</h2>
+          <p class="tool-desc" style="margin-top:6px">
+            Gere um cartão pronto para imprimir e colocar no balcão do seu negócio ou compartilhar no WhatsApp/Instagram.
+          </p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+          <div>
+            <label for="tool-qr-user" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px">Seu @usuario da Pi Network</label>
+            <input type="text" id="tool-qr-user" class="tool-input" placeholder="@hokage22b" value="hokage22b" />
+          </div>
+          <div>
+            <label for="tool-qr-title" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px">Título da Placa</label>
+            <input type="text" id="tool-qr-title" class="tool-input" style="font-family:inherit" value="Aceitamos Pi Network aqui!" maxlength="80" />
+          </div>
+          <div>
+            <label for="tool-qr-note" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px">Subtítulo / Instrução</label>
+            <input type="text" id="tool-qr-note" class="tool-input" style="font-family:inherit" value="Escaneie para ver nossa Vitrine Web3" maxlength="120" />
+          </div>
+        </div>
+
+        <div class="tool-actions">
+          <button type="button" class="btn btn-primary btn-sm" onclick="generateVitrineQr()">Gerar Placa com QR Code</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="copyVitrineShortUrl()">📋 Copiar Link Curto</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+        </div>
+
+        <div id="qr-print-area" class="qr-preview-card" style="display:none"></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/modules/pi-tools-core.js?v=1.0"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      function esc(str) {
+        if (window.HokageUtils && typeof window.HokageUtils.escapeHtml === 'function') {
+          return window.HokageUtils.escapeHtml(str);
+        }
+        return String(str == null ? '' : str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      window.runAddressCheck = function () {
+        const inputEl = document.getElementById('tool-address-input');
+        const box = document.getElementById('tool-address-result');
+        const res = window.HokagePiTools.inspectPiAddress(inputEl.value);
+        box.style.display = 'block';
+        box.className = 'tool-result ' + (res.riskLevel ? res.riskLevel.toLowerCase() : '');
+        const badge = res.valid ? '✅ CHAVE VÁLIDA' : (res.riskLevel === 'CRITICAL' ? '🚨 ALERTA CRÍTICO' : '⚠️ INVÁLIDA');
+        box.innerHTML =
+          '<strong style="display:block;margin-bottom:6px">' + badge + ' (' + esc(res.reasonCode) + ')</strong>' +
+          '<div>' + esc(res.summary) + '</div>' +
+          '<div style="margin-top:8px;font-size:0.78rem;opacity:0.85">' +
+            'Prefixo G: ' + (res.checks.prefixG ? '✓' : '✕') + ' · ' +
+            '56 chars: ' + (res.checks.length56 ? '✓' : '✕') + ' (' + res.length + ') · ' +
+            'Base32: ' + (res.checks.base32 ? '✓' : '✕') + ' · ' +
+            'CRC16: ' + (res.checks.crc16 ? '✓' : '✕') +
+          '</div>';
+      };
+
+      window.clearAddressCheck = function () {
+        document.getElementById('tool-address-input').value = '';
+        const box = document.getElementById('tool-address-result');
+        box.style.display = 'none';
+        box.innerHTML = '';
+      };
+
+      window.runLinkCheck = function () {
+        const inputEl = document.getElementById('tool-link-input');
+        const box = document.getElementById('tool-link-result');
+        const res = window.HokagePiTools.inspectPiLinkOrText(inputEl.value);
+        box.style.display = 'block';
+        box.className = 'tool-result ' + (res.riskLevel ? res.riskLevel.toLowerCase() : '');
+        const badge = res.safe ? '✅ DOMÍNIO OFICIAL' : (res.riskLevel === 'CRITICAL' ? '🚨 RISCO DE GOLPE' : '⚠️ ATENÇÃO');
+        box.innerHTML =
+          '<strong style="display:block;margin-bottom:6px">' + badge + ' (' + esc(res.reasonCode) + ')</strong>' +
+          '<div>' + esc(res.summary) + '</div>';
+      };
+
+      window.clearLinkCheck = function () {
+        document.getElementById('tool-link-input').value = '';
+        const box = document.getElementById('tool-link-result');
+        box.style.display = 'none';
+        box.innerHTML = '';
+      };
+
+      let lastQrPayload = null;
+
+      window.generateVitrineQr = function () {
+        const user = document.getElementById('tool-qr-user').value;
+        const title = document.getElementById('tool-qr-title').value;
+        const note = document.getElementById('tool-qr-note').value;
+        const payload = window.HokagePiTools.buildVitrineQrPayload({ username: user, title: title, note: note });
+        const area = document.getElementById('qr-print-area');
+        area.style.display = 'block';
+        if (!payload.ok) {
+          lastQrPayload = null;
+          area.innerHTML = '<div style="color:#fca5a5">' + esc(payload.summary) + '</div>';
+          return;
+        }
+        lastQrPayload = payload;
+        area.innerHTML =
+          '<div style="font-size:0.75rem;color:#c4b5fd;font-weight:800;text-transform:uppercase;letter-spacing:0.05em">✦ HOKAGE22B · Vitrine Web3 Pi</div>' +
+          '<h3 style="margin:8px 0 4px;font-size:1.25rem;color:#fff">' + esc(payload.title) + '</h3>' +
+          '<p style="margin:0;font-size:0.86rem;color:#d4d4d8">' + esc(payload.note) + '</p>' +
+          '<img src="' + esc(payload.qrImageUrl) + '" alt="QR Code da Vitrine ' + esc(payload.username) + '" />' +
+          '<div style="font-weight:800;font-size:1rem;color:#fbbf24">' + esc(payload.username) + '</div>' +
+          '<div style="font-size:0.82rem;color:#a1a1aa;margin-top:4px">' + esc(payload.shortUrl) + '</div>';
+      };
+
+      window.copyVitrineShortUrl = function () {
+        if (!lastQrPayload) generateVitrineQr();
+        if (!lastQrPayload) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(lastQrPayload.shortUrl).then(function () {
+            alert('✓ Link curto copiado:\n' + lastQrPayload.shortUrl);
+          });
+        } else {
+          window.prompt('Copie o link da sua Vitrine:', lastQrPayload.shortUrl);
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', function () {
+        try {
+          const saved = localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed && parsed.username) {
+              document.getElementById('tool-qr-user').value = parsed.username;
+            }
+          }
+        } catch (_) {}
+        generateVitrineQr();
+      });
+    })();
+  </script>
+</body>
+</html>
