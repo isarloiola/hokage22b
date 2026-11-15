@@ -33,7 +33,7 @@ Nunca confie apenas no `username` enviado pelo navegador. O helper `verifyPiAcce
 **Arquivos:**
 - Backend: `supabase/functions/pi-payment/index.ts`
 - Frontend: `site/assets/js/modules/pi-pay.js`
-- Ledger SQL: `database/migrations/setup_transacoes_pi.sql`
+- Ledger SQL: `database/migrations/007_setup_transacoes_pi.sql`
 
 O fluxo de pagamento U2A segue o ciclo oficial da Pi Network:
 1. O cliente inicia o pagamento no Pi SDK.
