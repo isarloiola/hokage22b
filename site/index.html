@@ -47,8 +47,10 @@
   <meta name="twitter:image" content="https://hokage22b.com/assets/img/og-image.png" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml"
-    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2309090b'/><circle cx='50' cy='50' r='24' fill='%238b5cf6'/></svg>" />
+  <link rel="icon" href="assets/img/brand/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
+  <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
+  <meta name="theme-color" content="#09090b" />
 
   <!-- Stylesheets com Cache Buster -->
   <link rel="stylesheet" href="assets/css/style.css?v=4.6" />
@@ -124,7 +126,8 @@
     <div class="portal-container">
       <div class="portal-header__inner">
         <div class="portal-header__brand-group">
-          <a href="#hero" class="portal-brand" aria-label="HOKAGE22B Início">
+          <a href="#hero" class="portal-brand" aria-label="HOKAGE22B Início" style="display:inline-flex;align-items:center;gap:9px">
+            <img src="assets/img/brand/hokage22b-logo.svg" alt="" width="22" height="22" aria-hidden="true" style="width:22px;height:22px;display:block;flex-shrink:0" />
             <span>HOKAGE22B</span>
             <span class="portal-brand__dot" aria-hidden="true"></span>
           </a>
@@ -1654,13 +1657,16 @@
     <div class="portal-container">
       <div class="footer-top">
         <div class="footer-brand-col">
-          <div class="portal-brand">
+          <div class="portal-brand" style="display:inline-flex;align-items:center;gap:10px">
+            <img src="assets/img/brand/hokage22b-logo.svg" alt="HOKAGE22B" width="22" height="22" style="width:22px;height:22px;display:block;flex-shrink:0" />
             <span>HOKAGE22B</span>
             <span class="portal-brand__dot" aria-hidden="true"></span>
           </div>
           <p>
-            O futuro não se espera. Constrói-se. Um espaço independente para explorar tecnologia, conhecimento e novas
-            possibilidades na economia digital.
+            Autonomia digital. Propósito em código. Um espaço independente para explorar tecnologia, conhecimento sem dogmas e execução prática na economia digital.
+          </p>
+          <p style="font-size:0.74rem;color:#71717a;margin-top:-6px;margin-bottom:14px">
+            Edição 93 · Autonomia digital, senso crítico e execução independente.
           </p>
           <div class="footer-social-links">
             <a href="https://www.youtube.com/@justhokage22b" target="_blank" rel="noopener noreferrer"
@@ -1984,6 +1990,7 @@
   <script src="assets/js/modules/pi-ticker.js?v=1.1"></script>
   <script src="assets/js/modules/referral.js?v=2.4"></script>
   <script src="assets/js/modules/analytics-tg.js?v=1.0"></script>
+  <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script>
     // Sincroniza foto personalizada do fundador no mockup da vitrine
     document.addEventListener('DOMContentLoaded', async function () {

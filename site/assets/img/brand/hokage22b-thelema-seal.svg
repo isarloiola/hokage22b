@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="violetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <g id="cryptographic-seal">
+    <path d="M 479.02 303.40 A 228 228 0 0 1 303.40 479.02" fill="none" stroke="url(#violetGrad)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 208.60 479.02 A 228 228 0 0 1 32.98 303.40" fill="none" stroke="url(#violetGrad)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 32.98 208.60 A 228 228 0 0 1 208.60 32.98" fill="none" stroke="url(#violetGrad)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 303.40 32.98 A 228 228 0 0 1 479.02 208.60" fill="none" stroke="url(#violetGrad)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 436.88 336.53 A 198 198 0 0 1 336.53 436.88" fill="none" stroke="#8b5cf6" stroke-opacity="0.45" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 175.47 436.88 A 198 198 0 0 1 75.12 336.53" fill="none" stroke="#8b5cf6" stroke-opacity="0.45" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 75.12 175.47 A 198 198 0 0 1 175.47 75.12" fill="none" stroke="#8b5cf6" stroke-opacity="0.45" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 336.53 75.12 A 198 198 0 0 1 436.88 175.47" fill="none" stroke="#8b5cf6" stroke-opacity="0.45" stroke-width="5" stroke-linecap="round"/>
+    <line x1="256.00" y1="40.00" x2="256.00" y2="18.00" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+    <line x1="472.00" y1="256.00" x2="494.00" y2="256.00" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+    <line x1="256.00" y1="472.00" x2="256.00" y2="494.00" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+    <line x1="40.00" y1="256.00" x2="18.00" y2="256.00" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <g id="eye-hexagram">
+    <polygon points="256.00,88.00 401.49,340.00 256.00,210.64 110.51,340.00" fill="none" stroke="url(#violetGrad)" stroke-width="16" stroke-linejoin="miter" stroke-miterlimit="10"/>
+    <polygon points="256.00,424.00 401.49,172.00 256.00,301.36 110.51,172.00" fill="none" stroke="url(#violetGrad)" stroke-width="16" stroke-linejoin="miter" stroke-miterlimit="10"/>
+    <polygon points="256,238 274,256 256,274 238,256" fill="url(#amberGrad)"/>
+  </g>
+</svg>
