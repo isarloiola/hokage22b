@@ -2,7 +2,8 @@
 // HOKAGE22B — Official Telegram Sales & Community Bot Webhook
 // Gratuito via Supabase Edge Functions (Deno) + Telegram Bot API
 // ============================================================
-import { MURAL_CONFIG } from "../_shared/http.ts";
+import { getCorsHeaders, MURAL_CONFIG } from "../_shared/http.ts";
+import { notifyAdmin } from "../_shared/notify.ts";
 
 interface TelegramUpdate {
   message?: {
@@ -106,6 +107,11 @@ function buildPiNegocioPayload() {
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req, false);
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
   const url = new URL(req.url);
   if (req.method === "GET") {
     if (url.searchParams.get("setup") === "1") {
@@ -133,7 +139,49 @@ Deno.serve(async (req) => {
   }
 
   if (req.method !== "POST") {
-    return new Response("Method not allowed", { status: 405 });
+    return new Response("Method not allowed", { status: 405, headers: corsHeaders });
+  }
+
+  const rawBody = await req.json().catch(() => null) as (TelegramUpdate & {
+    action?: string;
+    event?: string;
+    page?: string;
+    detail?: string;
+    ref?: string;
+  }) | null;
+
+  // Telemetria leve de cliques e visitas do site para o Telegram privado do admin
+  if (rawBody && rawBody.action === "track_event") {
+    const ua = (req.headers.get("user-agent") || "").toLowerCase();
+    if (/bot|crawler|spider|headless|curl|wget|python-requests/i.test(ua)) {
+      return new Response(JSON.stringify({ ok: true, skipped: "bot" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const eventName = String(rawBody.event || "interacao").trim().slice(0, 60);
+    const pagePath = String(rawBody.page || "/").trim().slice(0, 120);
+    const detail = String(rawBody.detail || "").trim().slice(0, 140);
+    const ref = String(rawBody.ref || "").trim().slice(0, 40);
+    const country = req.headers.get("cf-ipcountry") || req.headers.get("x-vercel-ip-country") || "";
+
+    const lines = [
+      `Página: ${pagePath}`,
+      detail ? `Detalhe: ${detail}` : "",
+      ref ? `Convite ativo: @${ref.replace(/^@+/, "")}` : "",
+      country ? `País: ${country}` : "",
+    ].filter(Boolean);
+
+    await notifyAdmin({
+      priority: "normal",
+      tag: "ATIVIDADE",
+      title: eventName,
+      lines,
+    });
+
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 
   const botToken = (Deno.env.get("TELEGRAM_PUBLIC_BOT_TOKEN") || Deno.env.get("TELEGRAM_BOT_TOKEN") || "").trim();
@@ -152,7 +200,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  const update = (await req.json().catch(() => null)) as TelegramUpdate | null;
+  const update = rawBody;
   if (!update) {
     return new Response(JSON.stringify({ ok: true }), { headers: { "Content-Type": "application/json" } });
   }
