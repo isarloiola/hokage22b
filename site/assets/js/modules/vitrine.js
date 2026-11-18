@@ -1042,14 +1042,14 @@
         const ownerRefSlug = username.replace(/^@+/, '');
         if (!isOwner && ownerRefSlug) {
           footerCreateLink.href = `pioneiro?ref=${encodeURIComponent(ownerRefSlug)}`;
-          footerCreateLink.textContent = `🎁 Crie sua vitrine grátis pelo convite de ${username} e ganhe 1 Anúncio Bronze (0.314 π) ↗`;
+          footerCreateLink.textContent = `🎁 Crie seu Passaporte grátis pelo convite de ${username} e ganhe 1 Anúncio Bronze (0.314 π) ↗`;
         } else {
           footerCreateLink.href = 'pioneiro';
-          footerCreateLink.textContent = '🚀 Crie sua vitrine grátis com seu @usuário Pi ↗';
+          footerCreateLink.textContent = '🚀 Crie seu Passaporte grátis com seu @usuário Pi ↗';
         }
       }
       document.getElementById('pioneer-handle').textContent = username;
-      document.title = `${username} — Vitrine Oficial na Pi Network | HOKAGE22B`;
+      document.title = `${username} — Passaporte Oficial na Pi Network | HOKAGE22B`;
 
       // Renderiza Avatar (Foto com Cortador ou Letra Inicial)
       applyAvatarOnScreen(prof.avatar_url, username);
@@ -1066,6 +1066,9 @@
 
       // Bio
       document.getElementById('pioneer-bio').textContent = prof.bio || 'Pioneiro oficial na comunidade independente Pi Network.';
+
+      // Atualiza barra de evolução da jornada (Pioneiro -> Construtor -> Hokage)
+      updatePassportJourneyBar(prof, username);
 
       // Carteira Pi com Verificação Criptográfica de Integridade
       const walletBox = document.getElementById('pioneer-wallet-box');
@@ -2437,6 +2440,57 @@
       });
     }
 
+    // Barra de Evolução da Jornada no Passaporte (Pioneiro -> Construtor -> Hokage)
+    function updatePassportJourneyBar(prof, rawUsername) {
+      const labelEl = document.getElementById('journey-current-label');
+      const fillEl = document.getElementById('journey-progress-fill');
+      const s1 = document.getElementById('journey-step-1');
+      const s2 = document.getElementById('journey-step-2');
+      const s3 = document.getElementById('journey-step-3');
+      const hintEl = document.getElementById('journey-next-hint');
+      if (!labelEl || !fillEl) return;
+
+      const uClean = String(rawUsername || prof.username || '').replace(/^@+/, '').toLowerCase();
+      const isHokage = Boolean(
+        prof.journey_tier === 'hokage' ||
+        prof.is_ambassador ||
+        Number(prof.referral_qualified_count || 0) >= 5 ||
+        uClean === 'hokage22b'
+      );
+      const hasWallet = Boolean(prof.wallet_address && isValidPiPublicKey(String(prof.wallet_address)));
+      const hasProducts = Array.isArray(prof.products) && prof.products.length > 0;
+      const isConstrutor = !isHokage && (
+        prof.journey_tier === 'construtor' ||
+        (hasWallet && (hasProducts || Number(prof.reputation_score || 0) >= 70))
+      );
+
+      if (isHokage) {
+        labelEl.textContent = '03 · Hokage';
+        labelEl.style.color = '#fb923c';
+        fillEl.style.width = '100%';
+        if (s1) s1.style.color = '#fbbf24';
+        if (s2) s2.style.color = '#c4b5fd';
+        if (s3) s3.style.color = '#fb923c';
+        if (hintEl) hintEl.innerHTML = '🔥 Nível máximo: integra <a href="monte" style="color:#fb923c;font-weight:700;text-decoration:none">O Monte Hokage ↗</a> por contribuição real.';
+      } else if (isConstrutor) {
+        labelEl.textContent = '02 · Construtor';
+        labelEl.style.color = '#c4b5fd';
+        fillEl.style.width = '68%';
+        if (s1) s1.style.color = '#fbbf24';
+        if (s2) s2.style.color = '#c4b5fd';
+        if (s3) s3.style.color = 'var(--text-muted)';
+        if (hintEl) hintEl.innerHTML = '⚡ Construtor ativo! Contribua na comunidade ou na API para alcançar <a href="monte" style="color:#fb923c;font-weight:700;text-decoration:none">O Monte Hokage →</a>';
+      } else {
+        labelEl.textContent = '01 · Pioneiro';
+        labelEl.style.color = '#fbbf24';
+        fillEl.style.width = '34%';
+        if (s1) s1.style.color = '#fbbf24';
+        if (s2) s2.style.color = 'var(--text-muted)';
+        if (s3) s3.style.color = 'var(--text-muted)';
+        if (hintEl) hintEl.textContent = 'Adicione uma chave Pi válida e um produto/serviço (ou ative na Vila) para avançar para Construtor.';
+      }
+    }
+
     // Reputação & Avaliações Verificadas + Programa de Afiliados em Pi (Zero-Trust)
     async function loadPioneerReferralPanel(targetUsername, isOwner) {
       const badgeEl = document.getElementById('pioneer-ambassador-badge');
@@ -2464,6 +2518,7 @@
 
       if (badgeEl && isAmb) {
         badgeEl.style.display = 'inline-flex';
+        updatePassportJourneyBar({ is_ambassador: true, referral_qualified_count: count }, targetUsername);
       }
 
       if (!isOwner || !sectionEl) return;
