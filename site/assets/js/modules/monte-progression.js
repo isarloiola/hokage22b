@@ -278,7 +278,15 @@
 
     const userKey = normalizeUserKey(prof.username);
     let selectedIds = null;
-    if (typeof localStorage !== 'undefined') {
+    // 1. Prioriza seleção salva publicamente no Supabase (visível para qualquer visitante)
+    if (Array.isArray(prof.selected_titles) && prof.selected_titles.length > 0) {
+      selectedIds = prof.selected_titles;
+    } else if (prof.checklist_state && Array.isArray(prof.checklist_state.selected_titles) && prof.checklist_state.selected_titles.length > 0) {
+      selectedIds = prof.checklist_state.selected_titles;
+    }
+
+    // 2. Fallback local (para preview imediato na própria sessão)
+    if (!selectedIds && typeof localStorage !== 'undefined') {
       try {
         const saved = localStorage.getItem(TITLES_STORAGE_PREFIX + userKey);
         if (saved) {
@@ -363,9 +371,46 @@
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (ev) { if (ev.target === overlay) overlay.remove(); });
     document.getElementById('hk-titles-close').addEventListener('click', function () { overlay.remove(); });
-    document.getElementById('hk-titles-save').addEventListener('click', function () {
+    document.getElementById('hk-titles-save').addEventListener('click', async function () {
+      const saveBtn = document.getElementById('hk-titles-save');
       const picked = Array.from(overlay.querySelectorAll('.hk-title-chk:checked')).map(function (c) { return c.value; });
-      saveSelectedTitles(profileData && profileData.username, picked);
+      const finalPicked = picked.length ? picked : ['pioneiro'];
+      saveSelectedTitles(profileData && profileData.username, finalPicked);
+
+      if (profileData && typeof profileData === 'object') {
+        profileData.selected_titles = finalPicked;
+        if (!profileData.checklist_state || typeof profileData.checklist_state !== 'object') {
+          profileData.checklist_state = {};
+        }
+        profileData.checklist_state.selected_titles = finalPicked;
+      }
+
+      if (window.IsarDB && typeof window.IsarDB.savePioneerProfile === 'function' && profileData && profileData.username) {
+        if (saveBtn) {
+          saveBtn.disabled = true;
+          saveBtn.textContent = '⏳ Salvando no Passaporte...';
+        }
+        try {
+          await window.IsarDB.savePioneerProfile(profileData.username, {
+            bio: profileData.bio || '',
+            avatar_url: profileData.avatar_url || '',
+            wallet_address: profileData.wallet_address || '',
+            whatsapp_url: profileData.whatsapp_url || '',
+            youtube_url: profileData.youtube_url || '',
+            twitter_url: profileData.twitter_url || '',
+            instagram_url: profileData.instagram_url || '',
+            products: Array.isArray(profileData.products) ? profileData.products : [],
+            checklist_state: Object.assign({}, profileData.checklist_state || {}, {
+              social_links: Array.isArray(profileData.social_links) ? profileData.social_links : [],
+              selected_titles: finalPicked
+            })
+          });
+        } catch (err) {
+          console.warn('Falha ao salvar títulos no Supabase:', err);
+          alert('⚠️ Salvo neste aparelho, mas para aparecer para todos é preciso estar conectado via Pi Browser.');
+        }
+      }
+
       overlay.remove();
       renderPassportTitles(containerId, profileData, isOwner);
     });

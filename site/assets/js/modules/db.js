@@ -802,6 +802,9 @@
           data.showcase_mural = data.checklist_state.showcase_mural;
         }
         data.social_links = Array.isArray(data.checklist_state.social_links) ? data.checklist_state.social_links : [];
+        if (Array.isArray(data.checklist_state.selected_titles)) {
+          data.selected_titles = data.checklist_state.selected_titles;
+        }
       }
       return data;
     } catch (err) {

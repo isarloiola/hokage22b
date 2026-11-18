@@ -832,6 +832,12 @@
               if (Array.isArray(dbProf.products) && dbProf.products.length > 0) {
                 currentProfileData.products = dbProf.products;
               }
+              if (dbProf.checklist_state && typeof dbProf.checklist_state === 'object') {
+                currentProfileData.checklist_state = dbProf.checklist_state;
+              }
+              if (Array.isArray(dbProf.selected_titles)) {
+                currentProfileData.selected_titles = dbProf.selected_titles;
+              }
             }
           } catch (e) {
             console.warn('Erro ao mesclar dados do fundador do Supabase:', e);
