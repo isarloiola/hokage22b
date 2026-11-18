@@ -73,6 +73,32 @@
     .dev-table code { font-family: 'JetBrains Mono', monospace; color: #fbbf24; font-size: 0.78rem; }
 
     .dev-hokage-box { background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(139,92,246,0.1)); border: 1px solid rgba(249,115,22,0.35); border-radius: 16px; padding: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+
+    .dev-cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .dev-case-card { background: linear-gradient(160deg, rgba(20,20,28,0.95), rgba(12,12,18,0.98)); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; transition: border-color 0.2s ease, transform 0.2s ease; }
+    .dev-case-card:hover { border-color: rgba(249,115,22,0.45); transform: translateY(-2px); }
+    .dev-case-tag { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #fbbf24; }
+    .dev-case-card h3 { font-size: 1rem; font-weight: 800; color: #fff; margin: 4px 0 6px; }
+    .dev-case-card p { font-size: 0.84rem; color: #a1a1aa; line-height: 1.5; margin: 0; }
+    .dev-hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+
+    @media (max-width: 640px) {
+      .dev-wrap { padding: 82px 14px 56px; }
+      .dev-card { padding: 18px 14px; border-radius: 14px; }
+      .dev-base-box { flex-direction: column; align-items: stretch; font-size: 0.74rem; word-break: break-all; }
+      .dev-base-box .dev-btn { width: 100%; text-align: center; }
+      .dev-endpoint-grid { grid-template-columns: 1fr; }
+      .dev-playground-bar { flex-direction: column; align-items: stretch; }
+      .dev-url-input { min-width: 0 !important; max-width: 100% !important; width: 100%; box-sizing: border-box; }
+      .dev-playground-bar .dev-btn { width: 100%; text-align: center; }
+      .dev-tabs .dev-btn { margin-left: 0 !important; width: 100%; text-align: center; }
+      .dev-pre { font-size: 0.73rem; padding: 12px; }
+      .dev-table thead { display: none; }
+      .dev-table, .dev-table tbody, .dev-table tr, .dev-table td { display: block; width: 100%; box-sizing: border-box; }
+      .dev-table tr { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .dev-table td { padding: 4px 0; border: none; word-break: break-word; }
+      .dev-hero-actions .dev-btn { width: 100%; text-align: center; }
+    }
   </style>
 </head>
 <body>
@@ -81,12 +107,78 @@
   <main class="dev-wrap">
 
     <header class="dev-hero">
-      <div class="dev-pill">⚡ API Pública v1 · Leitura Aberta · CORS *</div>
-      <h1>Construa sobre o ecossistema HOKAGE22B</h1>
+      <img src="assets/img/brand/hokage22b-logo-violet.svg" alt="HOKAGE22B" width="38" height="38" style="width:38px;height:38px;margin:0 auto 12px;display:block;opacity:0.92" />
+      <div class="dev-pill">⚡ Infraestrutura Aberta · Zero Servidor · CORS *</div>
+      <h1>Construa Apps, Bots e Lojas sobre o HOKAGE22B</h1>
       <p>
-        Consuma dados públicos verificados de <strong>Passaportes do Pioneiro</strong>, anúncios da <strong>A Vila · Central P2P</strong>, líderes do <strong>Monte Hokage</strong> e utilitários Pi Network — sem precisar de autenticação ou backend próprio.
+        Economize semanas de desenvolvimento: plugue <strong>Passaportes verificados</strong>, feed de <strong>A Vila · P2P</strong>, <strong>Validador CRC16</strong> e <strong>Cotação Pi</strong> no seu site ou bot em minutos — 100% gratuito e pronto para celular.
       </p>
+      <div class="dev-hero-actions">
+        <a href="#playground-ao-vivo" class="dev-btn dev-btn--primary" style="text-decoration:none;padding:11px 20px">▶ Testar API ao Vivo ↓</a>
+        <a href="#widget-passaporte" class="dev-btn" style="text-decoration:none;padding:11px 20px">🪪 Gerar Widget (2 linhas) ↓</a>
+        <a href="https://github.com/isarloiola/hokage22b/tree/main/docs/starter-kit" target="_blank" rel="noopener noreferrer" class="dev-btn" style="text-decoration:none;padding:11px 20px">🚀 Starter Kit no GitHub ↗</a>
+      </div>
     </header>
+
+    <!-- Casos de Uso & Possibilidades (Copy Comercial) -->
+    <section aria-label="O que você pode construir hoje">
+      <h2 style="font-size:1.25rem;font-weight:800;margin:0 0 14px;color:#fff;text-align:center">O que você pode colocar no ar hoje com nossas integrações</h2>
+      <div class="dev-cases-grid">
+        <article class="dev-case-card">
+          <div>
+            <span class="dev-case-tag">Para Criadores &amp; Lojas</span>
+            <h3>🪪 Passaporte em Qualquer Site</h3>
+            <p>Tem blog, WordPress, Carrd ou portfólio? Cole 2 linhas de HTML e mostre seu Passaporte Pi, selos e produtos ao vivo sem perder o estilo do seu site.</p>
+          </div>
+          <a href="#widget-passaporte" class="dev-btn" style="text-decoration:none;text-align:center">Gerar meu código agora →</a>
+        </article>
+
+        <article class="dev-case-card">
+          <div>
+            <span class="dev-case-tag">Para Bots &amp; Automações</span>
+            <h3>🤖 Bots de Telegram, Discord &amp; IA</h3>
+            <p>Conecte seu bot em <code>/v1/tools/pi-price</code> e <code>/v1/vila</code> para responder cotação em Reais/USD, listar ofertas e validar carteiras direto no chat.</p>
+          </div>
+          <a href="#playground-ao-vivo" class="dev-btn" style="text-decoration:none;text-align:center">Testar endpoints no celular →</a>
+        </article>
+
+        <article class="dev-case-card">
+          <div>
+            <span class="dev-case-tag">Para Checkouts &amp; Segurança</span>
+            <h3>🛡️ Bloqueio Anti-Golpe em Formulários</h3>
+            <p>Evite que clientes percam Pi por erro de digitação ou colando chave secreta <code>S...</code>: valide Base32 + CRC16 via API em 1 requisição.</p>
+          </div>
+          <a href="#playground-ao-vivo" onclick="selectEndpoint('/tools/validate-wallet?address=GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR')" class="dev-btn" style="text-decoration:none;text-align:center">Testar validador CRC16 →</a>
+        </article>
+
+        <article class="dev-case-card">
+          <div>
+            <span class="dev-case-tag">Para Empreendedores Locais</span>
+            <h3>🏘️ Diretórios &amp; Mapas Regionais</h3>
+            <p>Use <code>/v1/vila?country=BR</code> para montar portais locais, vitrines de bairro ou painéis filtrando negócios que já aceitam Pi.</p>
+          </div>
+          <a href="#exemplos-reais" class="dev-btn" style="text-decoration:none;text-align:center">Ver exemplos prontos →</a>
+        </article>
+
+        <article class="dev-case-card">
+          <div>
+            <span class="dev-case-tag">Para Comunidades &amp; Apps</span>
+            <h3>🔥 Níveis, Selos &amp; Monte Hokage</h3>
+            <p>Reconheça usuários reais consultando <code>/v1/passaportes</code> e <code>/v1/monte-hokage</code> para liberar benefícios ou acesso VIP no seu projeto.</p>
+          </div>
+          <a href="monte" class="dev-btn" style="text-decoration:none;text-align:center">Conhecer o Monte Hokage →</a>
+        </article>
+
+        <article class="dev-case-card" style="border-color:rgba(16,185,129,0.35)">
+          <div>
+            <span class="dev-case-tag" style="color:#34d399">Open Source · Custo Zero</span>
+            <h3>⚡ Suba seu dApp Pi em 10 Minutos</h3>
+            <p>Use nosso <strong>Pi dApp Starter Kit</strong> (GitHub Pages + Supabase Free + Pi SDK v2.0) com login e pagamento server-side já prontos.</p>
+          </div>
+          <a href="https://github.com/isarloiola/hokage22b/tree/main/docs/starter-kit" target="_blank" rel="noopener noreferrer" class="dev-btn dev-btn--primary" style="text-decoration:none;text-align:center">Acessar Starter Kit ↗</a>
+        </article>
+      </div>
+    </section>
 
     <!-- Base URL -->
     <section class="dev-card">
@@ -99,7 +191,7 @@
     </section>
 
     <!-- Playground Interativo -->
-    <section class="dev-card">
+    <section class="dev-card" id="playground-ao-vivo">
       <h2>🧪 Playground Interativo ao Vivo</h2>
       <p>Selecione um endpoint abaixo e execute a consulta real direto no seu navegador:</p>
 
