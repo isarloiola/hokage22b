@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Começar Minha Jornada — HOKAGE22B</title>
+  <meta name="description" content="Descubra seu próximo passo no ecossistema HOKAGE22B: de Pioneiro a Construtor até o Monte Hokage." />
+  <link rel="canonical" href="https://hokage22b.com/jornada" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hokage22b.com/jornada" />
+  <meta property="og:title" content="Começar Minha Jornada — HOKAGE22B" />
+  <meta property="og:description" content="Identidade · Conexão · Construção · Liderança. Escolha onde você está e siga sua trilha na Pi Network." />
+  <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png" />
+
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <link rel="icon" href="assets/img/brand/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
+  <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
+  <meta name="theme-color" content="#09090b" />
+  <link rel="stylesheet" href="assets/css/style.css?v=4.6" />
+
+  <style>
+    body { background: #09090b; color: #fafafa; min-height: 100vh; }
+    .j-wrap { max-width: 920px; margin: 0 auto; padding: 26px 20px 72px; }
+    .j-nav { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 34px; flex-wrap: wrap; }
+    .j-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 800; font-size: 1.05rem; }
+    .j-nav-links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.86rem; }
+    .j-nav-links a { color: #a1a1aa; text-decoration: none; font-weight: 600; }
+    .j-nav-links a:hover { color: #fafafa; }
+
+    .j-hero { text-align: center; max-width: 680px; margin: 0 auto 32px; }
+    .j-tag { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.38); color: #fb923c; font-size: 0.78rem; font-weight: 700; margin-bottom: 14px; }
+    .j-hero h1 { font-size: clamp(1.85rem, 4vw, 2.6rem); font-weight: 900; line-height: 1.15; margin: 0 0 10px; letter-spacing: -0.02em; }
+    .j-hero p { color: #a1a1aa; font-size: 0.98rem; line-height: 1.6; margin: 0; }
+
+    .j-resume-banner { display: none; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.4); border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; }
+    .j-resume-banner.visible { display: flex; }
+
+    .j-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
+    .j-option { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #141419; border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 18px 20px; text-decoration: none; color: #fafafa; transition: all 0.16s ease; }
+    .j-option:hover { border-color: #f97316; background: #1c1c24; transform: translateY(-1px); }
+    .j-option.is-last { border-color: rgba(139,92,246,0.6); box-shadow: 0 0 0 1px rgba(139,92,246,0.25); }
+    .j-option__left { display: flex; align-items: flex-start; gap: 14px; }
+    .j-option__icon { width: 42px; height: 42px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+    .j-option__title { font-size: 1.02rem; font-weight: 800; margin: 0 0 4px; color: #fff; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .j-option__desc { font-size: 0.86rem; color: #a1a1aa; margin: 0; line-height: 1.45; }
+    .j-option__dest { font-size: 0.78rem; font-weight: 800; color: #fb923c; white-space: nowrap; padding: 7px 12px; border-radius: 999px; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.32); }
+    .j-badge-last { font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: rgba(139,92,246,0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.4); }
+
+    .j-trail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+    .j-trail-card { background: #141419; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; }
+    .j-trail-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 800; color: #fb923c; display: block; margin-bottom: 6px; }
+    .j-trail-card h3 { font-size: 1.05rem; font-weight: 800; margin: 0 0 6px; color: #fff; }
+    .j-trail-card p { font-size: 0.84rem; color: #a1a1aa; margin: 0; line-height: 1.5; }
+
+    @media (max-width: 640px) {
+      .j-option { flex-direction: column; align-items: flex-start; }
+      .j-option__dest { align-self: flex-end; }
+    }
+  </style>
+</head>
+<body>
+  <main class="j-wrap">
+    <nav class="j-nav">
+      <a href="index.html" class="j-brand">
+        <img src="assets/img/brand/hokage22b-logo.svg" alt="HOKAGE22B" width="24" height="24" />
+        <span>HOKAGE22B</span>
+      </a>
+      <div class="j-nav-links">
+        <a href="index.html">Início</a>
+        <a href="zero">Pi do Zero</a>
+        <a href="pioneiro">🪪 Passaporte</a>
+        <a href="mural">🏘️ A Vila</a>
+        <a href="ferramentas">🛠️ Ferramentas</a>
+      </div>
+    </nav>
+
+    <header class="j-hero">
+      <div class="j-tag">Identidade · Conexão · Construção · Liderança</div>
+      <h1>Qual é o seu momento agora?</h1>
+      <p>
+        Escolha a opção que melhor descreve onde você está. Sem cadastro obrigatório na entrada — você segue direto para o próximo passo certo para você.
+      </p>
+    </header>
+
+    <div id="j-resume-banner" class="j-resume-banner">
+      <div>
+        <strong style="color:#c4b5fd;font-size:0.88rem;display:block">Você já iniciou sua trilha por aqui</strong>
+        <span id="j-resume-text" style="color:#d4d4d8;font-size:0.82rem"></span>
+      </div>
+      <a id="j-resume-link" href="zero" class="portal-btn portal-btn--primary portal-btn--sm" style="text-decoration:none">Continuar de onde parei →</a>
+    </div>
+
+    <section class="j-list" aria-label="Escolha seu próximo passo">
+      <a href="zero" class="j-option" data-step-id="1" data-step-label="01 · Pi do Zero (Iniciante)" onclick="saveJourneyStep('1', '01 · Pi do Zero (Iniciante)', 'zero')">
+        <div class="j-option__left">
+          <div class="j-option__icon">📘</div>
+          <div>
+            <h2 class="j-option__title">Ainda não tenho Pi ou sou iniciante</h2>
+            <p class="j-option__desc">Entenda a Pi Network sem hype, aprenda a proteger sua Passphrase de 24 palavras e evite golpes desde o primeiro dia.</p>
+          </div>
+        </div>
+        <span class="j-option__dest">Ir para Pi do Zero →</span>
+      </a>
+
+      <a href="pioneiro" class="j-option" data-step-id="2" data-step-label="01 · Criar Passaporte do Pioneiro" onclick="saveJourneyStep('2', '01 · Criar Passaporte do Pioneiro', 'pioneiro')">
+        <div class="j-option__left">
+          <div class="j-option__icon">🪪</div>
+          <div>
+            <h2 class="j-option__title">Já tenho Pi, mas ainda não tenho Passaporte</h2>
+            <p class="j-option__desc">Crie gratuitamente seu Passaporte do Pioneiro verificado via Pi KYC com chave pública P2P, links oficiais e catálogo.</p>
+          </div>
+        </div>
+        <span class="j-option__dest">Criar Passaporte →</span>
+      </a>
+
+      <a href="mural" class="j-option" data-step-id="3" data-step-label="02 · A Vila (Central P2P)" onclick="saveJourneyStep('3', '02 · A Vila (Central P2P)', 'mural')">
+        <div class="j-option__left">
+          <div class="j-option__icon">🏘️</div>
+          <div>
+            <h2 class="j-option__title">Já tenho Passaporte e quero negociar ou divulgar</h2>
+            <p class="j-option__desc">Entre na A Vila · Central P2P para anunciar produtos, oferecer serviços em Pi e fechar parcerias com pioneiros reais.</p>
+          </div>
+        </div>
+        <span class="j-option__dest">Entrar na Vila →</span>
+      </a>
+
+      <a href="construir" class="j-option" data-step-id="4" data-step-label="02 · Recursos de Construtor" onclick="saveJourneyStep('4', '02 · Recursos de Construtor', 'construir')">
+        <div class="j-option__left">
+          <div class="j-option__icon">⚡</div>
+          <div>
+            <h2 class="j-option__title">Já estou construindo projetos, lojas ou apps</h2>
+            <p class="j-option__desc">Acesse o Guia do Construtor, as Ferramentas Web3 (validador, placa QR) e a API Aberta em /desenvolvedores.</p>
+          </div>
+        </div>
+        <span class="j-option__dest">Recursos de Construtor →</span>
+      </a>
+
+      <a href="pioneiro?u=@hokage22b" class="j-option" data-step-id="5" data-step-label="03 · Trilha Monte Hokage" onclick="saveJourneyStep('5', '03 · Trilha Monte Hokage', 'pioneiro?u=@hokage22b')">
+        <div class="j-option__left">
+          <div class="j-option__icon">🔥</div>
+          <div>
+            <h2 class="j-option__title">Quero conquistar reconhecimento no Monte Hokage</h2>
+            <p class="j-option__desc">Veja um perfil Hokage real em ação e entenda como contribuições em educação, comércio P2P ou código levam ao selo de liderança.</p>
+          </div>
+        </div>
+        <span class="j-option__dest">Ver Monte Hokage →</span>
+      </a>
+    </section>
+
+    <section aria-label="A Trilha Única">
+      <h2 style="font-size:1.15rem;font-weight:800;margin:0 0 14px;color:#fff;text-align:center">A Trilha Única HOKAGE22B</h2>
+      <div class="j-trail-grid">
+        <div class="j-trail-card">
+          <span class="j-trail-num">01 — PIONEIRO</span>
+          <h3>Identidade &amp; Segurança</h3>
+          <p>Aprenda os fundamentos sem promessas mágicas, proteja sua carteira e ative seu Passaporte do Pioneiro.</p>
+        </div>
+        <div class="j-trail-card">
+          <span class="j-trail-num">02 — CONSTRUTOR</span>
+          <h3>Conexão &amp; Utilidade</h3>
+          <p>Entre na Vila, anuncie, negocie em Pi, use ferramentas de balcão e construa soluções úteis para a rede.</p>
+        </div>
+        <div class="j-trail-card">
+          <span class="j-trail-num">03 — HOKAGE</span>
+          <h3>Liderança por Mérito</h3>
+          <p>Conquiste reconhecimento no Monte Hokage através de contribuições reais e consistentes no ecossistema.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    var STORAGE_KEY = 'hokage_journey_step_v1';
+    function saveJourneyStep(id, label, href) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ id: id, label: label, href: href, at: Date.now() }));
+      } catch (_) {}
+    }
+
+    (function hydrateLastStep() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        var saved = JSON.parse(raw);
+        if (!saved || !saved.id || !saved.href) return;
+        var banner = document.getElementById('j-resume-banner');
+        document.getElementById('j-resume-text').textContent = 'Última etapa selecionada: ' + saved.label;
+        document.getElementById('j-resume-link').href = saved.href;
+        banner.classList.add('visible');
+
+        var card = document.querySelector('.j-option[data-step-id="' + saved.id + '"]');
+        if (card) {
+          card.classList.add('is-last');
+          var title = card.querySelector('.j-option__title');
+          if (title) {
+            var b = document.createElement('span');
+            b.className = 'j-badge-last';
+            b.textContent = 'Você parou aqui';
+            title.appendChild(b);
+          }
+        }
+      } catch (_) {}
+    })();
+  </script>
+</body>
+</html>
