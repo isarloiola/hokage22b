@@ -37,7 +37,7 @@ function jsonOut(body: unknown, status = 200, cacheSeconds = 60): Response {
 }
 
 function ok(code: string, data: Record<string, unknown>, cacheSeconds = 60): Response {
-  return jsonOut({ ok: true, api_version: API_VERSION, code, data }, cacheSeconds);
+  return jsonOut({ ok: true, api_version: API_VERSION, code, data }, 200, cacheSeconds);
 }
 
 function err(code: string, message: string, status = 400): Response {
@@ -76,13 +76,24 @@ function computeJourneyTier(row: Record<string, unknown>): "hokage" | "construto
 function projectPassport(row: Record<string, unknown>) {
   const username = normalizeHandle(String(row.username || ""));
   const tier = computeJourneyTier(row);
-  const rawProducts = Array.isArray(row.products) ? row.products : [];
-  const products = rawProducts.slice(0, 20).map((p: Record<string, unknown>) => ({
-    title: String(p?.title || "").slice(0, 120),
-    price_pi: p?.price_pi ?? null,
-    description: p?.description ? String(p.description).slice(0, 300) : null,
-    image_url: p?.image_url ? String(p.image_url) : null,
-  }));
+  let rawProducts: unknown[] = [];
+  if (Array.isArray(row.products)) {
+    rawProducts = row.products;
+  } else if (typeof row.products === "string") {
+    try {
+      const parsed = JSON.parse(row.products);
+      if (Array.isArray(parsed)) rawProducts = parsed;
+    } catch (_) { /* ignore */ }
+  }
+  const products = rawProducts.slice(0, 20).map((item) => {
+    const p = (item && typeof item === "object" ? item : {}) as Record<string, unknown>;
+    return {
+      title: String(p?.title || "").slice(0, 120),
+      price_pi: p?.price_pi ?? null,
+      description: p?.description ? String(p.description).slice(0, 300) : null,
+      image_url: p?.image_url ? String(p.image_url) : null,
+    };
+  });
 
   return {
     username,
@@ -268,7 +279,9 @@ serve(async (req: Request) => {
         const { data, error } = await supabase
           .from("pioneiros")
           .select(PUBLIC_PIONEER_SELECT)
-          .ilike("username", u)
+          .or(`username.ilike.${u},username.ilike.@${u}`)
+          .order("updated_at", { ascending: false })
+          .limit(1)
           .maybeSingle();
 
         if (error) throw error;
@@ -280,9 +293,9 @@ serve(async (req: Request) => {
       const offset = clampOffset(url.searchParams.get("offset"));
       const tierFilter = String(url.searchParams.get("tier") || "").trim().toLowerCase();
 
-      const { data, error, count } = await supabase
+      const { data, error } = await supabase
         .from("pioneiros")
-        .select(PUBLIC_PIONEER_SELECT, { count: "exact" })
+        .select(PUBLIC_PIONEER_SELECT)
         .order("reputation_score", { ascending: false })
         .range(offset, offset + limit - 1);
 
@@ -295,7 +308,7 @@ serve(async (req: Request) => {
 
       return ok("PASSPORT_LIST", {
         items,
-        meta: { count: items.length, total: count ?? items.length, limit, offset },
+        meta: { count: items.length, limit, offset },
       }, 60);
     }
 
@@ -305,7 +318,7 @@ serve(async (req: Request) => {
       const { data, error } = await supabase
         .from("pioneiros")
         .select(PUBLIC_PIONEER_SELECT)
-        .or("is_ambassador.eq.true,referral_qualified_count.gte.5,username.ilike.hokage22b")
+        .or("is_ambassador.eq.true,referral_qualified_count.gte.5,username.ilike.hokage22b,username.ilike.@hokage22b")
         .order("reputation_score", { ascending: false })
         .limit(limit);
 
@@ -330,7 +343,7 @@ serve(async (req: Request) => {
 
       let query = supabase
         .from("anuncios")
-        .select(PUBLIC_VILA_SELECT, { count: "exact" })
+        .select(PUBLIC_VILA_SELECT)
         .eq("status", "ativo")
         .order("created_at", { ascending: false })
         .range(offset, offset + limit - 1);
@@ -340,31 +353,33 @@ serve(async (req: Request) => {
       if (payment) query = query.eq("payment_modes", payment);
       if (plan) query = query.eq("plan_tier", plan);
 
-      const { data, error, count } = await query;
+      const { data, error } = await query;
       if (error) throw error;
 
       const items = (data || []).map(projectVilaAd);
       return ok("VILA_FEED", {
         items,
-        meta: { count: items.length, total: count ?? items.length, limit, offset },
+        meta: { count: items.length, limit, offset },
       }, 60);
     }
 
     // 6. Estatísticas Públicas Agregadas
     if (route === "/stats") {
-      const [{ count: totalPassports }, { count: totalVila }, { count: totalHokages }] = await Promise.all([
-        supabase.from("pioneiros").select("username", { count: "exact", head: true }),
-        supabase.from("anuncios").select("id", { count: "exact", head: true }).eq("status", "ativo"),
-        supabase
-          .from("pioneiros")
-          .select("username", { count: "exact", head: true })
-          .or("is_ambassador.eq.true,referral_qualified_count.gte.5,username.ilike.hokage22b"),
+      const [{ data: passRows }, { data: vilaRows }] = await Promise.all([
+        supabase.from("pioneiros").select("username, is_ambassador, referral_qualified_count"),
+        supabase.from("anuncios").select("id").eq("status", "ativo"),
       ]);
 
+      const passports = passRows || [];
+      const hokages = passports.filter((r) => {
+        const u = normalizeHandle(String(r.username || ""));
+        return Boolean(r.is_ambassador) || Number(r.referral_qualified_count || 0) >= 5 || u === "hokage22b";
+      });
+
       return ok("ECOSYSTEM_STATS", {
-        passaportes_ativos: totalPassports ?? 0,
-        anuncios_vila_ativos: totalVila ?? 0,
-        monte_hokage_membros: totalHokages ?? 0,
+        passaportes_ativos: passports.length,
+        anuncios_vila_ativos: (vilaRows || []).length,
+        monte_hokage_membros: hokages.length,
         updated_at: new Date().toISOString(),
       }, 120);
     }
