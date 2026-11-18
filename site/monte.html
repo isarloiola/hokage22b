@@ -100,6 +100,29 @@
       </div>
     </section>
 
+    <section aria-label="Seu Progresso até o Monte" style="margin-bottom:38px">
+      <h2 class="m-section-title">Sua Trilha até o Monte Hokage</h2>
+      <div class="m-criteria-grid" style="margin-bottom:18px">
+        <div class="m-crit-card">
+          <strong style="color:#94a3b8">1. 🌱 Pioneiro (0%)</strong>
+          <span>Ative seu Passaporte Web3 (/@voce) e acesse as ferramentas abertas.</span>
+        </div>
+        <div class="m-crit-card">
+          <strong style="color:#a78bfa">2. 🧱 Construtor (25%)</strong>
+          <span>Valide carteira G..., publique oferta na Vila ou gere seu QR Code.</span>
+        </div>
+        <div class="m-crit-card">
+          <strong style="color:#34d399">3. 🛡️ Guardião (60%)</strong>
+          <span>Traga pioneiros pelo link curto e conquiste comissão de 25% Embaixador.</span>
+        </div>
+        <div class="m-crit-card" style="border-color:rgba(249,115,22,0.4)">
+          <strong style="color:#fb923c">4. 🔥 Hokage (90%+)</strong>
+          <span>Destaque oficial na galeria do Monte por comércio, comunidade ou código.</span>
+        </div>
+      </div>
+      <div id="monte-user-progression"></div>
+    </section>
+
     <section aria-label="Líderes Reconhecidos">
       <h2 class="m-section-title">Construtores no Monte Hokage</h2>
       <div id="monte-grid" class="m-leaders-grid">
@@ -122,7 +145,11 @@
   </main>
 
   <script src="assets/js/hokage-sdk.js"></script>
+  <script src="assets/js/modules/monte-progression.js?v=1.0"></script>
   <script>
+    if (window.HokageMonteProgression) {
+      window.HokageMonteProgression.renderProgressionPanel('monte-user-progression', null);
+    }
     function esc(str) {
       return String(str || '')
         .replace(/&/g, '&amp;')

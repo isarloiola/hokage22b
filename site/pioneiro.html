@@ -864,6 +864,8 @@
           </div>
         </div>
 
+        <div id="pioneiro-monte-progress" style="margin:0 0 22px;text-align:left"></div>
+
         <!-- ========================================== -->
         <!-- DIRETÓRIO GLOBAL DE PIONEIROS & NEGÓCIOS (HACKATHON GRADE) -->
         <!-- ========================================== -->
@@ -1476,5 +1478,11 @@
   <script src="assets/js/modules/db.js?v=5.8"></script>
 
   <script src="assets/js/modules/vitrine.js?v=2.8"></script>
+  <script src="assets/js/modules/monte-progression.js?v=1.0"></script>
+  <script>
+    if (window.HokageMonteProgression) {
+      window.HokageMonteProgression.renderProgressionPanel('pioneiro-monte-progress', null, { compact: true });
+    }
+  </script>
 </body>
 </html>

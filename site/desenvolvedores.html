@@ -377,6 +377,16 @@
   </script>
   <script src="assets/js/hokage-embed.js"></script>
   <script>updateEmbedPreview();</script>
+  <script src="assets/js/modules/monte-progression.js?v=1.0"></script>
+  <script>
+    document.addEventListener('click', function (ev) {
+      if (ev.target && ev.target.closest && ev.target.closest('.dev-ep-btn, .dev-btn')) {
+        if (window.HokageMonteProgression) {
+          window.HokageMonteProgression.markQuestFlag('dev_api_used');
+        }
+      }
+    });
+  </script>
   <script src="assets/js/modules/i18n.js?v=4.6"></script>
   <script src="assets/js/modules/referral.js?v=2.4"></script>
   <script src="assets/js/modules/analytics-tg.js?v=1.0"></script>

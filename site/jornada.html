@@ -89,6 +89,8 @@
       <a id="j-resume-link" href="zero" class="portal-btn portal-btn--primary portal-btn--sm" style="text-decoration:none">Continuar de onde parei →</a>
     </div>
 
+    <div id="jornada-monte-progress" style="margin-bottom:22px"></div>
+
     <section class="j-list" aria-label="Escolha seu próximo passo">
       <a href="zero" class="j-option" data-step-id="1" data-step-label="01 · Pi do Zero (Iniciante)" onclick="saveJourneyStep('1', '01 · Pi do Zero (Iniciante)', 'zero')">
         <div class="j-option__left">
@@ -200,6 +202,12 @@
         }
       } catch (_) {}
     })();
+  </script>
+  <script src="assets/js/modules/monte-progression.js?v=1.0"></script>
+  <script>
+    if (window.HokageMonteProgression) {
+      window.HokageMonteProgression.renderProgressionPanel('jornada-monte-progress', null, { compact: true });
+    }
   </script>
   <script src="assets/js/modules/i18n.js?v=4.6"></script>
   <script src="assets/js/modules/referral.js?v=2.4"></script>
