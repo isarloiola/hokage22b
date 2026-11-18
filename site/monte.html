@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>O Monte Hokage — Líderes por Mérito | HOKAGE22B</title>
+  <meta name="description" content="Conheça O Monte Hokage: a galeria oficial de construtores e líderes reconhecidos por contribuição real no ecossistema HOKAGE22B e Pi Network." />
+  <link rel="canonical" href="https://hokage22b.com/monte" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hokage22b.com/monte" />
+  <meta property="og:title" content="O Monte Hokage — Líderes por Mérito | HOKAGE22B" />
+  <meta property="og:description" content="Hokage não se compra — conquista-se por contribuição real. Veja os construtores reconhecidos." />
+  <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png" />
+
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <link rel="icon" href="assets/img/brand/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
+  <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
+  <meta name="theme-color" content="#09090b" />
+  <link rel="stylesheet" href="assets/css/style.css?v=4.6" />
+
+  <style>
+    body { background: #09090b; color: #fafafa; min-height: 100vh; }
+    .m-wrap { max-width: 1040px; margin: 0 auto; padding: 26px 20px 72px; }
+    .m-nav { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 34px; flex-wrap: wrap; }
+    .m-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 800; font-size: 1.05rem; }
+    .m-nav-links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.86rem; }
+    .m-nav-links a { color: #a1a1aa; text-decoration: none; font-weight: 600; }
+    .m-nav-links a:hover { color: #fafafa; }
+
+    .m-hero { text-align: center; max-width: 760px; margin: 0 auto 38px; }
+    .m-hero-logo { width: 54px; height: 54px; margin: 0 auto 14px; display: block; }
+    .m-pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: rgba(249,115,22,0.14); border: 1px solid rgba(249,115,22,0.4); color: #fb923c; font-size: 0.78rem; font-weight: 700; margin-bottom: 12px; }
+    .m-hero h1 { font-size: clamp(2rem, 4.2vw, 2.8rem); font-weight: 900; line-height: 1.12; margin: 0 0 12px; letter-spacing: -0.02em; }
+    .m-hero p { color: #a1a1aa; font-size: 1rem; line-height: 1.6; margin: 0; }
+
+    .m-section-title { font-size: 1.25rem; font-weight: 800; margin: 0 0 14px; color: #fff; }
+    .m-criteria-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 40px; }
+    .m-crit-card { background: #141419; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; }
+    .m-crit-card strong { display: block; font-size: 0.96rem; color: #fbbf24; margin-bottom: 6px; }
+    .m-crit-card span { font-size: 0.84rem; color: #a1a1aa; line-height: 1.5; display: block; }
+
+    .m-leaders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; margin-bottom: 40px; }
+    .m-leader-card { background: linear-gradient(180deg, rgba(28,18,12,0.75), #141419); border: 1px solid rgba(249,115,22,0.35); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+    .m-leader-top { display: flex; align-items: center; gap: 12px; }
+    .m-avatar { width: 52px; height: 52px; border-radius: 50%; background: #09090b; border: 2px solid rgba(249,115,22,0.55); overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fb923c; flex-shrink: 0; }
+    .m-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .m-handle { font-size: 1.05rem; font-weight: 800; color: #fff; margin: 0; }
+    .m-role { font-size: 0.76rem; color: #fb923c; font-weight: 700; }
+    .m-bio { font-size: 0.85rem; color: #d4d4d8; line-height: 1.5; margin: 0; }
+    .m-leader-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.07); }
+    .m-rep { font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: #a1a1aa; }
+    .m-btn { display: inline-block; padding: 8px 14px; border-radius: 10px; background: linear-gradient(135deg, #f97316, #f59e0b); color: #09090b; font-size: 0.8rem; font-weight: 800; text-decoration: none; }
+
+    .m-cta-box { background: #141419; border: 1px solid rgba(249,115,22,0.35); border-radius: 16px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  </style>
+</head>
+<body>
+  <main class="m-wrap">
+    <nav class="m-nav">
+      <a href="index.html" class="m-brand">
+        <img src="assets/img/brand/hokage22b-logo.svg" alt="HOKAGE22B" width="24" height="24" />
+        <span>HOKAGE22B</span>
+      </a>
+      <div class="m-nav-links">
+        <a href="index.html">Início</a>
+        <a href="jornada">🚀 Jornada</a>
+        <a href="pioneiro">🪪 Passaporte</a>
+        <a href="mural">🏘️ A Vila (P2P)</a>
+        <a href="desenvolvedores">⚡ API &amp; Devs</a>
+      </div>
+    </nav>
+
+    <header class="m-hero">
+      <img src="assets/img/brand/hokage22b-logo.svg" alt="Selo Hokage" class="m-hero-logo" />
+      <div class="m-pill">Etapa 03 · Liderança que constrói o futuro</div>
+      <h1>O Monte Hokage</h1>
+      <p>
+        Hokage não se compra com planos ou anúncios — conquista-se por <strong>contribuição real</strong> no ecossistema. Este espaço reconhece os construtores que elevam a qualidade, a segurança e a utilidade prática da rede.
+      </p>
+    </header>
+
+    <section aria-label="Critérios de Mérito">
+      <h2 class="m-section-title">Como o título é conquistado</h2>
+      <div class="m-criteria-grid">
+        <div class="m-crit-card">
+          <strong>📘 Educação sem Hype</strong>
+          <span>Orientar novos pioneiros com clareza técnica, autocustódia e combate ativo a golpes.</span>
+        </div>
+        <div class="m-crit-card">
+          <strong>🏘️ Utilidade &amp; Comércio P2P</strong>
+          <span>Manter produtos, serviços ou atendimentos reais aceitando Pi na Vila · Central P2P.</span>
+        </div>
+        <div class="m-crit-card">
+          <strong>⚡ Código &amp; Ferramentas</strong>
+          <span>Desenvolver aplicações, bots ou integrações úteis consumindo o ecossistema e a API Aberta.</span>
+        </div>
+        <div class="m-crit-card">
+          <strong>🛡️ Confiança Comunitária</strong>
+          <span>Ajudar a moderar denúncias, validar pioneiros legítimos e construir reputação verificável.</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Líderes Reconhecidos">
+      <h2 class="m-section-title">Construtores no Monte Hokage</h2>
+      <div id="monte-grid" class="m-leaders-grid">
+        <div style="color:#a1a1aa;font-size:0.9rem">Carregando líderes via API Pública HOKAGE22B...</div>
+      </div>
+    </section>
+
+    <section class="m-cta-box">
+      <div style="max-width:600px">
+        <strong style="color:#fff;font-size:1.08rem;display:block;margin-bottom:4px">Seja pioneiro. Torne-se Hokage.</strong>
+        <span style="color:#a1a1aa;font-size:0.88rem;line-height:1.5;display:block">
+          Comece pela Trilha Única, ative seu Passaporte do Pioneiro e construa sua trajetória de contribuição na rede.
+        </span>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="jornada" class="m-btn">🚀 Começar Minha Jornada →</a>
+        <a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm" style="text-decoration:none">🪪 Criar Passaporte</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/hokage-sdk.js"></script>
+  <script>
+    function esc(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    (async function loadMonte() {
+      var grid = document.getElementById('monte-grid');
+      try {
+        HokageAPI.setAppName('hokage22b-monte-page');
+        var data = await HokageAPI.getMonteHokage({ limit: 24 });
+        var leaders = (data && data.leaders) || [];
+        if (!leaders.length) {
+          grid.innerHTML = '<div style="color:#a1a1aa">Nenhum líder listado no momento.</div>';
+          return;
+        }
+        grid.innerHTML = leaders.map(function (p) {
+          var initial = esc((p.username || 'H').charAt(0).toUpperCase());
+          var avatarHtml = p.avatar_url
+            ? '<img src="' + esc(p.avatar_url) + '" alt="' + esc(p.handle) + '" />'
+            : initial;
+          var bio = p.bio ? esc(String(p.bio).slice(0, 140)) : 'Construtor reconhecido no ecossistema HOKAGE22B.';
+          return (
+            '<article class="m-leader-card">' +
+            '  <div>' +
+            '    <div class="m-leader-top">' +
+            '      <div class="m-avatar">' + avatarHtml + '</div>' +
+            '      <div>' +
+            '        <h3 class="m-handle">' + esc(p.handle) + '</h3>' +
+            '        <span class="m-role">🔥 ' + esc(p.level_name || 'Hokage · Construtor Líder') + '</span>' +
+            '      </div>' +
+            '    </div>' +
+            '    <p class="m-bio" style="margin-top:12px">' + bio + '</p>' +
+            '  </div>' +
+            '  <div class="m-leader-foot">' +
+            '    <span class="m-rep">Reputação: ' + Number(p.reputation_score || 50) + ' pts</span>' +
+            '    <a class="m-btn" href="' + esc(p.profile_url) + '">Ver Passaporte →</a>' +
+            '  </div>' +
+            '</article>'
+          );
+        }).join('');
+      } catch (e) {
+        grid.innerHTML = '<div style="color:#f87171">Não foi possível carregar a lista ao vivo agora. <a href="pioneiro?u=hokage22b" style="color:#fbbf24">Ver perfil @hokage22b →</a></div>';
+      }
+    })();
+  </script>
+</body>
+</html>

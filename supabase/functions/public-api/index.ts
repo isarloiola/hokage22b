@@ -116,6 +116,24 @@ function projectPassport(row: Record<string, unknown>) {
   };
 }
 
+function dedupePassports(items: ReturnType<typeof projectPassport>[]) {
+  const byUser = new Map<string, ReturnType<typeof projectPassport>>();
+  for (const item of items) {
+    if (!item.username) continue;
+    const prev = byUser.get(item.username);
+    if (!prev) {
+      byUser.set(item.username, item);
+      continue;
+    }
+    const prevScore = (prev.bio ? 2 : 0) + (prev.avatar_url ? 2 : 0) + (prev.products?.length ? 1 : 0);
+    const currScore = (item.bio ? 2 : 0) + (item.avatar_url ? 2 : 0) + (item.products?.length ? 1 : 0);
+    if (currScore > prevScore || (currScore === prevScore && String(item.updated_at || "") > String(prev.updated_at || ""))) {
+      byUser.set(item.username, item);
+    }
+  }
+  return Array.from(byUser.values());
+}
+
 function projectVilaAd(row: Record<string, unknown>) {
   const authorClean = normalizeHandle(String(row.pioneer_username || "pioneiro"));
   return {
@@ -301,7 +319,7 @@ serve(async (req: Request) => {
 
       if (error) throw error;
 
-      let items = (data || []).map(projectPassport);
+      let items = dedupePassports((data || []).map(projectPassport));
       if (tierFilter === "hokage" || tierFilter === "construtor" || tierFilter === "pioneiro") {
         items = items.filter((item) => item.journey_tier === tierFilter);
       }
@@ -320,10 +338,10 @@ serve(async (req: Request) => {
         .select(PUBLIC_PIONEER_SELECT)
         .or("is_ambassador.eq.true,referral_qualified_count.gte.5,username.ilike.hokage22b,username.ilike.@hokage22b")
         .order("reputation_score", { ascending: false })
-        .limit(limit);
+        .limit(limit * 2);
 
       if (error) throw error;
-      const leaders = (data || []).map(projectPassport);
+      const leaders = dedupePassports((data || []).map(projectPassport)).slice(0, limit);
       return ok("MONTE_HOKAGE", {
         title: "O Monte Hokage",
         subtitle: "Líderes e construtores reconhecidos por contribuição real.",
@@ -370,16 +388,19 @@ serve(async (req: Request) => {
         supabase.from("anuncios").select("id").eq("status", "ativo"),
       ]);
 
-      const passports = passRows || [];
-      const hokages = passports.filter((r) => {
+      const uniqueUsers = new Map<string, boolean>();
+      for (const r of (passRows || [])) {
         const u = normalizeHandle(String(r.username || ""));
-        return Boolean(r.is_ambassador) || Number(r.referral_qualified_count || 0) >= 5 || u === "hokage22b";
-      });
+        if (!u) continue;
+        const isHok = Boolean(r.is_ambassador) || Number(r.referral_qualified_count || 0) >= 5 || u === "hokage22b";
+        uniqueUsers.set(u, Boolean(uniqueUsers.get(u) || isHok));
+      }
+      const hokageCount = Array.from(uniqueUsers.values()).filter(Boolean).length;
 
       return ok("ECOSYSTEM_STATS", {
-        passaportes_ativos: passports.length,
+        passaportes_ativos: uniqueUsers.size,
         anuncios_vila_ativos: (vilaRows || []).length,
-        monte_hokage_membros: hokages.length,
+        monte_hokage_membros: hokageCount,
         updated_at: new Date().toISOString(),
       }, 120);
     }
