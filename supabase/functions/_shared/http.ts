@@ -19,7 +19,7 @@ export const MURAL_CONFIG = {
     "pi-para-seu-negocio": { id: "pi-para-seu-negocio", title: "Pi para seu negócio", price_pi: 3.14, price_brl: 19.9 },
     "ia-na-pratica": { id: "ia-na-pratica", title: "IA na Prática", price_pi: 7.5, price_brl: 47.0 },
   },
-  categories: ["youtube", "produto", "servico", "mensagem", "geral"],
+  categories: ["youtube", "produto", "servico", "tecnologia", "educacao", "alimentacao", "mensagem", "geral"],
   payment_modes: ["pi", "pi_fiat", "fiat", "pi_reais", "reais"],
   countries: ["GLOBAL", "BR", "US", "PT", "ES", "NG", "PH", "VN", "IN", "EU", "OTHER"],
 };

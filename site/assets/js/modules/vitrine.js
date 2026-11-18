@@ -1306,15 +1306,24 @@
           `;
         }).join('');
         adsSection.style.display = 'block';
-      } else if (isOwner) {
+      } else if (isOwner && !isSimulatorMode) {
         adsList.innerHTML = `
-          <div style="background:rgba(139,92,246,0.05);border:1px dashed rgba(139,92,246,0.25);border-radius:14px;padding:16px;text-align:center">
-            <span style="font-size:1.4rem;display:block;margin-bottom:4px">📢</span>
-            <strong style="color:#fff;font-size:0.88rem;display:block;margin-bottom:4px">Destaque seu negócio no Mural dos Pioneiros</strong>
-            <p style="font-size:0.78rem;color:var(--text-secondary);margin:0 0 10px;line-height:1.4">Seus anúncios aparecem no Mural global e diretamente aqui na sua vitrine.</p>
-            <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm" style="display:inline-block;text-decoration:none;font-weight:700">
-              + Anunciar no Mural (1.0 π)
-            </a>
+          <div style="text-align:left;padding:18px;background:linear-gradient(135deg,rgba(139,92,246,0.09),rgba(245,158,11,0.08));border:1px dashed rgba(245,158,11,0.45);border-radius:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+              <strong style="font-size:0.88rem;color:#fbbf24">📢 Pendência do Passaporte: Sem anúncio na Vila</strong>
+              <span style="font-size:0.68rem;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,0.08);color:#d4d4d8;font-weight:700">👁️ Visível apenas para você</span>
+            </div>
+            <p style="font-size:0.82rem;color:#d4d4d8;margin:0 0 12px;line-height:1.45">
+              Você ainda não tem nenhum anúncio ativo na <strong>Vila (Central P2P)</strong>. Divulgue seu produto, serviço ou canal para aparecer nas buscas da comunidade.
+            </p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <a href="mural?chatbot=1" class="portal-btn portal-btn--primary portal-btn--sm" style="text-decoration:none;font-weight:800;background:linear-gradient(135deg,#8b5cf6,#f59e0b);border:none;color:#fff">
+                🤖 Publicar via Chatbot (1 min)
+              </a>
+              <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm" style="text-decoration:none;font-weight:700">
+                🏘️ Abrir A Vila (P2P)
+              </a>
+            </div>
           </div>
         `;
         adsSection.style.display = 'block';

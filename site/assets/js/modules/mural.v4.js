@@ -301,6 +301,10 @@
   let currentSearchQuery = '';
   let currentPaymentFilter = 'todos';
   let currentCountryFilter = 'todos';
+  let currentTierFilter = 'todos';
+  let currentRegionFilter = '';
+  let currentLangFilter = 'todos';
+  let currentSortOrder = 'destaque';
 
   function filterPaymentMode(mode) {
     currentPaymentFilter = mode || 'todos';
@@ -312,9 +316,95 @@
     applyFilters();
   }
 
-  // Filtragem combinada em tempo real por Categoria, Moeda, País e Busca Textual
+  function filterTier(tier) {
+    currentTierFilter = tier || 'todos';
+    applyFilters();
+  }
+
+  function filterRegion(region) {
+    currentRegionFilter = (region || '').trim().toLowerCase();
+    applyFilters();
+  }
+
+  function filterLang(lang) {
+    currentLangFilter = lang || 'todos';
+    applyFilters();
+  }
+
+  function sortAds(order) {
+    currentSortOrder = order || 'destaque';
+    applyFilters();
+  }
+
+  function clearAllFilters() {
+    currentCategory = 'todos';
+    currentSearchQuery = '';
+    currentPaymentFilter = 'todos';
+    currentCountryFilter = 'todos';
+    currentTierFilter = 'todos';
+    currentRegionFilter = '';
+    currentLangFilter = 'todos';
+    currentSortOrder = 'destaque';
+
+    const ids = {
+      'mural-search-input': '',
+      'mural-payment-filter': 'todos',
+      'mural-country-filter': 'todos',
+      'mural-tier-filter': 'todos',
+      'mural-region-filter': '',
+      'mural-lang-filter': 'todos',
+      'mural-sort-filter': 'destaque'
+    };
+    Object.keys(ids).forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el) el.value = ids[id];
+    });
+    const clearBtn = document.getElementById('mural-search-clear-btn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    document.querySelectorAll('.mural-filter-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-category') === 'todos');
+    });
+    applyFilters();
+  }
+
+  function detectCardTier(card) {
+    if (card.classList.contains('pioneer-card--ouro')) return 'ouro';
+    if (card.classList.contains('pioneer-card--prata')) return 'prata';
+    return 'bronze';
+  }
+
+  function detectCardLang(card, cardCountry) {
+    const text = (card.textContent || '').toLowerCase();
+    if (/\[en\]/i.test(text)) return 'en';
+    if (/\[es\]/i.test(text)) return 'es';
+    if (/\[pt\]/i.test(text)) return 'pt';
+    if (cardCountry === 'BR' || cardCountry === 'PT') return 'pt';
+    if (cardCountry === 'ES') return 'es';
+    if (cardCountry === 'US' || cardCountry === 'NG' || cardCountry === 'PH') return 'en';
+    if (/[ãõçáéíóúâêô]/i.test(text)) return 'pt';
+    return 'other';
+  }
+
+  function reorderGridCards(grid, sortOrder) {
+    if (!grid || sortOrder === 'destaque') return;
+    const cards = Array.from(grid.children).filter(function (el) {
+      return el.classList && (el.classList.contains('pioneer-card') || el.classList.contains('ad-card'));
+    });
+    if (cards.length < 2) return;
+    if (sortOrder === 'curtidos') {
+      cards.sort(function (a, b) {
+        const likesA = parseInt((a.querySelector('[id^="like-count-"]') || {}).textContent || '0', 10) || 0;
+        const likesB = parseInt((b.querySelector('[id^="like-count-"]') || {}).textContent || '0', 10) || 0;
+        return likesB - likesA;
+      });
+      cards.forEach(function (c) { grid.appendChild(c); });
+    }
+  }
+
+  // Filtragem combinada em tempo real por Categoria, Nível, Moeda, País, Região, Idioma e Busca Textual
   function applyFilters() {
     const query = (currentSearchQuery || '').trim().toLowerCase();
+    const regionQuery = (currentRegionFilter || '').trim().toLowerCase();
     const featuredSec = document.getElementById('section-destaques');
     const communitySec = document.getElementById('section-comunidade');
     const featuredGrid = document.getElementById('mural-featured-grid');
@@ -331,19 +421,24 @@
       const cardCat = card.getAttribute('data-category') || 'geral';
       const matchesCat = (currentCategory === 'todos' || cardCat === currentCategory);
 
+      const cardTier = detectCardTier(card);
+      const matchesTier = (currentTierFilter === 'todos' || cardTier === currentTierFilter);
+
       const cardPayMode = card.getAttribute('data-payment-mode') || 'pi';
       const matchesPay = (currentPaymentFilter === 'todos' || cardPayMode === currentPaymentFilter);
 
       const cardCountry = card.getAttribute('data-country') || 'GLOBAL';
       const matchesCountry = (currentCountryFilter === 'todos' || cardCountry === currentCountryFilter);
 
-      let matchesSearch = true;
-      if (query) {
-        const textContent = (card.textContent || '').toLowerCase();
-        matchesSearch = textContent.includes(query);
-      }
+      const textContent = (card.textContent || '').toLowerCase();
+      const matchesRegion = !regionQuery || textContent.includes(regionQuery);
 
-      const matches = matchesCat && matchesPay && matchesCountry && matchesSearch;
+      const cardLang = detectCardLang(card, cardCountry);
+      const matchesLang = (currentLangFilter === 'todos' || cardLang === currentLangFilter);
+
+      const matchesSearch = !query || textContent.includes(query);
+
+      const matches = matchesCat && matchesTier && matchesPay && matchesCountry && matchesRegion && matchesLang && matchesSearch;
 
       if (matches) {
         card.classList.remove('pioneer-card--hidden', 'ad-card--hidden');
@@ -357,11 +452,36 @@
       }
     });
 
+    reorderGridCards(featuredGrid, currentSortOrder);
+    reorderGridCards(communityGrid, currentSortOrder);
+
     if (featuredSec && featuredGrid) {
       featuredSec.style.display = featuredVisible > 0 ? 'block' : 'none';
     }
     if (communitySec && communityGrid) {
       communitySec.style.display = communityVisible > 0 ? 'block' : 'none';
+    }
+
+    const countEl = document.getElementById('mural-results-count');
+    if (countEl) {
+      countEl.textContent = totalVisible === 1
+        ? '1 anúncio encontrado na Vila'
+        : totalVisible + ' anúncios encontrados na Vila';
+    }
+
+    const hasActiveFilters = Boolean(
+      currentCategory !== 'todos' ||
+      query ||
+      regionQuery ||
+      currentPaymentFilter !== 'todos' ||
+      currentCountryFilter !== 'todos' ||
+      currentTierFilter !== 'todos' ||
+      currentLangFilter !== 'todos' ||
+      currentSortOrder !== 'destaque'
+    );
+    const resetBtn = document.getElementById('mural-reset-filters-btn');
+    if (resetBtn) {
+      resetBtn.style.display = hasActiveFilters ? 'inline-flex' : 'none';
     }
 
     let emptyNotice = document.getElementById('mural-empty-notice');
@@ -2636,6 +2756,11 @@
     filterCategory: filterCategory,
     filterPaymentMode: filterPaymentMode,
     filterCountry: filterCountry,
+    filterTier: filterTier,
+    filterRegion: filterRegion,
+    filterLang: filterLang,
+    sortAds: sortAds,
+    clearAllFilters: clearAllFilters,
     handleSearchInput: handleSearchInput,
     clearSearch: clearSearch,
     applyFilters: applyFilters,

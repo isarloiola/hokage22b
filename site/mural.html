@@ -228,18 +228,27 @@
             aria-label="Limpar busca">✕</button>
         </div>
 
-        <div class="mural-filters-bar" role="tablist" aria-label="Filtro de categorias de anúncios">
-          <button class="mural-filter-btn active" data-category="todos" type="button">📰 Todos os Classificados</button>
-          <button class="mural-filter-btn" data-category="youtube" type="button">▶ Canais de YouTube</button>
+        <div class="mural-filters-bar" role="tablist" aria-label="Filtro de categorias de anúncios" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <button class="mural-filter-btn active" data-category="todos" type="button">📰 Todos</button>
+          <button class="mural-filter-btn" data-category="youtube" type="button">▶ YouTube</button>
           <button class="mural-filter-btn" data-category="produto" type="button">🛍️ Produtos &amp; Lojas</button>
-          <button class="mural-filter-btn" data-category="servico" type="button">🛠️ Serviços Profissionais</button>
-          <button class="mural-filter-btn" data-category="mensagem" type="button">💬 Recados da Comunidade</button>
-          <select id="mural-payment-filter" onchange="window.IsarMural && window.IsarMural.filterPaymentMode(this.value)" aria-label="Filtrar por formato Pi" style="padding:8px 12px;border-radius:20px;background:rgba(15,23,42,0.85);border:1px solid rgba(245,158,11,0.35);color:#fcd34d;font-size:0.82rem;font-weight:600;cursor:pointer">
-            <option value="todos">⚡ Todos (Aceitam Pi)</option>
-            <option value="pi">⚡ 100% Pi</option>
-            <option value="pi_fiat">⚡💵 Pi + Ref. Local</option>
+          <button class="mural-filter-btn" data-category="servico" type="button">🛠️ Serviços</button>
+          <button class="mural-filter-btn" data-category="tecnologia" type="button">💻 Tech &amp; Apps</button>
+          <button class="mural-filter-btn" data-category="educacao" type="button">🎓 Educação</button>
+          <button class="mural-filter-btn" data-category="alimentacao" type="button">🍔 Alimentação</button>
+          <button class="mural-filter-btn" data-category="mensagem" type="button">💬 Recados</button>
+        </div>
+
+        <!-- Filtros Avançados: Nível, País, Região, Idioma, Pagamento, Ordenação & Chatbot -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin-top:10px;padding:12px;border-radius:14px;background:rgba(15,23,42,0.55);border:1px solid rgba(255,255,255,0.08)">
+          <select id="mural-tier-filter" onchange="window.IsarMural && window.IsarMural.filterTier(this.value)" aria-label="Filtrar por nível Ouro, Prata ou Bronze" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fde68a;font-size:0.8rem;font-weight:700">
+            <option value="todos">🏅 Todos os Níveis</option>
+            <option value="ouro">🥇 Ouro (3.14 π)</option>
+            <option value="prata">🥈 Prata (1.0 π)</option>
+            <option value="bronze">🥉 Bronze (0.314 π)</option>
           </select>
-          <select id="mural-country-filter" onchange="window.IsarMural && window.IsarMural.filterCountry(this.value)" aria-label="Filtrar por país ou alcance global" style="padding:8px 12px;border-radius:20px;background:rgba(15,23,42,0.85);border:1px solid rgba(139,92,246,0.38);color:#c4b5fd;font-size:0.82rem;font-weight:600;cursor:pointer">
+
+          <select id="mural-country-filter" onchange="window.IsarMural && window.IsarMural.filterCountry(this.value)" aria-label="Filtrar por país ou alcance global" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(139,92,246,0.38);color:#c4b5fd;font-size:0.8rem;font-weight:700">
             <option value="todos">🌎 Todos Países</option>
             <option value="GLOBAL">🌐 Global / Online</option>
             <option value="BR">🇧🇷 Brasil</option>
@@ -253,6 +262,40 @@
             <option value="EU">🇪🇺 Europe</option>
             <option value="OTHER">🌍 Outro</option>
           </select>
+
+          <input type="text" id="mural-region-filter" oninput="window.IsarMural && window.IsarMural.filterRegion(this.value)" placeholder="📍 Cidade / Região..." aria-label="Filtrar por cidade ou região" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#fff;font-size:0.8rem;box-sizing:border-box" />
+
+          <select id="mural-lang-filter" onchange="window.IsarMural && window.IsarMural.filterLang(this.value)" aria-label="Filtrar por idioma do anúncio" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#e4e4e7;font-size:0.8rem;font-weight:600">
+            <option value="todos">🗣️ Todos Idiomas</option>
+            <option value="pt">🇧🇷 Português</option>
+            <option value="en">🇺🇸 English</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="other">🌐 Outros</option>
+          </select>
+
+          <select id="mural-payment-filter" onchange="window.IsarMural && window.IsarMural.filterPaymentMode(this.value)" aria-label="Filtrar por formato Pi" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fcd34d;font-size:0.8rem;font-weight:600">
+            <option value="todos">⚡ Todos (Aceitam Pi)</option>
+            <option value="pi">⚡ 100% Pi</option>
+            <option value="pi_fiat">⚡💵 Pi + Ref. Local</option>
+          </select>
+
+          <select id="mural-sort-filter" onchange="window.IsarMural && window.IsarMural.sortAds(this.value)" aria-label="Ordenar anúncios" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#e4e4e7;font-size:0.8rem;font-weight:600">
+            <option value="destaque">👑 Destaques (Ouro→Bronze)</option>
+            <option value="recentes">🕒 Mais Recentes</option>
+            <option value="curtidos">❤️ Mais Curtidos</option>
+          </select>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span id="mural-results-count" style="font-size:0.8rem;color:var(--text-muted);font-weight:600">Carregando classificados...</span>
+            <button type="button" id="mural-reset-filters-btn" onclick="window.IsarMural && window.IsarMural.clearAllFilters()" style="display:none;padding:4px 10px;border-radius:999px;border:1px solid rgba(239,68,68,0.45);background:rgba(239,68,68,0.12);color:#fca5a5;font-size:0.75rem;font-weight:700;cursor:pointer">
+              ✕ Limpar Filtros
+            </button>
+          </div>
+          <button type="button" onclick="window.HokageMuralChatbot && window.HokageMuralChatbot.open()" class="portal-btn portal-btn--primary portal-btn--sm" style="background:linear-gradient(135deg,#8b5cf6,#f59e0b);border:none;color:#fff;font-weight:800;padding:7px 14px;border-radius:999px">
+            🤖 Publicar via Chatbot (1 min)
+          </button>
         </div>
       </div>
 
@@ -661,6 +704,9 @@
             <option value="youtube">▶ Canal de YouTube / Conteúdo</option>
             <option value="produto">🛍️ Produto / Comércio Local</option>
             <option value="servico">🛠️ Serviço Profissional</option>
+            <option value="tecnologia">💻 Tecnologia / Apps &amp; Bots</option>
+            <option value="educacao">🎓 Educação / Cursos &amp; Mentorias</option>
+            <option value="alimentacao">🍔 Alimentação / Gastronomia</option>
             <option value="mensagem">💬 Recado / Mensagem da Comunidade</option>
           </select>
         </div>
@@ -952,7 +998,8 @@
   <script src="assets/js/modules/analytics-tg.js?v=1.0"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.4"></script>
-  <script src="assets/js/modules/mural.v4.js?v=8.1"></script>
+  <script src="assets/js/modules/mural.v4.js?v=8.2"></script>
+  <script src="assets/js/modules/mural-chatbot.js?v=1.0"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');
