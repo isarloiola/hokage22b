@@ -14,11 +14,12 @@
   const NAV_ITEMS = [
     { href: 'index.html', match: ['index', ''], label: 'Início' },
     { href: 'zero', match: ['zero'], label: '📘 Pi do Zero', color: 'var(--amber-light)' },
+    { href: 'um', match: ['um', 'alem-do-clique'], label: '🚀 Passo 1: Além do Clique', color: 'var(--amber-light)' },
     { href: 'pioneiro', match: ['pioneiro'], label: '🪪 Passaporte', color: 'var(--accent-light)' },
     { href: 'mural', match: ['mural'], label: '🏘️ A Vila (P2P)', color: 'var(--amber-light)' },
     { href: 'monte', match: ['monte'], label: '🏔️ Monte Hokage', color: '#fb923c' },
     { href: 'ferramentas', match: ['ferramentas'], label: '🛠️ Ferramentas', color: '#6ee7b7' },
-    { href: 'desenvolvedores', match: ['desenvolvedores'], label: '⚡ API & Devs' }
+    { href: 'construir', match: ['construir', 'desenvolvedores'], label: '⚡ Construir (Devs)' }
   ];
 
   function getCurrentSlug() {

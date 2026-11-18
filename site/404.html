@@ -14,12 +14,20 @@
       var first = segments[0] || '';
       var second = segments[1] || '';
 
-      // Páginas conhecidas da raiz do portal
-      var knownRootPages = ['zero', 'um', 'vender', 'mural', 'pioneiro', 'construir', 'hackathon', 'obrigado', 'admin', 'ferramentas', 'monte', 'jornada', 'desenvolvedores'];
-      if (segments.length === 1 && first.toLowerCase() === 'alem-do-clique') {
-        window.location.replace('/construir.html' + window.location.search + window.location.hash);
+      // Mapa declarativo de aliases legados (sem arquivos HTML duplicados)
+      var REDIRECT_MAP = {
+        'alem-do-clique': '/um.html',
+        'alem-do-clique.html': '/um.html',
+        'desenvolvedores': '/construir.html',
+        'desenvolvedores.html': '/construir.html'
+      };
+      if (segments.length === 1 && REDIRECT_MAP[first.toLowerCase()]) {
+        window.location.replace(REDIRECT_MAP[first.toLowerCase()] + window.location.search + window.location.hash);
         return;
       }
+
+      // Páginas conhecidas da raiz do portal
+      var knownRootPages = ['zero', 'um', 'vender', 'mural', 'pioneiro', 'construir', 'hackathon', 'obrigado', 'admin', 'ferramentas', 'monte', 'jornada'];
       if (segments.length === 1 && knownRootPages.indexOf(first.toLowerCase()) !== -1) {
         window.location.replace('/' + first.toLowerCase() + '.html' + window.location.search + window.location.hash);
         return;

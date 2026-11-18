@@ -3,31 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Além do Clique Diário — O Guia Prático do Pi Browser & Construtor Web3 | HOKAGE22B</title>
-  <meta name="description" content="Aprenda a dominar o Pi Browser, entender o ecossistema Web3 por baixo do capô, proteger seus ativos e transformar saldo estático em utilidade e negócios reais na Pi Network." />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Construir · API Aberta &amp; Desenvolvedores — HOKAGE22B</title>
+  <meta name="description" content="Área para desenvolvedores e construtores avançados: API pública v1, Embed do Passaporte, Mini-SDK e Starter Kit do HOKAGE22B." />
   <link rel="canonical" href="https://hokage22b.com/construir" />
 
-  <!-- Open Graph / WhatsApp / Facebook -->
-  <meta property="og:type" content="article" />
+  <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hokage22b.com/construir" />
-  <meta property="og:title" content="Além do Clique Diário — Guia do Construtor Web3 | HOKAGE22B" />
-  <meta property="og:description" content="A Pi Network não precisa de mais pessoas apenas esperando o futuro. Precisa de quem constrói. Domine o Pi Browser, proteja seus ativos e crie valor real." />
+  <meta property="og:title" content="Construir · API Aberta &amp; Desenvolvedores — HOKAGE22B" />
+  <meta property="og:description" content="Construa apps, bots e vitrines usando a API pública v1 do HOKAGE22B. Seja pioneiro. Torne-se Hokage." />
   <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png" />
-  <meta property="og:site_name" content="HOKAGE22B" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@hokage22b" />
-  <meta name="twitter:title" content="Além do Clique Diário: O Guia Prático do Pi Browser" />
-  <meta name="twitter:description" content="Trilha avançada para pioneiros e desenvolvedores: arquitetura de sandbox, segurança radical, Pi SDK e integração na economia real." />
-  <meta name="twitter:image" content="https://hokage22b.com/assets/img/og-image.png" />
-
-  <!-- Security Hardening Headers (Client-Side) -->
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
-
-  <!-- Clean URLs (Remove .html da barra de endereços) -->
   <script>
     if (window.location.pathname.endsWith('.html')) {
       var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
@@ -39,1606 +25,371 @@
   <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
   <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
   <meta name="theme-color" content="#09090b" />
-  <link rel="stylesheet" href="assets/css/style.css?v=4.5" />
-  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.5" />
+  <link rel="stylesheet" href="assets/css/style.css?v=4.6" />
+  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.6" />
 
   <style>
-    /* Estilos Específicos para a Trilha do Construtor Web3 */
-    .build-hero {
-      padding: 110px 0 60px;
-      background: radial-gradient(circle at 50% 15%, rgba(245, 158, 11, 0.12) 0%, rgba(139, 92, 246, 0.08) 35%, transparent 70%);
-      border-bottom: 1px solid var(--border-subtle);
-      text-align: center;
-      position: relative;
-    }
-    .build-progress-bar-container {
-      position: sticky;
-      top: 60px;
-      z-index: 90;
-      background: rgba(9, 9, 11, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 10px 16px;
-    }
-    .build-progress-track {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 6px;
-    }
-    .build-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #f59e0b, #8b5cf6);
-      transition: width 0.3s ease;
-    }
-    .modules-nav-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 14px;
-      margin: 28px 0;
-    }
-    .module-nav-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      padding: 16px 18px;
-      text-decoration: none;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      transition: all 0.25s ease;
-    }
-    .module-nav-card:hover {
-      border-color: var(--amber);
-      background: rgba(245, 158, 11, 0.08);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.2);
-    }
-    .module-nav-number {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      color: var(--amber-light);
-      font-size: 0.95rem;
-      flex-shrink: 0;
-    }
-    .edu-content-block {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 20px;
-      padding: 36px 32px;
-      margin-bottom: 40px;
-      position: relative;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-    @media (max-width: 640px) {
-      .edu-content-block {
-        padding: 24px 18px;
-      }
-    }
+    body { background: #09090b; color: #fafafa; }
+    .dev-wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 72px; }
+    .dev-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 34px; flex-wrap: wrap; }
+    .dev-nav-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 800; font-size: 1.05rem; letter-spacing: 0.02em; }
+    .dev-nav-links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.88rem; }
+    .dev-nav-links a { color: #a1a1aa; text-decoration: none; font-weight: 600; }
+    .dev-nav-links a:hover { color: #fafafa; }
 
-    /* Rodapé de Navegação dos Módulos (Anti-Overflow e 100% Responsivo) */
-    .module-nav-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 32px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .module-nav-footer .portal-btn {
-      max-width: 100%;
-      box-sizing: border-box;
-      white-space: normal;
-      text-align: center;
-      line-height: 1.35;
-      padding: 10px 18px;
-    }
-    @media (max-width: 680px) {
-      .module-nav-footer {
-        flex-direction: column-reverse;
-        align-items: stretch;
-        gap: 10px;
-      }
-      .module-nav-footer .portal-btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-    .edu-badge-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 12px;
-    }
-    .edu-alert-box {
-      border-radius: 14px;
-      padding: 20px;
-      margin: 24px 0;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-    }
-    .edu-alert-danger {
-      background: rgba(239, 68, 68, 0.08);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #fff;
-    }
-    .edu-alert-info {
-      background: rgba(139, 92, 246, 0.08);
-      border: 1px solid rgba(139, 92, 246, 0.35);
-      color: #fff;
-    }
-    .edu-alert-amber {
-      background: rgba(245, 158, 11, 0.08);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      color: #fff;
-    }
-    .edu-alert-tip {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      color: #fff;
-    }
-    .concept-card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      margin: 24px 0;
-    }
-    .concept-mini-card {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      padding: 20px;
-      transition: border-color 0.2s ease;
-    }
-    .comparison-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-      font-size: 0.9rem;
-    }
-    .comparison-table th, .comparison-table td {
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      text-align: left;
-    }
-    .comparison-table th {
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--amber-light);
-      font-weight: 700;
-    }
+    .dev-hero { text-align: center; max-width: 780px; margin: 0 auto 38px; }
+    .dev-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.38); color: #fb923c; font-size: 0.78rem; font-weight: 700; margin-bottom: 14px; }
+    .dev-hero h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); font-weight: 900; line-height: 1.15; margin: 0 0 12px; letter-spacing: -0.02em; }
+    .dev-hero p { color: #a1a1aa; font-size: 1rem; line-height: 1.6; margin: 0; }
 
-    /* Diagrama Visual de Arquitetura do Pi Browser */
-    .flow-diagram-container {
-      margin: 28px 0;
-      padding: 24px;
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      position: relative;
-      overflow-x: auto;
-    }
-    .flow-steps-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      min-width: 660px;
-    }
-    .flow-node {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      padding: 16px 14px;
-      text-align: center;
-      flex: 1;
-      position: relative;
-      transition: all 0.25s ease;
-    }
-    .flow-node:hover {
-      transform: translateY(-3px);
-      border-color: var(--amber);
-      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
-    }
-    .flow-node--primary {
-      border-color: rgba(139, 92, 246, 0.4);
-      background: rgba(139, 92, 246, 0.08);
-    }
-    .flow-node--amber {
-      border-color: rgba(245, 158, 11, 0.45);
-      background: rgba(245, 158, 11, 0.08);
-    }
-    .flow-node--emerald {
-      border-color: rgba(16, 185, 129, 0.45);
-      background: rgba(16, 185, 129, 0.08);
-    }
-    .flow-node__icon {
-      font-size: 1.8rem;
-      margin-bottom: 6px;
-      display: block;
-    }
-    .flow-node__title {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #fff;
-      display: block;
-      margin-bottom: 4px;
-    }
-    .flow-node__desc {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      line-height: 1.35;
-      display: block;
-    }
-    .flow-arrow {
-      color: var(--amber-light);
-      font-size: 1.4rem;
-      font-weight: 800;
-      opacity: 0.8;
-      user-select: none;
-    }
+    .dev-card { background: #141419; border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 22px; margin-bottom: 24px; }
+    .dev-card h2 { font-size: 1.2rem; font-weight: 800; margin: 0 0 8px; color: #fafafa; }
+    .dev-card p { color: #a1a1aa; font-size: 0.9rem; line-height: 1.55; margin: 0 0 16px; }
 
-    /* Checklist Interativo do Construtor */
-    .builder-checklist-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 16px 18px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-    }
-    .builder-checklist-item:hover {
-      border-color: rgba(245, 158, 11, 0.4);
-      background: rgba(245, 158, 11, 0.03);
-    }
-    .builder-checklist-item.is-completed {
-      border-color: rgba(16, 185, 129, 0.4);
-      background: rgba(16, 185, 129, 0.04);
-    }
-    .builder-checklist-item input[type="checkbox"] {
-      margin-top: 3px;
-      cursor: pointer;
-      width: 20px;
-      height: 20px;
-      accent-color: #f59e0b;
-      flex-shrink: 0;
-    }
+    .dev-base-box { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: #09090b; border: 1px solid rgba(139,92,246,0.35); border-radius: 12px; padding: 12px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #c4b5fd; }
+    .dev-btn { padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.14); background: #1c1c24; color: #fafafa; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s ease; }
+    .dev-btn:hover { border-color: #8b5cf6; background: #23232d; }
+    .dev-btn--primary { background: linear-gradient(135deg, #f97316, #f59e0b); border-color: #f97316; color: #09090b; }
+    .dev-btn--primary:hover { filter: brightness(1.06); }
 
-    /* Rodapé CTA Glowing */
-    .cta-glow-card {
-      background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.18) 0%, rgba(139, 92, 246, 0.12) 40%, rgba(17, 17, 22, 0.98) 75%);
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      border-radius: 20px;
-      padding: 44px 32px;
-      text-align: center;
-      margin-bottom: 40px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-    }
+    .dev-endpoint-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 18px; }
+    .dev-ep-btn { text-align: left; padding: 14px; border-radius: 12px; background: #09090b; border: 1px solid rgba(255,255,255,0.09); cursor: pointer; transition: all 0.15s ease; color: #fafafa; }
+    .dev-ep-btn:hover, .dev-ep-btn.active { border-color: #f97316; background: rgba(249,115,22,0.08); }
+    .dev-ep-method { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 800; padding: 2px 7px; border-radius: 6px; background: rgba(16,185,129,0.16); color: #34d399; margin-right: 6px; }
+    .dev-ep-path { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; color: #e4e4e7; }
+    .dev-ep-desc { display: block; font-size: 0.78rem; color: #a1a1aa; margin-top: 6px; line-height: 1.4; }
 
-    /* ======================================================== */
-    /* CONTAINER ACERVO OFICIAL HOKAGE22B (DOWNLOADS)           */
-    /* ======================================================== */
-    .acervo-box {
-      background: radial-gradient(120% 120% at 50% 0%, rgba(245, 158, 11, 0.12) 0%, rgba(139, 92, 246, 0.08) 45%, rgba(13, 16, 23, 0.98) 100%);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      border-radius: 24px;
-      padding: 40px 32px;
-      margin-bottom: 48px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 35px -5px rgba(245, 158, 11, 0.15);
-      box-sizing: border-box;
-    }
-    @media (max-width: 640px) {
-      .acervo-box {
-        padding: 26px 18px;
-        border-radius: 18px;
-      }
-    }
-    .acervo-header {
-      margin-bottom: 28px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
-      padding-bottom: 20px;
-    }
-    .acervo-chips-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-    .acervo-chip {
-      font-size: 0.76rem;
-      padding: 4px 12px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: var(--text-secondary);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .acervo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
-      gap: 24px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .acervo-card {
-      background: rgba(18, 22, 32, 0.85);
-      border-radius: 18px;
-      padding: 28px 24px 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-      box-sizing: border-box;
-      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-    }
-    .acervo-card:hover {
-      transform: translateY(-3px);
-    }
-    .acervo-card--amber {
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.15);
-    }
-    .acervo-card--amber:hover {
-      border-color: rgba(245, 158, 11, 0.7);
-      box-shadow: 0 14px 35px -8px rgba(245, 158, 11, 0.3);
-    }
-    .acervo-card--purple {
-      border: 1px solid rgba(139, 92, 246, 0.45);
-      box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.18);
-    }
-    .acervo-card--purple:hover {
-      border-color: rgba(139, 92, 246, 0.75);
-      box-shadow: 0 14px 35px -8px rgba(139, 92, 246, 0.35);
-    }
-    .acervo-card-badge {
-      position: absolute;
-      top: 0;
-      right: 0;
-      font-size: 0.7rem;
-      font-weight: 900;
-      padding: 4px 14px;
-      border-bottom-left-radius: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .acervo-card-badge--amber {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: #000;
-    }
-    .acervo-card-badge--purple {
-      background: linear-gradient(135deg, #8b5cf6, #6366f1);
-      color: #fff;
-    }
-    .acervo-item-list {
-      list-style: none;
-      padding: 0;
-      margin: 16px 0 22px;
-      font-size: 0.83rem;
-      line-height: 1.6;
-    }
-    .acervo-item-list li {
-      position: relative;
-      padding-left: 20px;
-      margin-bottom: 8px;
-      color: var(--text-secondary);
-    }
-    .acervo-item-list li::before {
-      content: "✦";
-      position: absolute;
-      left: 0;
-      top: 0;
-      font-size: 0.75rem;
-    }
-    .acervo-item-list--amber li::before {
-      color: var(--amber-light);
-    }
-    .acervo-item-list--purple li::before {
-      color: var(--accent-light);
-    }
-    .acervo-btn-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .acervo-btn-group .portal-btn {
-      flex: 1 1 auto;
-      min-width: 140px;
-      text-align: center;
-      justify-content: center;
-      padding: 12px 16px;
-      font-size: 0.88rem;
-      box-sizing: border-box;
-      white-space: normal;
-    }
-    .acervo-meta-info {
-      font-size: 0.74rem;
-      color: var(--text-muted);
-      margin-top: 14px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .dev-playground-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+    .dev-url-input { flex: 1; min-width: 240px; padding: 10px 14px; border-radius: 10px; background: #09090b; border: 1px solid rgba(255,255,255,0.14); color: #fafafa; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .dev-pre { background: #09090b; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.79rem; line-height: 1.55; color: #d4d4d8; max-height: 380px; margin: 0; }
+
+    .dev-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .dev-tab { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #a1a1aa; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+    .dev-tab.active { background: rgba(139,92,246,0.18); border-color: #8b5cf6; color: #c4b5fd; }
+
+    .dev-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    .dev-table th, .dev-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.07); vertical-align: top; }
+    .dev-table th { color: #a1a1aa; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .dev-table code { font-family: 'JetBrains Mono', monospace; color: #fbbf24; font-size: 0.78rem; }
+
+    .dev-hokage-box { background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(139,92,246,0.1)); border: 1px solid rgba(249,115,22,0.35); border-radius: 16px; padding: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
   </style>
 </head>
 <body>
-  <div id="particles-bg" class="particles-bg" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden"></div>
+  <div id="hk-site-header-root"></div>
+  <script src="assets/js/modules/site-header.js?v=1.0"></script>
+  <main class="dev-wrap">
 
-  <!-- Header / Navbar Padronizado -->
-  <header class="portal-header" id="portal-header">
-    <div class="portal-container">
-      <div class="portal-header__inner">
-        <a href="./" class="portal-brand" aria-label="HOKAGE22B Início">
-          <span>HOKAGE22B</span>
-          <span class="portal-brand__dot" aria-hidden="true"></span>
-        </a>
+    <header class="dev-hero">
+      <div class="dev-pill">⚡ API Pública v1 · Leitura Aberta · CORS *</div>
+      <h1>Construa sobre o ecossistema HOKAGE22B</h1>
+      <p>
+        Consuma dados públicos verificados de <strong>Passaportes do Pioneiro</strong>, anúncios da <strong>A Vila · Central P2P</strong>, líderes do <strong>Monte Hokage</strong> e utilitários Pi Network — sem precisar de autenticação ou backend próprio.
+      </p>
+    </header>
 
-        <nav class="portal-nav-desktop" aria-label="Navegação Principal">
-          <li><a href="./">Início</a></li>
-          <li><a href="zero" style="color:var(--text-secondary)">📘 Pi do Zero</a></li>
-          <li><a href="construir" style="color:var(--amber-light);font-weight:700">🚀 Além do Clique</a></li>
-          <li><a href="pioneiro" style="color:var(--accent-light);font-weight:700">🪪 Passaporte</a></li>
-          <li><a href="mural">🏘️ A Vila (P2P)</a></li>
-          <li><a href="./#produtos">E-books</a></li>
-        </nav>
-
-        <div class="portal-header__actions">
-          <div class="lang-mount-point"></div>
-          <a href="./" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Voltar ao Portal
-          </a>
-        </div>
+    <!-- Base URL -->
+    <section class="dev-card">
+      <h2>Endpoint Base (v1)</h2>
+      <p>Todas as rotas aceitam requisições <code>GET</code> com cache de borda (<code>s-maxage=60</code>) e projeção estrita de campos públicos (zero exposição de <code>uid</code> ou dados privados).</p>
+      <div class="dev-base-box">
+        <span id="api-base-url">https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1</span>
+        <button type="button" class="dev-btn" onclick="copyText(document.getElementById('api-base-url').textContent, this)">📋 Copiar Base URL</button>
       </div>
-    </div>
-  </header>
+    </section>
 
-  <!-- Barra Fixa de Progresso Baseada em Scroll -->
-  <div class="build-progress-bar-container">
-    <div class="portal-container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-      <span style="font-size:0.8rem;color:var(--text-secondary);font-weight:600" id="progress-text">
-        🛠️ Trilha Avançada: Construção &amp; Pi Browser — Módulo 1 de 6
-      </span>
-      <span style="font-size:0.75rem;color:var(--amber-light);font-weight:700" id="progress-percent">
-        0% Concluído
-      </span>
-    </div>
-    <div class="portal-container">
-      <div class="build-progress-track">
-        <div class="build-progress-fill" id="progress-fill"></div>
+    <!-- Playground Interativo -->
+    <section class="dev-card">
+      <h2>🧪 Playground Interativo ao Vivo</h2>
+      <p>Selecione um endpoint abaixo e execute a consulta real direto no seu navegador:</p>
+
+      <div class="dev-endpoint-grid">
+        <button type="button" class="dev-ep-btn active" onclick="selectEndpoint('/health', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/health</span>
+          <span class="dev-ep-desc">Status da API e índice completo de rotas disponíveis.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/passaportes?u=hokage22b', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/passaportes?u=hokage22b</span>
+          <span class="dev-ep-desc">Retorna o Passaporte público, nível na jornada e catálogo.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/monte-hokage', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/monte-hokage</span>
+          <span class="dev-ep-desc">Lista oficial de construtores que conquistaram o Monte Hokage.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/vila?country=BR&limit=10', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/vila?country=BR</span>
+          <span class="dev-ep-desc">Feed da A Vila · Central P2P filtrável por país e categoria.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/tools/validate-wallet?address=GA5F...XPUR', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/tools/validate-wallet</span>
+          <span class="dev-ep-desc">Validador Base32 + CRC16-XModem para chaves públicas Pi (G...).</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/tools/pi-price?currency=BRL', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/tools/pi-price?currency=BRL</span>
+          <span class="dev-ep-desc">Cotação Pi normalizada com cache compartilhado de 60s.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/stats', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/stats</span>
+          <span class="dev-ep-desc">Métricas agregadas do ecossistema HOKAGE22B.</span>
+        </button>
       </div>
-    </div>
-  </div>
 
-  <main>
-    <!-- HERO SECTION -->
-    <section class="build-hero">
-      <div class="portal-container" style="max-width:860px">
-        <span class="edu-badge-tag" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light)">
-          🚀 Além da Mineração · Guia do Construtor Web3
-        </span>
-        <h1 style="font-size:clamp(2.1rem, 5vw, 3.6rem);font-weight:800;letter-spacing:-0.03em;color:#fff;margin:12px 0 16px;line-height:1.15">
-          Além do Clique Diário: O Guia Prático do Pi Browser
-        </h1>
-        <p style="font-size:clamp(1.05rem, 2vw, 1.25rem);color:var(--text-secondary);line-height:1.6;margin-bottom:28px">
-          A Pi Network não precisa de mais pessoas apenas esperando o futuro. Precisa de quem constrói. Aprenda a dominar o Pi Browser, proteger seus ativos e integrar valor real no ecossistema.
-        </p>
+      <div class="dev-playground-bar">
+        <input type="text" id="pg-url-input" class="dev-url-input" value="https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/health" aria-label="URL do endpoint" />
+        <button type="button" class="dev-btn dev-btn--primary" id="pg-run-btn" onclick="runPlayground()">▶ Executar Consulta</button>
+        <span id="pg-status" style="font-size:0.78rem;color:#a1a1aa;font-family:'JetBrains Mono',monospace"></span>
+      </div>
 
-        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:34px">
-          <a href="#modulo-1" class="portal-btn portal-btn--amber">
-            Iniciar Módulo 1 ↓
-          </a>
-          <a href="#downloads-oficiais" class="portal-btn portal-btn--outline" style="border-color:rgba(245,158,11,0.5);color:var(--amber-light)">
-            📥 Baixar E-book &amp; Manual (PDF/EPUB) ↓
-          </a>
-          <a href="pioneiro" class="portal-btn portal-btn--primary">
-            Explorar o Passaporte do Pioneiro ↗
-          </a>
-          <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline">
-            Seguir no X @hokage22b ↗
-          </a>
+      <pre class="dev-pre" id="pg-output">{ "dica": "Clique em 'Executar Consulta' para testar a resposta JSON ao vivo." }</pre>
+    </section>
+
+    <!-- Snippets & Mini-SDK -->
+    <section class="dev-card">
+      <h2>📦 Mini-SDK &amp; Exemplos Prontos</h2>
+      <p>Use nosso SDK leve (~3KB, zero dependências) via <code>&lt;script src="https://hokage22b.com/assets/js/hokage-sdk.js"&gt;&lt;/script&gt;</code> ou consuma via <code>fetch</code>, Python ou cURL.</p>
+
+      <div class="dev-tabs">
+        <button type="button" class="dev-tab active" onclick="showSnippet('sdk', this)">Mini-SDK (JS)</button>
+        <button type="button" class="dev-tab" onclick="showSnippet('fetch', this)">Fetch Nativo</button>
+        <button type="button" class="dev-tab" onclick="showSnippet('python', this)">Python</button>
+        <button type="button" class="dev-tab" onclick="showSnippet('curl', this)">cURL</button>
+        <button type="button" class="dev-btn" style="margin-left:auto" onclick="copyText(document.getElementById('snippet-code').textContent, this)">📋 Copiar Código</button>
+      </div>
+
+      <pre class="dev-pre" id="snippet-code"></pre>
+    </section>
+
+    <!-- Referência de Parâmetros -->
+    <section class="dev-card">
+      <h2>📘 Referência Rápida dos Endpoints</h2>
+      <div style="overflow-x:auto">
+        <table class="dev-table">
+          <thead>
+            <tr>
+              <th>Endpoint</th>
+              <th>Parâmetros</th>
+              <th>Retorno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/v1/passaportes</code></td>
+              <td><code>?u=handle</code>, <code>?tier=hokage|construtor|pioneiro</code>, <code>?limit=20</code>, <code>?offset=0</code></td>
+              <td>Passaporte individual ou lista paginada com nível na jornada e produtos.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/monte-hokage</code></td>
+              <td><code>?limit=20</code></td>
+              <td>Lista de líderes que conquistaram o selo Hokage por mérito.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/vila</code></td>
+              <td><code>?country=BR</code>, <code>?category=servico</code>, <code>?payment=pi</code>, <code>?plan=ouro|prata|bronze</code></td>
+              <td>Feed ativo da <strong>A Vila · Central P2P</strong> com link para o Passaporte do autor.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/tools/validate-wallet</code></td>
+              <td><code>?address=G...</code></td>
+              <td>Validação Base32 + CRC16-XModem e alerta caso seja chave secreta <code>S...</code>.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/tools/pi-price</code></td>
+              <td><code>?currency=BRL|USD|EUR</code></td>
+              <td>Preço atual e variação 24h com cache de 60s.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/stats</code></td>
+              <td>—</td>
+              <td>Contagem pública de Passaportes, anúncios na Vila e membros do Monte Hokage.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Gerador de Widget Incorporável (Passaporte em Qualquer Site) -->
+    <section class="dev-card" id="widget-passaporte">
+      <h2>🪪 Widget Incorporável: Passaporte em Qualquer Site</h2>
+      <p>Cole 2 linhas em qualquer site (HTML, WordPress, Carrd, blog) para exibir seu Passaporte Verificado ao vivo com isolamento de CSS (Shadow DOM).</p>
+
+      <div class="dev-playground-bar">
+        <input type="text" id="embed-handle-input" class="dev-url-input" value="hokage22b" placeholder="Seu @usuario (ex: hokage22b)" style="max-width:240px" oninput="updateEmbedPreview()" />
+        <select id="embed-theme-select" class="dev-url-input" style="max-width:170px" onchange="updateEmbedPreview()">
+          <option value="dark">Tema Escuro (Dark)</option>
+          <option value="light">Tema Claro (Light)</option>
+        </select>
+        <button type="button" class="dev-btn" onclick="copyText(document.getElementById('embed-code-out').textContent, this)">📋 Copiar HTML</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:start">
+        <div>
+          <span style="display:block;font-size:0.75rem;color:#a1a1aa;margin-bottom:8px;font-weight:700">PRÉ-VISUALIZAÇÃO AO VIVO:</span>
+          <div id="embed-preview-slot">
+            <div data-hokage-passport="hokage22b" data-theme="dark"></div>
+          </div>
         </div>
-
-        <!-- Grid de Atalhos Rápidos para os Módulos -->
-        <div class="modules-nav-grid">
-          <a href="#modulo-1" class="module-nav-card">
-            <span class="module-nav-number">1</span>
-            <div style="text-align:left">
-              <strong style="display:block;font-size:0.95rem">O Fim da Espera Passiva</strong>
-              <small style="color:var(--text-muted);font-size:0.75rem">Velocidade da moeda vs retenção estática</small>
-            </div>
-          </a>
-          <a href="#modulo-2" class="module-nav-card">
-            <span class="module-nav-number">2</span>
-            <div style="text-align:left">
-              <strong style="display:block;font-size:0.95rem">Anatomia do Pi Browser</strong>
-              <small style="color:var(--text-muted);font-size:0.75rem">Sandbox, carteira e arquitetura</small>
-            </div>
-          </a>
-          <a href="#modulo-3" class="module-nav-card">
-            <span class="module-nav-number">3</span>
-            <div style="text-align:left">
-              <strong style="display:block;font-size:0.95rem">Segurança Radical &amp; Pi SDK</strong>
-              <small style="color:var(--text-muted);font-size:0.75rem">Autenticação vs Passphrase</small>
-            </div>
-          </a>
-          <a href="#modulo-4" class="module-nav-card">
-            <span class="module-nav-number">4</span>
-            <div style="text-align:left">
-              <strong style="display:block;font-size:0.95rem">Redes Sociais &amp; O Caso do X</strong>
-              <small style="color:var(--text-muted);font-size:0.75rem">Instagram/TikTok vs debate no X</small>
-            </div>
-          </a>
-          <a href="#modulo-5" class="module-nav-card">
-            <span class="module-nav-number">5</span>
-            <div style="text-align:left">
-              <strong style="display:block;font-size:0.95rem">Ecossistema Hokage22b</strong>
-              <small style="color:var(--text-muted);font-size:0.75rem">A ponte entre quem cria e quem usa</small>
-            </div>
-          </a>
-          <a href="#modulo-6" class="module-nav-card" style="border-color:rgba(16,185,129,0.4)">
-            <span class="module-nav-number" style="background:rgba(16,185,129,0.15);color:#34d399;border-color:rgba(16,185,129,0.4)">6</span>
-            <div style="text-align:left">
-              <strong style="display:block;font-size:0.95rem;color:#34d399">Checklist do Construtor</strong>
-              <small style="color:var(--text-muted);font-size:0.75rem">Roteiro prático de ação</small>
-            </div>
-          </a>
+        <div>
+          <span style="display:block;font-size:0.75rem;color:#a1a1aa;margin-bottom:8px;font-weight:700">CÓDIGO PARA COLAR NO SEU SITE:</span>
+          <pre class="dev-pre" id="embed-code-out" style="white-space:pre-wrap"></pre>
         </div>
       </div>
     </section>
 
-    <!-- CONTAINER PRINCIPAL DOS MÓDULOS -->
-    <div class="portal-container" style="max-width:880px;padding-top:40px">
+    <!-- Implementações de Referência & Exemplos Reais (Fase D enxuta) -->
+    <section class="dev-card" id="exemplos-reais">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px">
+        <h2 style="margin:0">🧩 Implementações de Referência &amp; Casos de Uso</h2>
+        <a href="mailto:contato@hokage22b.com?subject=Projeto%20API%20HOKAGE22B" class="dev-btn" style="text-decoration:none">📩 Submeter Meu Projeto</a>
+      </div>
+      <p>Exemplos reais rodando hoje sobre a API Pública v1 para você se inspirar ou reutilizar a arquitetura:</p>
 
-      <!-- ======================================================== -->
-      <!-- MÓDULO 1: O CHOQUE DE REALIDADE ECONÔMICA               -->
-      <!-- ======================================================== -->
-      <section class="edu-content-block" id="modulo-1">
-        <span class="edu-badge-tag" style="background:rgba(245,158,11,0.15);color:var(--amber-light)">
-          Módulo 1 de 6 · Realidade Econômica
+      <div class="dev-endpoint-grid" style="margin-bottom:0">
+        <div class="dev-ep-btn" style="cursor:default">
+          <span class="dev-ep-method">AO VIVO</span><span class="dev-ep-path">O Monte Hokage</span>
+          <span class="dev-ep-desc">
+            A página <a href="monte" style="color:#fb923c;font-weight:700;text-decoration:none">/monte</a> consome <code>HokageAPI.getMonteHokage()</code> via <code>hokage-sdk.js</code> para listar os líderes reconhecidos por mérito.
+          </span>
+        </div>
+        <div class="dev-ep-btn" style="cursor:default">
+          <span class="dev-ep-method">WIDGET</span><span class="dev-ep-path">Passaporte Embed</span>
+          <span class="dev-ep-desc">
+            O script <code>hokage-embed.js</code> consulta <code>/v1/passaportes?u=...</code> e renderiza o selo verificado com Shadow DOM em qualquer site externo.
+          </span>
+        </div>
+        <div class="dev-ep-btn" style="cursor:default">
+          <span class="dev-ep-method">IDEIA BOT</span><span class="dev-ep-path">Verificador P2P em Grupos</span>
+          <span class="dev-ep-desc">
+            Um bot de Telegram/Discord pode responder <code>/verificar @usuario</code> consultando <code>/v1/passaportes</code> + <code>/v1/tools/validate-wallet</code> antes de trocas P2P.
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ponte com a Jornada Hokage -->
+    <section class="dev-hokage-box">
+      <div style="max-width:650px">
+        <strong style="color:#fb923c;font-size:1.05rem;display:block;margin-bottom:4px">🔥 Seja pioneiro. Torne-se Hokage.</strong>
+        <span style="color:#d4d4d8;font-size:0.88rem;line-height:1.5;display:block">
+          Construiu um bot, diretório local, loja ou ferramenta usando a API do HOKAGE22B? Envie o header <code>X-Hokage-Client: seu-projeto</code> nas chamadas e ative seu Passaporte para pontuar como Construtor rumo ao <strong>Monte Hokage</strong>.
         </span>
-        <h2 style="font-size:1.85rem;color:#fff;margin-bottom:16px">
-          1. O Fim da Espera Passiva: Por Que Saldo Sem Utilidade Não Vale Nada
-        </h2>
-        
-        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
-          Durante anos, a rotina padrão de muitos pioneiros resumiu-se a abrir o aplicativo uma vez por dia, clicar no botão de raio e aguardar passivamente pelo anúncio de listagem em corretoras especulativas. Mas a economia descentralizada real não funciona por milagre.
-        </p>
-
-        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:20px">
-          Na teoria econômica monetária, existe um conceito fundamental chamado <strong>Velocidade da Moeda</strong>: o número de vezes que uma unidade de moeda é trocada por bens e serviços em um determinado período. Uma moeda que fica 100% trancada em carteiras à espera de valorização futura não gera ecossistema, não atrai lojistas e não cria valor real.
-        </p>
-
-        <!-- Box Conceitual de Velocidade da Moeda -->
-        <div class="edu-alert-box edu-alert-amber">
-          <span style="font-size:2rem">💡</span>
-          <div>
-            <strong style="font-size:1.05rem;color:var(--amber-light);display:block;margin-bottom:6px">A Regra da Utilidade Econômica:</strong>
-            <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.6;margin:0">
-              O valor de uma rede é proporcional à quantidade de problemas reais que ela resolve no dia a dia. Se ninguém aceita Pi para vender um café, prestar uma consultoria ou adquirir um software, o número na tela é apenas uma pontuação sem lastro no mundo físico. O pioneiro construtor compreende que criar utilidade prática é a única garantia de sustentabilidade.
-            </p>
-          </div>
-        </div>
-
-        <h3 style="font-size:1.3rem;color:#fff;margin:28px 0 14px">
-          Tabela Comparativa: O Pioneiro Espectador vs. O Pioneiro Construtor
-        </h3>
-
-        <div style="overflow-x:auto">
-          <table class="comparison-table">
-            <thead>
-              <tr>
-                <th>Dimensão</th>
-                <th>Pioneiro Espectador (Passivo)</th>
-                <th>Pioneiro Construtor (Ativo)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Comportamento Diário</strong></td>
-                <td>Apenas clica no raio e fecha o app imediatamente.</td>
-                <td>Navega pelo Pi Browser, explora dApps e testa soluções Web3.</td>
-              </tr>
-              <tr>
-                <td><strong>Visão sobre a Moeda</strong></td>
-                <td>Aguarda corretoras externas para vender todo o saldo de uma vez.</td>
-                <td>Usa o saldo para consumir serviços, apoiar criadores e fechar negócios P2P.</td>
-              </tr>
-              <tr>
-                <td><strong>Exposição a Golpes</strong></td>
-                <td>Alta. Cai em promessas de "destravar moedas" ou compradores fakes.</td>
-                <td>Baixa. Compreende chaves públicas, sandbox e recusa ceder passphrase.</td>
-              </tr>
-              <tr>
-                <td><strong>Impacto Comunitário</strong></td>
-                <td>Zero. Depende do esforço e das ferramentas dos outros.</td>
-                <td>Alto. Oferece produtos, conecta seu Passaporte e movimenta a economia real.</td>
-              </tr>
-              <tr>
-                <td><strong>Postura nas Redes</strong></td>
-                <td>Reclama de prazos e espalha rumores infundados.</td>
-                <td>Debate tecnicamente, propõe melhorias e responde ao mercado com ferramentas.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="edu-alert-box edu-alert-tip">
-          <span style="font-size:1.6rem">🚀</span>
-          <div>
-            <strong style="display:block;margin-bottom:4px">Visão Prática Hokage22b:</strong>
-            <span style="font-size:0.88rem;color:var(--text-secondary);line-height:1.5">
-              Não se trata de queimar suas moedas sem critério, mas de participar das trocas orgânicas da comunidade. Quando você compra um card no mural, financia um projeto ou adquire um serviço aceitando Pi, você valida a blockchain perante o mercado global.
-            </span>
-          </div>
-        </div>
-
-        <div class="module-nav-footer" style="justify-content:flex-end">
-          <a href="#modulo-2" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Módulo 2 · Anatomia do Pi Browser →
-          </a>
-        </div>
-      </section>
-
-      <!-- ======================================================== -->
-      <!-- MÓDULO 2: POR DENTRO DO PI BROWSER                      -->
-      <!-- ======================================================== -->
-      <section class="edu-content-block" id="modulo-2">
-        <span class="edu-badge-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-light)">
-          Módulo 2 de 6 · Arquitetura Técnica
-        </span>
-        <h2 style="font-size:1.85rem;color:#fff;margin-bottom:16px">
-          2. Por Dentro do Pi Browser: O Que Acontece por Baixo do Capô
-        </h2>
-        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:20px">
-          O <strong>Pi Browser</strong> não é simplesmente um navegador comum como o Chrome ou Safari com uma roupagem roxa. Ele é um <strong>ambiente de execução Web3 com isolamento restrito (Sandbox)</strong> projetado especificamente para conectar páginas da web comuns a contratos e assinaturas da blockchain Pi com segurança.
-        </p>
-
-        <!-- 3 Pilares Técnicos -->
-        <div class="concept-card-grid">
-          <div class="concept-mini-card" style="border-color:rgba(139,92,246,0.3)">
-            <div style="font-size:1.8rem;margin-bottom:8px">🔐</div>
-            <strong style="color:var(--accent-light);font-size:1.05rem;display:block;margin-bottom:6px">1. Carteira Isolada (wallet.pi)</strong>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              A carteira do pioneiro é executada em um domínio interno nativo e protegido. As chaves criptográficas privadas jamais saem desse espaço e nunca são injetadas em páginas de terceiros.
-            </p>
-          </div>
-
-          <div class="concept-mini-card" style="border-color:rgba(245,158,11,0.3)">
-            <div style="font-size:1.8rem;margin-bottom:8px">⚡</div>
-            <strong style="color:var(--amber-light);font-size:1.05rem;display:block;margin-bottom:6px">2. Pi Platform SDK</strong>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              Uma ponte bidirecional que permite a dApps certificados solicitar autenticação descentralizada (username/UID) e despacho de pagamentos sem ter acesso à senha do usuário.
-            </p>
-          </div>
-
-          <div class="concept-mini-card" style="border-color:rgba(16,185,129,0.3)">
-            <div style="font-size:1.8rem;margin-bottom:8px">🛡️</div>
-            <strong style="color:#34d399;font-size:1.05rem;display:block;margin-bottom:6px">3. Sandbox Web3 de Bloqueio</strong>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              Restringe permissões intrusivas do dispositivo (como leitura silenciosa de armazenamento ou execução não autorizada de scripts em background), blindando o ambiente contra rastreadores agressivos.
-            </p>
-          </div>
-        </div>
-
-        <h3 style="font-size:1.25rem;color:#fff;margin:28px 0 14px">
-          Diagrama do Fluxo Seguro de Assinatura Web3
-        </h3>
-        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;margin-bottom:12px">
-          Veja visualmente como uma aplicação descentralizada (como o Passaporte ou A Vila do HOKAGE22B) interage com a sua carteira sem nunca tocar na sua chave privada:
-        </p>
-
-        <!-- Diagrama Visual em CSS -->
-        <div class="flow-diagram-container">
-          <div class="flow-steps-wrapper">
-            <div class="flow-node">
-              <span class="flow-node__icon">👤</span>
-              <span class="flow-node__title">Pioneiro</span>
-              <span class="flow-node__desc">Clica em "Pagar com Pi" no dApp</span>
-            </div>
-
-            <div class="flow-arrow">➔</div>
-
-            <div class="flow-node flow-node--amber">
-              <span class="flow-node__icon">🌐</span>
-              <span class="flow-node__title">dApp em Sandbox</span>
-              <span class="flow-node__desc">Prepara a ordem de pagamento (preço, item)</span>
-            </div>
-
-            <div class="flow-arrow">➔</div>
-
-            <div class="flow-node flow-node--primary">
-              <span class="flow-node__icon">🔌</span>
-              <span class="flow-node__title">Pi SDK Bridge</span>
-              <span class="flow-node__desc">Valida escopos e chama a API oficial</span>
-            </div>
-
-            <div class="flow-arrow">➔</div>
-
-            <div class="flow-node flow-node--emerald">
-              <span class="flow-node__icon">📱</span>
-              <span class="flow-node__title">Carteira (wallet.pi)</span>
-              <span class="flow-node__desc">Pede biometria/confirmação e assina na blockchain</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="edu-alert-box edu-alert-info">
-          <span style="font-size:1.8rem">🔍</span>
-          <div>
-            <strong style="font-size:1rem;color:#fff;display:block;margin-bottom:4px">O Princípio Zero-Trust:</strong>
-            <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.6;margin:0">
-              O site externo nunca sabe o saldo total da sua carteira nem tem o poder de debitar valores automaticamente sem que uma janela do sistema nativo do Pi Browser solicite expressamente a sua permissão individual para aquela transação específica.
-            </p>
-          </div>
-        </div>
-
-        <div class="module-nav-footer">
-          <a href="#modulo-1" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 1: O Fim do Espectador
-          </a>
-          <a href="#modulo-3" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Módulo 3 · Segurança Radical &amp; Pi SDK →
-          </a>
-        </div>
-      </section>
-
-      <!-- ======================================================== -->
-      <!-- MÓDULO 3: SEGURANÇA RADICAL & DEFESA ANTI-GOLPES         -->
-      <!-- ======================================================== -->
-      <section class="edu-content-block" id="modulo-3" style="border-color:rgba(239,68,68,0.4)">
-        <span class="edu-badge-tag" style="background:rgba(239,68,68,0.2);color:#f87171;border:1px solid rgba(239,68,68,0.4)">
-          🛡️ Módulo 3 de 6 · Blindagem Definitiva
-        </span>
-        <h2 style="font-size:1.85rem;color:#fff;margin-bottom:16px">
-          3. Segurança Radical &amp; Pi SDK: Como Apps Conversam com a Carteira
-        </h2>
-        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:18px">
-          A fronteira entre conveniência e vulnerabilidade na Web3 é tênue. Compreender com exatidão o que o Pi SDK faz — e o que ele <strong>nunca</strong> faz — é a linha de defesa definitiva contra 99,9% dos ataques e fraudes existentes no ecossistema.
-        </p>
-
-        <!-- BOX DE ALERTA MÁXIMO -->
-        <div class="edu-alert-box edu-alert-danger">
-          <span style="font-size:2.2rem">🚨</span>
-          <div>
-            <strong style="font-size:1.1rem;color:#f87171;display:block;margin-bottom:6px">ALERTA MÁXIMO DE SEGURANÇA:</strong>
-            <p style="font-size:0.9rem;line-height:1.6;margin:0">
-              <strong>A Passphrase (frase secreta de 24 palavras) NUNCA é solicitada por nenhum dApp legítimo.</strong><br />
-              O único lugar legítimo no mundo onde as 24 palavras podem ser digitadas é na tela interna e nativa do <code>wallet.pi</code>, exclusivamente quando você precisa desbloquear sua carteira em um novo aparelho. Se uma página externa pedir suas 24 palavras para "aprovar login", "conectar carteira" ou "receber airdrop", <strong>trata-se de um golpe irreversível</strong>.
-            </p>
-          </div>
-        </div>
-
-        <h3 style="font-size:1.3rem;color:#fff;margin:28px 0 14px">
-          Diferença Técnica: "Autorizar Login" vs. "Entregar a Passphrase"
-        </h3>
-
-        <div class="concept-card-grid">
-          <div class="concept-mini-card" style="border-color:rgba(16,185,129,0.4)">
-            <div style="font-size:1.8rem;margin-bottom:8px">✅</div>
-            <strong style="color:#34d399;font-size:1.05rem;display:block;margin-bottom:6px">Autorizar via Pi SDK (Seguro)</strong>
-            <span style="font-size:0.75rem;background:rgba(16,185,129,0.15);color:#34d399;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:10px">Autenticação Baseada em Escopos</span>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              O dApp recebe apenas seu <code>username</code> e um <code>accessToken</code> temporário emitido pelo Core Team. Ele não tem acesso aos seus fundos, não conhece suas palavras secretas e não pode movimentar nada sem sua assinatura explícita.
-            </p>
-          </div>
-
-          <div class="concept-mini-card" style="border-color:rgba(239,68,68,0.4)">
-            <div style="font-size:1.8rem;margin-bottom:8px">❌</div>
-            <strong style="color:#f87171;font-size:1.05rem;display:block;margin-bottom:6px">Digitar a Passphrase (Golpe Fatal)</strong>
-            <span style="font-size:0.75rem;background:rgba(239,68,68,0.15);color:#f87171;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:10px">Entrega de Custódia Total</span>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              A passphrase é o gerador da sua chave privada mestre. Uma vez digitada em formulário web fraudulento, scripts automatizados roubam suas moedas em milissegundos e ninguém pode reverter a transação na blockchain.
-            </p>
-          </div>
-        </div>
-
-        <!-- Regra de Ouro -->
-        <div class="edu-alert-box edu-alert-amber">
-          <span style="font-size:1.8rem">👑</span>
-          <div>
-            <strong style="color:var(--amber-light);display:block;margin-bottom:4px">Regra de Ouro do Construtor:</strong>
-            <span style="font-size:0.88rem;color:var(--text-secondary);line-height:1.5">
-              Trate sua chave pública (que começa com <code>G...</code>) como seu número de conta e e-mail de contato; e trate sua passphrase de 24 palavras como a chave física de um cofre enterrado. Jamais digite a chave física no teclado de um site de terceiros.
-            </span>
-          </div>
-        </div>
-
-        <div class="module-nav-footer">
-          <a href="#modulo-2" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 2: O Pi Browser
-          </a>
-          <a href="#modulo-4" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Módulo 4 · Redes Sociais &amp; O Caso do X →
-          </a>
-        </div>
-      </section>
-
-      <!-- ======================================================== -->
-      <!-- MÓDULO 4: REDES SOCIAIS E A FORÇA DO X (TWITTER)        -->
-      <!-- ======================================================== -->
-      <section class="edu-content-block" id="modulo-4">
-        <span class="edu-badge-tag" style="background:rgba(139,92,246,0.15);color:var(--accent-light)">
-          Módulo 4 de 6 · Estratégia de Comunicação
-        </span>
-        <h2 style="font-size:1.85rem;color:#fff;margin-bottom:16px">
-          4. O Papel das Redes Sociais &amp; O Caso Diferenciado do X (Twitter)
-        </h2>
-        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:20px">
-          No mundo das criptomoedas e da Web3, onde você se informa e onde você debate define se você será massa de manobra de boatos ou um agente ativo de transformação. Nem todas as plataformas cumprem o mesmo papel estratégico.
-        </p>
-
-        <!-- Comparativo de Plataformas -->
-        <div class="concept-card-grid">
-          <div class="concept-mini-card">
-            <div style="font-size:1.8rem;margin-bottom:8px">📸 🎬</div>
-            <strong style="color:#fff;font-size:1.05rem;display:block;margin-bottom:6px">Instagram &amp; TikTok: Topo do Funil</strong>
-            <span style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:10px">Atração e Despertar de Consciência</span>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              Excelentes para vídeos curtos, tutoriais visuais simplificados e apresentação inicial de conceitos para o público leigo. Porém, os algoritmos privilegiam o sensacionalismo e promessas imediatistas.
-            </p>
-          </div>
-
-          <div class="concept-mini-card" style="border-color:rgba(139,92,246,0.4)">
-            <div style="font-size:1.8rem;margin-bottom:8px">𝕏</div>
-            <strong style="color:var(--accent-light);font-size:1.05rem;display:block;margin-bottom:6px">X (@hokage22b): O Centro Técnico</strong>
-            <span style="font-size:0.75rem;color:var(--accent-light);display:block;margin-bottom:10px">Debate Profundo &amp; Governança Web3</span>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              É no X que desenvolvedores de todo o planeta, pesquisadores acadêmicos, a Pi Core Team e analistas de mercado debatem arquitetura de código, consensos, atualizações de rede e combatem campanhas de desinformação em tempo real.
-            </p>
-          </div>
-        </div>
-
-        <h3 style="font-size:1.25rem;color:#fff;margin:28px 0 14px">
-          Como Lidar com o Ceticismo do Mercado Tradicional?
-        </h3>
-        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;margin-bottom:16px">
-          Muitos pioneiros entram em discussões desgastantes na internet tentando defender "preços milagrosos" em dólares. Essa postura afasta pessoas sérias e gera descrédito. O pioneiro construtor atua de maneira completamente diferente:
-        </p>
-
-        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
-          <div style="background:rgba(255,255,255,0.03);border-left:4px solid var(--amber);padding:14px 18px;border-radius:0 10px 10px 0">
-            <strong style="color:var(--amber-light);display:block">1. Responder com Código e Ferramentas em Produção</strong>
-            <p style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 0">
-              Em vez de especular se a moeda "vai valer X ou Y", mostre dApps funcionando, transações assinadas em segundos na blockchain e negócios locais aceitando pagamentos reais.
-            </p>
-          </div>
-          <div style="background:rgba(255,255,255,0.03);border-left:4px solid var(--accent);padding:14px 18px;border-radius:0 10px 10px 0">
-            <strong style="color:var(--accent-light);display:block">2. Separar Narrativas de Ilusão da Economia Prática</strong>
-            <p style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 0">
-              Descarte promessas de riqueza da noite para o dia. Construir uma moeda global exige maturação de software, conformidade regulatória e adoção pelo comércio de base.
-            </p>
-          </div>
-          <div style="background:rgba(255,255,255,0.03);border-left:4px solid #10b981;padding:14px 18px;border-radius:0 10px 10px 0">
-            <strong style="color:#34d399;display:block">3. Conectar-se com Quem Constrói</strong>
-            <p style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 0">
-              Siga perfis técnicos e construtores de utilidade prática. Participe das discussões oficiais no X acompanhando o perfil <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer" style="color:var(--amber-light);font-weight:700">@hokage22b</a>.
-            </p>
-          </div>
-        </div>
-
-        <div class="module-nav-footer">
-          <a href="#modulo-3" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 3: Segurança Radical
-          </a>
-          <a href="#modulo-5" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Módulo 5 · Ecossistema Hokage22b →
-          </a>
-        </div>
-      </section>
-
-      <!-- ======================================================== -->
-      <!-- MÓDULO 5: O PORTAL HOKAGE22B COMO PONTE                  -->
-      <!-- ======================================================== -->
-      <section class="edu-content-block" id="modulo-5">
-        <span class="edu-badge-tag" style="background:rgba(245,158,11,0.15);color:var(--amber-light)">
-          Módulo 5 de 6 · Infraestrutura Ativa
-        </span>
-        <h2 style="font-size:1.85rem;color:#fff;margin-bottom:16px">
-          5. O Portal Hokage22b: A Ponte Entre Quem Cria e Quem Usa
-        </h2>
-        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:20px">
-          O portal <strong>HOKAGE22B.COM</strong> não é um site estático ou um mero agregador de notícias. Ele foi estruturado como uma camada de infraestrutura Web3 descentralizada, desenhada especificamente para fechar o elo que faltava no ecossistema: conectar quem tem saldo disponível com quem tem produtos e serviços para comercializar.
-        </p>
-
-        <!-- Três Pilares da Plataforma -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:16px;margin-bottom:24px">
-          <div class="concept-mini-card">
-            <div style="font-size:1.6rem;margin-bottom:8px">🏛️</div>
-            <strong style="color:var(--accent-light);display:block;margin-bottom:6px">Passaportes Web3 Validados</strong>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              Página de identidade digital única com links para redes sociais, catálogo e endereço público Pi verificado para receber transferências diretamente de outros pioneiros.
-            </p>
-          </div>
-
-          <div class="concept-mini-card">
-            <div style="font-size:1.6rem;margin-bottom:8px">📢</div>
-            <strong style="color:var(--amber-light);display:block;margin-bottom:6px">A Vila · Central P2P</strong>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              Ambiente de visibilidade nacional onde empreendedores e prestadores divulgam seus produtos com métricas reais de visualizações, cliques e curtidas transparentes.
-            </p>
-          </div>
-
-          <div class="concept-mini-card">
-            <div style="font-size:1.6rem;margin-bottom:8px">🛡️</div>
-            <strong style="color:#34d399;display:block;margin-bottom:6px">Governança Descentralizada</strong>
-            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.5">
-              Publicação ágil pós-pagamento combinada com ferramenta comunitária de denúncias (<code>🚩 Denunciar</code>), mantendo o mural limpo e confiável sem barreiras burocráticas.
-            </p>
-          </div>
-        </div>
-
-        <div class="edu-alert-box edu-alert-tip">
-          <span style="font-size:1.8rem">🤝</span>
-          <div>
-            <strong style="display:block;margin-bottom:4px">Para Construtores, Lojistas e Prestadores de Serviços:</strong>
-            <span style="font-size:0.88rem;color:var(--text-secondary);line-height:1.5">
-              Se você possui uma loja física, presta serviços de TI, vende infoprodutos ou artesanato, o portal disponibiliza ferramentas prontas para você começar a aceitar Pi hoje mesmo, testando a experiência no ambiente seguro do Pi Browser.
-            </span>
-          </div>
-        </div>
-
-        <div class="module-nav-footer">
-          <a href="#modulo-4" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 4: Redes Sociais
-          </a>
-          <a href="#modulo-6" class="portal-btn portal-btn--amber portal-btn--sm">
-            Próximo: Módulo 6 · Checklist do Construtor →
-          </a>
-        </div>
-      </section>
-
-      <!-- ======================================================== -->
-      <!-- MÓDULO 6: CHECKLIST DO PIONEIRO CONSTRUTOR               -->
-      <!-- ======================================================== -->
-      <section class="edu-content-block" id="modulo-6" style="border-color:rgba(16,185,129,0.4)">
-        <span class="edu-badge-tag" style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.4)">
-          ✅ Módulo 6 de 6 · Roteiro Prático de Ação
-        </span>
-        <h2 style="font-size:1.85rem;color:#fff;margin-bottom:16px">
-          6. Checklist do Pioneiro Construtor: Seu Plano de Ação
-        </h2>
-        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:20px">
-          Conhecimento sem aplicação prática não gera resultados. Utilize a checklist interativa abaixo para avaliar sua maturidade como pioneiro ativo e participante do ecossistema Web3. O seu progresso é salvo automaticamente neste navegador:
-        </p>
-
-        <!-- Checklist Interativo -->
-        <div id="builder-checklist">
-          <label class="builder-checklist-item" id="chk-item-1">
-            <input type="checkbox" data-chk="1" onchange="toggleBuilderCheck(this)" />
-            <div>
-              <strong style="color:#fff;display:block;font-size:0.95rem;margin-bottom:2px">1. Backup Físico e Offline da Passphrase</strong>
-              <span style="font-size:0.84rem;color:var(--text-secondary);line-height:1.4;display:block">
-                Minhas 24 palavras estão anotadas a caneta em papel físico, armazenadas em local seguro, e nunca foram fotografadas ou salvas na nuvem.
-              </span>
-            </div>
-          </label>
-
-          <label class="builder-checklist-item" id="chk-item-2">
-            <input type="checkbox" data-chk="2" onchange="toggleBuilderCheck(this)" />
-            <div>
-              <strong style="color:#fff;display:block;font-size:0.95rem;margin-bottom:2px">2. Fixar HOKAGE22B.COM nos Favoritos do Pi Browser</strong>
-              <span style="font-size:0.84rem;color:var(--text-secondary);line-height:1.4;display:block">
-                Acesso o portal diretamente pela barra de endereços do Pi Browser para garantir que a ponte Web3 e os pagamentos biométricos funcionem perfeitamente.
-              </span>
-            </div>
-          </label>
-
-          <label class="builder-checklist-item" id="chk-item-3">
-            <input type="checkbox" data-chk="3" onchange="toggleBuilderCheck(this)" />
-            <div>
-              <strong style="color:#fff;display:block;font-size:0.95rem;margin-bottom:2px">3. Testar Transações e dApps no Ecossistema</strong>
-              <span style="font-size:0.84rem;color:var(--text-secondary);line-height:1.4;display:block">
-                Realizei pelo menos uma transação real de teste na rede (seja na Testnet com biometria ou na Mainnet P2P) para dominar a experiência de uso.
-              </span>
-            </div>
-          </label>
-
-          <label class="builder-checklist-item" id="chk-item-4">
-            <input type="checkbox" data-chk="4" onchange="toggleBuilderCheck(this)" />
-            <div>
-              <strong style="color:#fff;display:block;font-size:0.95rem;margin-bottom:2px">4. Acompanhar Atualizações e Debater no X (@hokage22b)</strong>
-              <span style="font-size:0.84rem;color:var(--text-secondary);line-height:1.4;display:block">
-                Sigo o perfil oficial no X para acompanhar debates técnicos, atualizações de infraestrutura, alertas contra golpes e releases da Pi Core Team.
-              </span>
-            </div>
-          </label>
-
-          <label class="builder-checklist-item" id="chk-item-5">
-            <input type="checkbox" data-chk="5" onchange="toggleBuilderCheck(this)" />
-            <div>
-              <strong style="color:#fff;display:block;font-size:0.95rem;margin-bottom:2px">5. Criar Meu Passaporte ou Apoiar Projetos Reais</strong>
-              <span style="font-size:0.84rem;color:var(--text-secondary);line-height:1.4;display:block">
-                Publiquei meu Passaporte do Pioneiro com chave pública ou apoiei anunciantes legítimos no Mural de Classificados, gerando velocidade monetária.
-              </span>
-            </div>
-          </label>
-        </div>
-
-        <!-- Indicador de Status da Checklist -->
-        <div style="background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px 20px;margin-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-          <div>
-            <strong style="color:#fff;font-size:0.9rem;display:block">Status da Sua Jornada de Construtor:</strong>
-            <span style="font-size:0.8rem;color:var(--text-muted)" id="chk-summary-text">0 de 5 ações concluídas</span>
-          </div>
-          <span style="font-size:0.85rem;font-weight:700;color:var(--amber-light)" id="chk-badge-status">Nível: Iniciante</span>
-        </div>
-
-        <!-- Ponte para Etapa 03: Torne-se Hokage -->
-        <div style="background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(245,158,11,0.06));border:1px solid rgba(249,115,22,0.35);border-radius:12px;padding:18px 20px;margin-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
-          <div style="display:flex;align-items:center;gap:12px;max-width:560px">
-            <img src="assets/img/brand/hokage22b-logo.svg" alt="HOKAGE22B" width="32" height="32" style="width:32px;height:32px;flex-shrink:0" />
-            <div>
-              <strong style="color:#fb923c;font-size:0.95rem;display:block">Próximo Nível · Etapa 03: Torne-se Hokage</strong>
-              <span style="font-size:0.82rem;color:var(--text-secondary);line-height:1.45;display:block">
-                Ao consolidar seu Passaporte e gerar utilidade real (educação, serviços P2P, comércio ou código), você se qualifica para o selo oficial de Construtor Líder na plataforma.
-              </span>
-            </div>
-          </div>
-          <a href="pioneiro" class="portal-btn portal-btn--amber portal-btn--sm" style="background:linear-gradient(135deg,#f97316,#f59e0b);border-color:#f97316;color:#09090b;font-weight:700">
-            Ativar Meu Passaporte →
-          </a>
-        </div>
-
-        <div class="module-nav-footer">
-          <a href="#modulo-5" class="portal-btn portal-btn--outline portal-btn--sm">
-            ← Módulo 5: Ecossistema Hokage22b
-          </a>
-          <a href="#downloads-oficiais" class="portal-btn portal-btn--amber portal-btn--sm">
-            📥 Ir para o Acervo Oficial de Downloads ↓
-          </a>
-        </div>
-      </section>
-
-      <!-- ======================================================== -->
-      <!-- PUBLICAÇÕES OFICIAIS: MANUAL TÉCNICO (PDF) & E-BOOK (EPUB)-->
-      <!-- ======================================================== -->
-      <section class="acervo-box" id="downloads-oficiais">
-        <div class="acervo-header">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px">
-            <div>
-              <span class="edu-badge-tag" style="background:rgba(245,158,11,0.22);color:var(--amber-light);border:1px solid rgba(245,158,11,0.45);margin-bottom:8px">
-                🏛️ ACERVO OFICIAL HOKAGE22B · PUBLICAÇÕES TÉCNICAS WEB3
-              </span>
-              <h2 style="font-size:clamp(1.6rem, 2.8vw, 2.2rem);font-weight:900;color:#fff;margin:6px 0 6px;letter-spacing:-0.02em">
-                Biblioteca do Construtor: Manuais &amp; E-books Oficiais
-              </h2>
-              <p style="font-size:0.95rem;color:var(--text-secondary);max-width:760px;margin:0;line-height:1.6">
-                Obras originais de autoria de <strong>HOKAGE22B &amp; Isar Loiola</strong>. Conteúdo técnico e geopolítico 100% comunitário e de livre distribuição, desenvolvido para leitura offline, impressão ou sincronização direta com seu e-reader favorito.
-              </p>
-            </div>
-            <div style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.35);padding:8px 14px;border-radius:12px;text-align:right">
-              <span style="display:block;font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em">Acesso Aberto</span>
-              <strong style="color:var(--accent-light);font-size:0.88rem">✓ Licença Livre Comunitária</strong>
-            </div>
-          </div>
-
-          <div class="acervo-chips-row">
-            <span class="acervo-chip">⚡ 100% Livre &amp; Gratuito</span>
-            <span class="acervo-chip">🛡️ Sem Cadastro ou Coleta de Dados</span>
-            <span class="acervo-chip">📱 Compatível com Celular, PC, Kindle &amp; Kobo</span>
-            <span class="acervo-chip">📄 PDF Vetorial HD + EPUB 3.0 Oficial</span>
-          </div>
-        </div>
-
-        <div class="acervo-grid">
-          <!-- CARD 1: MANUAL TÉCNICO EM PDF -->
-          <div class="acervo-card acervo-card--amber">
-            <div class="acervo-card-badge acervo-card-badge--amber">
-              PDF Vetorial HD · 2 Páginas
-            </div>
-            <div>
-              <div style="font-size:2.2rem;margin-bottom:10px">📄</div>
-              <h3 style="color:#fff;font-size:1.25rem;font-weight:800;line-height:1.35;margin:0 0 8px">
-                Além do Clique: O Manual do Construtor Web3 &amp; Geopolítica Monetária
-              </h3>
-              <p style="color:var(--text-secondary);font-size:0.87rem;line-height:1.55;margin-bottom:12px">
-                Tratado geopolítico e manual sintético diagramado em alta resolução vetorial. Ideal para consulta rápida, estudo em bancada, distribuição impressa em encontros de pioneiros ou leitura executiva.
-              </p>
-              <ul class="acervo-item-list acervo-item-list--amber">
-                <li><strong style="color:#fff">Equação Monetária:</strong> Velocidade de circulação ($V = \frac{P \times Y}{M}$) vs. acúmulo passivo.</li>
-                <li><strong style="color:#fff">Matriz Comparativa:</strong> Pioneiro Espectador vs. Pioneiro Construtor em 5 dimensões.</li>
-                <li><strong style="color:#fff">Diagrama Sandbox Web3:</strong> Isolamento nativo de <code>wallet.pi</code> e arquitetura Zero-Trust.</li>
-                <li><strong style="color:#fff">Tabuleiro Geopolítico:</strong> Desdolarização, acordos BRICS e a alternativa descentralizada a CBDCs.</li>
-                <li><strong style="color:#fff">Três Cenários 2030:</strong> O futuro da micropoupança agêntica e governança descentralizada.</li>
-              </ul>
-            </div>
-
-            <div>
-              <div class="acervo-btn-group">
-                <a href="downloads/Alem-do-Clique-Manual-Tecnico.pdf" download="Alem-do-Clique-Manual-Tecnico.pdf" class="portal-btn portal-btn--amber">
-                  <span>📥</span> Baixar Manual (PDF)
-                </a>
-                <a href="downloads/manual-tecnico.html" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline" style="border-color:rgba(255,255,255,0.22);color:#fff">
-                  👁️ Ver Online
-                </a>
-              </div>
-              <div class="acervo-meta-info">
-                <span>📄 Arquivo: <code>Alem-do-Clique-Manual-Tecnico.pdf</code></span>
-                <span>Tamanho: ~526 KB · Vetorial HD</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- CARD 2: E-BOOK EM EPUB 3.0 -->
-          <div class="acervo-card acervo-card--purple">
-            <div class="acervo-card-badge acervo-card-badge--purple">
-              EPUB 3.0 · E-Book Completo
-            </div>
-            <div>
-              <div style="font-size:2.2rem;margin-bottom:10px">📚</div>
-              <h3 style="color:#fff;font-size:1.25rem;font-weight:800;line-height:1.35;margin:0 0 8px">
-                Além do Clique: O Guia Definitivo do Construtor Web3 &amp; Futuros Hipotéticos
-              </h3>
-              <p style="color:var(--text-secondary);font-size:0.87rem;line-height:1.55;margin-bottom:12px">
-                Livro digital aprofundado por <strong>HOKAGE22B &amp; Isar Loiola</strong>. Desenvolvido no padrão internacional EPUB 3.0 com paginação responsiva, tipografia fluida e suporte total ao modo noturno.
-              </p>
-              <ul class="acervo-item-list acervo-item-list--purple">
-                <li><strong style="color:#fff">Capítulo 1:</strong> O Fim da Espera Passiva &amp; A Ilusão das Corretoras Tradicionais.</li>
-                <li><strong style="color:#fff">Capítulo 2:</strong> A Anatomia do Pi Browser e a Blindagem Radical Zero-Trust.</li>
-                <li><strong style="color:#fff">Capítulo 3:</strong> O Tabuleiro Geopolítico Global &amp; A Camada de Humanidade Única.</li>
-                <li><strong style="color:#fff">Capítulo 4:</strong> Cenários Prospectivos para a Década de 2030 e a Economia Agêntica.</li>
-                <li><strong style="color:#fff">Capítulo 5:</strong> O Plano Prático de Ação do Pioneiro Construtor em 5 Passos.</li>
-              </ul>
-            </div>
-
-            <div>
-              <div class="acervo-btn-group">
-                <a href="downloads/Alem-do-Clique-Guia-Definitivo.epub" download="Alem-do-Clique-Guia-Definitivo.epub" class="portal-btn portal-btn--primary">
-                  <span>📖</span> Baixar E-Book (EPUB)
-                </a>
-                <button type="button" onclick="openEpubReaderModal()" class="portal-btn portal-btn--outline" style="border-color:rgba(139,92,246,0.45);color:var(--accent-light)">
-                  👓 Ler Capítulos Online
-                </button>
-              </div>
-              <div class="acervo-meta-info">
-                <span>📱 Leitores: Kindle, Apple Books, Kobo, Moon+</span>
-                <span>Tamanho: ~8.4 KB · EPUB 3.0</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================================================== -->
-      <!-- SEÇÃO FINAL: CALL TO ACTION (CTA) COM BRILHO NEON        -->
-      <!-- ======================================================== -->
-      <section class="cta-glow-card" id="cta-final">
-        <span class="edu-badge-tag" style="background:rgba(245,158,11,0.2);color:var(--amber-light);border:1px solid rgba(245,158,11,0.4)">
-          ⚡ O Futuro Pertence a Quem Constrói
-        </span>
-        <h2 style="font-size:clamp(1.9rem, 3.8vw, 2.6rem);color:#fff;margin:14px 0 16px;font-weight:800">
-          Construa o Futuro da Web3 Conosco
-        </h2>
-        <p style="color:var(--text-secondary);max-width:640px;margin:0 auto 32px;line-height:1.65;font-size:1.05rem">
-          A transição para a economia descentralizada sustentável depende de ferramentas ativas, educação técnica rigorosa e pioneiros dispostos a ir além do clique diário. Escolha como você vai contribuir hoje:
-        </p>
-
-        <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:28px">
-          <a href="pioneiro" class="portal-btn portal-btn--primary" style="padding:14px 26px;font-size:1rem">
-            🪪 Acessar Passaporte do Pioneiro
-          </a>
-          <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline" style="padding:14px 26px;font-size:1rem;border-color:rgba(139,92,246,0.5);color:var(--accent-light)">
-            𝕏 Participar do Debate no X
-          </a>
-          <a href="downloads/Alem-do-Clique-Manual-Tecnico.pdf" download="Alem-do-Clique-Manual-Tecnico.pdf" class="portal-btn portal-btn--amber" style="padding:14px 26px;font-size:1rem">
-            📄 Baixar Manual Técnico (PDF)
-          </a>
-          <a href="downloads/Alem-do-Clique-Guia-Definitivo.epub" download="Alem-do-Clique-Guia-Definitivo.epub" class="portal-btn portal-btn--primary" style="padding:14px 26px;font-size:1rem;background:linear-gradient(135deg, #7c3aed, #4f46e5)">
-            📚 Baixar E-Book (EPUB)
-          </a>
-        </div>
-
-        <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;max-width:600px;margin:0 auto">
-          <small style="color:var(--text-muted);font-size:0.8rem;line-height:1.5;display:block">
-            Portal HOKAGE22B — Iniciativa técnica e comunitária independente. Focada no desenvolvimento de utilidades práticas, segurança em dApps e fortalecimento do ecossistema Pi Network.
-          </small>
-        </div>
-      </section>
-
-    </div>
+      </div>
+      <a href="pioneiro" class="dev-btn dev-btn--primary" style="text-decoration:none;padding:11px 18px">🪪 Ativar Meu Passaporte →</a>
+    </section>
   </main>
 
-  <!-- Rodapé Global -->
-  <footer class="portal-footer" style="background:#09090b;border-top:1px solid rgba(255,255,255,0.08);padding:40px 0 30px;text-align:center">
-    <div class="portal-container">
-      <div style="display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:14px">
-        <span class="pi-sym" style="color:var(--amber-light)">✦</span>
-        <strong style="color:#fff;font-size:1.1rem">HOKAGE22B</strong>
-      </div>
-      <p style="color:var(--text-muted);font-size:0.85rem;max-width:540px;margin:0 auto 16px">
-        Tecnologia, Web3, Pi Network, Educação e Economia Descentralizada.
-      </p>
-      <div style="display:flex;justify-content:center;gap:18px;font-size:0.85rem;flex-wrap:wrap">
-        <a href="./" style="color:var(--text-secondary);text-decoration:none">Início</a>
-        <a href="zero" style="color:var(--text-secondary);text-decoration:none">Pi do Zero</a>
-        <a href="construir" style="color:var(--amber-light);text-decoration:none;font-weight:700">Além do Clique</a>
-        <a href="pioneiro" style="color:var(--text-secondary);text-decoration:none">Passaporte</a>
-        <a href="mural" style="color:var(--text-secondary);text-decoration:none">Mural</a>
-        <a href="legal/termos-de-uso" style="color:var(--text-muted);text-decoration:none">Termos de Uso</a>
-        <a href="legal/politica-de-privacidade" style="color:var(--text-muted);text-decoration:none">Privacidade</a>
-      </div>
-    </div>
-  </footer>
+  <script src="assets/js/hokage-sdk.js"></script>
+  <script>
+    var BASE = 'https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1';
 
-  <!-- Scripts -->
+    var SNIPPETS = {
+      sdk: [
+        '<script src="https://hokage22b.com/assets/js/hokage-sdk.js"><\/script>',
+        '<script>',
+        '  HokageAPI.setAppName("meu-app-pi");',
+        '',
+        '  // 1. Buscar Passaporte do Pioneiro',
+        '  const { passport } = await HokageAPI.getPassport("hokage22b");',
+        '  console.log(passport.journey_tier, passport.wallet_address);',
+        '',
+        '  // 2. Listar negócios da Vila (Central P2P) no Brasil',
+        '  const vila = await HokageAPI.listVila({ country: "BR", limit: 10 });',
+        '  console.log(vila.items);',
+        '<\/script>'
+      ].join('\n'),
+      fetch: [
+        'const res = await fetch(',
+        '  "https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/monte-hokage",',
+        '  { headers: { "X-Hokage-Client": "meu-projeto-pi" } }',
+        ');',
+        'const { ok, data } = await res.json();',
+        'console.log(data.leaders);'
+      ].join('\n'),
+      python: [
+        'import requests',
+        '',
+        'url = "https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/vila"',
+        'resp = requests.get(url, params={"country": "BR", "limit": 10}, headers={"X-Hokage-Client": "bot-pi-br"})',
+        'data = resp.json()["data"]',
+        'for item in data["items"]:',
+        '    print(item["title"], "-", item["author"]["handle"])'
+      ].join('\n'),
+      curl: [
+        'curl -s "https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/passaportes?u=hokage22b" \\',
+        '  -H "X-Hokage-Client: cli-check"'
+      ].join('\n')
+    };
+
+    function selectEndpoint(path, btn) {
+      document.querySelectorAll('.dev-ep-btn').forEach(function (el) { el.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      document.getElementById('pg-url-input').value = BASE + path;
+      runPlayground();
+    }
+
+    async function runPlayground() {
+      var url = document.getElementById('pg-url-input').value.trim();
+      var out = document.getElementById('pg-output');
+      var statusEl = document.getElementById('pg-status');
+      out.textContent = 'Consultando API...';
+      statusEl.textContent = '';
+      var t0 = performance.now();
+      try {
+        var res = await fetch(url, { headers: { 'X-Hokage-Client': 'hokage22b-playground' } });
+        var ms = Math.round(performance.now() - t0);
+        var json = await res.json();
+        statusEl.textContent = 'HTTP ' + res.status + ' · ' + ms + 'ms';
+        statusEl.style.color = res.ok ? '#34d399' : '#f87171';
+        out.textContent = JSON.stringify(json, null, 2);
+      } catch (e) {
+        statusEl.textContent = 'Erro de rede';
+        statusEl.style.color = '#f87171';
+        out.textContent = JSON.stringify({ ok: false, error: e.message }, null, 2);
+      }
+    }
+
+    function showSnippet(key, btn) {
+      document.querySelectorAll('.dev-tab').forEach(function (el) { el.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      document.getElementById('snippet-code').textContent = SNIPPETS[key] || '';
+    }
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(function () {
+        if (!btn) return;
+        var orig = btn.textContent;
+        btn.textContent = '✓ Copiado!';
+        setTimeout(function () { btn.textContent = orig; }, 1600);
+      });
+    }
+
+    showSnippet('sdk');
+
+    function updateEmbedPreview() {
+      var raw = (document.getElementById('embed-handle-input').value || 'hokage22b').trim().replace(/^@+/, '') || 'hokage22b';
+      var theme = document.getElementById('embed-theme-select').value || 'dark';
+      var code = '<div data-hokage-passport="' + raw + '" data-theme="' + theme + '"></div>\n' +
+        '<script src="https://hokage22b.com/assets/js/hokage-embed.js" async><\/script>';
+      document.getElementById('embed-code-out').textContent = code;
+      var slot = document.getElementById('embed-preview-slot');
+      slot.innerHTML = '<div data-hokage-passport="' + raw.replace(/"/g, '') + '" data-theme="' + theme + '"></div>';
+      if (window.HokageEmbed) window.HokageEmbed.mountAll();
+    }
+  </script>
+  <script src="assets/js/hokage-embed.js"></script>
+  <script>updateEmbedPreview();</script>
+  <script src="assets/js/modules/monte-progression.js?v=1.0"></script>
+  <script>
+    document.addEventListener('click', function (ev) {
+      if (ev.target && ev.target.closest && ev.target.closest('.dev-ep-btn, .dev-btn')) {
+        if (window.HokageMonteProgression) {
+          window.HokageMonteProgression.markQuestFlag('dev_api_used');
+        }
+      }
+    });
+  </script>
+  <script src="assets/js/modules/i18n.js?v=4.6"></script>
   <script src="assets/js/modules/referral.js?v=2.4"></script>
   <script src="assets/js/modules/analytics-tg.js?v=1.0"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
-  <script src="assets/js/modules/i18n.js?v=4.5"></script>
-  <script>
-    // Atualização da Barra de Progresso com Base no Scroll
-    function updateScrollProgress() {
-      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
-      
-      const fill = document.getElementById('progress-fill');
-      const percentEl = document.getElementById('progress-percent');
-      const textEl = document.getElementById('progress-text');
-
-      if (fill) fill.style.width = scrolled + '%';
-      if (percentEl) percentEl.textContent = Math.round(scrolled) + '% Concluído';
-
-      // Detecta em qual módulo o usuário está
-      const modules = [
-        { id: 'modulo-1', name: 'Módulo 1: O Fim da Espera Passiva' },
-        { id: 'modulo-2', name: 'Módulo 2: Anatomia do Pi Browser' },
-        { id: 'modulo-3', name: 'Módulo 3: Segurança Radical & SDK' },
-        { id: 'modulo-4', name: 'Módulo 4: Redes Sociais & O Caso do X' },
-        { id: 'modulo-5', name: 'Módulo 5: Ecossistema Hokage22b' },
-        { id: 'modulo-6', name: 'Módulo 6: Checklist do Construtor' },
-        { id: 'cta-final', name: '🚀 O Futuro Pertence a Quem Constrói' }
-      ];
-
-      for (let i = modules.length - 1; i >= 0; i--) {
-        const el = document.getElementById(modules[i].id);
-        if (el && el.getBoundingClientRect().top <= 220) {
-          if (textEl) textEl.textContent = `🛠️ Trilha Avançada: ${modules[i].name}`;
-          break;
-        }
-      }
-    }
-
-    // Persistência e Interatividade da Checklist do Construtor
-    const STORAGE_KEY = 'hkg_builder_checklist';
-
-    function loadBuilderChecklist() {
-      try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        const checkboxes = document.querySelectorAll('#builder-checklist input[type="checkbox"]');
-        
-        checkboxes.forEach(chk => {
-          const id = chk.getAttribute('data-chk');
-          if (saved[id]) {
-            chk.checked = true;
-            const parent = chk.closest('.builder-checklist-item');
-            if (parent) parent.classList.add('is-completed');
-          }
-        });
-        updateChecklistSummary();
-      } catch (e) {
-        console.warn('Erro ao carregar checklist:', e);
-      }
-    }
-
-    function toggleBuilderCheck(chk) {
-      const parent = chk.closest('.builder-checklist-item');
-      if (parent) {
-        if (chk.checked) {
-          parent.classList.add('is-completed');
-        } else {
-          parent.classList.remove('is-completed');
-        }
-      }
-
-      // Salva no localStorage
-      try {
-        const saved = {};
-        document.querySelectorAll('#builder-checklist input[type="checkbox"]').forEach(item => {
-          saved[item.getAttribute('data-chk')] = item.checked;
-        });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-      } catch (e) {
-        console.warn('Erro ao salvar checklist:', e);
-      }
-
-      updateChecklistSummary();
-    }
-
-    function updateChecklistSummary() {
-      const checkboxes = document.querySelectorAll('#builder-checklist input[type="checkbox"]');
-      const total = checkboxes.length;
-      let checkedCount = 0;
-      checkboxes.forEach(chk => {
-        if (chk.checked) checkedCount++;
-      });
-
-      const summaryText = document.getElementById('chk-summary-text');
-      const badgeStatus = document.getElementById('chk-badge-status');
-
-      if (summaryText) {
-        summaryText.textContent = `${checkedCount} de ${total} ações concluídas`;
-      }
-
-      if (badgeStatus) {
-        if (checkedCount === 0) {
-          badgeStatus.textContent = 'Nível: Espectador';
-          badgeStatus.style.color = 'var(--text-muted)';
-        } else if (checkedCount < 3) {
-          badgeStatus.textContent = 'Nível: Pioneiro em Transição';
-          badgeStatus.style.color = 'var(--amber-light)';
-        } else if (checkedCount < 5) {
-          badgeStatus.textContent = 'Nível: Pioneiro Praticante';
-          badgeStatus.style.color = 'var(--accent-light)';
-        } else {
-          badgeStatus.textContent = 'Nível: Construtor Web3 Ativo 🏆';
-          badgeStatus.style.color = '#34d399';
-        }
-      }
-    }
-
-    window.addEventListener('scroll', updateScrollProgress, { passive: true });
-    document.addEventListener('DOMContentLoaded', () => {
-      updateScrollProgress();
-      loadBuilderChecklist();
-    });
-
-    // Modal Leitor de Capítulos do E-Book
-    function openEpubReaderModal(chapterIndex) {
-      const modal = document.getElementById('epub-reader-modal');
-      if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        if (chapterIndex !== undefined) switchEpubChapter(chapterIndex);
-      }
-    }
-
-    function closeEpubReaderModal() {
-      const modal = document.getElementById('epub-reader-modal');
-      if (modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    }
-
-    function switchEpubChapter(index) {
-      document.querySelectorAll('.epub-nav-tab').forEach((tab, i) => {
-        if (i === index) tab.classList.add('active');
-        else tab.classList.remove('active');
-      });
-      document.querySelectorAll('.epub-chapter-pane').forEach((pane, i) => {
-        if (i === index) pane.style.display = 'block';
-        else pane.style.display = 'none';
-      });
-      const readerBody = document.getElementById('epub-reader-body');
-      if (readerBody) readerBody.scrollTop = 0;
-    }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeEpubReaderModal();
-    });
-  </script>
-
-  <!-- MODAL: LEITOR DE CAPÍTULOS ONLINE DO E-BOOK -->
-  <div class="pi-modal-overlay" id="epub-reader-modal" role="dialog" aria-modal="true" aria-labelledby="epub-modal-title" style="align-items:flex-start;padding:24px 12px;overflow-y:auto">
-    <div class="pi-modal" style="max-width:840px;width:100%;text-align:left;background:#0d1117;border:1px solid rgba(245,158,11,0.35);padding:0;overflow:hidden;border-radius:18px;margin:auto">
-      
-      <!-- Topo do Leitor -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02)">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-size:1.6rem">📚</span>
-          <div>
-            <h3 id="epub-modal-title" style="margin:0;font-size:1.05rem;color:#fff;font-weight:700">
-              Além do Clique: O Guia Definitivo do Construtor Web3
-            </h3>
-            <span style="font-size:0.75rem;color:var(--text-muted)">Por HOKAGE22B &amp; Isar Loiola · Leitor Integrado Web3</span>
-          </div>
-        </div>
-        <button type="button" onclick="closeEpubReaderModal()" style="background:rgba(255,255,255,0.08);border:none;color:#fff;font-size:1.1rem;cursor:pointer;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center" title="Fechar leitor">✕</button>
-      </div>
-
-      <!-- Abas de Navegação dos Capítulos -->
-      <div style="display:flex;overflow-x:auto;background:rgba(0,0,0,0.4);border-bottom:1px solid rgba(255,255,255,0.08);padding:6px 14px;gap:6px">
-        <button type="button" class="epub-nav-tab active" onclick="switchEpubChapter(0)">Capítulo 1</button>
-        <button type="button" class="epub-nav-tab" onclick="switchEpubChapter(1)">Capítulo 2</button>
-        <button type="button" class="epub-nav-tab" onclick="switchEpubChapter(2)">Capítulo 3</button>
-        <button type="button" class="epub-nav-tab" onclick="switchEpubChapter(3)">Capítulo 4</button>
-        <button type="button" class="epub-nav-tab" onclick="switchEpubChapter(4)">Capítulo 5</button>
-      </div>
-
-      <!-- Corpo de Leitura do E-Book -->
-      <div id="epub-reader-body" style="padding:28px 24px;max-height:65vh;overflow-y:auto;color:#e2e8f0;line-height:1.75;font-size:0.95rem">
-        
-        <!-- PANE 1 -->
-        <div class="epub-chapter-pane" style="display:block">
-          <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.06em">Capítulo 1</span>
-          <h2 style="font-size:1.45rem;color:#fff;margin:6px 0 16px;font-weight:800">O Fim da Espera Passiva e a Realidade Econômica</h2>
-          <p>Durante anos, milhões de indivíduos aderiram a redes móveis e ecossistemas descentralizados condicionados pelo estímulo básico da recompensa rotineira: acionar diariamente um comando em tela e supor que a listagem especulativa em corretoras centralizadas resolveria o mistério da criação de riqueza.</p>
-          <p>Conforme elucidado pela plataforma <strong>HOKAGE22B</strong>, essa mentalidade espectadora é a antítese do desenvolvimento monetário sustentável. O valor de qualquer meio de troca reside na sua <strong>Velocidade de Circulação</strong> e na capacidade de liquidar contratos, produtos e serviços reais sem fricção.</p>
-          
-          <blockquote style="background:rgba(245,158,11,0.08);border-left:4px solid var(--amber);padding:12px 18px;margin:20px 0;border-radius:0 8px 8px 0;color:var(--amber-light)">
-            <strong>A Regra da Utilidade Econômica:</strong> O valor de uma rede é estritamente proporcional à quantidade e complexidade de problemas materiais que ela soluciona no cotidiano das pessoas comuns.
-          </blockquote>
-
-          <h3 style="font-size:1.15rem;color:#fff;margin:22px 0 12px">A Transição: Do Espectador ao Construtor</h3>
-          <div style="overflow-x:auto;margin-bottom:16px">
-            <table class="edu-table">
-              <thead>
-                <tr>
-                  <th>Atributo</th>
-                  <th>Pioneiro Espectador</th>
-                  <th>Pioneiro Construtor</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Atitude</strong></td>
-                  <td>Espera passiva e reclamações sobre prazos de terceiros.</td>
-                  <td>Desenvolve dApps, cria Passaportes e promove o comércio P2P.</td>
-                </tr>
-                <tr>
-                  <td><strong>Segurança</strong></td>
-                  <td>Suscetível a fraudes de airdrops e golpes de custódia.</td>
-                  <td>Domina o princípio Zero-Trust e guarda rigorosamente suas chaves.</td>
-                </tr>
-                <tr>
-                  <td><strong>Visão de Mercado</strong></td>
-                  <td>Especulativa (foco em liquidar tudo por moeda estatal).</td>
-                  <td>Soberana (foco em construir uma economia paralela autônoma).</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- PANE 2 -->
-        <div class="epub-chapter-pane" style="display:none">
-          <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.06em">Capítulo 2</span>
-          <h2 style="font-size:1.45rem;color:#fff;margin:6px 0 16px;font-weight:800">Anatomia do Pi Browser e Segurança Radical</h2>
-          <p>O Pi Browser não é um navegador trivial. Ele foi construído como um <strong>Sandbox Web3 Isolado</strong>, cujo propósito é desacoplar com total rigor a identidade pública do usuário de suas chaves criptográficas mestras.</p>
-          
-          <h3 style="font-size:1.15rem;color:#fff;margin:20px 0 10px">A Tríade Arquitetural:</h3>
-          <ul style="padding-left:20px;line-height:1.7;margin-bottom:20px">
-            <li><strong>1. Carteira Isolada (wallet.pi):</strong> Ambiente restrito onde residem os algoritmos de assinatura e custódia. Suas chaves criptográficas jamais são compartilhadas com aplicações externas.</li>
-            <li><strong>2. Pi Platform SDK:</strong> Interface de programação que possibilita aos dApps autorizados solicitar autenticação de usuário (UID/username) e despachos de pagamento P2P sem jamais tocar em senhas.</li>
-            <li><strong>3. Sandbox de Isolamento:</strong> Mecanismo que bloqueia a injeção não autorizada de scripts em background e impede rastreadores agressivos de mapear dispositivos.</li>
-          </ul>
-
-          <div style="background:rgba(239,68,68,0.12);border-left:4px solid #ef4444;padding:14px 18px;border-radius:0 8px 8px 0;color:#fca5a5;margin:20px 0">
-            <strong style="color:#ef4444;display:block;margin-bottom:4px">REGRA INVIOLÁVEL:</strong>
-            A Passphrase (frase de 24 palavras) <em>nunca</em> deve ser informada a nenhum website ou dApp. O único local legítimo em todo o ecossistema para digitação da frase secreta é a tela de desbloqueio original do <code style="background:rgba(0,0,0,0.4);padding:2px 6px;border-radius:4px;color:#fff">wallet.pi</code>.
-          </div>
-        </div>
-
-        <!-- PANE 3 -->
-        <div class="epub-chapter-pane" style="display:none">
-          <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.06em">Capítulo 3</span>
-          <h2 style="font-size:1.45rem;color:#fff;margin:6px 0 16px;font-weight:800">Geopolítica Monetária Contemporânea: O Tabuleiro Global</h2>
-          <p>A ascensão de ecossistemas com dezenas de milhões de identidades autenticadas via KYC não pode ser analisada em um vácuo tecnológico. Ela se desdobra em paralelo à maior reconfiguração do sistema financeiro global dos últimos 80 anos.</p>
-
-          <h3 style="font-size:1.15rem;color:#fff;margin:20px 0 10px">A Queda do Monopólio SWIFT e a Desdolarização</h3>
-          <p>A utilização reiterada do dólar como vetor de coerção geopolítica incentivou o bloco dos BRICS e demais economias emergentes a estruturarem redes soberanas de pagamento multilateral. No entanto, as soluções estatais concorrentes — as CBDCs (Moedas Digitais de Banco Central, como o Drex brasileiro e o e-CNY chinês) — carregam o risco inerente do panóptico financeiro: controle programático do gasto, censura de contas e expiração mandatória de saldo.</p>
-          
-          <h3 style="font-size:1.15rem;color:#fff;margin:20px 0 10px">A Camada de Humanidade Contra a Proliferação de Bots</h3>
-          <p>Na era dos Modelos de Linguagem e da Inteligência Artificial em escala industrial, a internet tradicional ruiu sob perfis automatizados, fraudes de engenharia social e desinformação. Ao exigir a validação de humanidade (Proof of Human KYC), ecossistemas como o examinado pelo HOKAGE22B estabelecem um bem raro na geopolítica digital contemporânea: a certeza de interação econômica e contratual entre indivíduos de carne e osso.</p>
-        </div>
-
-        <!-- PANE 4 -->
-        <div class="epub-chapter-pane" style="display:none">
-          <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.06em">Capítulo 4</span>
-          <h2 style="font-size:1.45rem;color:#fff;margin:6px 0 16px;font-weight:800">Futuros Hipotéticos: Três Cenários para a Década de 2030</h2>
-
-          <div style="background:rgba(99,102,241,0.08);border-left:4px solid #6366f1;padding:14px 18px;margin-bottom:14px;border-radius:0 8px 8px 0">
-            <h4 style="color:#a5b4fc;margin:0 0 6px;font-size:1.05rem">Cenário 1: O Circuito Comunitário Resiliente</h4>
-            <p style="margin:0;font-size:0.9rem">Diante da hiper-regulação das moedas estatais e taxação em tempo real via CBDCs, pequenas comunidades comerciais e redes de microempreendedores passam a adotar sistemas P2P descentralizados como trilha primária de troca, preservando a autonomia local de serviços, alimentos e mercadorias.</p>
-          </div>
-
-          <div style="background:rgba(99,102,241,0.08);border-left:4px solid #6366f1;padding:14px 18px;margin-bottom:14px;border-radius:0 8px 8px 0">
-            <h4 style="color:#a5b4fc;margin:0 0 6px;font-size:1.05rem">Cenário 2: A Infraestrutura Bipolar</h4>
-            <p style="margin:0;font-size:0.9rem">O comércio internacional divide-se em blocos regionais concorrentes. Redes descentralizadas públicas operam como a "ponte neutra" utilizada por exportadores e importadores do Sul Global para liquidar ativos sem sujeição à jurisdição exclusiva de qualquer potência hegemônica.</p>
-          </div>
-
-          <div style="background:rgba(99,102,241,0.08);border-left:4px solid #6366f1;padding:14px 18px;margin-bottom:14px;border-radius:0 8px 8px 0">
-            <h4 style="color:#a5b4fc;margin:0 0 6px;font-size:1.05rem">Cenário 3: A Economia Agêntica e a Auditoria de Humanidade</h4>
-            <p style="margin:0;font-size:0.9rem">Agentes autônomos de inteligência artificial realizam trilhões de transações por segundo. Para garantir acesso a serviços físicos e transações éticas, a chave criptográfica atrelada a uma identidade humana validada torna-se o ativo mais valorizado do ecossistema econômico.</p>
-          </div>
-        </div>
-
-        <!-- PANE 5 -->
-        <div class="epub-chapter-pane" style="display:none">
-          <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.06em">Capítulo 5</span>
-          <h2 style="font-size:1.45rem;color:#fff;margin:6px 0 16px;font-weight:800">O Plano Prático de Ação do Construtor</h2>
-          <p>Para deixar a plateia e se juntar aos arquitetos do novo arranjo financeiro, o construtor Web3 deve executar o seguinte roteiro sistemático:</p>
-
-          <ol style="padding-left:22px;line-height:1.75;margin:16px 0 20px">
-            <li><strong>Passo 1: Blindagem de Chaves.</strong> Armazene a passphrase de 24 palavras em suporte físico durável (papel impermeável ou metal), fora de fotos na nuvem ou gerenciadores de texto digitais.</li>
-            <li><strong>Passo 2: Criação do Passaporte Comercial.</strong> Utilize ferramentas como as do portal HOKAGE22B para expor serviços, produtos e chaves públicas com total transparência.</li>
-            <li><strong>Passo 3: Adoção da Precificação Prática.</strong> Implemente modelos de precificação mista no comércio local (moeda fiduciária para custear reposição de estoque somada a criptoativos para capitalização futura).</li>
-            <li><strong>Passo 4: Qualificação do Debate.</strong> Abandone o hype e as promessas de ganhos milagrosos. Construa autoridade participando de debates sérios em redes técnicas, como no perfil do X <code>@hokage22b</code>.</li>
-            <li><strong>Passo 5: Operação de Nó Validador.</strong> Contribua com a descentralização computacional da rede operando nós ativos e auditando as transações na blockchain.</li>
-          </ol>
-        </div>
-
-      </div>
-
-      <!-- Barra de Ações do Rodapé do Modal -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-top:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);flex-wrap:wrap;gap:12px">
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a href="downloads/Alem-do-Clique-Guia-Definitivo.epub" download="Alem-do-Clique-Guia-Definitivo.epub" class="portal-btn portal-btn--primary portal-btn--sm" style="display:inline-flex;align-items:center;gap:6px">
-            <span>📖</span> Baixar EPUB (8 KB)
-          </a>
-          <a href="downloads/Alem-do-Clique-Manual-Tecnico.pdf" download="Alem-do-Clique-Manual-Tecnico.pdf" class="portal-btn portal-btn--amber portal-btn--sm" style="display:inline-flex;align-items:center;gap:6px">
-            <span>📄</span> Baixar PDF (520 KB)
-          </a>
-        </div>
-        <button type="button" onclick="closeEpubReaderModal()" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(255,255,255,0.2);color:#fff">
-          Concluir Leitura ✕
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <style>
-    .epub-nav-tab {
-      background: none;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s ease;
-    }
-    .epub-nav-tab:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.05);
-    }
-    .epub-nav-tab.active {
-      color: var(--amber-light);
-      background: rgba(245, 158, 11, 0.15);
-      border-color: rgba(245, 158, 11, 0.4);
-    }
-  </style>
 </body>
 </html>
-

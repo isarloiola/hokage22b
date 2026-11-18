@@ -72,8 +72,8 @@
       track: 'Código & API',
       title: 'Explorar API Aberta, Embed ou GitHub',
       desc: 'Integre o Passaporte via SDK/Widget ou contribua com código.',
-      href: 'desenvolvedores',
-      cta: 'Área Dev'
+      href: 'construir',
+      cta: 'Área Construir (Devs)'
     }
   ];
 
