@@ -377,14 +377,49 @@ a {
 .portal-hero {
   padding: 120px 0 96px;
   position: relative;
+  overflow: hidden;
   background: radial-gradient(circle at 50% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
   border-bottom: 1px solid var(--border-subtle);
 }
 
+.hk-hero-watermark {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  width: min(460px, 86vw);
+  height: auto;
+  opacity: 0.042;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
 .portal-hero__inner {
+  position: relative;
+  z-index: 1;
   max-width: 860px;
   margin: 0 auto;
   text-align: center;
+}
+
+.hk-hero-emblem-wrap {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 14px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.16), rgba(139, 92, 246, 0.1) 68%, rgba(9, 9, 11, 0.9) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.32);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 26px rgba(139, 92, 246, 0.18);
+}
+
+.hk-hero-emblem-wrap img {
+  width: 40px;
+  height: 40px;
+  display: block;
 }
 
 .portal-hero__badge {
