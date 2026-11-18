@@ -237,9 +237,9 @@
             <img src="assets/img/brand/hokage22b-logo.svg" alt="HOKAGE22B" width="40" height="40" />
           </div>
 
-          <div class="portal-hero__badge" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.35);color:#34d399;margin-bottom:18px">
-            <span class="portal-hero__badge-pulse" style="background:#10b981;box-shadow:0 0 10px #10b981" aria-hidden="true"></span>
-            <span>🛡️ Identidade Humana Verificada · Camada de Confiança via Pi KYC</span>
+          <div id="hero-pi-status-badge" class="portal-hero__badge" style="display:none;background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.35);color:#34d399;margin-bottom:16px;padding:4px 12px;font-size:0.78rem">
+            <span class="portal-hero__badge-pulse" style="background:#10b981;box-shadow:0 0 8px #10b981" aria-hidden="true"></span>
+            <span id="hero-pi-status-text"></span>
           </div>
 
           <h1 class="portal-hero__title" id="hero-title">
@@ -2002,6 +2002,22 @@
   <script src="assets/js/modules/referral.js?v=2.5"></script>
   <script src="assets/js/modules/analytics-tg.js?v=1.0"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
+  <script>
+    (function syncHeroPiBadge() {
+      try {
+        var badge = document.getElementById('hero-pi-status-badge');
+        var textEl = document.getElementById('hero-pi-status-text');
+        if (!badge || !textEl) return;
+        var raw = localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user');
+        var user = raw ? JSON.parse(raw) : null;
+        if (user && user.username) {
+          var handle = '@' + String(user.username).replace(/^@+/, '');
+          textEl.textContent = handle + ' · Sessão Pi Conectada';
+          badge.style.display = 'inline-flex';
+        }
+      } catch (_) {}
+    })();
+  </script>
   <script>
     // Sincroniza foto personalizada do fundador no mockup da vitrine
     document.addEventListener('DOMContentLoaded', async function () {
