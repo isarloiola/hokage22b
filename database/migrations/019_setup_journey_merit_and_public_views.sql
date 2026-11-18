@@ -30,7 +30,7 @@ END $$;
 UPDATE public.pioneiros
 SET
   journey_tier = CASE
-    WHEN is_ambassador = true OR COALESCE(referral_qualified_count, 0) >= 5 OR lower(username) = 'hokage22b'
+    WHEN is_ambassador = true OR COALESCE(referral_qualified_count, 0) >= 5 OR replace(lower(username), '@', '') = 'hokage22b'
       THEN 'hokage'
     WHEN wallet_address LIKE 'G%' AND (
       jsonb_array_length(COALESCE(products, '[]'::jsonb)) > 0
@@ -40,7 +40,7 @@ SET
     ELSE 'pioneiro'
   END,
   hokage_since = CASE
-    WHEN (is_ambassador = true OR COALESCE(referral_qualified_count, 0) >= 5 OR lower(username) = 'hokage22b')
+    WHEN (is_ambassador = true OR COALESCE(referral_qualified_count, 0) >= 5 OR replace(lower(username), '@', '') = 'hokage22b')
       AND hokage_since IS NULL
       THEN COALESCE(updated_at, NOW())
     ELSE hokage_since
