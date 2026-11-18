@@ -260,7 +260,7 @@
     }
 
     const title = String(opts.title || 'Aceitamos Pi Network aqui!').trim().slice(0, 80);
-    const note = String(opts.note || 'Escaneie para ver nossa Vitrine Web3 e pagar com Pi').trim().slice(0, 120);
+    const note = String(opts.note || 'Escaneie para ver nosso Passaporte Web3 e pagar com Pi').trim().slice(0, 120);
     const shortUrl = 'https://hokage22b.com/@' + encodeURIComponent(clean);
     const piBrowserUrl = 'pi://hokage22b.com/@' + encodeURIComponent(clean);
     const qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=12&data=' + encodeURIComponent(shortUrl);
@@ -273,7 +273,7 @@
       shortUrl: shortUrl,
       piBrowserUrl: piBrowserUrl,
       qrImageUrl: qrImageUrl,
-      shareText: title + ' — Acesse minha Vitrine Web3 na Pi Network: ' + shortUrl
+      shareText: title + ' — Acesse meu Passaporte Web3 na Pi Network: ' + shortUrl
     };
   }
 
@@ -350,7 +350,7 @@
     },
     {
       name: 'buildVitrineQrPayload',
-      description: 'Gera link curto oficial (/@usuario), deep link pi:// e QR Code de balcão para uma Vitrine Web3 HOKAGE22B.',
+      description: 'Gera link curto oficial (/@usuario), deep link pi:// e QR Code de balcão para uma Passaporte Web3 HOKAGE22B.',
       parameters: {
         type: 'object',
         properties: {

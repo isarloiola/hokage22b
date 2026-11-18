@@ -152,7 +152,7 @@
       linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" onclick="window.IsarMural && window.IsarMural.trackClick('${cardId}')" class="pioneer-card__link">Acessar Anúncio →</a>`;
     } else {
       const cleanProfileSlug = safeAuthor.replace(/^@+/, '');
-      linkHtml = `<a href="pioneiro?u=${encodeURIComponent(cleanProfileSlug)}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__link" style="font-size:0.78rem;color:var(--accent-light);text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-weight:700">👤 Ver Vitrine de ${safeAuthor} →</a>`;
+      linkHtml = `<a href="pioneiro?u=${encodeURIComponent(cleanProfileSlug)}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__link" style="font-size:0.78rem;color:var(--accent-light);text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-weight:700">👤 Ver Passaporte de ${safeAuthor} →</a>`;
     }
 
     let bannerHtml = '';
@@ -232,7 +232,7 @@
         ${bannerHtml}
         <div class="pioneer-card__top">
           <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
-          <a href="pioneiro?u=${encodeURIComponent(safeAuthor.replace(/^@+/, ''))}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__author" style="text-decoration:none" title="Ver perfil e vitrine do pioneiro">${safeAuthor} ↗</a>
+          <a href="pioneiro?u=${encodeURIComponent(safeAuthor.replace(/^@+/, ''))}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__author" style="text-decoration:none" title="Ver Passaporte do pioneiro">${safeAuthor} ↗</a>
         </div>
         <h3 class="pioneer-card__title">${safeTitle}</h3>
         <p class="pioneer-card__desc">${safeDesc}</p>
@@ -1040,7 +1040,7 @@
     const catInput   = document.getElementById('ad-input-cat');
 
     const title = (titleInput && titleInput.value.trim()) || 'Exemplar Oficial Hokage22b';
-    const desc  = (descInput && descInput.value.trim()) || 'Demonstração institucional da Gazeta dos Pioneiros.';
+    const desc  = (descInput && descInput.value.trim()) || 'Demonstração institucional da Vila · Central P2P.';
 
     const demoAd = {
       id: 'founder_demo_' + Date.now(),
@@ -1185,7 +1185,7 @@
 
           insertAdCard(pendingAd);
           filterCategory(currentCategory);
-          alert(`🎉 Pagamento P2P de ${priceInfo.pi} π confirmado na blockchain! Seu anúncio já está no ar na Gazeta.`);
+          alert(`🎉 Pagamento P2P de ${priceInfo.pi} π confirmado na blockchain! Seu anúncio já está no ar na Vila · Central P2P.`);
         }
       });
     }
@@ -1599,7 +1599,7 @@
 
           insertAdCard(newAd);
           filterCategory(currentCategory);
-          alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Testnet! Seu anúncio já está no ar na Gazeta dos Pioneiros.`);
+          alert(`🎉 Pagamento de ${priceInfo.pi} π confirmado na Pi Testnet! Seu anúncio já está no ar na Vila · Central P2P.`);
         },
         onError: function (err) {
           if (watchdogTimer) clearTimeout(watchdogTimer);
@@ -1685,7 +1685,7 @@
     showSubmitFeedback(
       'warning',
       `<strong>⚠️ Validação Instantânea Obrigatória:</strong><br>
-       Para manter a integridade comercial da Gazeta, anúncios pagos exigem validação instantânea pela blockchain via <strong>Pi Wallet oficial</strong>.<br>
+       Para manter a integridade comercial da Vila, anúncios pagos exigem validação instantânea pela blockchain via <strong>Pi Wallet oficial</strong>.<br>
        <span style="color:#fff;display:block;margin-top:6px">Seu rascunho continua 100% salvo. Abra esta página no Pi Browser oficial no celular para concluir:</span>`,
       `
         <a href="${piDeepLink}" class="btn btn-sm btn-primary" style="font-size:0.84rem;padding:8px 16px;text-decoration:none;display:inline-block;background:#8b5cf6;border-color:#7c3aed;font-weight:700">
@@ -2013,7 +2013,7 @@
 
     const editStatus = getAdEditStatus(ad);
     if (!editStatus.editable) {
-      alert('O prazo de 24 horas para edição deste anúncio expirou. Isso garante a transparência e credibilidade da Gazeta.');
+      alert('O prazo de 24 horas para edição deste anúncio expirou. Isso garante a transparência e credibilidade da Vila.');
       return;
     }
 

@@ -500,11 +500,11 @@
           <span>Pi Browser detectado! Seu convite de @${safeRef} será vinculado automaticamente.</span>
         </div>
         <button type="button" class="hk-ref-btn-primary" onclick="window.HokageReferral.startFromWelcomeModal('${safeRef}')">
-          <span>⚡</span> Conectar Pi Browser &amp; Criar Minha Vitrine Grátis
+          <span>⚡</span> Conectar Pi Browser &amp; Criar Meu Passaporte Grátis
         </button>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
           <a href="${vitrineRefUrl}" class="hk-ref-btn-ghost" onclick="window.HokageReferral.closeWelcomeModal()">
-            <span>👀</span> Ver Vitrine de @${safeRef}
+            <span>👀</span> Ver Passaporte de @${safeRef}
           </a>
           <button type="button" class="hk-ref-btn-ghost" onclick="window.HokageReferral.startSimFromWelcomeModal('${safeRef}')">
             <span>🧪</span> Testar no Simulador
@@ -582,7 +582,7 @@
           <div>
             <div style="font-size:0.86rem;font-weight:800;color:#fbbf24;margin-bottom:2px">1. Seu Presente Imediato: 1 Anúncio Bronze Grátis (0.314 π)</div>
             <div style="font-size:0.76rem;color:#e4e4e7;line-height:1.4">
-              Ao conectar o <strong>Pi Browser</strong> e salvar sua <strong>Vitrine 100% Grátis</strong> (<code style="color:#c4b5fd">hokage22b.com/@voce</code>), você ganha na hora <strong>1 Crédito de Anúncio Bronze Grátis (0.314 π)</strong> para publicar seu negócio na Gazeta dos Pioneiros (Mural)!
+              Ao conectar o <strong>Pi Browser</strong> e salvar sua <strong>Vitrine 100% Grátis</strong> (<code style="color:#c4b5fd">hokage22b.com/@voce</code>), você ganha na hora <strong>1 Crédito de Anúncio Bronze Grátis (0.314 π)</strong> para publicar seu negócio na A Vila · Central P2P (Mural)!
             </div>
           </div>
         </div>

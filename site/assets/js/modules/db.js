@@ -681,7 +681,7 @@
       list = [{
         id: 'ad_official_hokage22b_welcome',
         title: 'Bem-vindo ao HOKAGE22B: A Economia Real na Pi Network 🌐',
-        description: 'Seja muito bem-vindo, pioneiro! Este é o seu espaço descentralizado para criar vitrines, aceitar Pi no seu negócio, conectar-se com pioneiros verificados e construir a utilidade real da moeda. Juntos rumo à Open Mainnet!',
+        description: 'Seja muito bem-vindo, pioneiro! Este é o seu espaço descentralizado para criar Passaportes, aceitar Pi no seu negócio, conectar-se com pioneiros verificados e construir a utilidade real da moeda. Juntos rumo à Open Mainnet!',
         link_url: 'https://www.youtube.com/@justhokage22b',
         image_url: 'assets/img/ebook-pago-negocios.jpg',
         category: 'geral',
@@ -743,7 +743,7 @@
         } catch (_) {}
       }
       if (!token) {
-        throw new Error('Sessão Pi Network não autenticada. Conecte-se no Pi Browser para salvar sua Vitrine.');
+        throw new Error('Sessão Pi Network não autenticada. Conecte-se no Pi Browser para salvar seu Passaporte.');
       }
 
       var pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')

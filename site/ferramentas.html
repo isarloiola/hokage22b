@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ferramentas Web3 &amp; Segurança Pi | HOKAGE22B</title>
-  <meta name="description" content="Validador criptográfico de Chave Pública Pi (G...), detector anti-golpe de links e gerador gratuito de QR Code/Placa de Balcão para sua Vitrine Web3." />
+  <meta name="description" content="Validador criptográfico de Chave Pública Pi (G...), detector anti-golpe de links e gerador gratuito de QR Code/Placa de Balcão para sua Passaporte Web3." />
   <link rel="icon" href="assets/img/brand/favicon.ico" sizes="any" />
   <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
   <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
@@ -131,7 +131,7 @@
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px">
       <a href="index.html" style="font-weight:800;font-size:1.05rem;color:#fff;text-decoration:none">✦ HOKAGE22B</a>
       <nav style="display:flex;gap:14px;align-items:center;font-size:0.86rem">
-        <a href="pioneiro.html" style="color:#d4d4d8;text-decoration:none">Vitrine Web3</a>
+        <a href="pioneiro.html" style="color:#d4d4d8;text-decoration:none">Passaporte Web3</a>
         <a href="mural.html" style="color:#d4d4d8;text-decoration:none">Mural</a>
         <a href="zero.html" style="color:#d4d4d8;text-decoration:none">Guia Zero</a>
         <a href="construir.html" style="color:#d4d4d8;text-decoration:none">Construir</a>
@@ -148,7 +148,7 @@
         Ferramentas Práticas para Pioneiros &amp; Comerciantes
       </h1>
       <p style="color:var(--text-secondary);font-size:0.96rem;line-height:1.55;margin:0">
-        Valide chaves públicas antes de transferir Pi, confira links suspeitos contra golpes e gere a placa com QR Code da sua Vitrine Web3. Tudo roda localmente no seu aparelho (nada é enviado ou salvo).
+        Valide chaves públicas antes de transferir Pi, confira links suspeitos contra golpes e gere a placa com QR Code da sua Passaporte Web3. Tudo roda localmente no seu aparelho (nada é enviado ou salvo).
       </p>
     </section>
 
@@ -248,7 +248,7 @@
       <!-- Ferramenta 4: Gerador de Placa / QR Code de Balcão -->
       <article class="tool-card" style="grid-column: 1 / -1">
         <div>
-          <h2>📲 Gerador de Placa &amp; QR Code da Vitrine (/@usuario)</h2>
+          <h2>📲 Gerador de Placa &amp; QR Code do Passaporte (/@usuario)</h2>
           <p class="tool-desc" style="margin-top:6px">
             Gere um cartão pronto para imprimir e colocar no balcão do seu negócio ou compartilhar no WhatsApp/Instagram.
           </p>
@@ -265,7 +265,7 @@
           </div>
           <div>
             <label for="tool-qr-note" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px">Subtítulo / Instrução</label>
-            <input type="text" id="tool-qr-note" class="tool-input" style="font-family:inherit" value="Escaneie para ver nossa Vitrine Web3" maxlength="120" />
+            <input type="text" id="tool-qr-note" class="tool-input" style="font-family:inherit" value="Escaneie para ver nosso Passaporte Web3" maxlength="120" />
           </div>
         </div>
 
@@ -305,18 +305,18 @@
         <div>
           <h2>🛍️ Onde Aceita Pi? &amp; Acesso Rápido</h2>
           <p class="tool-desc" style="margin-top:6px">
-            Encontre lojas, serviços e pioneiros com Vitrine Web3 ativa — ou crie a sua gratuitamente mesmo se ainda estiver aguardando o KYC/Mainnet.
+            Encontre lojas, serviços e pioneiros com Passaporte Web3 ativo — ou crie a sua gratuitamente mesmo se ainda estiver aguardando o KYC/Mainnet.
           </p>
         </div>
         <div class="tool-actions">
           <a href="pioneiro#pioneer-directory-section" class="btn btn-primary btn-sm" style="text-decoration:none">
-            🌐 Explorar Diretório de Vitrines
+            🌐 Explorar Passaportes &amp; Monte Hokage
           </a>
           <a href="mural" class="btn btn-outline btn-sm" style="text-decoration:none">
             📢 Ver Anúncios no Mural
           </a>
           <a href="pioneiro?teste=1" class="btn btn-outline btn-sm" style="text-decoration:none">
-            🧪 Testar Vitrine no Simulador (Sem KYC)
+            🧪 Testar Passaporte no Simulador (Sem KYC)
           </a>
         </div>
       </article>
@@ -403,10 +403,10 @@
         }
         lastQrPayload = payload;
         area.innerHTML =
-          '<div style="font-size:0.75rem;color:#c4b5fd;font-weight:800;text-transform:uppercase;letter-spacing:0.05em">✦ HOKAGE22B · Vitrine Web3 Pi</div>' +
+          '<div style="font-size:0.75rem;color:#c4b5fd;font-weight:800;text-transform:uppercase;letter-spacing:0.05em">✦ HOKAGE22B · Passaporte Web3 Pi</div>' +
           '<h3 style="margin:8px 0 4px;font-size:1.25rem;color:#fff">' + esc(payload.title) + '</h3>' +
           '<p style="margin:0;font-size:0.86rem;color:#d4d4d8">' + esc(payload.note) + '</p>' +
-          '<img src="' + esc(payload.qrImageUrl) + '" alt="QR Code da Vitrine ' + esc(payload.username) + '" />' +
+          '<img src="' + esc(payload.qrImageUrl) + '" alt="QR Code do Passaporte ' + esc(payload.username) + '" />' +
           '<div style="font-weight:800;font-size:1rem;color:#fbbf24">' + esc(payload.username) + '</div>' +
           '<div style="font-size:0.82rem;color:#a1a1aa;margin-top:4px">' + esc(payload.shortUrl) + '</div>';
       };
@@ -419,7 +419,7 @@
             alert('✓ Link curto copiado:\n' + lastQrPayload.shortUrl);
           });
         } else {
-          window.prompt('Copie o link da sua Vitrine:', lastQrPayload.shortUrl);
+          window.prompt('Copie o link do seu Passaporte:', lastQrPayload.shortUrl);
         }
       };
 

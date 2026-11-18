@@ -248,10 +248,10 @@
               ✓ Você já está conectado como @${escapeHtml(formatUserHandle(authenticatedUser.username))}!
             </div>
             <a href="pioneiro?u=${encodeURIComponent(formatUserHandle(authenticatedUser.username))}" class="portal-btn portal-btn--amber portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px">
-              <span>🌟</span> Ir para Minha Vitrine
+              <span>🪪</span> Ir para Meu Passaporte
             </a>
             <a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--full" style="text-align:center;text-decoration:none;font-size:0.85rem;padding:9px">
-              🔍 Explorar Outras Vitrines
+              🔍 Explorar Outros Passaportes
             </a>
             <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="color:var(--text-muted);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="localStorage.removeItem('hokage_pi_user');localStorage.removeItem('isar_pi_user');location.reload()">
               Desconectar / Trocar de Conta
@@ -944,7 +944,7 @@
         </div>
 
         <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;font-size:0.82rem;color:#a7f3d0;line-height:1.45">
-          ✓ <strong>Publicação Instantânea:</strong> Ao pagar na Testnet, seu anúncio entra imediatamente no ar na Gazeta dos Pioneiros, sem necessidade de aprovação por administrador!
+          ✓ <strong>Publicação Instantânea:</strong> Ao pagar na Testnet, seu anúncio entra imediatamente no ar na Vila · Central P2P, sem necessidade de aprovação por administrador!
         </div>
 
         <button type="button" class="portal-btn portal-btn--amber portal-btn--full" onclick="document.getElementById('pi-testnet-info-modal').classList.remove('active')" style="padding:12px;font-weight:700">

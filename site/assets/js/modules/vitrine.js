@@ -27,7 +27,7 @@
           type: 'zero'
         },
         {
-          title: '📢 Gazeta dos Pioneiros (Mural de Anúncios)',
+          title: '🏘️ A Vila (P2P) dos Pioneiros (Mural de Anúncios)',
           subtitle: 'Divulgue sua loja, canal ou serviço para a comunidade',
           badge: 'Classificados P2P',
           url: 'mural',
@@ -759,7 +759,7 @@
                     ✨ Ver Todas as Vantagens do Convite
                   </button>
                   <a href="?u=${encodeURIComponent(activeRef)}&ref=${encodeURIComponent(activeRef)}" class="btn btn-outline btn-sm" style="padding:6px 12px;font-size:0.76rem;font-weight:700;border-color:rgba(255,255,255,0.2);color:#fff;text-decoration:none">
-                    👀 Ver Vitrine de @${safeActiveRef}
+                    👀 Ver Passaporte de @${safeActiveRef}
                   </a>
                 </div>
               </div>
@@ -1145,7 +1145,7 @@
             </div>
             <div class="pioneer-link-content">
               <span class="pioneer-link-heading">
-                📢 Gazeta dos Pioneiros (Mural de Anúncios)
+                🏘️ A Vila (P2P) dos Pioneiros (Mural de Anúncios)
                 <span style="font-size:0.68rem;background:rgba(245,158,11,0.25);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:2px 8px;border-radius:10px;font-weight:700">Classificados P2P</span>
               </span>
               <span class="pioneer-link-caption">Divulgue sua loja, canal ou serviço para a comunidade</span>
@@ -1236,7 +1236,7 @@
           const safeImg = sanitizeImageUrl(p.image_url);
           window._vitrinePromoteItems[idx] = {
             title: p.title || '',
-            desc: (p.price ? p.price + ' — ' : '') + (p.badge || 'Disponível na minha Vitrine Web3'),
+            desc: (p.price ? p.price + ' — ' : '') + (p.badge || 'Disponível na minha Passaporte Web3'),
             link: safeLink && safeLink !== '#' ? safeLink : ('https://hokage22b.com/pioneiro?u=' + encodeURIComponent(prof.username || '')),
             img: safeImg || '',
             cat: 'produto'
@@ -2621,7 +2621,7 @@
       const sectionEl = document.getElementById('pioneer-referral-section');
       const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || '';
       const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
-      const msg = '🎁 Crie sua Vitrine Web3 100% grátis na Pi Network pelo meu convite oficial e ganhe na hora 1 Anúncio Bronze Grátis (0.314 π) no Mural + comissões de 20% a 25% em Pi: ' + url;
+      const msg = '🎁 Crie sua Passaporte Web3 100% grátis na Pi Network pelo meu convite oficial e ganhe na hora 1 Anúncio Bronze Grátis (0.314 π) no Mural + comissões de 20% a 25% em Pi: ' + url;
       window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
     }
 
