@@ -217,6 +217,34 @@
       </div>
     </section>
 
+    <!-- Gerador de Widget Incorporável (Passaporte em Qualquer Site) -->
+    <section class="dev-card" id="widget-passaporte">
+      <h2>🪪 Widget Incorporável: Passaporte em Qualquer Site</h2>
+      <p>Cole 2 linhas em qualquer site (HTML, WordPress, Carrd, blog) para exibir seu Passaporte Verificado ao vivo com isolamento de CSS (Shadow DOM).</p>
+
+      <div class="dev-playground-bar">
+        <input type="text" id="embed-handle-input" class="dev-url-input" value="hokage22b" placeholder="Seu @usuario (ex: hokage22b)" style="max-width:240px" oninput="updateEmbedPreview()" />
+        <select id="embed-theme-select" class="dev-url-input" style="max-width:170px" onchange="updateEmbedPreview()">
+          <option value="dark">Tema Escuro (Dark)</option>
+          <option value="light">Tema Claro (Light)</option>
+        </select>
+        <button type="button" class="dev-btn" onclick="copyText(document.getElementById('embed-code-out').textContent, this)">📋 Copiar HTML</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:start">
+        <div>
+          <span style="display:block;font-size:0.75rem;color:#a1a1aa;margin-bottom:8px;font-weight:700">PRÉ-VISUALIZAÇÃO AO VIVO:</span>
+          <div id="embed-preview-slot">
+            <div data-hokage-passport="hokage22b" data-theme="dark"></div>
+          </div>
+        </div>
+        <div>
+          <span style="display:block;font-size:0.75rem;color:#a1a1aa;margin-bottom:8px;font-weight:700">CÓDIGO PARA COLAR NO SEU SITE:</span>
+          <pre class="dev-pre" id="embed-code-out" style="white-space:pre-wrap"></pre>
+        </div>
+      </div>
+    </section>
+
     <!-- Ponte com a Jornada Hokage -->
     <section class="dev-hokage-box">
       <div style="max-width:650px">
@@ -315,6 +343,19 @@
     }
 
     showSnippet('sdk');
+
+    function updateEmbedPreview() {
+      var raw = (document.getElementById('embed-handle-input').value || 'hokage22b').trim().replace(/^@+/, '') || 'hokage22b';
+      var theme = document.getElementById('embed-theme-select').value || 'dark';
+      var code = '<div data-hokage-passport="' + raw + '" data-theme="' + theme + '"></div>\n' +
+        '<script src="https://hokage22b.com/assets/js/hokage-embed.js" async><\/script>';
+      document.getElementById('embed-code-out').textContent = code;
+      var slot = document.getElementById('embed-preview-slot');
+      slot.innerHTML = '<div data-hokage-passport="' + raw.replace(/"/g, '') + '" data-theme="' + theme + '"></div>';
+      if (window.HokageEmbed) window.HokageEmbed.mountAll();
+    }
   </script>
+  <script src="assets/js/hokage-embed.js"></script>
+  <script>updateEmbedPreview();</script>
 </body>
 </html>
