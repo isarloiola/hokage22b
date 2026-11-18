@@ -324,6 +324,9 @@
           '<button type="button" id="hk-bot-close-btn" style="background:transparent;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:50%;width:30px;height:30px;cursor:pointer">✕</button>' +
         '</div>' +
         '<div class="hk-bot-body" id="hk-bot-body"></div>' +
+        '<div style="padding:10px 18px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;background:rgba(0,0,0,0.25)">' +
+          '<button type="button" id="hk-bot-direct-form-btn" style="background:none;border:none;color:#a1a1aa;font-size:0.78rem;text-decoration:underline;cursor:pointer">Prefere preencher o formulário completo direto? Abrir formulário →</button>' +
+        '</div>' +
       '</div>';
 
     document.body.appendChild(overlay);
@@ -331,6 +334,12 @@
       if (ev.target === overlay) closeBot();
     });
     document.getElementById('hk-bot-close-btn').addEventListener('click', closeBot);
+    document.getElementById('hk-bot-direct-form-btn').addEventListener('click', function () {
+      closeBot();
+      if (window.IsarMural && typeof window.IsarMural.openModal === 'function') {
+        window.IsarMural.openModal();
+      }
+    });
     renderStep();
   }
 

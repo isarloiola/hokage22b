@@ -201,8 +201,8 @@
           <button type="button" class="btn btn-outline" onclick="window.IsarMural && window.IsarMural.openMyAdsModal()" style="white-space:nowrap;padding:11px 16px;font-weight:700;border-color:rgba(245,158,11,0.5);color:var(--amber-light)">
             📊 Meus Anúncios &amp; Métricas
           </button>
-          <button type="button" class="btn btn-primary" onclick="window.IsarMural && window.IsarMural.openModal()" style="white-space:nowrap;padding:11px 18px;font-weight:700">
-            📢 Criar Meu Anúncio
+          <button type="button" class="btn btn-primary" onclick="window.HokageMuralChatbot ? window.HokageMuralChatbot.open() : (window.IsarMural && window.IsarMural.openModal())" style="white-space:nowrap;padding:11px 18px;font-weight:800;background:linear-gradient(135deg,#8b5cf6,#f59e0b);border:none;color:#fff">
+            🤖 Criar Meu Anúncio
           </button>
         </div>
       </div>
@@ -293,9 +293,6 @@
               ✕ Limpar Filtros
             </button>
           </div>
-          <button type="button" onclick="window.HokageMuralChatbot && window.HokageMuralChatbot.open()" class="portal-btn portal-btn--primary portal-btn--sm" style="background:linear-gradient(135deg,#8b5cf6,#f59e0b);border:none;color:#fff;font-weight:800;padding:7px 14px;border-radius:999px">
-            🤖 Publicar via Chatbot (1 min)
-          </button>
         </div>
       </div>
 
