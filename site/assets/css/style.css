@@ -6,7 +6,7 @@
 /* --- 1. Tokens & Base --- */
 @import url('./tokens.css');
 @import url('./base.css');
-@import url('./portal.css?v=4.8');
+@import url('./portal.css?v=4.9');
 
 /* --- 2. Components --- */
 @import url('./components/navbar.css');
