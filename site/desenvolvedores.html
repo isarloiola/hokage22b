@@ -245,6 +245,36 @@
       </div>
     </section>
 
+    <!-- Implementações de Referência & Exemplos Reais (Fase D enxuta) -->
+    <section class="dev-card" id="exemplos-reais">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px">
+        <h2 style="margin:0">🧩 Implementações de Referência &amp; Casos de Uso</h2>
+        <a href="mailto:contato@hokage22b.com?subject=Projeto%20API%20HOKAGE22B" class="dev-btn" style="text-decoration:none">📩 Submeter Meu Projeto</a>
+      </div>
+      <p>Exemplos reais rodando hoje sobre a API Pública v1 para você se inspirar ou reutilizar a arquitetura:</p>
+
+      <div class="dev-endpoint-grid" style="margin-bottom:0">
+        <div class="dev-ep-btn" style="cursor:default">
+          <span class="dev-ep-method">AO VIVO</span><span class="dev-ep-path">O Monte Hokage</span>
+          <span class="dev-ep-desc">
+            A página <a href="monte" style="color:#fb923c;font-weight:700;text-decoration:none">/monte</a> consome <code>HokageAPI.getMonteHokage()</code> via <code>hokage-sdk.js</code> para listar os líderes reconhecidos por mérito.
+          </span>
+        </div>
+        <div class="dev-ep-btn" style="cursor:default">
+          <span class="dev-ep-method">WIDGET</span><span class="dev-ep-path">Passaporte Embed</span>
+          <span class="dev-ep-desc">
+            O script <code>hokage-embed.js</code> consulta <code>/v1/passaportes?u=...</code> e renderiza o selo verificado com Shadow DOM em qualquer site externo.
+          </span>
+        </div>
+        <div class="dev-ep-btn" style="cursor:default">
+          <span class="dev-ep-method">IDEIA BOT</span><span class="dev-ep-path">Verificador P2P em Grupos</span>
+          <span class="dev-ep-desc">
+            Um bot de Telegram/Discord pode responder <code>/verificar @usuario</code> consultando <code>/v1/passaportes</code> + <code>/v1/tools/validate-wallet</code> antes de trocas P2P.
+          </span>
+        </div>
+      </div>
+    </section>
+
     <!-- Ponte com a Jornada Hokage -->
     <section class="dev-hokage-box">
       <div style="max-width:650px">
