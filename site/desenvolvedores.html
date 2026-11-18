@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>API Aberta &amp; Desenvolvedores — HOKAGE22B</title>
+  <meta name="description" content="Documentação oficial da API pública v1 e Mini-SDK do HOKAGE22B: consuma Passaportes do Pioneiro, A Vila (Central P2P), Monte Hokage e validadores Pi Network." />
+  <link rel="canonical" href="https://hokage22b.com/desenvolvedores" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hokage22b.com/desenvolvedores" />
+  <meta property="og:title" content="API Aberta &amp; Desenvolvedores — HOKAGE22B" />
+  <meta property="og:description" content="Construa apps, bots e vitrines usando a API pública v1 do HOKAGE22B. Seja pioneiro. Torne-se Hokage." />
+  <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png" />
+
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <link rel="icon" href="assets/img/brand/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
+  <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
+  <meta name="theme-color" content="#09090b" />
+  <link rel="stylesheet" href="assets/css/style.css?v=4.6" />
+
+  <style>
+    body { background: #09090b; color: #fafafa; }
+    .dev-wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 72px; }
+    .dev-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 34px; flex-wrap: wrap; }
+    .dev-nav-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 800; font-size: 1.05rem; letter-spacing: 0.02em; }
+    .dev-nav-links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.88rem; }
+    .dev-nav-links a { color: #a1a1aa; text-decoration: none; font-weight: 600; }
+    .dev-nav-links a:hover { color: #fafafa; }
+
+    .dev-hero { text-align: center; max-width: 780px; margin: 0 auto 38px; }
+    .dev-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.38); color: #fb923c; font-size: 0.78rem; font-weight: 700; margin-bottom: 14px; }
+    .dev-hero h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); font-weight: 900; line-height: 1.15; margin: 0 0 12px; letter-spacing: -0.02em; }
+    .dev-hero p { color: #a1a1aa; font-size: 1rem; line-height: 1.6; margin: 0; }
+
+    .dev-card { background: #141419; border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 22px; margin-bottom: 24px; }
+    .dev-card h2 { font-size: 1.2rem; font-weight: 800; margin: 0 0 8px; color: #fafafa; }
+    .dev-card p { color: #a1a1aa; font-size: 0.9rem; line-height: 1.55; margin: 0 0 16px; }
+
+    .dev-base-box { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: #09090b; border: 1px solid rgba(139,92,246,0.35); border-radius: 12px; padding: 12px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #c4b5fd; }
+    .dev-btn { padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.14); background: #1c1c24; color: #fafafa; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s ease; }
+    .dev-btn:hover { border-color: #8b5cf6; background: #23232d; }
+    .dev-btn--primary { background: linear-gradient(135deg, #f97316, #f59e0b); border-color: #f97316; color: #09090b; }
+    .dev-btn--primary:hover { filter: brightness(1.06); }
+
+    .dev-endpoint-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 18px; }
+    .dev-ep-btn { text-align: left; padding: 14px; border-radius: 12px; background: #09090b; border: 1px solid rgba(255,255,255,0.09); cursor: pointer; transition: all 0.15s ease; color: #fafafa; }
+    .dev-ep-btn:hover, .dev-ep-btn.active { border-color: #f97316; background: rgba(249,115,22,0.08); }
+    .dev-ep-method { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 800; padding: 2px 7px; border-radius: 6px; background: rgba(16,185,129,0.16); color: #34d399; margin-right: 6px; }
+    .dev-ep-path { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; color: #e4e4e7; }
+    .dev-ep-desc { display: block; font-size: 0.78rem; color: #a1a1aa; margin-top: 6px; line-height: 1.4; }
+
+    .dev-playground-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+    .dev-url-input { flex: 1; min-width: 240px; padding: 10px 14px; border-radius: 10px; background: #09090b; border: 1px solid rgba(255,255,255,0.14); color: #fafafa; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .dev-pre { background: #09090b; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.79rem; line-height: 1.55; color: #d4d4d8; max-height: 380px; margin: 0; }
+
+    .dev-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .dev-tab { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #a1a1aa; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+    .dev-tab.active { background: rgba(139,92,246,0.18); border-color: #8b5cf6; color: #c4b5fd; }
+
+    .dev-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    .dev-table th, .dev-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.07); vertical-align: top; }
+    .dev-table th { color: #a1a1aa; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .dev-table code { font-family: 'JetBrains Mono', monospace; color: #fbbf24; font-size: 0.78rem; }
+
+    .dev-hokage-box { background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(139,92,246,0.1)); border: 1px solid rgba(249,115,22,0.35); border-radius: 16px; padding: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  </style>
+</head>
+<body>
+  <main class="dev-wrap">
+    <nav class="dev-nav">
+      <a href="index.html" class="dev-nav-brand">
+        <img src="assets/img/brand/hokage22b-logo.svg" alt="HOKAGE22B" width="24" height="24" />
+        <span>HOKAGE22B · DEVS</span>
+      </a>
+      <div class="dev-nav-links">
+        <a href="index.html">Portal</a>
+        <a href="pioneiro">🪪 Passaporte</a>
+        <a href="mural">🏘️ A Vila (P2P)</a>
+        <a href="ferramentas">🛠️ Ferramentas</a>
+        <a href="construir">🚀 Guia do Construtor</a>
+      </div>
+    </nav>
+
+    <header class="dev-hero">
+      <div class="dev-pill">⚡ API Pública v1 · Leitura Aberta · CORS *</div>
+      <h1>Construa sobre o ecossistema HOKAGE22B</h1>
+      <p>
+        Consuma dados públicos verificados de <strong>Passaportes do Pioneiro</strong>, anúncios da <strong>A Vila · Central P2P</strong>, líderes do <strong>Monte Hokage</strong> e utilitários Pi Network — sem precisar de autenticação ou backend próprio.
+      </p>
+    </header>
+
+    <!-- Base URL -->
+    <section class="dev-card">
+      <h2>Endpoint Base (v1)</h2>
+      <p>Todas as rotas aceitam requisições <code>GET</code> com cache de borda (<code>s-maxage=60</code>) e projeção estrita de campos públicos (zero exposição de <code>uid</code> ou dados privados).</p>
+      <div class="dev-base-box">
+        <span id="api-base-url">https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1</span>
+        <button type="button" class="dev-btn" onclick="copyText(document.getElementById('api-base-url').textContent, this)">📋 Copiar Base URL</button>
+      </div>
+    </section>
+
+    <!-- Playground Interativo -->
+    <section class="dev-card">
+      <h2>🧪 Playground Interativo ao Vivo</h2>
+      <p>Selecione um endpoint abaixo e execute a consulta real direto no seu navegador:</p>
+
+      <div class="dev-endpoint-grid">
+        <button type="button" class="dev-ep-btn active" onclick="selectEndpoint('/health', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/health</span>
+          <span class="dev-ep-desc">Status da API e índice completo de rotas disponíveis.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/passaportes?u=hokage22b', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/passaportes?u=hokage22b</span>
+          <span class="dev-ep-desc">Retorna o Passaporte público, nível na jornada e catálogo.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/monte-hokage', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/monte-hokage</span>
+          <span class="dev-ep-desc">Lista oficial de construtores que conquistaram o Monte Hokage.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/vila?country=BR&limit=10', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/vila?country=BR</span>
+          <span class="dev-ep-desc">Feed da A Vila · Central P2P filtrável por país e categoria.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/tools/validate-wallet?address=GA5F...XPUR', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/tools/validate-wallet</span>
+          <span class="dev-ep-desc">Validador Base32 + CRC16-XModem para chaves públicas Pi (G...).</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/tools/pi-price?currency=BRL', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/tools/pi-price?currency=BRL</span>
+          <span class="dev-ep-desc">Cotação Pi normalizada com cache compartilhado de 60s.</span>
+        </button>
+        <button type="button" class="dev-ep-btn" onclick="selectEndpoint('/stats', this)">
+          <span class="dev-ep-method">GET</span><span class="dev-ep-path">/v1/stats</span>
+          <span class="dev-ep-desc">Métricas agregadas do ecossistema HOKAGE22B.</span>
+        </button>
+      </div>
+
+      <div class="dev-playground-bar">
+        <input type="text" id="pg-url-input" class="dev-url-input" value="https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/health" aria-label="URL do endpoint" />
+        <button type="button" class="dev-btn dev-btn--primary" id="pg-run-btn" onclick="runPlayground()">▶ Executar Consulta</button>
+        <span id="pg-status" style="font-size:0.78rem;color:#a1a1aa;font-family:'JetBrains Mono',monospace"></span>
+      </div>
+
+      <pre class="dev-pre" id="pg-output">{ "dica": "Clique em 'Executar Consulta' para testar a resposta JSON ao vivo." }</pre>
+    </section>
+
+    <!-- Snippets & Mini-SDK -->
+    <section class="dev-card">
+      <h2>📦 Mini-SDK &amp; Exemplos Prontos</h2>
+      <p>Use nosso SDK leve (~3KB, zero dependências) via <code>&lt;script src="https://hokage22b.com/assets/js/hokage-sdk.js"&gt;&lt;/script&gt;</code> ou consuma via <code>fetch</code>, Python ou cURL.</p>
+
+      <div class="dev-tabs">
+        <button type="button" class="dev-tab active" onclick="showSnippet('sdk', this)">Mini-SDK (JS)</button>
+        <button type="button" class="dev-tab" onclick="showSnippet('fetch', this)">Fetch Nativo</button>
+        <button type="button" class="dev-tab" onclick="showSnippet('python', this)">Python</button>
+        <button type="button" class="dev-tab" onclick="showSnippet('curl', this)">cURL</button>
+        <button type="button" class="dev-btn" style="margin-left:auto" onclick="copyText(document.getElementById('snippet-code').textContent, this)">📋 Copiar Código</button>
+      </div>
+
+      <pre class="dev-pre" id="snippet-code"></pre>
+    </section>
+
+    <!-- Referência de Parâmetros -->
+    <section class="dev-card">
+      <h2>📘 Referência Rápida dos Endpoints</h2>
+      <div style="overflow-x:auto">
+        <table class="dev-table">
+          <thead>
+            <tr>
+              <th>Endpoint</th>
+              <th>Parâmetros</th>
+              <th>Retorno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/v1/passaportes</code></td>
+              <td><code>?u=handle</code>, <code>?tier=hokage|construtor|pioneiro</code>, <code>?limit=20</code>, <code>?offset=0</code></td>
+              <td>Passaporte individual ou lista paginada com nível na jornada e produtos.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/monte-hokage</code></td>
+              <td><code>?limit=20</code></td>
+              <td>Lista de líderes que conquistaram o selo Hokage por mérito.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/vila</code></td>
+              <td><code>?country=BR</code>, <code>?category=servico</code>, <code>?payment=pi</code>, <code>?plan=ouro|prata|bronze</code></td>
+              <td>Feed ativo da <strong>A Vila · Central P2P</strong> com link para o Passaporte do autor.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/tools/validate-wallet</code></td>
+              <td><code>?address=G...</code></td>
+              <td>Validação Base32 + CRC16-XModem e alerta caso seja chave secreta <code>S...</code>.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/tools/pi-price</code></td>
+              <td><code>?currency=BRL|USD|EUR</code></td>
+              <td>Preço atual e variação 24h com cache de 60s.</td>
+            </tr>
+            <tr>
+              <td><code>/v1/stats</code></td>
+              <td>—</td>
+              <td>Contagem pública de Passaportes, anúncios na Vila e membros do Monte Hokage.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Ponte com a Jornada Hokage -->
+    <section class="dev-hokage-box">
+      <div style="max-width:650px">
+        <strong style="color:#fb923c;font-size:1.05rem;display:block;margin-bottom:4px">🔥 Seja pioneiro. Torne-se Hokage.</strong>
+        <span style="color:#d4d4d8;font-size:0.88rem;line-height:1.5;display:block">
+          Construiu um bot, diretório local, loja ou ferramenta usando a API do HOKAGE22B? Envie o header <code>X-Hokage-Client: seu-projeto</code> nas chamadas e ative seu Passaporte para pontuar como Construtor rumo ao <strong>Monte Hokage</strong>.
+        </span>
+      </div>
+      <a href="pioneiro" class="dev-btn dev-btn--primary" style="text-decoration:none;padding:11px 18px">🪪 Ativar Meu Passaporte →</a>
+    </section>
+  </main>
+
+  <script src="assets/js/hokage-sdk.js"></script>
+  <script>
+    var BASE = 'https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1';
+
+    var SNIPPETS = {
+      sdk: [
+        '<script src="https://hokage22b.com/assets/js/hokage-sdk.js"><\/script>',
+        '<script>',
+        '  HokageAPI.setAppName("meu-app-pi");',
+        '',
+        '  // 1. Buscar Passaporte do Pioneiro',
+        '  const { passport } = await HokageAPI.getPassport("hokage22b");',
+        '  console.log(passport.journey_tier, passport.wallet_address);',
+        '',
+        '  // 2. Listar negócios da Vila (Central P2P) no Brasil',
+        '  const vila = await HokageAPI.listVila({ country: "BR", limit: 10 });',
+        '  console.log(vila.items);',
+        '<\/script>'
+      ].join('\n'),
+      fetch: [
+        'const res = await fetch(',
+        '  "https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/monte-hokage",',
+        '  { headers: { "X-Hokage-Client": "meu-projeto-pi" } }',
+        ');',
+        'const { ok, data } = await res.json();',
+        'console.log(data.leaders);'
+      ].join('\n'),
+      python: [
+        'import requests',
+        '',
+        'url = "https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/vila"',
+        'resp = requests.get(url, params={"country": "BR", "limit": 10}, headers={"X-Hokage-Client": "bot-pi-br"})',
+        'data = resp.json()["data"]',
+        'for item in data["items"]:',
+        '    print(item["title"], "-", item["author"]["handle"])'
+      ].join('\n'),
+      curl: [
+        'curl -s "https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/passaportes?u=hokage22b" \\',
+        '  -H "X-Hokage-Client: cli-check"'
+      ].join('\n')
+    };
+
+    function selectEndpoint(path, btn) {
+      document.querySelectorAll('.dev-ep-btn').forEach(function (el) { el.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      document.getElementById('pg-url-input').value = BASE + path;
+      runPlayground();
+    }
+
+    async function runPlayground() {
+      var url = document.getElementById('pg-url-input').value.trim();
+      var out = document.getElementById('pg-output');
+      var statusEl = document.getElementById('pg-status');
+      out.textContent = 'Consultando API...';
+      statusEl.textContent = '';
+      var t0 = performance.now();
+      try {
+        var res = await fetch(url, { headers: { 'X-Hokage-Client': 'hokage22b-playground' } });
+        var ms = Math.round(performance.now() - t0);
+        var json = await res.json();
+        statusEl.textContent = 'HTTP ' + res.status + ' · ' + ms + 'ms';
+        statusEl.style.color = res.ok ? '#34d399' : '#f87171';
+        out.textContent = JSON.stringify(json, null, 2);
+      } catch (e) {
+        statusEl.textContent = 'Erro de rede';
+        statusEl.style.color = '#f87171';
+        out.textContent = JSON.stringify({ ok: false, error: e.message }, null, 2);
+      }
+    }
+
+    function showSnippet(key, btn) {
+      document.querySelectorAll('.dev-tab').forEach(function (el) { el.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      document.getElementById('snippet-code').textContent = SNIPPETS[key] || '';
+    }
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(function () {
+        if (!btn) return;
+        var orig = btn.textContent;
+        btn.textContent = '✓ Copiado!';
+        setTimeout(function () { btn.textContent = orig; }, 1600);
+      });
+    }
+
+    showSnippet('sdk');
+  </script>
+</body>
+</html>
