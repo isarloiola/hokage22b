@@ -864,8 +864,6 @@
           </div>
         </div>
 
-        <div id="pioneiro-monte-progress" style="margin:0 0 22px;text-align:left"></div>
-
         <!-- ========================================== -->
         <!-- DIRETÓRIO GLOBAL DE PIONEIROS & NEGÓCIOS (HACKATHON GRADE) -->
         <!-- ========================================== -->
@@ -931,29 +929,9 @@
         <!-- Handle & Badges -->
         <h1 class="pioneer-handle notranslate" id="pioneer-handle" translate="no">@carregando...</h1>
         <p style="color:var(--text-secondary);font-size:0.95rem;margin-top:8px;margin-bottom:14px;line-height:1.5" id="pioneer-bio">
-          Pioneiro Verificado na comunidade independente HOKAGE22B.
+          Pioneiro na comunidade independente HOKAGE22B.
         </p>
-        <span class="pioneer-badge-verified" id="pioneer-badge">🛡️ Humano Verificado via Pi KYC</span>
-        <span class="pioneer-badge-verified" id="pioneer-ambassador-badge" style="display:none;margin-left:6px;background:rgba(249,115,22,0.16);border-color:rgba(249,115,22,0.45);color:#fb923c" title="Título conquistado por contribuição real no ecossistema HOKAGE22B">🔥 Hokage · Construtor Líder</span>
-
-        <!-- Barra de Evolução da Jornada (Fase C) -->
-        <div id="pioneer-journey-progress" style="margin:14px auto 6px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 14px;text-align:left">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:0.74rem;font-weight:700">
-            <span style="color:var(--text-muted)">Trilha HOKAGE22B</span>
-            <span id="journey-current-label" style="color:#fb923c">01 · Pioneiro</span>
-          </div>
-          <div style="height:6px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-bottom:8px">
-            <div id="journey-progress-fill" style="height:100%;width:33%;border-radius:999px;background:linear-gradient(90deg,#f59e0b,#8b5cf6,#f97316);transition:width 0.35s ease"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);font-weight:700">
-            <span id="journey-step-1" style="color:#fbbf24">01 Pioneiro</span>
-            <span id="journey-step-2">02 Construtor</span>
-            <span id="journey-step-3">03 Hokage</span>
-          </div>
-          <div id="journey-next-hint" style="font-size:0.72rem;color:var(--text-secondary);margin-top:6px;line-height:1.4">
-            Adicione sua chave Pi válida e um serviço/produto para avançar para Construtor.
-          </div>
-        </div>
+        <div id="pioneer-titles-bar" style="margin:6px auto 14px"></div>
 
         <!-- Link Curto Oficial da Vitrine (Estilo Linktree com Proteção Anti-Overflow) -->
         <div class="short-link-pill">
@@ -1477,12 +1455,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/modules/db.js?v=5.8"></script>
 
-  <script src="assets/js/modules/vitrine.js?v=2.9"></script>
-  <script src="assets/js/modules/monte-progression.js?v=1.0"></script>
-  <script>
-    if (window.HokageMonteProgression) {
-      window.HokageMonteProgression.renderProgressionPanel('pioneiro-monte-progress', null, { compact: true });
-    }
-  </script>
+  <script src="assets/js/modules/vitrine.js?v=3.0"></script>
+  <script src="assets/js/modules/monte-progression.js?v=1.1"></script>
 </body>
 </html>

@@ -1331,6 +1331,11 @@
         adsSection.style.display = 'none';
       }
 
+      // Atualiza selos de título desbloqueáveis no Passaporte
+      if (window.HokageMonteProgression && typeof window.HokageMonteProgression.renderPassportTitles === 'function') {
+        window.HokageMonteProgression.renderPassportTitles('pioneer-titles-bar', prof, isOwner);
+      }
+
       // Inicializa/sincroniza o seletor de idiomas nos pontos de montagem da vitrine
       if (window.HokageI18n && window.HokageI18n.init) {
         window.HokageI18n.init();

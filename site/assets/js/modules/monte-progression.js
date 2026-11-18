@@ -241,12 +241,177 @@
       '</div>';
   }
 
+  const TITLES_STORAGE_PREFIX = 'hokage_passport_titles_v1_';
+
+  const UNLOCKABLE_TITLES = [
+    { id: 'pioneiro', label: '🌱 Pioneiro', bg: 'rgba(148,163,184,0.16)', border: 'rgba(148,163,184,0.42)', color: '#e2e8f0', rule: 'Ativar seu Passaporte Web3' },
+    { id: 'construtor', label: '🧱 Construtor', bg: 'rgba(139,92,246,0.18)', border: 'rgba(139,92,246,0.48)', color: '#ddd6fe', rule: 'Validar carteira G... ou cadastrar produto' },
+    { id: 'desenvolvedor', label: '⚡ Desenvolvedor', bg: 'rgba(56,189,248,0.16)', border: 'rgba(56,189,248,0.45)', color: '#bae6fd', rule: 'Usar /construir (API/Embed) ou vincular GitHub' },
+    { id: 'hokage', label: '🔥 Hokage', bg: 'rgba(249,115,22,0.18)', border: 'rgba(249,115,22,0.5)', color: '#fb923c', rule: 'Mérito máximo no Monte Hokage' },
+    { id: 'pi_kyc', label: '🛡️ Pi KYC Verified', bg: 'rgba(16,185,129,0.16)', border: 'rgba(16,185,129,0.45)', color: '#34d399', rule: 'Conectar via Pi Browser oficial' },
+    { id: 'comerciante', label: '🛍️ Comerciante P2P', bg: 'rgba(245,158,11,0.16)', border: 'rgba(245,158,11,0.45)', color: '#fde68a', rule: 'Ter produto ou anúncio na Vila' },
+    { id: 'embaixador', label: '🏅 Embaixador', bg: 'rgba(234,179,8,0.18)', border: 'rgba(234,179,8,0.5)', color: '#fef08a', rule: 'Trazer pioneiros pelo link oficial' }
+  ];
+
+  function normalizeUserKey(username) {
+    return String(username || 'anon').trim().replace(/^@+/, '').toLowerCase() || 'anon';
+  }
+
+  function getTitlesState(profileData, localFlags) {
+    const prof = profileData && typeof profileData === 'object' ? profileData : {};
+    const flags = localFlags && typeof localFlags === 'object' ? localFlags : readLocalFlags();
+    const prog = evaluateProgression(prof, flags);
+    const hasPiAuth = Boolean(prof.username && String(prof.username).trim());
+    const hasWallet = Boolean(prof.wallet_address && /^G[A-Z2-7]{55}$/.test(String(prof.wallet_address).trim()));
+    const hasProducts = Array.isArray(prof.products) && prof.products.length > 0;
+    const hasGithub = Boolean(prof.github_url) || (Array.isArray(prof.social_links) && prof.social_links.some(function (s) { return s && s.network === 'github'; }));
+
+    const unlockedMap = {
+      pioneiro: true,
+      construtor: hasWallet || hasProducts || prog.rank.level >= 2,
+      desenvolvedor: Boolean(flags.dev_api_used) || hasGithub,
+      hokage: Boolean(prof.is_ambassador) || prog.rank.level === 4 || normalizeUserKey(prof.username) === 'hokage22b',
+      pi_kyc: hasPiAuth || Boolean(flags.passport),
+      comerciante: hasProducts || Boolean(flags.mural_posted),
+      embaixador: Boolean(prof.is_ambassador) || Number(prof.referral_qualified_count || 0) > 0
+    };
+
+    const userKey = normalizeUserKey(prof.username);
+    let selectedIds = null;
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(TITLES_STORAGE_PREFIX + userKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) selectedIds = parsed;
+        }
+      } catch (_) {}
+    }
+
+    if (!selectedIds) {
+      if (userKey === 'hokage22b') {
+        selectedIds = ['hokage', 'desenvolvedor', 'construtor'];
+      } else {
+        selectedIds = [prog.rank.id];
+      }
+    }
+
+    selectedIds = selectedIds.filter(function (id) { return Boolean(unlockedMap[id]); });
+    if (!selectedIds.length) selectedIds = ['pioneiro'];
+
+    return {
+      titles: UNLOCKABLE_TITLES.map(function (t) {
+        return {
+          id: t.id,
+          label: t.label,
+          bg: t.bg,
+          border: t.border,
+          color: t.color,
+          rule: t.rule,
+          unlocked: Boolean(unlockedMap[t.id]),
+          selected: selectedIds.indexOf(t.id) !== -1
+        };
+      }),
+      selectedIds: selectedIds
+    };
+  }
+
+  function saveSelectedTitles(username, selectedIds) {
+    if (typeof localStorage === 'undefined') return;
+    const userKey = normalizeUserKey(username);
+    try {
+      const clean = Array.isArray(selectedIds) && selectedIds.length ? selectedIds : ['pioneiro'];
+      localStorage.setItem(TITLES_STORAGE_PREFIX + userKey, JSON.stringify(clean));
+    } catch (_) {}
+  }
+
+  function openTitlesSelectorModal(containerId, profileData, isOwner) {
+    if (typeof document === 'undefined') return;
+    const existing = document.getElementById('hk-titles-modal');
+    if (existing) existing.remove();
+
+    const state = getTitlesState(profileData, readLocalFlags());
+    const overlay = document.createElement('div');
+    overlay.id = 'hk-titles-modal';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:10060;background:rgba(5,5,10,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:14px';
+
+    const listHtml = state.titles.map(function (t) {
+      const disabledAttr = t.unlocked ? '' : 'disabled';
+      const checkedAttr = t.selected ? 'checked' : '';
+      return (
+        '<label style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid ' + (t.unlocked ? t.border : 'rgba(255,255,255,0.08)') + ';background:' + (t.unlocked ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.3)') + ';opacity:' + (t.unlocked ? '1' : '0.5') + ';cursor:' + (t.unlocked ? 'pointer' : 'not-allowed') + '">' +
+          '<div style="text-align:left">' +
+            '<div style="font-size:0.86rem;font-weight:800;color:' + (t.unlocked ? t.color : '#71717a') + '">' + esc(t.label) + '</div>' +
+            '<div style="font-size:0.72rem;color:#a1a1aa">' + (t.unlocked ? '✓ Desbloqueado' : '🔒 ' + esc(t.rule)) + '</div>' +
+          '</div>' +
+          '<input type="checkbox" class="hk-title-chk" value="' + esc(t.id) + '" ' + checkedAttr + ' ' + disabledAttr + ' style="width:18px;height:18px;accent-color:#f59e0b" />' +
+        '</label>'
+      );
+    }).join('');
+
+    overlay.innerHTML =
+      '<div style="width:100%;max-width:440px;background:#12121b;border:1.5px solid rgba(245,158,11,0.45);border-radius:20px;padding:20px;color:#fff;box-shadow:0 24px 60px rgba(0,0,0,0.8)">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+          '<strong style="font-size:1.02rem">🏷️ Meus Títulos no Passaporte</strong>' +
+          '<button type="button" id="hk-titles-close" style="background:none;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:50%;width:28px;height:28px;cursor:pointer">✕</button>' +
+        '</div>' +
+        '<p style="font-size:0.8rem;color:#a1a1aa;margin:0 0 12px;line-height:1.4">Selecione um ou mais títulos já desbloqueados para exibir no seu Passaporte:</p>' +
+        '<div style="display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto;margin-bottom:14px">' + listHtml + '</div>' +
+        '<button type="button" id="hk-titles-save" class="portal-btn portal-btn--primary portal-btn--full" style="font-weight:800">Salvar Títulos no Passaporte</button>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (ev) { if (ev.target === overlay) overlay.remove(); });
+    document.getElementById('hk-titles-close').addEventListener('click', function () { overlay.remove(); });
+    document.getElementById('hk-titles-save').addEventListener('click', function () {
+      const picked = Array.from(overlay.querySelectorAll('.hk-title-chk:checked')).map(function (c) { return c.value; });
+      saveSelectedTitles(profileData && profileData.username, picked);
+      overlay.remove();
+      renderPassportTitles(containerId, profileData, isOwner);
+    });
+  }
+
+  function renderPassportTitles(containerId, profileData, isOwner) {
+    if (typeof document === 'undefined') return;
+    const el = document.getElementById(containerId);
+    if (!el) return;
+
+    const state = getTitlesState(profileData, readLocalFlags());
+    const pillsHtml = state.titles
+      .filter(function (t) { return t.selected; })
+      .map(function (t) {
+        return '<span style="font-size:0.74rem;padding:4px 11px;border-radius:999px;background:' + t.bg + ';border:1px solid ' + t.border + ';color:' + t.color + ';font-weight:700;display:inline-flex;align-items:center">' + esc(t.label) + '</span>';
+      }).join('');
+
+    const editBtnHtml = isOwner
+      ? '<button type="button" id="hk-open-titles-btn" style="font-size:0.72rem;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);color:#d4d4d8;font-weight:700;cursor:pointer">🏷️ Editar Títulos</button>'
+      : '';
+
+    el.innerHTML =
+      '<div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px">' +
+        pillsHtml + editBtnHtml +
+      '</div>';
+
+    if (isOwner) {
+      const btn = document.getElementById('hk-open-titles-btn');
+      if (btn) {
+        btn.addEventListener('click', function () {
+          openTitlesSelectorModal(containerId, profileData, isOwner);
+        });
+      }
+    }
+  }
+
   return {
     RANKS: RANKS,
     MISSIONS: MISSIONS,
+    UNLOCKABLE_TITLES: UNLOCKABLE_TITLES,
     evaluateProgression: evaluateProgression,
     readLocalFlags: readLocalFlags,
     markQuestFlag: markQuestFlag,
+    getTitlesState: getTitlesState,
+    saveSelectedTitles: saveSelectedTitles,
+    renderPassportTitles: renderPassportTitles,
     renderProgressionPanel: renderProgressionPanel
   };
 });
