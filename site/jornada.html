@@ -104,37 +104,44 @@
         <span class="j-option__dest">Ir para Pi do Zero →</span>
       </a>
 
-      <a href="pioneiro" class="j-option" data-step-id="2" data-step-label="01 · Criar Passaporte do Pioneiro" onclick="saveJourneyStep('2', '01 · Criar Passaporte do Pioneiro', 'pioneiro')">
+      <a href="um" class="j-option" data-step-id="2" data-step-label="01 · Pi Browser &amp; Passaporte" onclick="saveJourneyStep('2', '01 · Pi Browser & Passaporte', 'um')">
         <div class="j-option__left">
           <div class="j-option__icon">🪪</div>
           <div>
-            <h2 class="j-option__title">Já tenho Pi, mas ainda não tenho Passaporte</h2>
-            <p class="j-option__desc">Crie gratuitamente seu Passaporte do Pioneiro verificado via Pi KYC com chave pública P2P, links oficiais e catálogo.</p>
+            <h2 class="j-option__title">Já tenho Pi: usar o Pi Browser &amp; criar meu Passaporte</h2>
+            <p class="j-option__desc">Aprenda a usar o Pi Browser oficial com segurança (Passo 1) e ative gratuitamente seu Passaporte Web3 com chave pública G...</p>
           </div>
         </div>
-        <span class="j-option__dest">Criar Passaporte →</span>
+        <span class="j-option__dest">Ir para Passo 1 →</span>
       </a>
 
-      <a href="mural" class="j-option" data-step-id="3" data-step-label="02 · A Vila (Central P2P)" onclick="saveJourneyStep('3', '02 · A Vila (Central P2P)', 'mural')">
+      <div class="j-option" data-step-id="3" data-step-label="02 · Comprar ou Vender em Pi" style="cursor:default">
         <div class="j-option__left">
           <div class="j-option__icon">🏘️</div>
           <div>
-            <h2 class="j-option__title">Já tenho Passaporte e quero negociar ou divulgar</h2>
-            <p class="j-option__desc">Entre na A Vila · Central P2P para anunciar produtos, oferecer serviços em Pi e fechar parcerias com pioneiros reais.</p>
+            <h2 class="j-option__title">Já tenho Passaporte — Quero Comprar ou Vender</h2>
+            <p class="j-option__desc">Escolha se você quer explorar ofertas de pioneiros na Vila (P2P) ou aprender a anunciar na sua Vitrine e impulsionar suas vendas.</p>
           </div>
         </div>
-        <span class="j-option__dest">Entrar na Vila →</span>
-      </a>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0">
+          <a href="mural" onclick="saveJourneyStep('3', '02 · Comprar na Vila (P2P)', 'mural')" class="j-option__dest" style="text-decoration:none">
+            🛒 Comprar na Vila →
+          </a>
+          <a href="vender" onclick="saveJourneyStep('3', '02 · Vender na Vitrine', 'vender')" class="j-option__dest" style="text-decoration:none;background:rgba(139,92,246,0.16);border-color:rgba(139,92,246,0.45);color:#ddd6fe">
+            🏷️ Como Vender →
+          </a>
+        </div>
+      </div>
 
-      <a href="construir" class="j-option" data-step-id="4" data-step-label="02 · Recursos de Construtor" onclick="saveJourneyStep('4', '02 · Recursos de Construtor', 'construir')">
+      <a href="desenvolvedores" class="j-option" data-step-id="4" data-step-label="02 · API Aberta &amp; Devs" onclick="saveJourneyStep('4', '02 · API Aberta & Devs', 'desenvolvedores')">
         <div class="j-option__left">
           <div class="j-option__icon">⚡</div>
           <div>
-            <h2 class="j-option__title">Já estou construindo projetos, lojas ou apps</h2>
-            <p class="j-option__desc">Acesse o Guia do Construtor, as Ferramentas Web3 (validador, placa QR) e a API Aberta em /desenvolvedores.</p>
+            <h2 class="j-option__title">Sou desenvolvedor ou construtor avançado</h2>
+            <p class="j-option__desc">Consuma a API Pública HOKAGE22B, incorpore seu Passaporte em outros sites (Embed), baixe o Mini-SDK e acesse o Starter Kit no GitHub.</p>
           </div>
         </div>
-        <span class="j-option__dest">Recursos de Construtor →</span>
+        <span class="j-option__dest">Área Dev &amp; API →</span>
       </a>
 
       <a href="monte" class="j-option" data-step-id="5" data-step-label="03 · Trilha Monte Hokage" onclick="saveJourneyStep('5', '03 · Trilha Monte Hokage', 'monte')">
