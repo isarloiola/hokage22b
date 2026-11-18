@@ -434,6 +434,36 @@ a {
   margin: 0 auto 36px;
 }
 
+.hk-hero-cta-primary {
+  padding: 17px 34px !important;
+  font-size: 1.08rem !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, #f97316 0%, #f59e0b 100%) !important;
+  border: 1px solid rgba(251, 191, 36, 0.7) !important;
+  color: #09090b !important;
+  border-radius: 14px !important;
+  box-shadow: 0 12px 34px rgba(249, 115, 22, 0.35), 0 0 0 1px rgba(249, 115, 22, 0.25) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.hk-hero-cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(249, 115, 22, 0.45) !important;
+}
+.hk-hero-cta-arrow {
+  display: inline-block;
+  font-size: 1.2em;
+  transition: transform 0.2s ease;
+  animation: hkCtaNudge 1.8s ease-in-out infinite;
+}
+@keyframes hkCtaNudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
 .portal-hero__actions {
   display: flex;
   align-items: center;
@@ -1496,7 +1526,10 @@ a {
     padding: 56px 0;
   }
   .portal-hero {
-    padding: 72px 0 54px;
+    padding: 28px 0 44px;
+  }
+  .portal-hero__badge {
+    margin-bottom: 16px;
   }
 
   /* Prevenção Absoluta contra Botões Transbordando na Tela */
@@ -1859,22 +1892,22 @@ a {
     padding-right: 10px !important;
   }
   .portal-hero__title {
-    font-size: 1.8rem !important;
-    line-height: 1.12 !important;
+    font-size: 2.18rem !important;
+    line-height: 1.08 !important;
   }
   .portal-hero__subtitle {
-    font-size: 1.05rem !important;
+    font-size: 1.16rem !important;
   }
   .portal-hero__badge {
-    padding: 4px 10px !important;
-    font-size: 0.72rem !important;
+    padding: 5px 11px !important;
+    font-size: 0.74rem !important;
     line-height: 1.3 !important;
   }
   .section-title {
     font-size: 1.45rem !important;
   }
-  .portal-btn:not(.pi-auth-header-btn) {
-    font-size: 0.86rem !important;
+  .portal-btn:not(.pi-auth-header-btn):not(.hk-hero-cta-primary) {
+    font-size: 0.88rem !important;
     padding: 10px 12px !important;
     gap: 6px !important;
   }

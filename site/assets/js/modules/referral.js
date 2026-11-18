@@ -307,8 +307,8 @@
       }
       .hk-ref-floating-pill {
         position: fixed;
-        right: 14px;
-        bottom: 72px;
+        right: 12px;
+        bottom: 88px;
         z-index: 999990;
         display: inline-flex;
         align-items: center;
