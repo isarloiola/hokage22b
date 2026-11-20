@@ -245,7 +245,7 @@
     } else if (step.type === 'desc_link') {
       controlsHtml =
         '<textarea id="hk-bot-desc" class="hk-bot-input" rows="3" maxlength="160" placeholder="Descreva seu produto, serviço ou recado...">' + esc(draft.desc) + '</textarea>' +
-        '<input type="text" id="hk-bot-link" class="hk-bot-input" placeholder="Link opcional (WhatsApp, Vitrine, YouTube...)" value="' + esc(draft.link) + '" />' +
+        '<input type="text" id="hk-bot-link" class="hk-bot-input" placeholder="Link opcional (WhatsApp, Passaporte, YouTube...)" value="' + esc(draft.link) + '" />' +
         '<div style="display:flex;justify-content:space-between;gap:8px">' +
           '<button type="button" id="hk-bot-back-btn" class="portal-btn portal-btn--outline portal-btn--sm">← Voltar</button>' +
           '<button type="button" id="hk-bot-next-btn" class="portal-btn portal-btn--primary portal-btn--sm">Continuar →</button>' +

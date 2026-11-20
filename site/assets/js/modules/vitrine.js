@@ -76,7 +76,7 @@
     // =========================================================================
     const SIMULATOR_DEMO_PROFILE = {
       username: '@pioneiro_teste',
-      bio: '🧪 Esta é uma vitrine de simulação. Experimente trocar fotos, links e produtos no botão "Personalizar no Teste"!',
+      bio: '🧪 Este é um Passaporte de simulação. Experimente trocar fotos, links e produtos no botão "Personalizar no Teste"!',
       wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR',
       whatsapp_url: 'https://wa.me/5500000000000',
       youtube_url: 'https://youtube.com',
@@ -490,7 +490,7 @@
       if (amountVal) link += `&pay=${encodeURIComponent(amountVal)}`;
       if (memoVal) link += `&memo=${encodeURIComponent(memoVal)}`;
 
-      const msg = `Olá! Segue o link da minha vitrine no HOKAGE22B para pagamento direto em Pi Network (${amountVal ? amountVal + ' π' : 'P2P'}):\n${link}\n\nDestinatário: ${cleanUser}`;
+      const msg = `Olá! Segue o link do meu Passaporte no HOKAGE22B para pagamento direto em Pi Network (${amountVal ? amountVal + ' π' : 'P2P'}):\n${link}\n\nDestinatário: ${cleanUser}`;
       window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
@@ -510,7 +510,7 @@
       }
 
       // Se for número wa.me direto ou link personalizado
-      const msg = `Olá ${cleanUser}! Acessei sua vitrine no HOKAGE22B e efetuei uma transferência em Pi Network para a sua carteira. Segue o comprovante:`;
+      const msg = `Olá ${cleanUser}! Acessei seu Passaporte no HOKAGE22B e efetuei uma transferência em Pi Network para a sua carteira. Segue o comprovante:`;
       if (waUrl.includes('wa.me/')) {
         const separator = waUrl.includes('?') ? '&' : '?';
         window.open(`${waUrl}${separator}text=${encodeURIComponent(msg)}`, '_blank');
@@ -783,7 +783,7 @@
                   <div style="font-size:0.95rem;color:#10b981;font-weight:800;word-break:break-word">🟢 @${escapeHtml(cleanLogged)}</div>
                 </div>
                 <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="padding:9px 16px;font-size:0.86rem;font-weight:700;text-decoration:none;flex-shrink:0">
-                  🌟 Ir para Minha Vitrine →
+                  🪪 Ir para Meu Passaporte →
                 </a>
               </div>
             `;
@@ -1015,10 +1015,10 @@
         document.getElementById('simulator-banner').style.display = 'none';
         if (isOwner) {
           topbarActions.innerHTML = `
-            <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="font-size:0.75rem;padding:6px 14px;font-weight:700">
-              ⚙️ Editar Minha Vitrine
+            <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="font-size:0.74rem;padding:5px 11px;font-weight:700">
+              ⚙️ Editar Passaporte
             </button>
-            <button type="button" class="btn btn-outline btn-sm" onclick="logoutPioneer()" style="font-size:0.75rem;padding:6px 10px;border-color:rgba(255,255,255,0.2);color:var(--text-muted)">
+            <button type="button" class="btn btn-outline btn-sm" onclick="logoutPioneer()" style="font-size:0.74rem;padding:5px 9px;border-color:rgba(255,255,255,0.2);color:var(--text-muted)">
               Sair
             </button>
           `;
@@ -1028,14 +1028,14 @@
           const cleanOwnerRef = cleanUsername(prof.username || currentPioneerUser || 'hokage22b').replace(/^@+/, '');
           if (cleanLogged) {
             topbarActions.innerHTML = `
-              <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="font-size:0.75rem;padding:6px 12px;font-weight:700;text-decoration:none">
-                🌟 Minha Vitrine (@${cleanLogged})
+              <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="font-size:0.74rem;padding:5px 11px;font-weight:700;text-decoration:none">
+                🪪 Meu Passaporte (@${cleanLogged})
               </a>
             `;
           } else {
             topbarActions.innerHTML = `
-              <a href="pioneiro?ref=${encodeURIComponent(cleanOwnerRef)}" class="btn btn-outline btn-sm" style="font-size:0.75rem;padding:6px 12px;border-color:rgba(245,158,11,0.5);color:#fbbf24;font-weight:700;text-decoration:none">
-                🎁 Criar Vitrine + 1 Anúncio Grátis →
+              <a href="pioneiro?ref=${encodeURIComponent(cleanOwnerRef)}" class="btn btn-outline btn-sm" style="font-size:0.74rem;padding:5px 11px;border-color:rgba(245,158,11,0.5);color:#fbbf24;font-weight:700;text-decoration:none">
+                🪪 Criar Passaporte + Bônus na Vila →
               </a>
             `;
           }
@@ -1659,7 +1659,7 @@
               </div>
             </div>
             <a href="?u=${encodeURIComponent(uSlug)}" class="portal-btn portal-btn--outline portal-btn--sm dir-card-cta">
-              Ver Vitrine ↗
+              Ver Passaporte ↗
             </a>
           </div>
         `;
@@ -2647,7 +2647,7 @@
       const btn = document.getElementById('btn-request-affiliate-payout');
       const wallet = (currentProfileData && currentProfileData.wallet_address) || currentPioneerWallet || '';
       if (!wallet || !isValidPiPublicKey(wallet)) {
-        alert('Cadastre sua Chave Pública da Pi Wallet (iniciada com G, 56 caracteres) clicando em "Editar Minha Vitrine" antes de solicitar o saque.');
+        alert('Cadastre sua Chave Pública da Pi Wallet (iniciada com G, 56 caracteres) clicando em "Editar Passaporte" antes de solicitar o saque.');
         openProfileEditModal();
         return;
       }
@@ -2791,7 +2791,7 @@
         }).join('');
       } else {
         if (summaryEl) summaryEl.textContent = 'Sem avaliações ainda';
-        listEl.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);padding:6px 0">Seja o primeiro pioneiro verificado a recomendar esta Vitrine.</div>';
+        listEl.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);padding:6px 0">Seja o primeiro pioneiro verificado a recomendar este Passaporte.</div>';
       }
 
       if (!formBox) return;
@@ -2822,7 +2822,7 @@
       } else if (isPi) {
         formBox.innerHTML = `
           <div style="font-size:0.78rem;color:var(--text-secondary);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-            <span>🛡️ Conecte sua conta no <strong>Pi Browser</strong> para avaliar esta Vitrine:</span>
+            <span>🛡️ Conecte sua conta no <strong>Pi Browser</strong> para avaliar este Passaporte:</span>
             <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="connectPiForReview('${escapeHtml(targetUsername)}')" style="padding:6px 12px;font-size:0.76rem;font-weight:800">
               ⚡ Conectar Pi
             </button>
@@ -2860,19 +2860,19 @@
       }
     }
 
-    // Compartilhar Vitrine (Link Curto Oficial)
+    // Compartilhar Passaporte (Link Curto Oficial)
     function shareProfile() {
       const cleanUser = currentPioneerUser ? currentPioneerUser.replace(/^@+/, '') : 'hokage22b';
       const shareUrl = `https://hokage22b.com/@${cleanUser}`;
       if (navigator.share) {
         navigator.share({
-          title: `${cleanUsername(currentPioneerUser)} — Vitrine Oficial na Pi Network`,
-          text: `Confira minha vitrine oficial, produtos e links na comunidade Pi Network:`,
+          title: `${cleanUsername(currentPioneerUser)} — Passaporte Oficial na Pi Network`,
+          text: `Confira meu Passaporte oficial, produtos e links na comunidade Pi Network:`,
           url: shareUrl
         }).catch(() => {});
       } else {
         navigator.clipboard.writeText(shareUrl).then(() => {
-          alert(`✓ Link da sua Vitrine copiado!\n\n${shareUrl}\n\nVocê pode colar este link na bio do Instagram, TikTok ou WhatsApp.`);
+          alert(`✓ Link do seu Passaporte copiado!\n\n${shareUrl}\n\nVocê pode colar este link na bio do Instagram, TikTok ou WhatsApp.`);
         });
       }
     }

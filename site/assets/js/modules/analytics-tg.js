@@ -93,7 +93,7 @@
       return { event: '🛒 Interesse em Produto/E-book', detail: label || onclick.slice(0, 50), key: 'prod_' + label.slice(0, 20) };
     }
     if (/shareProfile|shareReferralWhatsapp|copyWelcomeInviteLink/i.test(onclick)) {
-      return { event: '📢 Compartilhou Vitrine/Convite', detail: label, key: 'share' };
+      return { event: '📢 Compartilhou Passaporte/Convite', detail: label, key: 'share' };
     }
     if (/openWelcomeModal/i.test(onclick)) {
       return { event: '🎁 Abriu Balão de Convite', detail: label, key: 'ref_pill' };

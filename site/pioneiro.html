@@ -56,7 +56,7 @@
   </script>
 
   <style>
-    /* Topbar Fixa e Minimalista */
+    /* Topbar Fixa e Slim */
     .vitrine-topbar {
       position: fixed;
       top: 0;
@@ -66,29 +66,31 @@
       backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       z-index: 100;
-      padding: 10px 16px;
+      padding: 6px 14px;
+      min-height: 44px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
     }
     .vitrine-brand-link {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       color: #fff;
       font-weight: 800;
       text-decoration: none;
-      font-size: 0.92rem;
+      font-size: 0.84rem;
       flex-shrink: 0;
     }
     @media (max-width: 480px) {
       .vitrine-topbar {
-        padding: 8px 10px;
+        padding: 5px 10px;
+        min-height: 40px;
         gap: 6px;
       }
       .vitrine-brand-link {
-        font-size: 0.82rem;
+        font-size: 0.78rem;
         gap: 5px;
       }
     }
@@ -767,7 +769,7 @@
   </header>
 
   <!-- NAVBAR PADRÃO (VISÍVEL APENAS NA TELA INICIAL DE ONBOARDING) -->
-  <nav class="navbar" id="onboarding-navbar" style="background:rgba(9,9,11,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.1);padding:10px 0">
+  <nav class="navbar" id="onboarding-navbar" style="background:rgba(9,9,11,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.1);padding:6px 0">
     <div class="container">
       <div class="navbar__inner" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
         <a href="./" class="navbar__logo" aria-label="HOKAGE22B — Início" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:800">
@@ -787,7 +789,7 @@
   </nav>
   <div id="hk-site-drawer-root"></div>
 
-  <main style="padding:75px 16px 60px;position:relative;z-index:1;min-height:90vh">
+  <main style="padding:58px 16px 60px;position:relative;z-index:1;min-height:90vh">
     <div class="container" style="max-width:680px;margin:0 auto">
       
       <!-- ========================================== -->
@@ -852,7 +854,7 @@
           </p>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;font-size:0.76rem;color:#e4e4e7">
             <div style="background:rgba(0,0,0,0.28);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.07)">
-              <strong style="color:#fff;display:block;margin-bottom:2px">1. Crie sua Vitrine Grátis</strong>
+              <strong style="color:#fff;display:block;margin-bottom:2px">1. Crie seu Passaporte Grátis</strong>
               Conecte no Pi Browser e publique seus links, WhatsApp e produtos em <code>/@voce</code>.
             </div>
             <div style="background:rgba(0,0,0,0.28);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.07)">
@@ -981,7 +983,7 @@
           </div>
 
           <div id="pioneer-wallet-empty" style="display:none;font-size:0.82rem;color:var(--text-muted);padding:4px 0">
-            Chave pública ainda não cadastrada. O pioneiro pode adicioná-la editando sua vitrine no Pi Browser.
+            Chave pública ainda não cadastrada. O pioneiro pode adicioná-la editando seu Passaporte no Pi Browser.
           </div>
         </div>
 
@@ -1045,7 +1047,7 @@
           </div>
           <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;margin:0 0 12px">
             Compartilhe seu link de convite e gere <strong>benefício duplo (Ganha-Ganha)</strong>:<br>
-            • 🎁 <strong>Presente para seu Convidado:</strong> Quem ativa a Vitrine pelo seu link ganha na hora <strong>1 Crédito de Anúncio Bronze Grátis (0.314 π)</strong> no Mural!<br>
+            • 🎁 <strong>Presente para seu Convidado:</strong> Quem ativa o Passaporte pelo seu link ganha na hora <strong>1 Publicação Bônus na Vila (Central P2P)</strong>!<br>
             • 💰 <strong>Sua Comissão em Pi (<span id="ref-rate-label">20%</span>):</strong> Você ganha <strong>20% em Pi</strong> (ou <strong>25% como Embaixador</strong>) toda vez que um indicado seu anunciar no Mural ou adquirir um E-book em Pi!<br>
             • 🎟️ <strong>Seus Créditos + Selo:</strong> Ganhe <strong>1 Crédito Bronze (0.314 π)</strong> no 1º indicado ativo, <strong>+1 a cada 2 novos indicados</strong> e o <strong>🏅 Selo Embaixador</strong> com 5 indicados!
           </p>
@@ -1093,18 +1095,18 @@
         <!-- Botão Único de Compartilhamento no Rodapé do Card -->
         <div style="margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08)">
           <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="shareProfile()" style="width:100%;padding:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">
-            <span>📢</span> Compartilhar esta Vitrine
+            <span>📢</span> Compartilhar este Passaporte
           </button>
         </div>
 
       </div>
 
-      <!-- Rodapé da Vitrine Oficial -->
+      <!-- Rodapé do Passaporte Oficial -->
       <div id="pioneer-footer" style="text-align:center;color:var(--text-muted);font-size:0.82rem;margin-top:24px;display:none">
-        <p>✦ Passaporte Oficial do Pioneiro criada com a plataforma <a href="./" style="color:var(--accent-light);font-weight:600">HOKAGE22B</a>.</p>
+        <p>✦ Passaporte Oficial do Pioneiro criado com a plataforma <a href="./" style="color:var(--accent-light);font-weight:600">HOKAGE22B</a>.</p>
         <p style="margin-top:8px">
           <a href="pioneiro" id="pioneer-footer-create-link" style="color:var(--amber-light);font-weight:700;text-decoration:none">
-            🚀 Crie sua vitrine grátis com seu @usuário Pi ↗
+            🚀 Crie seu Passaporte grátis com seu @usuário Pi ↗
           </a>
         </p>
         <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap">
@@ -1124,7 +1126,7 @@
     <div class="pi-modal ad-modal" style="max-width:580px;text-align:left">
       <button type="button" class="pi-modal-close" onclick="closeProfileEditModal()" aria-label="Fechar modal">✕</button>
       <div class="pi-modal-logo">✏️</div>
-      <h3 id="modal-profile-title" style="text-align:center;margin-bottom:4px">Personalizar Minha Vitrine Pi</h3>
+      <h3 id="modal-profile-title" style="text-align:center;margin-bottom:4px">Personalizar Meu Passaporte Pi</h3>
       <p style="font-size:0.85rem;color:var(--text-secondary);text-align:center;margin-bottom:16px" id="modal-profile-subtitle">
         Configure sua bio, carteira Pi, links de contato e produtos com fotos.
       </p>
@@ -1148,7 +1150,7 @@
       <form id="profile-edit-form" onsubmit="saveProfileForm(event)">
 
         <!-- Abas de Navegação Rápida no Editor (Organização Mobile-First) -->
-        <div class="edit-tabs-bar" role="tablist" aria-label="Etapas de edição da vitrine">
+        <div class="edit-tabs-bar" role="tablist" aria-label="Etapas de edição do passaporte">
           <button type="button" class="edit-tab-btn active" data-edit-tab="perfil" onclick="switchEditTab('perfil')" role="tab" aria-selected="true">
             👤 Perfil &amp; Pi
           </button>
@@ -1353,7 +1355,7 @@
         </button>
 
         <a href="?u=hokage22b" class="btn btn-outline" style="width:100%;padding:11px;font-size:0.85rem;border-color:rgba(255,255,255,0.2);color:#fff;text-decoration:none">
-          🌟 Ver Vitrine do Fundador (@hokage22b)
+          🌟 Ver Passaporte do Fundador (@hokage22b)
         </a>
       </div>
 
@@ -1458,7 +1460,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/modules/db.js?v=5.9"></script>
 
-  <script src="assets/js/modules/vitrine.js?v=3.2"></script>
+  <script src="assets/js/modules/vitrine.js?v=3.3"></script>
   <script src="assets/js/modules/monte-progression.js?v=1.2"></script>
 </body>
 </html>
