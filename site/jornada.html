@@ -75,24 +75,36 @@
 
     <header class="j-hero">
       <img src="assets/img/brand/hokage22b-logo-violet.svg" alt="HOKAGE22B" width="38" height="38" style="width:38px;height:38px;margin:0 auto 12px;display:block;opacity:0.92" />
-      <div class="j-tag">Identidade · Conexão · Construção · Liderança</div>
-      <h1>Qual é o seu momento agora?</h1>
+      <div class="j-tag">Diagnóstico Rápido · Web3 &amp; IA</div>
+      <h1>Para onde a tecnologia está indo — e qual é o seu lugar nela</h1>
       <p>
-        Escolha a opção que melhor descreve onde você está. Sem cadastro obrigatório na entrada — você segue direto para o próximo passo certo para você.
+        Responda 3 perguntas rápidas (~30 segundos) para descobrirmos o melhor ponto de partida para o seu momento. Sem cadastro obrigatório.
       </p>
     </header>
 
-    <div id="j-resume-banner" class="j-resume-banner">
-      <div>
-        <strong style="color:#c4b5fd;font-size:0.88rem;display:block">Você já iniciou sua trilha por aqui</strong>
-        <span id="j-resume-text" style="color:#d4d4d8;font-size:0.82rem"></span>
-      </div>
-      <a id="j-resume-link" href="zero" class="portal-btn portal-btn--primary portal-btn--sm" style="text-decoration:none">Continuar de onde parei →</a>
+    <!-- Quiz Interativo (1 pergunta por vez) -->
+    <section id="j-quiz-box" aria-label="Diagnóstico de Jornada" style="background:#141419;border:1px solid rgba(139,92,246,0.38);border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:0 18px 46px rgba(0,0,0,0.45)">
+      <div id="j-quiz-content"></div>
+    </section>
+
+    <div style="text-align:center;margin-bottom:24px">
+      <button type="button" id="j-toggle-direct-btn" onclick="toggleDirectMenu()" style="background:none;border:none;color:#a1a1aa;font-size:0.84rem;font-weight:700;cursor:pointer;text-decoration:underline">
+        Prefere ir direto? Ver todas as rotas do portal ↓
+      </button>
     </div>
 
-    <div id="jornada-monte-progress" style="margin-bottom:22px"></div>
+    <div id="j-direct-wrap" style="display:none">
+      <div id="j-resume-banner" class="j-resume-banner">
+        <div>
+          <strong style="color:#c4b5fd;font-size:0.88rem;display:block">Você já iniciou sua trilha por aqui</strong>
+          <span id="j-resume-text" style="color:#d4d4d8;font-size:0.82rem"></span>
+        </div>
+        <a id="j-resume-link" href="zero" class="portal-btn portal-btn--primary portal-btn--sm" style="text-decoration:none">Continuar de onde parei →</a>
+      </div>
 
-    <section class="j-list" aria-label="Escolha seu próximo passo">
+      <div id="jornada-monte-progress" style="margin-bottom:22px"></div>
+
+      <section class="j-list" aria-label="Escolha seu próximo passo">
       <a href="zero" class="j-option" data-step-id="1" data-step-label="01 · Pi do Zero (Iniciante)" onclick="saveJourneyStep('1', '01 · Pi do Zero (Iniciante)', 'zero')">
         <div class="j-option__left">
           <div class="j-option__icon">📘</div>
@@ -155,6 +167,7 @@
         <span class="j-option__dest">Explorar Monte Hokage →</span>
       </a>
     </section>
+    </div>
 
     <section aria-label="A Trilha Única">
       <h2 style="font-size:1.15rem;font-weight:800;margin:0 0 14px;color:#fff;text-align:center">A Trilha Única HOKAGE22B</h2>
@@ -211,7 +224,132 @@
       } catch (_) {}
     })();
   </script>
-  <script src="assets/js/modules/monte-progression.js?v=1.0"></script>
+  <script src="assets/js/modules/jornada-quiz.js?v=1.0"></script>
+  <script>
+    function toggleDirectMenu() {
+      var wrap = document.getElementById('j-direct-wrap');
+      var btn = document.getElementById('j-toggle-direct-btn');
+      if (!wrap) return;
+      var show = wrap.style.display === 'none';
+      wrap.style.display = show ? 'block' : 'none';
+      if (btn) btn.textContent = show ? 'Ocultar rotas diretas ↑' : 'Prefere ir direto? Ver todas as rotas do portal ↓';
+    }
+
+    (function initJornadaQuiz() {
+      var engine = window.HokageJornadaQuiz;
+      var root = document.getElementById('j-quiz-content');
+      if (!engine || !root) return;
+
+      var step = 0;
+      var answers = {};
+      var QUIZ_STORAGE_KEY = 'hokage_jornada_quiz_v1';
+
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function renderResult(res) {
+        var insightsHtml = res.futureInsight.map(function (line) {
+          return '<li style="margin-bottom:6px">' + esc(line) + '</li>';
+        }).join('');
+
+        root.innerHTML =
+          '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">' +
+            '<span style="font-size:0.74rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#34d399">✓ Seu Diagnóstico</span>' +
+            '<span style="font-size:0.74rem;color:#a1a1aa">' + esc(res.profileLabel) + '</span>' +
+          '</div>' +
+          '<div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.28);border-radius:12px;padding:12px 14px;margin-bottom:14px">' +
+            '<strong style="display:block;font-size:0.84rem;color:#ddd6fe;margin-bottom:6px">Para onde Web3 + IA estão indo (e por que importa):</strong>' +
+            '<ul style="margin:0;padding-left:18px;font-size:0.8rem;color:#d4d4d8;line-height:1.45">' + insightsHtml + '</ul>' +
+          '</div>' +
+          '<div style="background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(139,92,246,0.1));border:1px solid rgba(249,115,22,0.45);border-radius:14px;padding:16px;margin-bottom:12px">' +
+            '<span style="font-size:0.7rem;font-weight:800;text-transform:uppercase;color:#fbbf24">' + esc(res.primary.badge) + '</span>' +
+            '<h2 style="font-size:1.15rem;font-weight:900;color:#fff;margin:4px 0 6px">' + esc(res.primary.title) + '</h2>' +
+            '<p style="font-size:0.86rem;color:#d4d4d8;margin:0 0 12px;line-height:1.5">' + esc(res.primary.desc) + '</p>' +
+            '<a href="' + esc(res.primary.href) + '" class="portal-btn portal-btn--primary" style="text-decoration:none;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);color:#09090b;border:none;display:inline-flex">' + esc(res.primary.cta) + '</a>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">' +
+            '<a href="' + esc(res.secondary.href) + '" style="font-size:0.84rem;color:#c4b5fd;font-weight:700;text-decoration:none">' + esc(res.secondary.title) + ' (' + esc(res.secondary.cta) + ')</a>' +
+            '<button type="button" id="j-quiz-restart" style="background:none;border:1px solid rgba(255,255,255,0.16);color:#a1a1aa;border-radius:8px;padding:5px 10px;font-size:0.76rem;cursor:pointer">🔄 Refazer diagnóstico</button>' +
+          '</div>';
+
+        document.getElementById('j-quiz-restart').addEventListener('click', function () {
+          step = 0;
+          answers = {};
+          try { localStorage.removeItem(QUIZ_STORAGE_KEY); } catch (_) {}
+          renderQuestion();
+        });
+      }
+
+      function renderQuestion() {
+        var q = engine.QUESTIONS[step];
+        if (!q) {
+          var res = engine.recommendPath(answers);
+          try { localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify({ answers: answers, at: Date.now() })); } catch (_) {}
+          if (window.HokageAnalyticsTg && typeof window.HokageAnalyticsTg.sendEvent === 'function') {
+            window.HokageAnalyticsTg.sendEvent('🧭 Diagnóstico Jornada', res.profileLabel, 'quiz_' + (answers.role || '') + '_' + (answers.crypto || '') + '_' + (answers.goal || ''));
+          }
+          renderResult(res);
+          return;
+        }
+
+        var pct = Math.round(((step + 1) / engine.QUESTIONS.length) * 100);
+        var optsHtml = q.options.map(function (opt) {
+          return (
+            '<button type="button" class="j-quiz-opt" data-val="' + esc(opt.value) + '" style="text-align:left;padding:13px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(9,9,11,0.75);color:#fafafa;cursor:pointer;display:flex;align-items:flex-start;gap:12px;width:100%">' +
+              '<span style="font-size:1.25rem;line-height:1.1;flex-shrink:0">' + opt.icon + '</span>' +
+              '<span><strong style="display:block;font-size:0.92rem;color:#fff;margin-bottom:2px">' + esc(opt.label) + '</strong>' +
+              '<span style="display:block;font-size:0.78rem;color:#a1a1aa">' + esc(opt.desc) + '</span></span>' +
+            '</button>'
+          );
+        }).join('');
+
+        root.innerHTML =
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.76rem;color:#fbbf24;font-weight:800">' +
+            '<span>' + esc(q.stepLabel) + '</span>' +
+            '<span>' + pct + '%</span>' +
+          '</div>' +
+          '<div style="height:6px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-bottom:14px">' +
+            '<div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,#8b5cf6,#f97316);border-radius:999px;transition:width 0.3s ease"></div>' +
+          '</div>' +
+          '<h2 style="font-size:1.15rem;font-weight:900;color:#fff;margin:0 0 4px">' + esc(q.title) + '</h2>' +
+          '<p style="font-size:0.84rem;color:#a1a1aa;margin:0 0 14px">' + esc(q.subtitle) + '</p>' +
+          '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px">' + optsHtml + '</div>' +
+          (step > 0 ? '<div style="margin-top:12px"><button type="button" id="j-quiz-back" style="background:none;border:none;color:#a1a1aa;font-size:0.8rem;cursor:pointer">← Pergunta anterior</button></div>' : '');
+
+        root.querySelectorAll('.j-quiz-opt').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            answers[q.id] = btn.getAttribute('data-val');
+            step += 1;
+            renderQuestion();
+          });
+        });
+
+        var back = document.getElementById('j-quiz-back');
+        if (back) {
+          back.addEventListener('click', function () {
+            step = Math.max(0, step - 1);
+            renderQuestion();
+          });
+        }
+      }
+
+      try {
+        var saved = localStorage.getItem(QUIZ_STORAGE_KEY);
+        if (saved) {
+          var parsed = JSON.parse(saved);
+          if (parsed && parsed.answers) {
+            answers = parsed.answers;
+            renderResult(engine.recommendPath(answers));
+            return;
+          }
+        }
+      } catch (_) {}
+
+      renderQuestion();
+    })();
+  </script>
+  <script src="assets/js/modules/monte-progression.js?v=1.2"></script>
   <script>
     if (window.HokageMonteProgression) {
       window.HokageMonteProgression.renderProgressionPanel('jornada-monte-progress', null, { compact: true });
