@@ -47,11 +47,94 @@
     return clean || 'index';
   }
 
-  function renderHeader() {
-    const mount = document.getElementById('hk-site-header-root');
-    if (!mount) return;
+  function buildDrawerHtml(current) {
+    const drawerNav = NAV_GROUPS.map(function (group) {
+      const links = group.items.map(function (item) {
+        const isActive = item.match.indexOf(current) !== -1;
+        const colorStyle = item.color ? ('color:' + item.color + ';') : '';
+        const activeBg = isActive ? 'background:rgba(139,92,246,0.14);border-radius:10px;padding-left:8px;padding-right:8px;' : '';
+        return '<a href="' + item.href + '" style="' + colorStyle + 'font-weight:700;' + activeBg + '"' +
+          (isActive ? ' aria-current="page"' : '') + '>' + item.label + '</a>';
+      }).join('');
+      return (
+        '<div style="margin-bottom:10px">' +
+          '<div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">' + group.heading + '</div>' +
+          links +
+        '</div>'
+      );
+    }).join('');
 
+    return (
+      '<div class="portal-drawer" id="portal-drawer" role="navigation" aria-label="Menu Mobile">' +
+        '<div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08)">' +
+          '<span style="font-size:0.8rem;color:#a1a1aa;font-weight:600">🌐 Idioma / Language</span>' +
+          '<div class="lang-mount-point"></div>' +
+        '</div>' +
+        '<div class="portal-drawer__nav">' + drawerNav + '</div>' +
+        '<div style="padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);margin-top:8px">' +
+          '<a href="jornada" class="portal-btn portal-btn--primary portal-btn--full" style="display:flex;align-items:center;justify-content:center;width:100%;padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);color:#09090b">' +
+            '🚀 Começar Minha Jornada' +
+          '</a>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function injectStandaloneDrawerStyles() {
+    if (document.getElementById('hk-standalone-drawer-css')) return;
+    const style = document.createElement('style');
+    style.id = 'hk-standalone-drawer-css';
+    style.textContent =
+      '.hk-burger-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;min-width:36px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.16);border-radius:10px;color:#f4f4f5;font-size:1.15rem;line-height:1;cursor:pointer;padding:0;margin:0;flex-shrink:0;transition:all 0.2s ease}' +
+      '.hk-burger-btn:hover,.hk-burger-btn:focus-visible{border-color:#8b5cf6;background:rgba(139,92,246,0.18);color:#fff}' +
+      '.hk-drawer-standalone .portal-drawer{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;width:100vw;max-width:100vw;box-sizing:border-box;height:calc(100dvh - 64px);overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;background:rgba(9,9,11,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.08);padding:16px 20px 80px;z-index:9999}' +
+      '.hk-drawer-standalone .portal-drawer *{box-sizing:border-box;max-width:100%}' +
+      '.hk-drawer-standalone .portal-drawer.active{display:block}' +
+      '.hk-drawer-standalone .portal-drawer__nav{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}' +
+      '.hk-drawer-standalone .portal-drawer__nav a{font-size:0.98rem;font-weight:700;color:#f4f4f5;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;text-decoration:none}';
+    document.head.appendChild(style);
+  }
+
+  function bindDrawerEvents() {
+    const burger = document.getElementById('portal-burger-btn');
+    const drawer = document.getElementById('portal-drawer');
+    if (burger && drawer && !burger.dataset.hkBound) {
+      burger.dataset.hkBound = '1';
+      function closeDrawer() {
+        drawer.classList.remove('active');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.textContent = '☰';
+      }
+      burger.addEventListener('click', function () {
+        const isOpen = drawer.classList.toggle('active');
+        burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        burger.textContent = isOpen ? '✕' : '☰';
+      });
+      drawer.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', closeDrawer);
+      });
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && drawer.classList.contains('active')) {
+          closeDrawer();
+        }
+      });
+    }
+  }
+
+  function renderHeader() {
     const current = getCurrentSlug();
+    const mount = document.getElementById('hk-site-header-root');
+    const drawerOnlyMount = document.getElementById('hk-site-drawer-root');
+
+    if (!mount) {
+      if (drawerOnlyMount) {
+        injectStandaloneDrawerStyles();
+        drawerOnlyMount.classList.add('hk-drawer-standalone');
+        drawerOnlyMount.innerHTML = buildDrawerHtml(current);
+        bindDrawerEvents();
+      }
+      return;
+    }
 
     const desktopItems = [];
     NAV_GROUPS.forEach(function (group) {
@@ -68,22 +151,6 @@
         );
       });
     });
-
-    const drawerHtml = NAV_GROUPS.map(function (group) {
-      const links = group.items.map(function (item) {
-        const isActive = item.match.indexOf(current) !== -1;
-        const colorStyle = item.color ? ('color:' + item.color + ';') : '';
-        const activeBg = isActive ? 'background:rgba(139,92,246,0.14);border-radius:10px;' : '';
-        return '<a href="' + item.href + '" style="' + colorStyle + 'font-weight:700;' + activeBg + '"' +
-          (isActive ? ' aria-current="page"' : '') + '>' + item.label + '</a>';
-      }).join('');
-      return (
-        '<div style="margin-bottom:10px">' +
-          '<div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">' + group.heading + '</div>' +
-          links +
-        '</div>'
-      );
-    }).join('');
 
     mount.innerHTML =
       '<header class="portal-header" id="portal-header">' +
@@ -109,18 +176,7 @@
           '</div>' +
         '</div>' +
       '</header>' +
-      '<div class="portal-drawer" id="portal-drawer" role="navigation" aria-label="Menu Mobile">' +
-        '<div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.08)">' +
-          '<span style="font-size:0.8rem;color:var(--text-secondary);font-weight:600">🌐 Idioma / Language</span>' +
-          '<div class="lang-mount-point"></div>' +
-        '</div>' +
-        '<div class="portal-drawer__nav">' + drawerHtml + '</div>' +
-        '<div style="padding-top:12px;border-top:1px solid var(--border-subtle);margin-top:8px">' +
-          '<a href="jornada" class="portal-btn portal-btn--primary portal-btn--full" style="text-decoration:none;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);color:#09090b">' +
-            '🚀 Começar Minha Jornada' +
-          '</a>' +
-        '</div>' +
-      '</div>';
+      buildDrawerHtml(current);
 
     const main = document.querySelector('main');
     if (main && !main.dataset.hkHeaderSpaced) {
@@ -132,29 +188,7 @@
       }
     }
 
-    const burger = document.getElementById('portal-burger-btn');
-    const drawer = document.getElementById('portal-drawer');
-    if (burger && drawer && !burger.dataset.hkBound) {
-      burger.dataset.hkBound = '1';
-      function closeDrawer() {
-        drawer.classList.remove('active');
-        burger.setAttribute('aria-expanded', 'false');
-        burger.textContent = '☰';
-      }
-      burger.addEventListener('click', function () {
-        const isOpen = drawer.classList.toggle('active');
-        burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        burger.textContent = isOpen ? '✕' : '☰';
-      });
-      drawer.querySelectorAll('a').forEach(function (a) {
-        a.addEventListener('click', closeDrawer);
-      });
-      document.addEventListener('keydown', function (ev) {
-        if (ev.key === 'Escape' && drawer.classList.contains('active')) {
-          closeDrawer();
-        }
-      });
-    }
+    bindDrawerEvents();
   }
 
   renderHeader();
