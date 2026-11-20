@@ -37,7 +37,7 @@
     .m-nav-links a { color: #a1a1aa; text-decoration: none; font-weight: 600; }
     .m-nav-links a:hover { color: #fafafa; }
 
-    .m-hero { text-align: center; max-width: 760px; margin: 0 auto 38px; }
+    .m-hero { position: relative; overflow: hidden; text-align: center; max-width: 760px; margin: 0 auto 38px; padding: 10px 0; }
     .m-hero-logo { width: 54px; height: 54px; margin: 0 auto 14px; display: block; }
     .m-pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: rgba(249,115,22,0.14); border: 1px solid rgba(249,115,22,0.4); color: #fb923c; font-size: 0.78rem; font-weight: 700; margin-bottom: 12px; }
     .m-hero h1 { font-size: clamp(2rem, 4.2vw, 2.8rem); font-weight: 900; line-height: 1.12; margin: 0 0 12px; letter-spacing: -0.02em; }
@@ -70,12 +70,15 @@
   <main class="m-wrap">
 
     <header class="m-hero">
+      <img src="assets/img/brand/hokage22b-thelema-seal.svg" alt="" aria-hidden="true" class="hk-hero-watermark" />
+      <div style="position:relative;z-index:1">
       <img src="assets/img/brand/hokage22b-logo.svg" alt="Selo Hokage" class="m-hero-logo" />
       <div class="m-pill">Etapa 03 · Liderança que constrói o futuro</div>
       <h1>O Monte Hokage</h1>
       <p>
         Hokage não se compra com planos ou anúncios — conquista-se por <strong>contribuição real</strong> no ecossistema. Este espaço reconhece os construtores que elevam a qualidade, a segurança e a utilidade prática da rede.
       </p>
+      </div>
     </header>
 
     <section aria-label="Critérios de Mérito">

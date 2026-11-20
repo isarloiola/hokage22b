@@ -37,7 +37,7 @@
     .j-nav-links a { color: #a1a1aa; text-decoration: none; font-weight: 600; }
     .j-nav-links a:hover { color: #fafafa; }
 
-    .j-hero { text-align: center; max-width: 680px; margin: 0 auto 32px; }
+    .j-hero { position: relative; overflow: hidden; text-align: center; max-width: 680px; margin: 0 auto 32px; padding: 10px 0; }
     .j-tag { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.38); color: #fb923c; font-size: 0.78rem; font-weight: 700; margin-bottom: 14px; }
     .j-hero h1 { font-size: clamp(1.85rem, 4vw, 2.6rem); font-weight: 900; line-height: 1.15; margin: 0 0 10px; letter-spacing: -0.02em; }
     .j-hero p { color: #a1a1aa; font-size: 0.98rem; line-height: 1.6; margin: 0; }
@@ -74,12 +74,15 @@
   <main class="j-wrap">
 
     <header class="j-hero">
+      <img src="assets/img/brand/hokage22b-thelema-seal.svg" alt="" aria-hidden="true" class="hk-hero-watermark" />
+      <div style="position:relative;z-index:1">
       <img src="assets/img/brand/hokage22b-logo-violet.svg" alt="HOKAGE22B" width="38" height="38" style="width:38px;height:38px;margin:0 auto 12px;display:block;opacity:0.92" />
       <div class="j-tag">Diagnóstico Rápido · Web3 &amp; IA</div>
       <h1>Para onde a tecnologia está indo — e qual é o seu lugar nela</h1>
       <p>
         Responda 3 perguntas rápidas (~30 segundos) para descobrirmos o melhor ponto de partida para o seu momento. Sem cadastro obrigatório.
       </p>
+      </div>
     </header>
 
     <!-- Quiz Interativo (1 pergunta por vez) -->
