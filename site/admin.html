@@ -25,24 +25,26 @@
 
   <style>
     :root {
-      --bg: #07090e;
-      --bg-card: #0f131d;
-      --bg-card-hover: #151a28;
-      --bg-input: #151a26;
+      --bg: #09090b;
+      --bg-card: #111114;
+      --bg-card-hover: #18181c;
+      --bg-input: #0c0c0f;
       --border: rgba(255, 255, 255, 0.08);
-      --border-focus: rgba(245, 158, 11, 0.5);
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --border-focus: rgba(245, 158, 11, 0.45);
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --text-subtle: #71717a;
       --amber: #f59e0b;
       --amber-light: #fbbf24;
-      --amber-glow: rgba(245, 158, 11, 0.25);
+      --amber-glow: rgba(245, 158, 11, 0.14);
       --purple: #8b5cf6;
       --green: #10b981;
       --red: #ef4444;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-head: 'Outfit', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --radius: 12px;
+      --radius: 10px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -54,17 +56,19 @@
       display: flex;
       flex-direction: column;
       line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* Topbar */
     .admin-nav {
-      background: rgba(15, 19, 29, 0.9);
-      backdrop-filter: blur(14px);
+      background: rgba(9, 9, 11, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 50;
-      padding: 12px 24px;
+      padding: 10px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -72,56 +76,51 @@
       flex-wrap: wrap;
     }
     .admin-logo {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 10px;
       text-decoration: none;
       color: #fff;
       font-family: var(--font-head);
       font-weight: 800;
-      font-size: 1.15rem;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
     }
     .admin-logo-badge {
-      background: linear-gradient(135deg, var(--amber), #d97706);
-      color: #000;
-      font-size: 0.68rem;
-      font-weight: 900;
-      padding: 2px 8px;
-      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
     }
     .admin-nav-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    /* Security Bar */
-    .security-status-bar {
-      background: rgba(16, 185, 129, 0.08);
-      border-bottom: 1px solid rgba(16, 185, 129, 0.2);
-      padding: 8px 24px;
-      font-size: 0.76rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
       gap: 10px;
-      font-family: var(--font-mono);
-      color: #a7f3d0;
+      flex-wrap: wrap;
     }
-    .security-badge {
+    .security-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 999px;
     }
     .security-dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--green);
-      box-shadow: 0 0 8px var(--green);
     }
 
     /* Buttons */
@@ -132,36 +131,34 @@
       gap: 6px;
       font-family: var(--font);
       font-weight: 600;
-      font-size: 0.86rem;
-      padding: 9px 18px;
+      font-size: 0.84rem;
+      padding: 8px 15px;
       border-radius: 8px;
       cursor: pointer;
       border: 1px solid transparent;
-      transition: all 0.2s ease;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
       text-decoration: none;
+      white-space: nowrap;
     }
     .btn:disabled {
-      opacity: 0.55;
+      opacity: 0.5;
       cursor: not-allowed;
     }
     .btn-primary {
-      background: linear-gradient(135deg, var(--amber), #d97706);
-      color: #000;
-      box-shadow: 0 2px 10px var(--amber-glow);
+      background: var(--amber);
+      color: #09090b;
+      font-weight: 700;
     }
     .btn-primary:hover:not(:disabled) {
-      filter: brightness(1.1);
-      transform: translateY(-1px);
+      background: var(--amber-light);
     }
     .btn-pi {
-      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      background: #6d28d9;
       color: #fff;
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      box-shadow: 0 2px 12px rgba(124, 58, 237, 0.25);
+      border: 1px solid rgba(139, 92, 246, 0.35);
     }
     .btn-pi:hover:not(:disabled) {
-      filter: brightness(1.15);
-      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+      background: #7c3aed;
     }
     .btn-outline {
       background: transparent;
@@ -170,59 +167,59 @@
     }
     .btn-outline:hover:not(:disabled) {
       background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: var(--border-strong);
     }
-    .btn-sm { padding: 5px 12px; font-size: 0.78rem; }
-    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
+    .btn-sm { padding: 5px 11px; font-size: 0.76rem; }
+    .btn-danger { background: rgba(239, 68, 68, 0.12); color: #fca5a5; border-color: rgba(239, 68, 68, 0.25); }
     .btn-danger:hover { background: #ef4444; color: #fff; }
-    .btn-success { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.3); }
-    .btn-success:hover { background: #10b981; color: #000; }
-    .btn-warning { background: rgba(245, 158, 11, 0.15); color: #fde68a; border-color: rgba(245, 158, 11, 0.3); }
-    .btn-warning:hover { background: #f59e0b; color: #000; }
+    .btn-success { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.25); }
+    .btn-success:hover { background: #10b981; color: #09090b; }
+    .btn-warning { background: rgba(245, 158, 11, 0.12); color: #fde68a; border-color: rgba(245, 158, 11, 0.25); }
+    .btn-warning:hover { background: #f59e0b; color: #09090b; }
 
     /* Login Screen */
     .login-container {
-      max-width: 480px;
-      margin: 60px auto 40px;
-      padding: 36px 32px;
+      max-width: 420px;
+      width: calc(100% - 32px);
+      margin: 72px auto 48px;
+      padding: 32px 28px;
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+      border-radius: 14px;
       text-align: center;
     }
     .login-icon-wrap {
-      width: 68px;
-      height: 68px;
-      margin: 0 auto 16px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(139, 92, 246, 0.15));
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 14px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
     }
     .login-title {
       font-family: var(--font-head);
-      font-size: 1.6rem;
-      font-weight: 800;
+      font-size: 1.35rem;
+      font-weight: 700;
       color: #fff;
+      letter-spacing: -0.02em;
       margin-bottom: 6px;
     }
     .login-desc {
       color: var(--text-muted);
-      font-size: 0.88rem;
-      margin-bottom: 24px;
+      font-size: 0.84rem;
+      margin-bottom: 22px;
       line-height: 1.5;
     }
     .login-divider {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin: 22px 0;
-      color: var(--text-muted);
-      font-size: 0.74rem;
+      margin: 18px 0;
+      color: var(--text-subtle);
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
@@ -234,12 +231,12 @@
     }
     .form-group {
       text-align: left;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       position: relative;
     }
     .form-label {
       display: block;
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--text-muted);
       margin-bottom: 6px;
@@ -257,85 +254,94 @@
       border: 1px solid var(--border);
       color: #fff;
       font-family: var(--font-mono);
-      font-size: 0.88rem;
-      padding: 11px 40px 11px 14px;
+      font-size: 0.85rem;
+      padding: 10px 38px 10px 12px;
       border-radius: 8px;
       outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .form-input:focus {
-      border-color: var(--amber);
+      border-color: var(--border-focus);
       box-shadow: 0 0 0 3px var(--amber-glow);
     }
     .input-toggle-eye {
       position: absolute;
-      right: 12px;
+      right: 10px;
       background: transparent;
       border: none;
-      color: var(--text-muted);
+      color: var(--text-subtle);
       cursor: pointer;
-      font-size: 1.1rem;
+      font-size: 1rem;
       padding: 4px;
     }
     .login-pi-status {
       margin-top: 10px;
       padding: 10px;
       border-radius: 8px;
-      background: rgba(0,0,0,0.3);
+      background: rgba(0, 0, 0, 0.35);
       border: 1px solid var(--border);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-family: var(--font-mono);
       display: none;
       text-align: left;
     }
+    .login-footnote {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+    }
 
     /* Main Dashboard */
     .dashboard-container {
-      max-width: 1300px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 24px 20px 48px;
+      padding: 24px 20px 56px;
       width: 100%;
       flex: 1;
     }
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
       margin-bottom: 24px;
     }
     .stat-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px 20px;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
     .stat-label {
-      font-size: 0.76rem;
-      color: var(--text-muted);
+      font-size: 0.72rem;
+      color: var(--text-subtle);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       font-weight: 600;
     }
     .stat-value {
       font-family: var(--font-head);
-      font-size: 1.85rem;
-      font-weight: 800;
+      font-size: 1.75rem;
+      font-weight: 700;
       color: #fff;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
     }
     .stat-desc {
-      font-size: 0.75rem;
-      color: var(--amber-light);
+      font-size: 0.74rem;
+      color: var(--text-muted);
     }
 
     /* Tabs */
     .tab-bar {
       display: flex;
-      gap: 8px;
+      gap: 4px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       overflow-x: auto;
       scrollbar-width: none;
     }
@@ -344,20 +350,20 @@
       border: none;
       color: var(--text-muted);
       font-family: var(--font);
-      font-weight: 700;
-      font-size: 0.92rem;
-      padding: 12px 18px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      padding: 10px 16px;
       cursor: pointer;
       border-bottom: 2px solid transparent;
-      transition: all 0.2s ease;
+      transition: color 0.15s ease, border-color 0.15s ease;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       white-space: nowrap;
     }
     .tab-btn:hover { color: #fff; }
     .tab-btn.active {
-      color: var(--amber);
+      color: #fff;
       border-bottom-color: var(--amber);
     }
     .tab-pane { display: none; }
@@ -370,30 +376,29 @@
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .filter-pills {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
     .filter-pill {
-      background: var(--bg-card);
+      background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 999px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
-    .filter-pill:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
+    .filter-pill:hover { color: #fff; border-color: var(--border-strong); }
     .filter-pill.active {
-      background: var(--amber);
-      color: #000;
-      border-color: var(--amber);
-      font-weight: 800;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     /* Table */
@@ -407,64 +412,106 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.86rem;
+      font-size: 0.84rem;
     }
     table.admin-table th {
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--text-muted);
-      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-subtle);
+      padding: 11px 16px;
       font-weight: 600;
       text-transform: uppercase;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       letter-spacing: 0.06em;
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
     table.admin-table td {
-      padding: 14px 16px;
+      padding: 13px 16px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       vertical-align: middle;
+    }
+    table.admin-table tr:last-child td {
+      border-bottom: none;
     }
     table.admin-table tr:hover {
       background: rgba(255, 255, 255, 0.02);
     }
     .badge {
       display: inline-block;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 0.72rem;
-      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 0.7rem;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
-    .badge-ativo { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-pausado { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .badge-pendente { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .badge-tier-ouro { background: linear-gradient(90deg, #f59e0b, #fbbf24); color: #000; font-weight: 900; }
-    .badge-tier-prata { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
-    .badge-tier-bronze { background: rgba(180, 100, 50, 0.2); color: #d97706; }
+    .badge-ativo { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+    .badge-pausado { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
+    .badge-pendente { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
+    .badge-tier-ouro { background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-tier-prata { background: rgba(148, 163, 184, 0.14); color: #cbd5e1; }
+    .badge-tier-bronze { background: rgba(180, 100, 50, 0.16); color: #d97706; }
+
+    /* System Grid */
+    .system-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+    .panel-card h3 {
+      font-family: var(--font-head);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .panel-card p.panel-sub {
+      color: var(--text-muted);
+      font-size: 0.83rem;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .diag-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      background: var(--bg-input);
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
 
     /* Toast Notification */
     #admin-toast {
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #111827;
+      background: #18181b;
       color: #fff;
-      border: 1px solid var(--amber);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-      padding: 12px 20px;
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+      padding: 11px 18px;
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.84rem;
       font-weight: 600;
       z-index: 1000;
       display: none;
       align-items: center;
       gap: 10px;
-      animation: slideUp 0.25s ease;
+      animation: slideUp 0.2s ease;
     }
     @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
+      from { transform: translateY(14px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
 
@@ -472,7 +519,7 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.76);
       backdrop-filter: blur(6px);
       z-index: 100;
       display: none;
@@ -483,11 +530,17 @@
     .modal-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      max-width: 520px;
+      border-radius: 14px;
+      max-width: 500px;
       width: 100%;
-      padding: 26px;
-      box-shadow: 0 24px 50px rgba(0,0,0,0.7);
+      padding: 24px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    @media (max-width: 640px) {
+      .admin-nav { padding: 10px 14px; }
+      .dashboard-container { padding: 16px 12px 48px; }
+      .login-container { margin: 40px auto; padding: 24px 20px; }
     }
   </style>
 </head>
@@ -495,65 +548,61 @@
 
   <!-- Topbar -->
   <header class="admin-nav">
-    <a href="mural" class="admin-logo">
-      <span style="color:var(--amber);font-size:1.4rem">✦</span>
+    <a href="./" class="admin-logo">
+      <img src="assets/img/brand/hokage22b-logo.svg" alt="" width="22" height="22" aria-hidden="true" style="width:22px;height:22px;display:block;flex-shrink:0" />
       <span>HOKAGE22B</span>
-      <span class="admin-logo-badge">Console Administrativo</span>
+      <span class="admin-logo-badge">Admin</span>
     </a>
 
     <div class="admin-nav-actions" id="nav-actions-auth" style="display:none">
-      <span id="admin-user-tag" style="font-size:0.8rem;color:var(--text-muted);font-family:var(--font-mono);background:rgba(255,255,255,0.05);padding:4px 10px;border-radius:6px"></span>
-      <a href="mural" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">👁️ Ver Mural</a>
-      <button type="button" class="btn btn-outline btn-sm" onclick="logoutAdmin()">🔒 Bloquear Console</button>
+      <span class="security-pill"><span class="security-dot"></span>RLS Zero-Trust</span>
+      <span id="admin-user-tag" style="font-size:0.76rem;color:var(--text-muted);font-family:var(--font-mono);background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:4px 10px;border-radius:6px"></span>
+      <a href="mural" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">↗ A Vila</a>
+      <button type="button" class="btn btn-outline btn-sm" onclick="logoutAdmin()">Bloquear</button>
     </div>
   </header>
 
-  <!-- Barra de Status de Segurança Criptográfica -->
-  <div class="security-status-bar">
-    <div class="security-badge">
-      <span class="security-dot"></span>
-      <span>PostgreSQL Zero-Trust: <strong>Proteção Server-Side via RPC</strong></span>
-    </div>
-    <div class="security-badge">
-      <span>Autenticação: <strong>Pi Network Web3 &amp; Chave de Cofre</strong></span>
-    </div>
-  </div>
-
   <!-- TELA 1: LOGIN ADMINISTRATIVO -->
   <main id="view-login" class="login-container">
-    <div class="login-icon-wrap">🛡️</div>
-    <h1 class="login-title">Acesso Restrito</h1>
-    <p class="login-desc">Painel exclusivo do administrador <strong>@hokage22b</strong> para gerenciar anúncios, leads e manutenção sem mexer em código.</p>
+    <div class="login-icon-wrap">
+      <img src="assets/img/brand/hokage22b-logo.svg" alt="" width="22" height="22" aria-hidden="true" style="width:22px;height:22px;display:block" />
+    </div>
+    <h1 class="login-title">Console Administrativo</h1>
+    <p class="login-desc">Autenticação restrita do ecossistema <strong>@hokage22b</strong>.</p>
 
     <!-- Método A: Login Pi Network -->
-    <button type="button" class="btn btn-pi" id="btn-pi-login" style="width:100%;padding:13px;font-size:0.95rem;font-weight:700" onclick="loginWithPiAdmin()">
+    <button type="button" class="btn btn-pi" id="btn-pi-login" style="width:100%;padding:11px;font-size:0.9rem;font-weight:700" onclick="loginWithPiAdmin()">
       ⚡ Entrar com Pi Network (@hokage22b)
     </button>
     <div id="pi-login-diag" class="login-pi-status"></div>
 
-    <div class="login-divider">ou acesse com chave mestra</div>
+    <div class="login-divider">ou chave mestra</div>
 
     <!-- Método B: Senha Mestra -->
     <form onsubmit="handlePasswordLogin(event)">
       <div class="form-group">
-        <label class="form-label" for="admin-pass">Chave Mestra do Cofre</label>
+        <label class="form-label" for="admin-pass">Chave Mestra</label>
         <div class="form-input-wrap">
           <input type="password" id="admin-pass" class="form-input" placeholder="Cole sua chave mestra..." autocomplete="current-password" required />
           <button type="button" class="input-toggle-eye" onclick="togglePassVisibility()" title="Exibir/Ocultar">👁️</button>
         </div>
       </div>
 
-      <div style="text-align:left;margin-bottom:18px">
-        <label style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;cursor:pointer">
+      <div style="text-align:left;margin-bottom:16px">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;cursor:pointer">
           <input type="checkbox" id="chk-remember-device" style="accent-color:var(--amber)" checked />
-          <span>Lembrar autorização neste dispositivo confiável</span>
+          <span>Manter este dispositivo autorizado</span>
         </label>
       </div>
 
-      <button type="submit" class="btn btn-primary" id="btn-pass-login" style="width:100%;padding:12px;font-weight:700">
-        🔓 Desbloquear Console Seguro
+      <button type="submit" class="btn btn-primary" id="btn-pass-login" style="width:100%;padding:11px;font-weight:700">
+        Desbloquear Console
       </button>
     </form>
+
+    <div class="login-footnote">
+      <span class="security-pill"><span class="security-dot"></span>PostgreSQL RPC · Server-Side</span>
+    </div>
   </main>
 
   <!-- TELA 2: DASHBOARD ADMINISTRATIVO -->
@@ -595,7 +644,7 @@
         👥 Leads &amp; Contatos (<span id="tab-count-leads">0</span>)
       </button>
       <button class="tab-btn" onclick="switchTab('tab-system', this)">
-        ⚙️ Diagnóstico &amp; Segurança
+        📚 E-books &amp; Sistema
       </button>
     </nav>
 
@@ -719,59 +768,64 @@
       </div>
     </section>
 
-    <!-- ABA 3: SISTEMA & STATUS DO BANCO -->
+    <!-- ABA 3: E-BOOKS P2P & SISTEMA -->
     <section id="tab-system" class="tab-pane">
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:720px">
-        <h3 style="font-family:var(--font-head);color:#fff;margin-bottom:12px;font-size:1.2rem">Protocolo de Segurança Zero-Trust</h3>
-        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:18px">
-          Ao contrário de sites comuns que confiam na validação do navegador, este console valida todas as operações diretamente no motor <strong>PostgreSQL via RPC SECURITY DEFINER</strong>. Mesmo com a chave pública exposta na web, invasores não conseguem listar leads nem adulterar anúncios.
-        </p>
-
-        <div style="display:flex;flex-direction:column;gap:10px;font-family:var(--font-mono);font-size:0.82rem;background:rgba(0,0,0,0.3);padding:16px;border-radius:8px;border:1px solid var(--border);margin-bottom:20px">
-          <div>Servidor: <span style="color:var(--amber)">yhzoehwkuxteihsnagcj.supabase.co</span></div>
-          <div>Modo RLS: <span style="color:var(--green)">✓ Strict (Leitura de Leads e Moderação Bloqueadas para Anônimos)</span></div>
-          <div>Camada de Autenticação: <span style="color:#6ee7b7">✓ PostgreSQL RPC Criptografado</span></div>
-          <div>Sessão Atual: <span id="sess-active-info" style="color:#fff">Ativa</span></div>
+      <div class="system-grid">
+        <!-- COFRE DE E-BOOKS: LIBERAÇÃO VITALÍCIA P2P MAINNET -->
+        <div class="panel-card">
+          <h3>📚 Liberação Vitalícia de E-book (P2P)</h3>
+          <p class="panel-sub">
+            Informe o <code>@username</code> do comprador após confirmar o pagamento P2P na Mainnet (<strong>3.14 π</strong> ou <strong>7.50 π</strong>). O download assinado é liberado automaticamente na conta Pi dele.
+          </p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" for="grant-ebook-user">@Username Pi do Comprador</label>
+              <input type="text" id="grant-ebook-user" class="form-input" placeholder="Ex: @joaopioneiro" />
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label" for="grant-ebook-product">Obra Adquirida</label>
+                <select id="grant-ebook-product" class="form-input" style="font-family:var(--font)">
+                  <option value="ia-na-pratica">IA na Prática (7.50 π)</option>
+                  <option value="pi-para-seu-negocio">Pi para seu Negócio (3.14 π)</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label" for="grant-ebook-ref">@Indicador (Opcional)</label>
+                <input type="text" id="grant-ebook-ref" class="form-input" placeholder="Auto (ou @afiliado)" />
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="grantEbookAccessAdmin()" style="width:100%;padding:10px 16px">
+              🔓 Liberar Acesso Vitalício
+            </button>
+          </div>
         </div>
 
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button type="button" class="btn btn-primary btn-sm" onclick="testAdminNotification()">
-            🔔 Testar Notificação (Telegram / E-mail)
-          </button>
-          <button type="button" class="btn btn-outline btn-sm" onclick="clearSavedDeviceKey()">
-            🗑️ Esquecer Chave Salva Neste Aparelho
-          </button>
-          <a href="https://supabase.com/dashboard/project/yhzoehwkuxteihsnagcj" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-            ↗ Dashboard Supabase
-          </a>
-        </div>
-      </div>
+        <!-- DIAGNÓSTICO & SEGURANÇA -->
+        <div class="panel-card">
+          <h3>Infraestrutura &amp; Segurança</h3>
+          <p class="panel-sub">
+            Operações administrativas validadas no servidor via PostgreSQL RPC <code>SECURITY DEFINER</code>.
+          </p>
 
-      <!-- COFRE DE E-BOOKS: LIBERAÇÃO VITALÍCIA P2P MAINNET -->
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:720px;margin-top:20px">
-        <h3 style="font-family:var(--font-head);color:#fff;margin-bottom:8px;font-size:1.2rem">📚 Cofre de E-books — Liberação Vitalícia (P2P Mainnet)</h3>
-        <p style="color:var(--text-muted);font-size:0.86rem;margin-bottom:16px">
-          Quando um pioneiro realizar o pagamento P2P na Mainnet (<strong>3.14 π</strong> ou <strong>7.50 π</strong>), informe o <code>@username</code> dele abaixo para liberar o download vitalício assinado na conta Pi dele:
-        </p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(170px, 1fr));gap:10px;align-items:end">
-          <div class="form-group" style="margin-bottom:0">
-            <label class="form-label" for="grant-ebook-user">@Username do Comprador Pi</label>
-            <input type="text" id="grant-ebook-user" class="form-input" placeholder="Ex: @joaopioneiro" />
+          <div class="diag-list">
+            <div>Endpoint: <span style="color:var(--amber)">yhzoehwkuxteihsnagcj.supabase.co</span></div>
+            <div>RLS: <span style="color:var(--green)">✓ Strict (Leads e Moderação bloqueados)</span></div>
+            <div>Auth: <span style="color:#6ee7b7">✓ Pi Browser / Chave Mestra</span></div>
+            <div>Sessão: <span id="sess-active-info" style="color:#fff">Ativa</span></div>
           </div>
-          <div class="form-group" style="margin-bottom:0">
-            <label class="form-label" for="grant-ebook-product">Obra Adquirida</label>
-            <select id="grant-ebook-product" class="form-input" style="font-family:var(--font)">
-              <option value="ia-na-pratica">🚀 IA na Prática (7.50 π)</option>
-              <option value="pi-para-seu-negocio">💼 Pi para seu Negócio (3.14 π)</option>
-            </select>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn btn-outline btn-sm" onclick="testAdminNotification()">
+              🔔 Testar Alerta
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="clearSavedDeviceKey()">
+              Esquecer Chave Local
+            </button>
+            <a href="https://supabase.com/dashboard/project/yhzoehwkuxteihsnagcj" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              ↗ Supabase
+            </a>
           </div>
-          <div class="form-group" style="margin-bottom:0">
-            <label class="form-label" for="grant-ebook-ref">@Indicador (Opcional)</label>
-            <input type="text" id="grant-ebook-ref" class="form-input" placeholder="Auto (ou @afiliado)" />
-          </div>
-          <button type="button" class="btn btn-primary" onclick="grantEbookAccessAdmin()" style="padding:10px 18px;height:40px">
-            🔓 Liberar Acesso Vitalício
-          </button>
         </div>
       </div>
     </section>
