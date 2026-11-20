@@ -1035,7 +1035,7 @@
           } else {
             topbarActions.innerHTML = `
               <a href="pioneiro?ref=${encodeURIComponent(cleanOwnerRef)}" class="btn btn-outline btn-sm" style="font-size:0.74rem;padding:5px 11px;border-color:rgba(245,158,11,0.5);color:#fbbf24;font-weight:700;text-decoration:none">
-                🪪 Criar Passaporte + Bônus na Vila →
+                🪪 Criar Passaporte
               </a>
             `;
           }
