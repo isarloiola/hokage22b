@@ -748,11 +748,11 @@
                     🎁 Convite Oficial de @${safeActiveRef} Ativo
                   </span>
                   <span style="font-size:0.7rem;background:rgba(245,158,11,0.22);border:1px solid rgba(245,158,11,0.55);color:#fde68a;padding:2px 8px;border-radius:999px;font-weight:800">
-                    🎁 +1 Anúncio Bronze Grátis (0.314 π)
+                    🎁 Passaporte + Publicação Bônus na Vila
                   </span>
                 </div>
                 <p style="font-size:0.82rem;color:#e4e4e7;margin:0 0 10px;line-height:1.45">
-                  Ative sua Vitrine 100% grátis abaixo e ganhe na hora <strong>1 Crédito de Anúncio Bronze Grátis (0.314 π)</strong> no Mural + seu próprio link para ganhar <strong>20% a 25% em Pi</strong> sobre indicações!
+                  Ative seu Passaporte Web3 100% grátis abaixo e ganhe na hora <strong>1 Publicação Bônus na Vila (Central P2P)</strong> para divulgar seu serviço ou oferta + seu link de indicação com <strong>20% a 25% em Pi</strong>!
                 </p>
                 <div style="display:flex;gap:8px;flex-wrap:wrap">
                   <button type="button" onclick="if(window.HokageReferral && window.HokageReferral.openWelcomeModal) window.HokageReferral.openWelcomeModal('${safeActiveRef}')" class="btn btn-outline btn-sm" style="padding:6px 12px;font-size:0.76rem;font-weight:700;border-color:rgba(245,158,11,0.5);color:#fbbf24">

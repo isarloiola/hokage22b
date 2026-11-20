@@ -416,7 +416,7 @@
         <span style="font-size:1.05rem;line-height:1">🎁</span>
         <span style="text-align:left;line-height:1.2">
           <strong style="display:block;font-size:0.75rem;color:#fde68a">Convite de @${safeRef}</strong>
-          <span style="display:block;font-size:0.67rem;color:#d4d4d8">+1 Anúncio Grátis · Toque p/ ativar</span>
+          <span style="display:block;font-size:0.67rem;color:#d4d4d8">Passaporte + Destaque na Vila · Toque p/ ver</span>
         </span>
       </button>
       <button type="button" class="hk-ref-floating-pill-close" onclick="window.HokageReferral.hideFloatingRefPill()" aria-label="Ocultar aviso" title="Ocultar aviso">✕</button>
@@ -515,7 +515,7 @@
       ctaHtml = `
         <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);border-radius:12px;padding:10px 12px;margin:12px 0 10px;font-size:0.77rem;color:#fde68a;line-height:1.45">
           <strong style="color:#fbbf24;display:block;margin-bottom:2px">📱 Você está em um navegador comum</strong>
-          Para criar sua Vitrine oficial com 1 clique e ativar seu convite de <strong>@${safeRef}</strong>, abra direto no aplicativo <strong>Pi Browser</strong> ou copie o link abaixo:
+          Para ativar seu Passaporte oficial com 1 clique e vincular seu convite de <strong>@${safeRef}</strong>, abra direto no aplicativo <strong>Pi Browser</strong> ou copie o link abaixo:
         </div>
         <div style="display:flex;flex-direction:column;gap:8px">
           <a href="${piDeepLink}" class="hk-ref-btn-primary">
@@ -529,7 +529,7 @@
               <span>🧪</span> Testar no Simulador
             </button>
             <a href="${vitrineRefUrl}" class="hk-ref-btn-ghost" onclick="window.HokageReferral.closeWelcomeModal()">
-              <span>👀</span> Vitrine de @${safeRef}
+              <span>👀</span> Passaporte de @${safeRef}
             </a>
           </div>
         </div>
@@ -557,10 +557,10 @@
         </div>
 
         <h2 style="font-size:clamp(1.18rem, 4vw, 1.42rem);font-weight:800;color:#fff;margin:0 0 6px;line-height:1.25">
-          Ative sua Vitrine Grátis &amp; Ganhe 1 Anúncio Bronze + Comissões em Pi!
+          Ative seu Passaporte Web3 &amp; Ganhe Publicação Bônus na Vila!
         </h2>
         <p style="font-size:0.83rem;color:#a1a1aa;margin:0 0 12px;line-height:1.45">
-          Por entrar através de um <strong>convite oficial</strong> no ecossistema <strong>HOKAGE22B</strong>, você desbloqueia vantagens exclusivas que quem entra sem convite não recebe:
+          Por entrar através de um <strong>convite oficial</strong> no ecossistema <strong>HOKAGE22B</strong>, você já entra com vantagens exclusivas:
         </p>
 
         <div class="hk-ref-inviter-box">
@@ -572,7 +572,7 @@
             </div>
           </div>
           <span style="font-size:0.7rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.55);color:#fde68a;padding:3px 9px;border-radius:999px;font-weight:800">
-            🎁 +1 Anúncio Bronze Grátis (0.314 π)
+            🎁 Passaporte + Destaque na Vila
           </span>
         </div>
 
@@ -580,9 +580,9 @@
         <div class="hk-ref-benefit" style="border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.07)">
           <div class="hk-ref-benefit-icon" style="background:rgba(245,158,11,0.22);border:1px solid rgba(245,158,11,0.5)">🎁</div>
           <div>
-            <div style="font-size:0.86rem;font-weight:800;color:#fbbf24;margin-bottom:2px">1. Seu Presente Imediato: 1 Anúncio Bronze Grátis (0.314 π)</div>
+            <div style="font-size:0.86rem;font-weight:800;color:#fbbf24;margin-bottom:2px">1. Passaporte + 1 Publicação Bônus na Vila (P2P)</div>
             <div style="font-size:0.76rem;color:#e4e4e7;line-height:1.4">
-              Ao conectar o <strong>Pi Browser</strong> e salvar sua <strong>Vitrine 100% Grátis</strong> (<code style="color:#c4b5fd">hokage22b.com/@voce</code>), você ganha na hora <strong>1 Crédito de Anúncio Bronze Grátis (0.314 π)</strong> para publicar seu negócio na A Vila · Central P2P (Mural)!
+              Ao ativar seu <strong>Passaporte Web3</strong> (<code style="color:#c4b5fd">hokage22b.com/@voce</code>), você ganha <strong>1 Publicação Bônus na Vila (Central P2P)</strong> — o espaço comunitário onde pioneiros divulgam negócios, serviços e parcerias em Pi!
             </div>
           </div>
         </div>
@@ -592,7 +592,7 @@
           <div>
             <div style="font-size:0.86rem;font-weight:800;color:#6ee7b7;margin-bottom:2px">2. Ganhe de 20% a 25% em Pi Real (Comissão P2P)</div>
             <div style="font-size:0.76rem;color:#d4d4d8;line-height:1.4">
-              Você também recebe seu próprio link de convite e ganha <strong>20% em Pi</strong> (ou <strong>25% como Embaixador</strong>) sobre cada <strong>Anúncio no Mural</strong> e cada <strong>E-book</strong> adquirido pelos seus indicados!
+              Você também recebe seu próprio link de convite e ganha <strong>20% em Pi</strong> (ou <strong>25% como Embaixador</strong>) sobre destaques na Vila e E-books adquiridos pelos seus indicados!
             </div>
           </div>
         </div>
@@ -600,9 +600,9 @@
         <div class="hk-ref-benefit">
           <div class="hk-ref-benefit-icon" style="background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.4)">🏅</div>
           <div>
-            <div style="font-size:0.86rem;font-weight:800;color:#fff;margin-bottom:2px">3. Ganha-Ganha: Mais Créditos + Selo Embaixador</div>
+            <div style="font-size:0.86rem;font-weight:800;color:#fff;margin-bottom:2px">3. Ganha-Ganha: Mais Alcance + Selo Embaixador</div>
             <div style="font-size:0.76rem;color:#a1a1aa;line-height:1.4">
-              Cada amigo que entrar pelo seu link também ganha <strong>1 Anúncio Bronze Grátis</strong>, enquanto você acumula novos créditos Bronze e conquista o <strong>Selo Oficial de Embaixador Web3</strong> com 5 indicados!
+              Cada amigo que entrar pelo seu link também ganha <strong>1 Publicação Bônus na Vila</strong>, enquanto você acumula novos destaques e conquista o <strong>Selo Oficial de Embaixador Web3</strong>!
             </div>
           </div>
         </div>
