@@ -148,12 +148,18 @@ Deno.serve(async (req) => {
     page?: string;
     detail?: string;
     ref?: string;
+    sessionId?: string;
+    device?: string;
+    user?: string;
+    trail?: string;
+    source?: string;
+    durationSec?: number;
   }) | null;
 
-  // Telemetria leve de cliques e visitas do site para o Telegram privado do admin
+  // Telemetria profissional de visitas, trilha de navegação e cliques reais para o Telegram do admin
   if (rawBody && rawBody.action === "track_event") {
     const ua = (req.headers.get("user-agent") || "").toLowerCase();
-    if (/bot|crawler|spider|headless|curl|wget|python-requests/i.test(ua)) {
+    if (/bot|crawler|spider|headless|curl|wget|python-requests|lighthouse|pagespeed|uptime/i.test(ua)) {
       return new Response(JSON.stringify({ ok: true, skipped: "bot" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -161,15 +167,31 @@ Deno.serve(async (req) => {
 
     const eventName = String(rawBody.event || "interacao").trim().slice(0, 60);
     const pagePath = String(rawBody.page || "/").trim().slice(0, 120);
-    const detail = String(rawBody.detail || "").trim().slice(0, 140);
+    const detail = String(rawBody.detail || "").trim().slice(0, 220);
     const ref = String(rawBody.ref || "").trim().slice(0, 40);
+    const sessionId = String(rawBody.sessionId || "").trim().slice(0, 12);
+    const device = String(rawBody.device || "").trim().slice(0, 24);
+    const userHandle = String(rawBody.user || "").trim().slice(0, 32);
+    const trail = String(rawBody.trail || "").trim().slice(0, 180);
+    const source = String(rawBody.source || "").trim().slice(0, 80);
+    const durationSec = Number(rawBody.durationSec || 0);
     const country = req.headers.get("cf-ipcountry") || req.headers.get("x-vercel-ip-country") || "";
 
+    const sessionMeta = [
+      sessionId ? `#${sessionId}` : "",
+      device || "",
+      country || "",
+      userHandle || "",
+    ].filter(Boolean).join(" · ");
+
     const lines = [
+      sessionMeta ? `Sessão: ${sessionMeta}` : "",
       `Página: ${pagePath}`,
-      detail ? `Detalhe: ${detail}` : "",
+      source ? `Origem: ${source}` : "",
+      trail ? `Trilha: ${trail}` : "",
+      durationSec > 1 ? `Tempo na etapa anterior: ${durationSec}s` : "",
+      !trail && detail ? `Detalhe: ${detail}` : "",
       ref ? `Convite ativo: @${ref.replace(/^@+/, "")}` : "",
-      country ? `País: ${country}` : "",
     ].filter(Boolean);
 
     await notifyAdmin({
