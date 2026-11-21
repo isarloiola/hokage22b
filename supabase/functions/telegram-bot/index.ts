@@ -1,5 +1,5 @@
 // ============================================================
-// HOKAGE22B — Official Telegram Sales & Community Bot Webhook
+// HOKAGE22B — Official Telegram Ecosystem, Sales & Telemetry Bot
 // Gratuito via Supabase Edge Functions (Deno) + Telegram Bot API
 // ============================================================
 import { getCorsHeaders, MURAL_CONFIG } from "../_shared/http.ts";
@@ -9,12 +9,21 @@ interface TelegramUpdate {
   message?: {
     message_id?: number;
     text?: string;
+    from?: { id?: number; first_name?: string; username?: string; language_code?: string };
     chat?: { id?: number | string; first_name?: string; username?: string };
   };
   callback_query?: {
     id?: string;
     data?: string;
+    from?: { id?: number; first_name?: string; username?: string };
     message?: { chat?: { id?: number | string }; message_id?: number };
+  };
+}
+
+interface BotPayload {
+  text: string;
+  reply_markup?: {
+    inline_keyboard: Array<Array<{ text: string; url?: string; callback_data?: string }>>;
   };
 }
 
@@ -30,35 +39,152 @@ async function callTelegram(
   });
 }
 
-function buildWelcomePayload(firstName?: string) {
-  const hello = firstName ? `Olá, ${firstName}!` : "Olá, Pioneiro(a)!";
+function escapeHtml(raw: string): string {
+  return String(raw || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function buildWelcomePayload(firstName?: string): BotPayload {
+  const hello = firstName ? `Olá, ${escapeHtml(firstName)}!` : "Olá, Pioneiro(a)!";
   const text = [
-    `🤖 <b>${hello} Bem-vindo(a) ao Bot Oficial HOKAGE22B</b>`,
+    `🔥 <b>${hello} Bem-vindo(a) ao HOKAGE22B</b>`,
     "",
-    "Escolha abaixo o que você precisa agora:",
-    "• <b>IA na Prática</b> (293 pág. + 50 Prompts) — 7.50 π ou R$ 47,00",
-    "• <b>Pi para seu Negócio</b> — 3.14 π ou R$ 19,90",
-    "• <b>Manual Pi Network</b> — 100% Gratuito",
-    "• <b>Ferramentas Anti-Golpe & QR Code</b>",
+    "Seu guia oficial para entrar na <b>Web3 &amp; Economia Pi Network</b> sem complicação:",
+    "• 🧭 <b>Jornada Guiada</b> — entenda em minutos por onde começar",
+    "• 🪪 <b>Passaporte Web3</b> — sua identidade &amp; carteira P2P grátis",
+    "• 🏘️ <b>A Vila (Central P2P)</b> — negócios, serviços e pioneiros reais",
+    "• 📚 <b>E-books &amp; Ferramentas</b> — guias práticos e proteção anti-golpe",
   ].join("\n");
 
   return {
     text,
     reply_markup: {
       inline_keyboard: [
-        [{ text: "🤖 E-book: IA na Prática (293 pág.)", callback_data: "ebook_ia" }],
-        [{ text: "💼 E-book: Pi para seu Negócio", callback_data: "ebook_negocio" }],
+        [{ text: "🚀 Começar Minha Jornada", callback_data: "jornada" }],
         [
-          { text: "📘 Manual Pi Grátis", url: "https://hokage22b.com/#manual" },
-          { text: "🛠️ Ferramentas", url: "https://hokage22b.com/ferramentas" },
+          { text: "🪪 Passaporte Grátis", callback_data: "passaporte" },
+          { text: "🏘️ A Vila (P2P)", callback_data: "vila" },
         ],
-        [{ text: "👤 Abrir Vitrine @hokage22b", url: "https://hokage22b.com/@hokage22b" }],
+        [
+          { text: "🏷️ Como Vender em Pi", callback_data: "vender" },
+          { text: "📚 E-books & Guias", callback_data: "ebooks" },
+        ],
+        [
+          { text: "🛠️ Ferramentas Web3", callback_data: "ferramentas" },
+          { text: "🛡️ Anti-Golpe & Ajuda", callback_data: "seguranca" },
+        ],
       ],
     },
   };
 }
 
-function buildIaNaPraticaPayload() {
+function buildJornadaPayload(): BotPayload {
+  return {
+    text: [
+      "🧭 <b>Jornada Web3 HOKAGE22B</b>",
+      "",
+      "Não sabe por onde começar na Web3 ou na Pi Network?",
+      "Em menos de 2 minutos o diagnóstico interativo identifica seu perfil (iniciante, vendedor, criador ou dev) e monta seu próximo passo.",
+      "",
+      "📘 Se preferir ir do zero absoluto, acesse também o guia <b>Pi do Zero</b>.",
+    ].join("\n"),
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "🚀 Abrir Diagnóstico da Jornada", url: "https://hokage22b.com/jornada?utm_source=telegram_bot" }],
+        [{ text: "📘 Ler Pi do Zero", url: "https://hokage22b.com/zero?utm_source=telegram_bot" }],
+        [{ text: "⬅️ Voltar ao Menu", callback_data: "menu" }],
+      ],
+    },
+  };
+}
+
+function buildPassaportePayload(): BotPayload {
+  return {
+    text: [
+      "🪪 <b>Passaporte do Pioneiro Web3 (100% Grátis)</b>",
+      "",
+      "Sua credencial oficial no ecossistema HOKAGE22B:",
+      "• Receba pagamentos P2P direto na sua <b>Pi Wallet</b>",
+      "• Reúna seus links, produtos, serviços e títulos verificados",
+      "• Ganhe <b>1 Publicação Bônus na Vila</b> ao ativar por convite",
+      "",
+      "Veja o exemplo oficial de <b>@hokage22b</b> ou ative o seu agora:",
+    ].join("\n"),
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "🪪 Criar Meu Passaporte Grátis", url: "https://hokage22b.com/pioneiro?utm_source=telegram_bot" }],
+        [{ text: "👀 Ver Passaporte @hokage22b", url: "https://hokage22b.com/@hokage22b?utm_source=telegram_bot" }],
+        [{ text: "⬅️ Voltar ao Menu", callback_data: "menu" }],
+      ],
+    },
+  };
+}
+
+function buildVilaPayload(): BotPayload {
+  return {
+    text: [
+      "🏘️ <b>A Vila · Central P2P da Comunidade</b>",
+      "",
+      "O mural independente onde pioneiros divulgam serviços, produtos que aceitam Pi, canais e projetos reais.",
+      "",
+      "• Explore negócios e criadores verificados",
+      "• Publique sua oferta usando seu Passaporte",
+    ].join("\n"),
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "🏘️ Entrar na Vila (P2P)", url: "https://hokage22b.com/mural?utm_source=telegram_bot" }],
+        [{ text: "🪪 Ativar Passaporte Primeiro", callback_data: "passaporte" }],
+        [{ text: "⬅️ Voltar ao Menu", callback_data: "menu" }],
+      ],
+    },
+  };
+}
+
+function buildVenderPayload(): BotPayload {
+  return {
+    text: [
+      "🏷️ <b>Como Vender &amp; Aceitar Pi no Seu Negócio</b>",
+      "",
+      "A internet está convergindo para a Web3 — e quem estrutura presença P2P hoje sai na frente:",
+      "• Como usar o <b>Passaporte</b> para receber em Pi sem intermediários",
+      "• Como precificar e intermediar negócios com segurança",
+      "• Boas práticas para lojistas, autônomos e prestadores de serviço",
+    ].join("\n"),
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "🏷️ Ver Guia Como Vender", url: "https://hokage22b.com/vender?utm_source=telegram_bot" }],
+        [{ text: "💼 E-book: Pi para seu Negócio", callback_data: "ebook_negocio" }],
+        [{ text: "⬅️ Voltar ao Menu", callback_data: "menu" }],
+      ],
+    },
+  };
+}
+
+function buildEbooksHubPayload(): BotPayload {
+  return {
+    text: [
+      "📚 <b>Biblioteca Oficial HOKAGE22B</b>",
+      "",
+      "Escolha um material abaixo para ver detalhes e formas de pagamento (<b>Pi Network</b> ou <b>Pix/Cartão</b>):",
+      "",
+      "• 🤖 <b>IA na Prática</b> (293 pág. + 50 Prompts) — 7.50 π ou R$ 47,00",
+      "• 💼 <b>Pi para seu Negócio</b> — 3.14 π ou R$ 19,90",
+      "• 📘 <b>Manual Pi Network</b> — 100% Gratuito",
+    ].join("\n"),
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "🤖 IA na Prática (293 pág.)", callback_data: "ebook_ia" }],
+        [{ text: "💼 Pi para seu Negócio", callback_data: "ebook_negocio" }],
+        [{ text: "📘 Baixar Manual Gratuito", url: "https://hokage22b.com/#manual" }],
+        [{ text: "⬅️ Voltar ao Menu", callback_data: "menu" }],
+      ],
+    },
+  };
+}
+
+function buildIaNaPraticaPayload(): BotPayload {
   const prod = MURAL_CONFIG.products["ia-na-pratica"];
   const text = [
     "🤖 <b>IA na Prática: O Seu Assistente Pessoal</b>",
@@ -77,13 +203,13 @@ function buildIaNaPraticaPayload() {
       inline_keyboard: [
         [{ text: "⚡ Pagar com Pi (7.50 π) no Portal", url: "https://hokage22b.com/#produto-ia-na-pratica" }],
         [{ text: "💳 Pagar em R$ (Pix / Cartão - Hotmart)", url: "https://pay.hotmart.com/J108469065H" }],
-        [{ text: "⬅️ Voltar ao Menu", callback_data: "menu" }],
+        [{ text: "⬅️ Voltar aos E-books", callback_data: "ebooks" }],
       ],
     },
   };
 }
 
-function buildPiNegocioPayload() {
+function buildPiNegocioPayload(): BotPayload {
   const prod = MURAL_CONFIG.products["pi-para-seu-negocio"];
   const text = [
     "💼 <b>Pi para seu Negócio</b>",
@@ -100,10 +226,116 @@ function buildPiNegocioPayload() {
       inline_keyboard: [
         [{ text: "⚡ Pagar com Pi (3.14 π) no Portal", url: "https://hokage22b.com/#produtos" }],
         [{ text: "💳 Pagar em R$ (Pix / Cartão - Hotmart)", url: "https://pay.hotmart.com/A108356534I" }],
+        [{ text: "⬅️ Voltar aos E-books", callback_data: "ebooks" }],
+      ],
+    },
+  };
+}
+
+function buildFerramentasPayload(): BotPayload {
+  return {
+    text: [
+      "🛠️ <b>Ferramentas Web3 &amp; Segurança Pi</b>",
+      "",
+      "Utilitários gratuitos para o dia a dia na rede:",
+      "• Validador de Chave Pública Pi (<code>G...</code>)",
+      "• Verificador de links anti-phishing",
+      "• Calculadora de balcão P2P",
+      "• Gerador de placa QR Code para o seu <b>Passaporte</b>",
+    ].join("\n"),
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "🛠️ Abrir Ferramentas Web3", url: "https://hokage22b.com/ferramentas?utm_source=telegram_bot" }],
+        [{ text: "⚡ Construir (API & Devs)", url: "https://hokage22b.com/construir?utm_source=telegram_bot" }],
         [{ text: "⬅️ Voltar ao Menu", callback_data: "menu" }],
       ],
     },
   };
+}
+
+function buildSegurancaPayload(): BotPayload {
+  return {
+    text: [
+      "🛡️ <b>Segurança Anti-Golpe &amp; Suporte</b>",
+      "",
+      "<b>Regras de ouro na Pi Network:</b>",
+      "1️⃣ <b>NUNCA</b> digite suas 24 palavras (Passphrase) em nenhum site externo — ela só pertence à Pi Wallet oficial dentro do Pi Browser.",
+      "2️⃣ O HOKAGE22B nunca pede sua senha nem promete multiplicação de moedas.",
+      "3️⃣ Pagamentos oficiais em Pi são feitos exclusivamente pelo fluxo verificado no Pi Browser ou P2P direto com chave pública conferida.",
+      "",
+      "Precisa falar com o suporte ou comprou P2P? Acesse o portal:",
+    ].join("\n"),
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "🛡️ Checar Link / Carteira", url: "https://hokage22b.com/ferramentas?utm_source=telegram_bot" }],
+        [{ text: "🌐 Acessar Portal HOKAGE22B", url: "https://hokage22b.com/?utm_source=telegram_bot" }],
+        [{ text: "⬅️ Voltar ao Menu", callback_data: "menu" }],
+      ],
+    },
+  };
+}
+
+function routeCallback(data: string, firstName?: string): BotPayload {
+  switch (data) {
+    case "jornada": return buildJornadaPayload();
+    case "passaporte": return buildPassaportePayload();
+    case "vila": return buildVilaPayload();
+    case "vender": return buildVenderPayload();
+    case "ebooks": return buildEbooksHubPayload();
+    case "ebook_ia": return buildIaNaPraticaPayload();
+    case "ebook_negocio": return buildPiNegocioPayload();
+    case "ferramentas": return buildFerramentasPayload();
+    case "seguranca": return buildSegurancaPayload();
+    default: return buildWelcomePayload(firstName);
+  }
+}
+
+function routeTextCommand(text: string, firstName?: string): BotPayload {
+  const lower = text.toLowerCase();
+
+  if (lower.startsWith("/start")) {
+    const param = lower.replace(/^\/start\s*/, "").trim();
+    if (param.includes("ia_na_pratica") || param === "ia") return buildIaNaPraticaPayload();
+    if (param.includes("negocio")) return buildPiNegocioPayload();
+    if (param.includes("ebook")) return buildEbooksHubPayload();
+    if (param.includes("jornada")) return buildJornadaPayload();
+    if (param.includes("passaporte") || param.includes("vitrine")) return buildPassaportePayload();
+    if (param.includes("vila") || param.includes("mural")) return buildVilaPayload();
+    if (param.includes("vender")) return buildVenderPayload();
+    if (param.includes("ferramenta")) return buildFerramentasPayload();
+    if (param.includes("seguranca") || param.includes("ajuda")) return buildSegurancaPayload();
+    return buildWelcomePayload(firstName);
+  }
+
+  if (lower.startsWith("/jornada") || lower.includes("jornada") || lower.includes("comecar") || lower.includes("começar")) {
+    return buildJornadaPayload();
+  }
+  if (lower.startsWith("/passaporte") || lower.startsWith("/vitrine") || lower.includes("passaporte") || lower.includes("vitrine")) {
+    return buildPassaportePayload();
+  }
+  if (lower.startsWith("/vila") || lower.startsWith("/mural") || lower.includes("vila") || lower.includes("p2p") || lower.includes("anunciar")) {
+    return buildVilaPayload();
+  }
+  if (lower.startsWith("/vender") || lower.includes("vender") || lower.includes("aceitar pi")) {
+    return buildVenderPayload();
+  }
+  if (lower.includes("ia na pratica") || lower.includes("ia na prática")) {
+    return buildIaNaPraticaPayload();
+  }
+  if (lower.startsWith("/negocio") || lower.includes("pi para seu negocio") || lower.includes("pi para seu negócio")) {
+    return buildPiNegocioPayload();
+  }
+  if (lower.startsWith("/ebook") || lower.includes("ebook") || lower.includes("e-book") || lower.includes("livro") || lower.includes("hotmart") || lower.includes("pix") || lower.includes("comprar")) {
+    return buildEbooksHubPayload();
+  }
+  if (lower.startsWith("/ferramentas") || lower.includes("ferramenta") || lower.includes("qr")) {
+    return buildFerramentasPayload();
+  }
+  if (lower.startsWith("/ajuda") || lower.startsWith("/seguranca") || lower.includes("golpe") || lower.includes("kyc") || lower.includes("suporte") || lower.includes("passphrase") || lower.includes("ajuda")) {
+    return buildSegurancaPayload();
+  }
+
+  return buildWelcomePayload(firstName);
 }
 
 Deno.serve(async (req) => {
@@ -126,12 +358,31 @@ Deno.serve(async (req) => {
       const secretToken = (Deno.env.get("TELEGRAM_WEBHOOK_SECRET") || "").trim();
       const body: Record<string, unknown> = { url: webhookUrl };
       if (secretToken) body.secret_token = secretToken;
+
       const tgRes = await callTelegram(botToken, "setWebhook", body);
       const tgData = await tgRes.json().catch(() => ({ ok: false }));
-      return new Response(JSON.stringify({ ok: Boolean(tgData.ok), telegram: tgData, webhookUrl }), {
-        status: tgData.ok ? 200 : 400,
-        headers: { "Content-Type": "application/json" },
+
+      const cmdRes = await callTelegram(botToken, "setMyCommands", {
+        commands: [
+          { command: "start", description: "Menu principal HOKAGE22B" },
+          { command: "jornada", description: "Diagnóstico e trilha Web3" },
+          { command: "passaporte", description: "Criar Passaporte Web3 grátis" },
+          { command: "vila", description: "A Vila · Central P2P" },
+          { command: "vender", description: "Como vender e aceitar Pi" },
+          { command: "ebooks", description: "E-books e Manual gratuito" },
+          { command: "ferramentas", description: "Ferramentas Web3 e Anti-Golpe" },
+          { command: "ajuda", description: "Segurança KYC e suporte" },
+        ],
       });
+      const cmdData = await cmdRes.json().catch(() => ({ ok: false }));
+
+      return new Response(
+        JSON.stringify({ ok: Boolean(tgData.ok), telegram: tgData, commands: cmdData, webhookUrl }),
+        {
+          status: tgData.ok ? 200 : 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
     return new Response(JSON.stringify({ ok: true, service: "hokage22b-telegram-bot" }), {
       headers: { "Content-Type": "application/json" },
@@ -230,23 +481,32 @@ Deno.serve(async (req) => {
   if (update.callback_query) {
     const cb = update.callback_query;
     const chatId = cb.message?.chat?.id;
+    const messageId = cb.message?.message_id;
     if (cb.id) {
       await callTelegram(botToken, "answerCallbackQuery", { callback_query_id: cb.id });
     }
     if (chatId) {
       const data = cb.data || "menu";
-      const responsePayload =
-        data === "ebook_ia"
-          ? buildIaNaPraticaPayload()
-          : data === "ebook_negocio"
-            ? buildPiNegocioPayload()
-            : buildWelcomePayload();
-      await callTelegram(botToken, "sendMessage", {
-        chat_id: chatId,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-        ...responsePayload,
-      });
+      const responsePayload = routeCallback(data, cb.from?.first_name);
+      let edited = false;
+      if (messageId) {
+        const editRes = await callTelegram(botToken, "editMessageText", {
+          chat_id: chatId,
+          message_id: messageId,
+          parse_mode: "HTML",
+          disable_web_page_preview: true,
+          ...responsePayload,
+        });
+        edited = editRes.ok;
+      }
+      if (!edited) {
+        await callTelegram(botToken, "sendMessage", {
+          chat_id: chatId,
+          parse_mode: "HTML",
+          disable_web_page_preview: true,
+          ...responsePayload,
+        });
+      }
     }
     return new Response(JSON.stringify({ ok: true }), { headers: { "Content-Type": "application/json" } });
   }
@@ -258,26 +518,21 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ ok: true }), { headers: { "Content-Type": "application/json" } });
   }
 
-  const lower = text.toLowerCase();
-  let responsePayload;
-
-  if (lower.startsWith("/start ia_na_pratica") || lower === "/ebook" || lower.includes("ia na pratica") || lower.includes("ia na prática")) {
-    responsePayload = buildIaNaPraticaPayload();
-  } else if (lower.startsWith("/negocio") || lower.includes("pi para seu negocio")) {
-    responsePayload = buildPiNegocioPayload();
-  } else if (lower.startsWith("/ferramentas")) {
-    responsePayload = {
-      text: "🛠️ <b>Ferramentas Web3 & Segurança Pi</b>\n\nValide chaves públicas (G...), cheque links anti-golpe, use a calculadora de balcão e gere QR Codes da sua Vitrine:\n👉 https://hokage22b.com/ferramentas",
-      reply_markup: { inline_keyboard: [[{ text: "🛠️ Abrir Ferramentas", url: "https://hokage22b.com/ferramentas" }]] },
-    };
-  } else if (lower.startsWith("/vitrine")) {
-    responsePayload = {
-      text: "👤 <b>Vitrine Oficial @hokage22b</b>\n\nAcesse produtos, links oficiais e crie sua própria Vitrine Web3 Grátis:\n👉 https://hokage22b.com/@hokage22b",
-      reply_markup: { inline_keyboard: [[{ text: "👤 Abrir Vitrine", url: "https://hokage22b.com/@hokage22b" }]] },
-    };
-  } else {
-    responsePayload = buildWelcomePayload(msg?.chat?.first_name);
+  const firstName = msg?.from?.first_name || msg?.chat?.first_name;
+  const tgUsername = msg?.from?.username || msg?.chat?.username;
+  if (text.toLowerCase().startsWith("/start")) {
+    await notifyAdmin({
+      priority: "normal",
+      tag: "BOT TELEGRAM",
+      title: "Novo /start no @hokage22b_oficial_bot",
+      lines: [
+        `Usuário: ${firstName || "Visitante"}${tgUsername ? " (@" + tgUsername + ")" : ""}`,
+        `Comando: ${text.slice(0, 60)}`,
+      ],
+    });
   }
+
+  const responsePayload = routeTextCommand(text, firstName);
 
   await callTelegram(botToken, "sendMessage", {
     chat_id: chatId,
