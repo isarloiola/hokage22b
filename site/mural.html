@@ -184,26 +184,95 @@
   <main class="mural-main">
     <div class="container" style="max-width:1100px;margin:0 auto;padding-top:4px">
       
-      <!-- Topo da Gazeta -->
-      <div style="border-bottom:2px solid var(--amber);padding-bottom:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <!-- Topo Institucional da Vila -->
+      <div style="border-bottom:1px solid rgba(245,158,11,0.35);padding-bottom:16px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
         <div style="max-width:680px">
-          <span style="display:inline-block;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber-light);font-weight:700;margin-bottom:4px">Central P2P Descentralizada · Rede Pi Network</span>
-          <h1 style="font-size:clamp(2rem, 4.5vw, 2.8rem);font-weight:900;color:#fff;margin:0;font-family:var(--font-head);letter-spacing:-0.02em;line-height:1.15">
-            A Vila · Central P2P
+          <span style="display:inline-block;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--amber-light);font-weight:800;margin-bottom:4px">HOKAGE22B · A VILA · Onde oportunidades encontram pessoas</span>
+          <h1 style="font-size:clamp(2rem, 4.5vw, 2.7rem);font-weight:900;color:#fff;margin:0;font-family:var(--font-head);letter-spacing:-0.02em;line-height:1.12">
+            A Vila
           </h1>
-          <p style="color:var(--gray-light);font-size:0.98rem;margin:6px 0 0;line-height:1.4">
-            O mural independente da comunidade: canais de YouTube, produtos que aceitam Pi, serviços e recados de pioneiros de todo o Brasil.
+          <p style="color:var(--gray-light);font-size:0.96rem;margin:6px 0 0;line-height:1.45">
+            Uma vila construída por pioneiros, para pioneiros. Negócios, oportunidades de trabalho, mural comunitário e conexões no ecossistema Pi Network.
           </p>
         </div>
         <div class="gazeta-top-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <button type="button" class="btn btn-outline" onclick="window.IsarMural && window.IsarMural.openMyAdsModal()" style="white-space:nowrap;padding:11px 16px;font-weight:700;border-color:rgba(245,158,11,0.5);color:var(--amber-light)">
             📊 Meus Anúncios &amp; Métricas
           </button>
-          <button type="button" class="btn btn-primary" onclick="window.HokageMuralChatbot ? window.HokageMuralChatbot.open() : (window.IsarMural && window.IsarMural.openModal())" style="white-space:nowrap;padding:11px 18px;font-weight:800;background:linear-gradient(135deg,#8b5cf6,#f59e0b);border:none;color:#fff">
-            🤖 Criar Meu Anúncio
+          <button type="button" class="btn btn-primary" onclick="window.HokageMuralChatbot ? window.HokageMuralChatbot.open() : (window.IsarMural && window.IsarMural.openModal())" style="white-space:nowrap;padding:11px 18px;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);border:none;color:#09090b">
+            📢 Publicar na Vila
           </button>
         </div>
       </div>
+
+      <!-- Navegação Principal dos 4 Pilares da Vila -->
+      <nav id="vila-pillar-nav" aria-label="Áreas da Vila" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:18px;scrollbar-width:none">
+        <button type="button" class="mural-filter-btn active" data-pillar="inicio" onclick="window.IsarMural && window.IsarMural.setPillar('inicio', this)" style="white-space:nowrap;font-weight:800">
+          🏛️ Início da Vila
+        </button>
+        <button type="button" class="mural-filter-btn" data-pillar="mercado" onclick="window.IsarMural && window.IsarMural.setPillar('mercado', this)" style="white-space:nowrap;font-weight:800">
+          🛒 Mercado
+        </button>
+        <button type="button" class="mural-filter-btn" data-pillar="mural" onclick="window.IsarMural && window.IsarMural.setPillar('mural', this)" style="white-space:nowrap;font-weight:800">
+          📌 Mural
+        </button>
+        <button type="button" class="mural-filter-btn" data-pillar="trabalho" onclick="window.IsarMural && window.IsarMural.setPillar('trabalho', this)" style="white-space:nowrap;font-weight:800">
+          💼 Trabalho
+        </button>
+        <button type="button" class="mural-filter-btn" data-pillar="comunidade" onclick="window.IsarMural && window.IsarMural.setPillar('comunidade', this)" style="white-space:nowrap;font-weight:800">
+          🤝 Comunidade
+        </button>
+      </nav>
+
+      <!-- Visão Geral da Vila (4 Áreas Integradas) -->
+      <section id="vila-overview-pillars" aria-label="Áreas da Vila HOKAGE22B" style="margin-bottom:22px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
+          <button type="button" onclick="window.IsarMural && window.IsarMural.setPillar('mercado')" style="text-align:left;background:linear-gradient(155deg,rgba(249,115,22,0.12),rgba(17,17,22,0.95));border:1px solid rgba(249,115,22,0.35);border-radius:16px;padding:16px;cursor:pointer;color:#fff;transition:transform 0.18s ease">
+            <div style="font-size:1.35rem;margin-bottom:6px">🛒</div>
+            <strong style="display:block;font-size:0.98rem;color:#fbbf24;margin-bottom:4px">Mercado</strong>
+            <span style="font-size:0.8rem;color:#a1a1aa;line-height:1.45;display:block">Produtos físicos e digitais, serviços, negócios e lojas que aceitam Pi.</span>
+          </button>
+
+          <button type="button" onclick="window.IsarMural && window.IsarMural.setPillar('mural')" style="text-align:left;background:linear-gradient(155deg,rgba(139,92,246,0.12),rgba(17,17,22,0.95));border:1px solid rgba(139,92,246,0.35);border-radius:16px;padding:16px;cursor:pointer;color:#fff;transition:transform 0.18s ease">
+            <div style="font-size:1.35rem;margin-bottom:6px">📌</div>
+            <strong style="display:block;font-size:0.98rem;color:#c4b5fd;margin-bottom:4px">Mural</strong>
+            <span style="font-size:0.8rem;color:#a1a1aa;line-height:1.45;display:block">Avisos, eventos, ofertas rápidas, procura-se, projetos e notícias.</span>
+          </button>
+
+          <button type="button" onclick="window.IsarMural && window.IsarMural.setPillar('trabalho')" style="text-align:left;background:linear-gradient(155deg,rgba(16,185,129,0.12),rgba(17,17,22,0.95));border:1px solid rgba(16,185,129,0.35);border-radius:16px;padding:16px;cursor:pointer;color:#fff;transition:transform 0.18s ease">
+            <div style="font-size:1.35rem;margin-bottom:6px">💼</div>
+            <strong style="display:block;font-size:0.98rem;color:#34d399;margin-bottom:4px">Trabalho</strong>
+            <span style="font-size:0.8rem;color:#a1a1aa;line-height:1.45;display:block">Vagas, freelancers, colaboração e contratação direta de profissionais.</span>
+          </button>
+
+          <button type="button" onclick="window.IsarMural && window.IsarMural.setPillar('comunidade')" style="text-align:left;background:linear-gradient(155deg,rgba(59,130,246,0.12),rgba(17,17,22,0.95));border:1px solid rgba(59,130,246,0.35);border-radius:16px;padding:16px;cursor:pointer;color:#fff;transition:transform 0.18s ease">
+            <div style="font-size:1.35rem;margin-bottom:6px">🤝</div>
+            <strong style="display:block;font-size:0.98rem;color:#93c5fd;margin-bottom:4px">Comunidade</strong>
+            <span style="font-size:0.8rem;color:#a1a1aa;line-height:1.45;display:block">Perfis de pioneiros, reputação verificada, networking e conexões.</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Banner Contextual da Área Ativa (Trabalho / Comunidade) -->
+      <section id="vila-pillar-banner" style="display:none;margin-bottom:20px;background:rgba(17,17,22,0.9);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:18px"></section>
+
+      <!-- Espaço Comunidade Integrado (Perfis Reais de Pioneiros) -->
+      <section id="vila-community-hub" style="display:none;margin-bottom:32px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(59,130,246,0.28)">
+          <div>
+            <h2 style="font-size:1.3rem;font-weight:800;color:#fff;margin:0">🤝 Comunidade da Vila</h2>
+            <p style="font-size:0.84rem;color:var(--text-muted);margin:4px 0 0">
+              Pioneiros conectados pelo Passaporte Web3. Explore perfis públicos ou ative seu Passaporte para participar.
+            </p>
+          </div>
+          <a href="pioneiro" class="btn btn-primary btn-sm" style="text-decoration:none;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);color:#09090b;border:none">
+            🪪 Criar / Abrir Meu Passaporte →
+          </a>
+        </div>
+        <div id="vila-community-profiles-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
+          <div style="color:var(--text-muted);font-size:0.86rem;padding:16px 0">Carregando pioneiros da comunidade...</div>
+        </div>
+      </section>
 
       <!-- Barra de Pesquisa e Filtros -->
       <div class="mural-search-filter-wrapper" style="margin-bottom:20px">
@@ -994,7 +1063,7 @@
   <script src="assets/js/modules/analytics-tg.js?v=2.0"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.4"></script>
-  <script src="assets/js/modules/mural.v4.js?v=8.2"></script>
+  <script src="assets/js/modules/mural.v4.js?v=8.3"></script>
   <script src="assets/js/modules/mural-chatbot.js?v=1.0"></script>
   <script>
     function syncMuralOffset() {

@@ -83,6 +83,7 @@
   }
 
   let currentCategory = 'todos';
+  let currentPillar = 'inicio';
   let selectedTier = 'prata';
   let availableReferralCredits = 0;
 
@@ -401,8 +402,131 @@
     }
   }
 
+  function cardMatchesPillar(cardCat, pillar) {
+    if (!pillar || pillar === 'inicio' || pillar === 'comunidade') return true;
+    const cat = String(cardCat || 'geral').toLowerCase();
+    if (pillar === 'mercado') {
+      return ['produto', 'servico', 'tecnologia', 'educacao', 'alimentacao', 'geral', 'fisico', 'digital', 'negocio', 'comercial'].indexOf(cat) !== -1;
+    }
+    if (pillar === 'mural') {
+      return ['mensagem', 'youtube', 'aviso', 'evento', 'procura', 'projeto', 'noticia'].indexOf(cat) !== -1;
+    }
+    if (pillar === 'trabalho') {
+      return ['trabalho', 'vaga', 'freelancer', 'servico'].indexOf(cat) !== -1;
+    }
+    return true;
+  }
+
+  let communityLoadedOnce = false;
+  async function loadCommunityDirectory() {
+    const grid = document.getElementById('vila-community-profiles-grid');
+    if (!grid || communityLoadedOnce) return;
+    if (!window.HokageDb || typeof window.HokageDb.listPioneerProfiles !== 'function') {
+      grid.innerHTML = '<div style="color:var(--text-muted);font-size:0.86rem">Diretório da comunidade temporariamente indisponível.</div>';
+      return;
+    }
+    try {
+      const profiles = await window.HokageDb.listPioneerProfiles(12);
+      communityLoadedOnce = true;
+      if (!profiles || !profiles.length) {
+        grid.innerHTML = '<div style="color:var(--text-muted);font-size:0.86rem">Nenhum perfil público encontrado ainda.</div>';
+        return;
+      }
+      grid.innerHTML = profiles.map(function (p) {
+        const handle = String(p.username || '').replace(/^@+/, '');
+        const bio = escapeHtml((p.bio || 'Pioneiro ativo no ecossistema HOKAGE22B.').slice(0, 110));
+        const avatar = safeImageUrl(p.avatar_url || '');
+        const kycBadge = p.kyc_verified === true
+          ? '<span style="font-size:0.68rem;background:rgba(16,185,129,0.16);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:2px 8px;border-radius:999px;font-weight:700">🛡️ KYC Verificado</span>'
+          : '<span style="font-size:0.68rem;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:#c4b5fd;padding:2px 8px;border-radius:999px;font-weight:700">🪪 Passaporte Web3</span>';
+        const avatarHtml = avatar
+          ? '<img src="' + escapeHtml(avatar) + '" alt="@' + escapeHtml(handle) + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.2);flex-shrink:0" />'
+          : '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#f59e0b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0">π</div>';
+
+        return (
+          '<article style="background:#141419;border:1px solid rgba(255,255,255,0.09);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px">' +
+            '<div style="display:flex;align-items:center;gap:12px">' +
+              avatarHtml +
+              '<div style="min-width:0">' +
+                '<div class="notranslate" translate="no" style="font-weight:800;color:#fff;font-size:0.98rem;overflow:hidden;text-overflow:ellipsis">@' + escapeHtml(handle) + '</div>' +
+                '<div style="margin-top:4px">' + kycBadge + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<p style="margin:0;font-size:0.82rem;color:#a1a1aa;line-height:1.45">' + bio + '</p>' +
+            '<a href="pioneiro?u=' + encodeURIComponent(handle) + '" class="btn btn-outline btn-sm" style="text-decoration:none;text-align:center;font-weight:700">👀 Ver Passaporte →</a>' +
+          '</article>'
+        );
+      }).join('');
+    } catch (_) {
+      grid.innerHTML = '<div style="color:var(--text-muted);font-size:0.86rem">Não foi possível carregar os perfis agora.</div>';
+    }
+  }
+
+  function setPillar(pillar) {
+    currentPillar = pillar || 'inicio';
+
+    document.querySelectorAll('#vila-pillar-nav [data-pillar]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-pillar') === currentPillar);
+    });
+
+    const overviewEl = document.getElementById('vila-overview-pillars');
+    const bannerEl = document.getElementById('vila-pillar-banner');
+    const searchWrap = document.querySelector('.mural-search-filter-wrapper');
+    const featuredSec = document.getElementById('section-destaques');
+    const communitySec = document.getElementById('section-comunidade');
+    const communityHub = document.getElementById('vila-community-hub');
+
+    if (overviewEl) overviewEl.style.display = currentPillar === 'inicio' ? 'block' : 'none';
+
+    if (bannerEl) {
+      const banners = {
+        mercado: {
+          title: '🛒 Mercado da Vila',
+          desc: 'Produtos físicos e digitais, serviços, negócios e lojas que aceitam Pi. Negocie diretamente pelo Passaporte do anunciante.'
+        },
+        mural: {
+          title: '📌 Mural da Comunidade',
+          desc: 'Avisos, comunicados, eventos, ofertas rápidas, procura-se, projetos e notícias dos pioneiros.'
+        },
+        trabalho: {
+          title: '💼 Trabalho & Oportunidades',
+          desc: 'Vagas, projetos freelancer, colaboração e serviços profissionais pagos em Pi ou híbrido.'
+        }
+      };
+      if (banners[currentPillar]) {
+        bannerEl.innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">' +
+            '<div>' +
+              '<strong style="color:#fff;font-size:1.05rem;display:block;margin-bottom:4px">' + banners[currentPillar].title + '</strong>' +
+              '<span style="color:#a1a1aa;font-size:0.85rem;line-height:1.45;display:block">' + banners[currentPillar].desc + '</span>' +
+            '</div>' +
+            '<button type="button" class="btn btn-primary btn-sm" onclick="window.HokageMuralChatbot ? window.HokageMuralChatbot.open() : (window.IsarMural && window.IsarMural.openModal())" style="font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);border:none;color:#09090b">' +
+              '+ Publicar em ' + currentPillar.charAt(0).toUpperCase() + currentPillar.slice(1) +
+            '</button>' +
+          '</div>';
+        bannerEl.style.display = 'block';
+      } else {
+        bannerEl.style.display = 'none';
+      }
+    }
+
+    if (currentPillar === 'comunidade') {
+      if (searchWrap) searchWrap.style.display = 'none';
+      if (featuredSec) featuredSec.style.display = 'none';
+      if (communitySec) communitySec.style.display = 'none';
+      if (communityHub) communityHub.style.display = 'block';
+      loadCommunityDirectory();
+      return;
+    }
+
+    if (communityHub) communityHub.style.display = 'none';
+    if (searchWrap) searchWrap.style.display = 'block';
+    applyFilters();
+  }
+
   // Filtragem combinada em tempo real por Categoria, Nível, Moeda, País, Região, Idioma e Busca Textual
   function applyFilters() {
+    if (currentPillar === 'comunidade') return;
     const query = (currentSearchQuery || '').trim().toLowerCase();
     const regionQuery = (currentRegionFilter || '').trim().toLowerCase();
     const featuredSec = document.getElementById('section-destaques');
@@ -420,6 +544,7 @@
 
       const cardCat = card.getAttribute('data-category') || 'geral';
       const matchesCat = (currentCategory === 'todos' || cardCat === currentCategory);
+      const matchesPillar = cardMatchesPillar(cardCat, currentPillar);
 
       const cardTier = detectCardTier(card);
       const matchesTier = (currentTierFilter === 'todos' || cardTier === currentTierFilter);
@@ -438,7 +563,7 @@
 
       const matchesSearch = !query || textContent.includes(query);
 
-      const matches = matchesCat && matchesTier && matchesPay && matchesCountry && matchesRegion && matchesLang && matchesSearch;
+      const matches = matchesPillar && matchesCat && matchesTier && matchesPay && matchesCountry && matchesRegion && matchesLang && matchesSearch;
 
       if (matches) {
         card.classList.remove('pioneer-card--hidden', 'ad-card--hidden');
@@ -2754,6 +2879,7 @@
       } catch (_) {}
     },
     filterCategory: filterCategory,
+    setPillar: setPillar,
     filterPaymentMode: filterPaymentMode,
     filterCountry: filterCountry,
     filterTier: filterTier,
