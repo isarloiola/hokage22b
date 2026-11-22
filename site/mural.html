@@ -379,11 +379,11 @@
 
         <!-- Filtros Avançados: Nível, País, Região, Idioma, Pagamento, Ordenação & Chatbot -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin-top:10px;padding:12px;border-radius:14px;background:rgba(15,23,42,0.55);border:1px solid rgba(255,255,255,0.08)">
-          <select id="mural-tier-filter" onchange="window.IsarMural && window.IsarMural.filterTier(this.value)" aria-label="Filtrar por nível Ouro, Prata ou Bronze" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fde68a;font-size:0.8rem;font-weight:700">
-            <option value="todos">🏅 Todos os Níveis</option>
-            <option value="ouro">🥇 Ouro (3.14 π)</option>
-            <option value="prata">🥈 Prata (1.0 π)</option>
-            <option value="bronze">🥉 Bronze (0.314 π)</option>
+          <select id="mural-tier-filter" onchange="window.IsarMural && window.IsarMural.filterTier(this.value)" aria-label="Filtrar por alcance na Vila" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fde68a;font-size:0.8rem;font-weight:700">
+            <option value="todos">🏅 Todos os Alcances</option>
+            <option value="ouro">🚀 Boost VIP (3.14 π)</option>
+            <option value="prata">⚡ Boost Destaque (1.0 π)</option>
+            <option value="bronze">📜 Normal (0.314 π)</option>
           </select>
 
           <select id="mural-country-filter" onchange="window.IsarMural && window.IsarMural.filterCountry(this.value)" aria-label="Filtrar por país ou alcance global" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(139,92,246,0.38);color:#c4b5fd;font-size:0.8rem;font-weight:700">
@@ -434,24 +434,25 @@
         </div>
       </div>
 
-      <!-- ÁREA A: DESTAQUES DO MURAL (PATROCINADOS: OURO & PRATA) -->
+      <!-- FEED UNIFICADO DA VILA (ORDENADO POR ALCANCE: BOOST VIP -> BOOST DESTAQUE -> NORMAL) -->
       <section class="mural-section mural-section--featured" id="section-destaques" style="margin-bottom:48px">
-        <div class="mural-section__header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(245,158,11,0.25);flex-wrap:wrap;gap:12px">
+        <div class="mural-section__header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(217,119,6,0.35);flex-wrap:wrap;gap:12px">
           <div style="display:flex;align-items:center;gap:12px">
-            <span style="font-size:1.6rem">👑</span>
+            <span style="font-size:1.6rem">🏘️</span>
             <div>
               <h2 style="font-size:1.35rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:10px">
-                Destaques do Mural
-                <span style="font-size:0.7rem;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(234,179,8,0.3));color:var(--amber-light);border:1px solid rgba(245,158,11,0.5);padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700">Patrocinado</span>
+                Feed da Vila
+                <span style="font-size:0.7rem;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.3));color:var(--amber-light);border:1px solid rgba(245,158,11,0.5);padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700">Unificado</span>
               </h2>
-              <p style="font-size:0.82rem;color:var(--text-muted);margin:3px 0 0">
-                Campanhas VIP e serviços em evidência na Pi Network · Rotação equilibrada entre anunciantes
+              <p style="font-size:0.82rem;color:#e7dccf;margin:3px 0 0">
+                Ofertas, vagas, serviços e comunicados em um só lugar · Ordenado por alcance (Boost VIP → Boost Destaque → Normal)
               </p>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-muted)">
-            <span style="background:rgba(245,158,11,0.1);color:var(--amber-light);padding:4px 10px;border-radius:6px;border:1px solid rgba(245,158,11,0.25);font-weight:600">🥇 Ouro (Topo VIP)</span>
-            <span style="background:rgba(148,163,184,0.1);color:#e2e8f0;padding:4px 10px;border-radius:6px;border:1px solid rgba(148,163,184,0.25);font-weight:600">🥈 Prata (Destaque)</span>
+          <div style="display:flex;align-items:center;gap:6px;font-size:0.74rem;color:var(--text-muted);flex-wrap:wrap">
+            <span style="background:rgba(245,158,11,0.12);color:var(--amber-light);padding:4px 9px;border-radius:6px;border:1px solid rgba(245,158,11,0.3);font-weight:600">🚀 Boost VIP</span>
+            <span style="background:rgba(148,163,184,0.1);color:#e2e8f0;padding:4px 9px;border-radius:6px;border:1px solid rgba(148,163,184,0.25);font-weight:600">⚡ Boost Destaque</span>
+            <span style="background:rgba(255,255,255,0.04);color:#e7dccf;padding:4px 9px;border-radius:6px;border:1px solid rgba(217,119,6,0.25);font-weight:600">📜 Normal</span>
           </div>
         </div>
 
@@ -632,34 +633,10 @@
               </div>
             </div>
           </article>
-        </div>
-      </section>
-
-      <!-- ÁREA B: MURAL DA COMUNIDADE (CLASSIFICADOS: BRONZE) -->
-      <section class="mural-section mural-section--community" id="section-comunidade" style="margin-bottom:48px">
-        <div class="mural-section__header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(139,92,246,0.25);flex-wrap:wrap;gap:12px">
-          <div style="display:flex;align-items:center;gap:12px">
-            <span style="font-size:1.6rem">💬</span>
-            <div>
-              <h2 style="font-size:1.35rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:10px">
-                Mural da Comunidade
-                <span style="font-size:0.7rem;background:rgba(139,92,246,0.2);color:var(--accent-light);border:1px solid rgba(139,92,246,0.4);padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700">Classificados</span>
-              </h2>
-              <p style="font-size:0.82rem;color:var(--text-muted);margin:3px 0 0">
-                Participação comunitária livre e recados fraternos de pioneiros · Exibição cronológica recente
-              </p>
-            </div>
-          </div>
-          <span style="font-size:0.75rem;background:rgba(255,255,255,0.04);color:var(--text-muted);padding:4px 10px;border-radius:6px;border:1px solid var(--border-color);font-weight:600">
-            🥉 Bronze (Feed Comunitário)
-          </span>
-        </div>
-
-        <div class="mural-grid" id="mural-community-grid">
-          <!-- 4. CLASSIFICADO BRONZE (MENSAGEM SEM LINK EXTERNO) -->
+          <!-- 4. PUBLICAÇÃO NORMAL (EXEMPLO DE RECADO NA VILA) -->
           <article class="pioneer-card pioneer-card--bronze" data-category="mensagem" id="card-mock-4">
             <div class="pioneer-card__top">
-              <span class="pioneer-card__badge pioneer-badge--bronze">🥉 Comunitário · Recado</span>
+              <span class="pioneer-card__badge pioneer-badge--bronze">📜 Publicação na Vila · Recado</span>
               <a href="pioneiro?u=pioneiro_cwb" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('card-mock-4')" class="pioneer-card__author" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px" title="Ver Passaporte oficial do pioneiro">@pioneiro_cwb ↗</a>
             </div>
             <h3 class="pioneer-card__title">Rumo à Open Mainnet!</h3>
@@ -1143,7 +1120,7 @@
   <script src="assets/js/modules/analytics-tg.js?v=2.0"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.4"></script>
-  <script src="assets/js/modules/mural.v4.js?v=8.6"></script>
+  <script src="assets/js/modules/mural.v4.js?v=8.7"></script>
   <script src="assets/js/modules/mural-chatbot.js?v=1.0"></script>
   <script>
     function syncMuralOffset() {

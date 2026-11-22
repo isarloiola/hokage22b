@@ -99,7 +99,7 @@
   }
 
   function getCommunityGrid() {
-    return document.getElementById('mural-community-grid') || document.getElementById('mural-ads-grid');
+    return getFeaturedGrid();
   }
 
   // Rotação determinística e justa por fatia horária (UTC)
@@ -276,25 +276,27 @@
     const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata') ? ad.plan_tier : 'bronze';
     const html = buildAdCardHtml(ad);
 
+    const unifiedGrid = getFeaturedGrid();
+    if (!unifiedGrid) return;
+
     if (tier === 'ouro') {
-      const featuredGrid = getFeaturedGrid();
-      if (featuredGrid) {
-        featuredGrid.insertAdjacentHTML('afterbegin', html);
-      }
+      unifiedGrid.insertAdjacentHTML('afterbegin', html);
     } else if (tier === 'prata') {
-      const featuredGrid = getFeaturedGrid();
-      if (featuredGrid) {
-        const firstPrata = featuredGrid.querySelector('.pioneer-card--prata');
-        if (firstPrata) {
-          firstPrata.insertAdjacentHTML('beforebegin', html);
-        } else {
-          featuredGrid.insertAdjacentHTML('beforeend', html);
-        }
+      const firstPrata = unifiedGrid.querySelector('.pioneer-card--prata');
+      const firstBronze = unifiedGrid.querySelector('.pioneer-card--bronze');
+      if (firstPrata) {
+        firstPrata.insertAdjacentHTML('beforebegin', html);
+      } else if (firstBronze) {
+        firstBronze.insertAdjacentHTML('beforebegin', html);
+      } else {
+        unifiedGrid.insertAdjacentHTML('beforeend', html);
       }
     } else {
-      const commGrid = getCommunityGrid();
-      if (commGrid) {
-        commGrid.insertAdjacentHTML('afterbegin', html);
+      const firstBronze = unifiedGrid.querySelector('.pioneer-card--bronze');
+      if (firstBronze) {
+        firstBronze.insertAdjacentHTML('beforebegin', html);
+      } else {
+        unifiedGrid.insertAdjacentHTML('beforeend', html);
       }
     }
   }
@@ -387,11 +389,19 @@
   }
 
   function reorderGridCards(grid, sortOrder) {
-    if (!grid || sortOrder === 'destaque') return;
+    if (!grid) return;
     const cards = Array.from(grid.children).filter(function (el) {
       return el.classList && (el.classList.contains('pioneer-card') || el.classList.contains('ad-card'));
     });
     if (cards.length < 2) return;
+    if (sortOrder === 'destaque') {
+      const weight = { ouro: 0, prata: 1, bronze: 2 };
+      cards.sort(function (a, b) {
+        return (weight[detectCardTier(a)] ?? 2) - (weight[detectCardTier(b)] ?? 2);
+      });
+      cards.forEach(function (c) { grid.appendChild(c); });
+      return;
+    }
     if (sortOrder === 'curtidos') {
       cards.sort(function (a, b) {
         const likesA = parseInt((a.querySelector('[id^="like-count-"]') || {}).textContent || '0', 10) || 0;
