@@ -83,14 +83,16 @@ async function runTests() {
       body: JSON.stringify({ wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR', bio: 'Invasor' })
     });
     const data = await res.json().catch(() => null);
-    // Deve retornar [] (0 linhas atualizadas) ou erro RLS
-    const ok = Array.isArray(data) && data.length === 0;
+    // Deve retornar [] (0 linhas atualizadas) ou erro RLS / REVOKE (401/403/42501)
+    const ok = res.status === 401 || res.status === 403 || (data && data.code === '42501') || (Array.isArray(data) && data.length === 0);
     results.push({
       id: 'TESTE_04_NEGATIVO',
       descricao: 'Tentativa de alterar carteira ou bio de pioneiro via anon key',
       resultado: ok ? 'PASSOU (Bloqueado com Sucesso)' : 'FALHOU',
       httpCode: res.status,
-      detalhe: ok ? '0 linhas modificadas (RLS pioneiros_update_backend_only bloqueou a alteração)' : JSON.stringify(data)
+      detalhe: ok
+        ? (data && data.message ? `Acesso bloqueado (HTTP ${res.status}): ${data.message}` : '0 linhas modificadas (RLS/REVOKE bloqueou a alteração)')
+        : JSON.stringify(data)
     });
   } catch (e) {
     results.push({ id: 'TESTE_04_NEGATIVO', descricao: 'PATCH em pioneiros', resultado: 'ERRO', detalhe: e.message });
@@ -103,13 +105,15 @@ async function runTests() {
       headers
     });
     const data = await res.json().catch(() => null);
-    const ok = !data || (Array.isArray(data) && data.length === 0);
+    const ok = res.status === 401 || res.status === 403 || (data && data.code === '42501') || !data || (Array.isArray(data) && data.length === 0);
     results.push({
       id: 'TESTE_05_NEGATIVO',
       descricao: 'Tentativa de excluir pioneiro via anon key',
       resultado: ok ? 'PASSOU (Bloqueado com Sucesso)' : 'FALHOU',
       httpCode: res.status,
-      detalhe: '0 registros excluídos (RLS pioneiros_delete_backend_only ativa)'
+      detalhe: ok
+        ? (data && data.message ? `Acesso bloqueado (HTTP ${res.status}): ${data.message}` : '0 registros excluídos (RLS/REVOKE bloqueou)')
+        : JSON.stringify(data)
     });
   } catch (e) {
     results.push({ id: 'TESTE_05_NEGATIVO', descricao: 'DELETE em pioneiros', resultado: 'ERRO', detalhe: e.message });
@@ -342,6 +346,30 @@ async function runTests() {
     });
   } catch (e) {
     results.push({ id: 'TESTE_16_MIGRATION_021_PIONEIROS', descricao: 'pioneiros direct SELECT', resultado: 'ERRO', detalhe: e.message });
+  }
+
+  // TESTE 17 (Fase 2 - public-api): Validação estrita de ?u= e escape de curinga _
+  try {
+    const apiBase = `${sbUrl}/functions/v1/public-api/v1/passaportes`;
+    const rBad = await fetch(`${apiBase}?u=${encodeURIComponent('hokage22b,uid.neq.0')}`);
+    const dBad = await rBad.json().catch(() => null);
+    const rUnder = await fetch(`${apiBase}?u=test_underscore_check`);
+    const rGood = await fetch(`${apiBase}?u=hokage22b`);
+
+    const badOk = rBad.status === 400 && dBad && dBad.code === 'INVALID_USERNAME';
+    const underOk = rUnder.status === 200 || rUnder.status === 404;
+    const goodOk = rGood.status === 200;
+    const ok = badOk && underOk && goodOk;
+
+    results.push({
+      id: 'TESTE_17_PUBLIC_API_VALIDATION',
+      descricao: 'public-api /passaportes valida ?u= contra injeção PostgREST e escapa curinga _',
+      resultado: ok ? 'PASSOU (Validado com Sucesso)' : 'FALHOU',
+      httpCode: { bad: rBad.status, underscore: rUnder.status, good: rGood.status },
+      detalhe: `bad=${rBad.status}(${dBad ? dBad.code : ''}), underscore=${rUnder.status}, good=${rGood.status}`
+    });
+  } catch (e) {
+    results.push({ id: 'TESTE_17_PUBLIC_API_VALIDATION', descricao: 'public-api /passaportes validation', resultado: 'ERRO', detalhe: e.message });
   }
 
   console.log(JSON.stringify(results, null, 2));

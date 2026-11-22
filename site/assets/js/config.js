@@ -69,11 +69,17 @@
       // true  = Ativado automaticamente no Sandbox (sandbox.minepi.com / ?sandbox=true)
       sandbox: (function () {
         try {
+          var host = (window.location.hostname || '').toLowerCase();
+          var isProdDomain = host === 'hokage22b.com' || host === 'www.hokage22b.com';
+          var ref = (document.referrer || '').toLowerCase();
+          if (ref.indexOf('sandbox.minepi.com') !== -1 || host === 'localhost' || host === '127.0.0.1') {
+            return true;
+          }
+          if (isProdDomain) return false;
           var q = new URLSearchParams(window.location.search);
           if (q.get('sandbox') === 'true' || q.get('sandbox') === '1') return true;
           if (q.get('sandbox') === 'false' || q.get('sandbox') === '0') return false;
-          var ref = (document.referrer || '').toLowerCase();
-          return ref.indexOf('sandbox.minepi.com') !== -1 || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          return false;
         } catch (_) {
           return false;
         }

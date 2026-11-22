@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HOKAGE22B — Console de Administração Web3 &amp; Gestão</title>
   <meta name="robots" content="noindex, nofollow">
-  <meta name="referrer" content="no-referrer" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://sdk.minepi.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https://yhzoehwkuxteihsnagcj.supabase.co https://api.minepi.com; object-src 'none'; base-uri 'self';" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://sdk.minepi.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; frame-src 'self' https://*.minepi.com https://minepi.com https://sandbox.minepi.com https://socialchain.app https://*.socialchain.app https://*.pinet.com https://app-cdn.minepi.com; connect-src 'self' https://yhzoehwkuxteihsnagcj.supabase.co https://api.minepi.com https://*.minepi.com https://minepi.com https://sandbox.minepi.com https://socialchain.app https://*.socialchain.app https://*.pinet.com; object-src 'none'; base-uri 'self';" />
 
   <!-- Clean URLs (Remove .html da barra de endereços) -->
   <script>
@@ -23,7 +23,18 @@
 
   <!-- Pi Network SDK & Supabase -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    try {
+      if (window.Pi && !window.__hkPiSdkInitialized) {
+        var _host = (location.hostname || '').toLowerCase();
+        var _isProd = _host === 'hokage22b.com' || _host === 'www.hokage22b.com';
+        var _isSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || _host === 'localhost' || _host === '127.0.0.1' || (!_isProd && /[?&]sandbox=(1|true)/i.test(location.search));
+        window.Pi.init({ version: '2.0', sandbox: _isSandbox });
+        window.__hkPiSdkInitialized = true;
+      }
+    } catch (_) {}
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
 
   <style>
     :root {
@@ -888,7 +899,7 @@
   <div id="admin-toast"></div>
 
   <!-- SCRIPTS DE INTEGRAÇÃO & AUTENTICAÇÃO -->
-  <script src="assets/js/config.js?v=7.2"></script>
+  <script src="assets/js/config.js?v=7.3"></script>
   <script src="assets/js/modules/db.js?v=6.0"></script>
   <script>
     (function () {
@@ -1044,10 +1055,13 @@
         }
 
         try {
-          try {
-            var isPiSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || /[?&]sandbox=(1|true)/i.test(location.search) || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+          if (!window.__hkPiSdkInitialized) {
+            var _h = (location.hostname || '').toLowerCase();
+            var _prod = _h === 'hokage22b.com' || _h === 'www.hokage22b.com';
+            var isPiSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || _h === 'localhost' || _h === '127.0.0.1' || (!_prod && /[?&]sandbox=(1|true)/i.test(location.search));
             window.Pi.init({ version: '2.0', sandbox: isPiSandbox });
-          } catch (_) {}
+            window.__hkPiSdkInitialized = true;
+          }
 
           diag.innerHTML = '⚡ Autenticando com a Pi Blockchain...';
 
@@ -1055,9 +1069,9 @@
             console.log('Pagamento incompleto:', payment);
           }
 
-          const authPromise = window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
+          const authPromise = window.Pi.authenticate(['username'], onIncompletePaymentFound);
           const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('TIMEOUT_PI_SDK')), 9000);
+            setTimeout(() => reject(new Error('TIMEOUT_PI_SDK')), 20000);
           });
 
           const auth = await Promise.race([authPromise, timeoutPromise]);
@@ -1068,6 +1082,10 @@
             diag.innerHTML = `⛔ <strong>Acesso Negado:</strong> Usuário <code>@${escapeHtml(username || 'desconhecido')}</code> não possui privilégios de administrador.`;
             btn.disabled = false;
             return;
+          }
+
+          if (auth && auth.accessToken) {
+            try { sessionStorage.setItem('hokage_pi_access_token', auth.accessToken); } catch (_) {}
           }
 
           diag.style.color = 'var(--green)';
@@ -1467,14 +1485,27 @@
         });
       };
 
+      function sanitizeCsvCell(val) {
+        let str = String(val == null ? '' : val).replace(/\r?\n/g, ' ').trim();
+        if (/^[=+\-@\t\r]/.test(str)) {
+          str = "'" + str;
+        }
+        return '"' + str.replace(/"/g, '""') + '"';
+      }
+
       window.exportLeadsCsv = function () {
         if (!cachedLeads.length) {
           showToast('Nenhum dado para exportar.', true);
           return;
         }
-        let csv = 'Nome,Email,Origem,Data\n';
+        let csv = '\uFEFFNome,Email,Origem,Data\n';
         cachedLeads.forEach(l => {
-          csv += `"${l.name || ''}","${l.email || ''}","${l.source || ''}","${l.created_at || ''}"\n`;
+          csv += [
+            sanitizeCsvCell(l.name),
+            sanitizeCsvCell(l.email),
+            sanitizeCsvCell(l.source),
+            sanitizeCsvCell(l.created_at)
+          ].join(',') + '\n';
         });
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
@@ -1657,7 +1688,7 @@
         try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
         if (!currentSecret && !token && window.Pi && window.Pi.authenticate) {
           try {
-            const auth = await window.Pi.authenticate(['username', 'payments'], function () {});
+            const auth = await window.Pi.authenticate(['username'], function () {});
             if (auth && auth.accessToken) {
               token = auth.accessToken;
               sessionStorage.setItem('hokage_pi_access_token', token);

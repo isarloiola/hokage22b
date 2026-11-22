@@ -574,52 +574,102 @@ serve(async (req) => {
         );
       }
 
-      const { data: rows } = await supabase
-        .from("transacoes_pi")
-        .select("payment_id, amount, status, metadata")
-        .eq("purpose", "affiliate_commission")
-        .eq("status", "pending");
-
-      const targetIds: string[] = [];
       let pendingSum = 0;
+      let commissionsCount = 0;
 
-      if (Array.isArray(rows)) {
-        for (const r of rows) {
-          const meta = (r && typeof r.metadata === "object" && r.metadata) ? r.metadata : {};
-          if (normalizeHandle(String(meta.referrer_username || "")) === cleanUser) {
-            targetIds.push(r.payment_id);
-            pendingSum += Number(r.amount) || 0;
+      // Usa RPC atômica com FOR UPDATE quando disponível (Migration 022), mantendo fallback seguro
+      const { data: rpcRes, error: rpcErr } = await supabase.rpc("request_affiliate_payout_atomic", {
+        p_username: "@" + cleanUser,
+        p_wallet: cleanWallet,
+        p_min_pi: MIN_AFFILIATE_PAYOUT_PI,
+      });
+
+      const rpcMsg = String(rpcErr?.message || "");
+      const missingRpc = Boolean(
+        rpcErr &&
+          (rpcErr.code === "42883" ||
+            rpcMsg.includes("Could not find the function") ||
+            rpcMsg.includes("does not exist"))
+      );
+
+      if (!rpcErr && rpcRes && typeof rpcRes === "object") {
+        const resObj = rpcRes as Record<string, unknown>;
+        if (!resObj.ok) {
+          const reason = String(resObj.reason || "");
+          if (reason === "MIN_PAYOUT_NOT_REACHED") {
+            const avail = Number(resObj.pending_pi || 0);
+            return jsonError(
+              "MIN_PAYOUT_NOT_REACHED",
+              `Saldo disponível (${avail} π) abaixo do mínimo para saque (${MIN_AFFILIATE_PAYOUT_PI} π).`,
+              corsHeaders,
+              400
+            );
+          }
+          return jsonError(reason || "PAYOUT_REQUEST_FAILED", "Não foi possível solicitar o saque.", corsHeaders, 400);
+        }
+        pendingSum = Math.round((Number(resObj.requested_pi) || 0) * 10000) / 10000;
+        commissionsCount = Number(resObj.commissions_count || 0);
+      } else if (missingRpc) {
+        const { data: rows } = await supabase
+          .from("transacoes_pi")
+          .select("payment_id, amount, status, metadata")
+          .eq("purpose", "affiliate_commission")
+          .eq("status", "pending");
+
+        const targetIds: string[] = [];
+        if (Array.isArray(rows)) {
+          for (const r of rows) {
+            const meta = (r && typeof r.metadata === "object" && r.metadata) ? r.metadata : {};
+            if (normalizeHandle(String(meta.referrer_username || "")) === cleanUser) {
+              targetIds.push(r.payment_id);
+              pendingSum += Number(r.amount) || 0;
+            }
           }
         }
-      }
 
-      pendingSum = Math.round(pendingSum * 10000) / 10000;
-      if (targetIds.length === 0 || pendingSum + 1e-6 < MIN_AFFILIATE_PAYOUT_PI) {
-        return jsonError(
-          "MIN_PAYOUT_NOT_REACHED",
-          `Saldo disponível (${pendingSum} π) abaixo do mínimo para saque (${MIN_AFFILIATE_PAYOUT_PI} π).`,
-          corsHeaders,
-          400
-        );
-      }
+        pendingSum = Math.round(pendingSum * 10000) / 10000;
+        if (targetIds.length === 0 || pendingSum + 1e-6 < MIN_AFFILIATE_PAYOUT_PI) {
+          return jsonError(
+            "MIN_PAYOUT_NOT_REACHED",
+            `Saldo disponível (${pendingSum} π) abaixo do mínimo para saque (${MIN_AFFILIATE_PAYOUT_PI} π).`,
+            corsHeaders,
+            400
+          );
+        }
 
-      const requestedAt = new Date().toISOString();
-      for (const id of targetIds) {
-        const row = rows!.find((x: any) => x.payment_id === id);
-        const oldMeta = (row && typeof row.metadata === "object" && row.metadata) ? row.metadata : {};
-        await supabase
-          .from("transacoes_pi")
-          .update({
-            status: "requested",
-            to_address: cleanWallet,
-            metadata: {
-              ...oldMeta,
-              referrer_wallet: cleanWallet,
-              payout_status: "requested",
-              requested_at: requestedAt,
-            },
-          })
-          .eq("payment_id", id);
+        const requestedAt = new Date().toISOString();
+        let transitionedSum = 0;
+        for (const id of targetIds) {
+          const row = rows!.find((x: any) => x.payment_id === id);
+          const oldMeta = (row && typeof row.metadata === "object" && row.metadata) ? row.metadata : {};
+          const { data: updatedRow } = await supabase
+            .from("transacoes_pi")
+            .update({
+              status: "requested",
+              to_address: cleanWallet,
+              metadata: {
+                ...oldMeta,
+                referrer_wallet: cleanWallet,
+                payout_status: "requested",
+                requested_at: requestedAt,
+              },
+            })
+            .eq("payment_id", id)
+            .eq("purpose", "affiliate_commission")
+            .eq("status", "pending")
+            .select("payment_id, amount")
+            .maybeSingle();
+          if (updatedRow) {
+            commissionsCount += 1;
+            transitionedSum += Number(updatedRow.amount) || 0;
+          }
+        }
+        pendingSum = Math.round(transitionedSum * 10000) / 10000;
+        if (commissionsCount === 0) {
+          return jsonError("MIN_PAYOUT_NOT_REACHED", "Nenhuma comissão pendente disponível para saque.", corsHeaders, 409);
+        }
+      } else if (rpcErr) {
+        throw rpcErr;
       }
 
       await notifyAdmin({
@@ -628,7 +678,7 @@ serve(async (req) => {
         title: `@${cleanUser} pediu saque de ${pendingSum.toFixed(4)} π`,
         lines: [
           `Afiliado: @${cleanUser}`,
-          `Valor pendente: ${pendingSum.toFixed(4)} π (${targetIds.length} comissões)`,
+          `Valor pendente: ${pendingSum.toFixed(4)} π (${commissionsCount} comissões)`,
           `Carteira Pi: ${cleanWallet}`,
           `Ação: Envie a transferência P2P e clique em "Marcar Pago" no Admin.`,
         ],
@@ -642,7 +692,7 @@ serve(async (req) => {
           username: "@" + cleanUser,
           requested_pi: pendingSum,
           wallet_address: cleanWallet,
-          commissions_count: targetIds.length,
+          commissions_count: commissionsCount,
         },
         corsHeaders,
         200
@@ -739,12 +789,14 @@ serve(async (req) => {
       const { data: rows } = await supabase
         .from("transacoes_pi")
         .select("payment_id, metadata")
+        .eq("purpose", "affiliate_commission")
         .in("payment_id", ids);
 
+      const updatedIds: string[] = [];
       if (Array.isArray(rows)) {
         for (const r of rows) {
           const oldMeta = (r && typeof r.metadata === "object" && r.metadata) ? r.metadata : {};
-          await supabase
+          const { data: updatedRow } = await supabase
             .from("transacoes_pi")
             .update({
               status: "paid",
@@ -756,14 +808,24 @@ serve(async (req) => {
                 paid_txid: cleanPaidTxid,
               },
             })
-            .eq("payment_id", r.payment_id);
+            .eq("payment_id", r.payment_id)
+            .eq("purpose", "affiliate_commission")
+            .select("payment_id")
+            .maybeSingle();
+          if (updatedRow?.payment_id) {
+            updatedIds.push(updatedRow.payment_id);
+          }
         }
+      }
+
+      if (updatedIds.length === 0) {
+        return jsonError("COMMISSION_NOT_FOUND", "Nenhuma comissão elegível encontrada para os IDs informados.", corsHeaders, 404);
       }
 
       return jsonOk(
         "COMMISSION_MARKED_PAID",
         {
-          updated_ids: ids,
+          updated_ids: updatedIds,
           paid_txid: cleanPaidTxid,
           paid_at: paidAt,
         },

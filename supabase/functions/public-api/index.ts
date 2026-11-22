@@ -292,18 +292,27 @@ serve(async (req: Request) => {
 
     // 3. Passaporte(s) do Pioneiro
     if (route === "/passaportes") {
-      const u = normalizeHandle(url.searchParams.get("u"));
-      if (u) {
+      const rawU = url.searchParams.get("u");
+      if (rawU !== null && rawU.trim() !== "") {
+        const cleanU = rawU.trim().replace(/^@+/, "").toLowerCase();
+        if (!/^[a-z0-9_]{2,32}$/.test(cleanU)) {
+          return err(
+            "INVALID_USERNAME",
+            "Identificador @username inválido. Use apenas letras, números e underline (2 a 32 caracteres).",
+            400
+          );
+        }
+        const escapedU = cleanU.replace(/[\\%_]/g, "\\$&");
         const { data, error } = await supabase
           .from("pioneiros")
           .select(PUBLIC_PIONEER_SELECT)
-          .or(`username.ilike.${u},username.ilike.@${u}`)
+          .or(`username.ilike.${escapedU},username.ilike.@${escapedU}`)
           .order("updated_at", { ascending: false })
           .limit(1)
           .maybeSingle();
 
         if (error) throw error;
-        if (!data) return err("PASSPORT_NOT_FOUND", `Passaporte @${u} não encontrado.`, 404);
+        if (!data) return err("PASSPORT_NOT_FOUND", `Passaporte @${cleanU} não encontrado.`, 404);
         return ok("PASSPORT_DETAIL", { passport: projectPassport(data) }, 60);
       }
 

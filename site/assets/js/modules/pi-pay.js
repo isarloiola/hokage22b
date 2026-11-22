@@ -1175,7 +1175,7 @@
 
   // Inicializa bindings e recupera cache
   function autoInit() {
-    initPiSdk(true);
+    initPiSdk();
     initSmartPiBanner();
     try {
       const cached = localStorage.getItem('hokage_pi_user');

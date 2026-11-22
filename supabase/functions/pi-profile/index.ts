@@ -110,13 +110,13 @@ serve(async (req) => {
     // Consulta estado real no servidor para validar títulos meritocráticos
     const { data: existingByUser } = await supabase
       .from("pioneiros")
-      .select("uid, is_ambassador, referral_qualified_count")
+      .select("uid, is_ambassador, referral_qualified_count, wallet_address, referred_by_username")
       .ilike("username", verifiedUsername)
       .maybeSingle();
 
     const { data: existingByUid } = await supabase
       .from("pioneiros")
-      .select("uid, is_ambassador, referral_qualified_count")
+      .select("uid, is_ambassador, referral_qualified_count, wallet_address, referred_by_username")
       .eq("uid", verifiedUid)
       .maybeSingle();
 
@@ -195,6 +195,83 @@ serve(async (req) => {
       updated_at: new Date().toISOString(),
     };
 
+    // 3b. RE-CHECAGEM ANTIFRAUDE DE CARTEIRA NA REDE DE INDICAÇÃO (impede Sybil após cadastro)
+    if (cleanWallet) {
+      const upperWallet = cleanWallet.toUpperCase();
+      const relatedUids = new Set<string>();
+      const relatedHandles = new Set<string>();
+
+      if (existingFlags?.referred_by_username) {
+        const refH = normalizeHandle(String(existingFlags.referred_by_username));
+        if (refH) relatedHandles.add("@" + refH);
+      }
+
+      const { data: asReferred } = await supabase
+        .from("indicacoes")
+        .select("referrer_uid, referrer_username")
+        .eq("referred_uid", verifiedUid)
+        .limit(5);
+      if (Array.isArray(asReferred)) {
+        for (const rel of asReferred) {
+          if (rel.referrer_uid && rel.referrer_uid !== verifiedUid) relatedUids.add(String(rel.referrer_uid));
+          const h = normalizeHandle(String(rel.referrer_username || ""));
+          if (h) relatedHandles.add("@" + h);
+        }
+      }
+
+      const { data: asReferrer } = await supabase
+        .from("indicacoes")
+        .select("referred_uid")
+        .eq("referrer_uid", verifiedUid)
+        .limit(50);
+      if (Array.isArray(asReferrer)) {
+        for (const rel of asReferrer) {
+          if (rel.referred_uid && rel.referred_uid !== verifiedUid) relatedUids.add(String(rel.referred_uid));
+        }
+      }
+
+      if (relatedUids.size > 0) {
+        const { data: relProfiles } = await supabase
+          .from("pioneiros")
+          .select("uid, wallet_address")
+          .in("uid", Array.from(relatedUids));
+        if (Array.isArray(relProfiles)) {
+          const dup = relProfiles.find(
+            (p) => p.uid !== verifiedUid && p.wallet_address && String(p.wallet_address).trim().toUpperCase() === upperWallet
+          );
+          if (dup) {
+            return jsonError(
+              "SELF_REFERRAL_WALLET",
+              "Carteira Pi já vinculada a uma conta da sua rede de indicação.",
+              corsHeaders,
+              400
+            );
+          }
+        }
+      }
+
+      for (const h of relatedHandles) {
+        const { data: hProf } = await supabase
+          .from("pioneiros")
+          .select("uid, wallet_address")
+          .ilike("username", h)
+          .maybeSingle();
+        if (
+          hProf &&
+          hProf.uid !== verifiedUid &&
+          hProf.wallet_address &&
+          String(hProf.wallet_address).trim().toUpperCase() === upperWallet
+        ) {
+          return jsonError(
+            "SELF_REFERRAL_WALLET",
+            "Carteira Pi já vinculada ao seu indicador.",
+            corsHeaders,
+            400
+          );
+        }
+      }
+    }
+
     // 4. GRAVAÇÃO SEGURA NO SUPABASE (Com migração automática caso exista registro prévio user_<username>)
     if (existingByUser && existingByUser.uid && existingByUser.uid !== verifiedUid) {
       await supabase
@@ -253,23 +330,44 @@ serve(async (req) => {
           if (!refErr) {
             referralResult = refData;
             // Garante que o convidado também receba +1 Crédito Bronze de Boas-Vindas (Give & Get)
-            // mesmo se a versão da função SQL no banco ainda não tiver retornado invitee_credit_added
+            // atomicamente via RPC quando a versão SQL no banco ainda não tiver retornado invitee_credit_added
             if (refData && typeof refData === "object" && (refData as Record<string, unknown>).awarded === true) {
               const rObj = refData as Record<string, unknown>;
               if (!rObj.invitee_credit_added) {
-                const newCredits = Number(data?.referral_credits || 0) + 1;
-                await supabase
-                  .from("pioneiros")
-                  .update({
-                    referral_credits: newCredits,
-                    referred_by_username: data?.referred_by_username || ("@" + cleanRef),
-                  })
-                  .eq("uid", verifiedUid);
-                if (data) {
-                  data.referral_credits = newCredits;
-                  data.referred_by_username = data.referred_by_username || ("@" + cleanRef);
+                const { data: incRes, error: incErr } = await supabase.rpc("increment_pioneer_referral_credit", {
+                  p_uid: verifiedUid,
+                  p_referred_by: "@" + cleanRef,
+                });
+                const incMsg = String(incErr?.message || "");
+                const missingIncRpc = Boolean(
+                  incErr &&
+                    (incErr.code === "42883" ||
+                      incMsg.includes("Could not find the function") ||
+                      incMsg.includes("does not exist"))
+                );
+                if (!incErr && incRes && typeof incRes === "object") {
+                  const incObj = incRes as Record<string, unknown>;
+                  if (data) {
+                    data.referral_credits = Number(incObj.referral_credits ?? data.referral_credits ?? 1);
+                    data.referred_by_username =
+                      (incObj.referred_by_username as string | null) || data.referred_by_username || ("@" + cleanRef);
+                  }
+                  rObj.invitee_credit_added = 1;
+                } else if (missingIncRpc) {
+                  const newCredits = Number(data?.referral_credits || 0) + 1;
+                  await supabase
+                    .from("pioneiros")
+                    .update({
+                      referral_credits: newCredits,
+                      referred_by_username: data?.referred_by_username || ("@" + cleanRef),
+                    })
+                    .eq("uid", verifiedUid);
+                  if (data) {
+                    data.referral_credits = newCredits;
+                    data.referred_by_username = data.referred_by_username || ("@" + cleanRef);
+                  }
+                  rObj.invitee_credit_added = 1;
                 }
-                rObj.invitee_credit_added = 1;
               }
             }
           } else {

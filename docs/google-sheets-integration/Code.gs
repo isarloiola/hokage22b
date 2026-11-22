@@ -18,7 +18,22 @@
  * 9. Quem pode acessar: "Qualquer pessoa" (Anyone) -> ESSENCIAL!
  * 10. Clique em "Implantar" e copie a URL gerada (termina com /exec)
  * 11. Cole essa URL no arquivo site/assets/js/modules/lead.js (na variável GOOGLE_SHEETS_URL)
+ * 12. (Opcional recomendado) Em Configurações do Projeto > Propriedades de script,
+ *     adicione WEBHOOK_SECRET para exigir autenticação compartilhada no POST.
  */
+
+function sanitizeSheetCell(val, maxLen) {
+  var str = String(val == null ? "" : val).trim();
+  if (!str) return "Não informado";
+  if (maxLen && str.length > maxLen) {
+    str = str.slice(0, maxLen);
+  }
+  // Neutraliza Formula Injection (=, +, -, @, TAB, CR no início da célula)
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
+  return str;
+}
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -26,6 +41,28 @@ function doPost(e) {
   lock.tryLock(10000);
 
   try {
+    var data = {};
+    if (e && e.postData && e.postData.contents) {
+      try {
+        data = JSON.parse(e.postData.contents);
+      } catch (err) {
+        data = e.parameter || {};
+      }
+    } else if (e && e.parameter) {
+      data = e.parameter;
+    }
+
+    // Validação opcional de segredo compartilhado configurado em ScriptProperties
+    var expectedSecret = PropertiesService.getScriptProperties().getProperty("WEBHOOK_SECRET");
+    if (expectedSecret) {
+      var providedSecret = String(data.secret || (e && e.parameter && e.parameter.secret) || "");
+      if (providedSecret !== expectedSecret) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ status: "error", message: "Unauthorized" }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     
     // Se for uma planilha nova e a linha 1 estiver vazia, cria os cabeçalhos
@@ -48,24 +85,14 @@ function doPost(e) {
       sheet.setFrozenRows(1);
     }
 
-    var data = {};
-    if (e && e.postData && e.postData.contents) {
-      try {
-        data = JSON.parse(e.postData.contents);
-      } catch (err) {
-        data = e.parameter || {};
-      }
-    } else if (e && e.parameter) {
-      data = e.parameter;
-    }
-
     // Formata a data e hora para o fuso horário de Brasília
     var timestamp = Utilities.formatDate(new Date(), "America/Sao_Paulo", "dd/MM/yyyy HH:mm:ss");
-    var name = data.name || data.nome || "Não informado";
-    var email = data.email || "Não informado";
-    var source = data.source || data.origem || "Manual Pi Network";
-    var piUser = data.pi_user || data.usuario_pi || "Visitante";
-    var reputation = data.reputation || data.pontos_reputacao || 0;
+    var name = sanitizeSheetCell(data.name || data.nome, 160);
+    var email = sanitizeSheetCell(data.email, 200);
+    var source = sanitizeSheetCell(data.source || data.origem || "Manual Pi Network", 120);
+    var piUser = sanitizeSheetCell(data.pi_user || data.usuario_pi || "Visitante", 64);
+    var parsedRep = Number(data.reputation != null ? data.reputation : data.pontos_reputacao);
+    var reputation = isFinite(parsedRep) ? parsedRep : 0;
 
     // Adiciona a linha com os dados
     sheet.appendRow([
