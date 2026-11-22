@@ -64,6 +64,7 @@
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
     }
   }
@@ -72,6 +73,7 @@
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
     }
   }
@@ -83,6 +85,7 @@
       overlay.addEventListener('click', function (e) {
         if (e.target === overlay) {
           overlay.classList.remove('active');
+          overlay.setAttribute('aria-hidden', 'true');
           document.body.style.overflow = '';
         }
       });
@@ -94,10 +97,32 @@
         const modal = btn.closest('.portal-modal-overlay');
         if (modal) {
           modal.classList.remove('active');
+          modal.setAttribute('aria-hidden', 'true');
           document.body.style.overflow = '';
         }
       });
     });
+
+    if (!window._hkPortalEscBound) {
+      window._hkPortalEscBound = true;
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        let closedAny = false;
+        document.querySelectorAll('.portal-modal-overlay.active').forEach(function (modal) {
+          modal.classList.remove('active');
+          modal.setAttribute('aria-hidden', 'true');
+          closedAny = true;
+        });
+        const drawer = document.getElementById('portal-drawer');
+        if (drawer && drawer.classList.contains('active')) {
+          closeMobileDrawer();
+          closedAny = true;
+        }
+        if (closedAny) {
+          document.body.style.overflow = '';
+        }
+      });
+    }
   }
 
   // ─── 3. Formulário Real de Newsletter ──────────────────────
@@ -112,6 +137,7 @@
 
       const nameInput = document.getElementById('newsletter-name');
       const emailInput = document.getElementById('newsletter-email');
+      const consentInput = document.getElementById('newsletter-consent');
       const name = nameInput ? nameInput.value.trim() : '';
       const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
 
@@ -123,6 +149,15 @@
           feedback.textContent = 'Por favor, informe um endereço de e-mail válido.';
         }
         if (emailInput) emailInput.focus();
+        return;
+      }
+
+      if (consentInput && !consentInput.checked) {
+        if (feedback) {
+          feedback.className = 'newsletter-feedback newsletter-feedback--error';
+          feedback.textContent = 'Marque a caixa de consentimento para confirmar sua inscrição (LGPD).';
+        }
+        consentInput.focus();
         return;
       }
 
@@ -192,10 +227,12 @@
       const category = (document.getElementById('prop-category') || {}).value || 'Parceria';
       const message = (document.getElementById('prop-message') || {}).value || '';
 
-      if (!email || !message.trim()) {
+      const emailClean = email.trim().toLowerCase();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailClean || !emailRegex.test(emailClean) || !message.trim()) {
         if (feedback) {
           feedback.className = 'newsletter-feedback newsletter-feedback--error';
-          feedback.textContent = 'Preencha ao menos seu e-mail e uma mensagem sobre a proposta.';
+          feedback.textContent = 'Informe um e-mail válido e uma mensagem sobre a proposta.';
         }
         return;
       }
@@ -206,12 +243,12 @@
       }
 
       const payload = {
-        name: name,
-        email: email,
+        name: name.trim() || company.trim() || 'Parceiro HOKAGE22B',
+        email: emailClean,
         company: company,
         category: category,
         message: message,
-        source: 'proposta-comercial-hokage22b',
+        source: ('proposta-' + String(category || 'comercial')).slice(0, 60),
         timestamp: new Date().toISOString()
       };
 
@@ -226,6 +263,16 @@
         }).catch(function () {});
       } catch (_) {}
 
+      if (window.IsarDB && window.IsarDB.saveLead) {
+        try {
+          await window.IsarDB.saveLead({
+            name: payload.name,
+            email: payload.email,
+            source: payload.source
+          });
+        } catch (_) {}
+      }
+
       if (feedback) {
         feedback.className = 'newsletter-feedback newsletter-feedback--success';
         feedback.textContent = '✓ Proposta enviada com sucesso! Nossa equipe entrará em contato em até 48 horas.';
@@ -239,6 +286,7 @@
 
       setTimeout(function () {
         closeModal('modal-proposta');
+        if (submitBtn) submitBtn.textContent = 'Enviar Proposta';
       }, 2500);
     });
   }
@@ -255,8 +303,16 @@
 
       const emailInput = document.getElementById('community-email');
       const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      if (!email) return;
+      if (!email || !emailRegex.test(email)) {
+        if (feedback) {
+          feedback.className = 'newsletter-feedback newsletter-feedback--error';
+          feedback.textContent = 'Por favor, informe um endereço de e-mail válido.';
+        }
+        if (emailInput) emailInput.focus();
+        return;
+      }
 
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -264,6 +320,7 @@
       }
 
       const payload = {
+        name: 'Lista Comunidade HOKAGE22B',
         email: email,
         source: 'waitlist-comunidade-propria',
         timestamp: new Date().toISOString()
@@ -278,6 +335,16 @@
           body: JSON.stringify(payload)
         }).catch(function () {});
       } catch (_) {}
+
+      if (window.IsarDB && window.IsarDB.saveLead) {
+        try {
+          await window.IsarDB.saveLead({
+            name: payload.name,
+            email: payload.email,
+            source: payload.source
+          });
+        } catch (_) {}
+      }
 
       if (feedback) {
         feedback.className = 'newsletter-feedback newsletter-feedback--success';
@@ -393,12 +460,81 @@
 
   // ─── 7. Pagamento do E-book via Pi Browser ────────────────
   function payEbookWithPi() {
-    alert('O e-book "Pi para seu Negócio" está em pré-lançamento exclusivo para a Open Mainnet (não aceita Test-Pi). Cadastre-se na lista de espera ou entre em contato direto com @hokage22b nas redes sociais para acesso antecipado via P2P na Mainnet!');
     closeModal('modal-pagamento-pi');
     openModal('modal-waitlist-comunidade');
+    if (window.HokageUi && typeof window.HokageUi.showToast === 'function') {
+      window.HokageUi.showToast('Cadastre seu e-mail na lista VIP para liberar acesso antecipado em Pi Mainnet.', 'info');
+    }
   }
 
-  // ─── 8. Inicialização ──────────────────────────────────────
+  // ─── 8. Prévia Ao Vivo da Vila na Home (Zero Anúncios Fake) ─
+  async function initHomeVilaLivePreview() {
+    const grid = document.getElementById('home-vila-live-grid');
+    if (!grid) return;
+
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    try {
+      const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/vila?limit=4');
+      const json = await res.json().catch(function () { return {}; });
+      const items = (json && json.data && Array.isArray(json.data.items))
+        ? json.data.items
+        : (Array.isArray(json.items) ? json.items : []);
+
+      if (!items.length) {
+        grid.innerHTML =
+          '<div style="grid-column:1/-1;text-align:center;padding:36px 20px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(245,158,11,0.28)">' +
+            '<div style="font-size:2rem;margin-bottom:8px">🏘️</div>' +
+            '<h3 style="color:#fff;margin:0 0 6px;font-size:1.1rem">Nenhum anúncio ativo no momento</h3>' +
+            '<p style="color:var(--text-secondary);font-size:0.88rem;max-width:480px;margin:0 auto 14px">Publique gratuitamente ou destaque seu produto, serviço ou vaga na Vila em segundos.</p>' +
+            '<a href="mural?publish=1" class="portal-btn portal-btn--amber portal-btn--sm">📢 Publicar Primeiro Anúncio</a>' +
+          '</div>';
+        return;
+      }
+
+      grid.innerHTML = items.slice(0, 4).map(function (ad) {
+        const tier = ['ouro', 'prata', 'bronze', 'gratis'].includes(ad.tier) ? ad.tier : 'bronze';
+        const authorRaw = String(ad.author || '@pioneiro').replace(/^@+/, '');
+        const badgeLabel = tier === 'ouro' ? '👑 Destaque Ouro VIP'
+          : tier === 'prata' ? '🥈 Destaque Prata'
+          : tier === 'gratis' ? '🌱 Comunidade' : '🥉 Classificado Bronze';
+        const itemPriceText = (ad.item_price && Number(ad.item_price) > 0)
+          ? esc(ad.item_price + ' ' + (ad.item_currency || 'PI'))
+          : (tier === 'gratis' ? 'Grátis' : (tier === 'ouro' ? '3.14 π' : tier === 'prata' ? '1.00 π' : '0.314 π'));
+        const targetHref = 'mural?ad=' + encodeURIComponent(ad.id || '');
+        const safeImg = (ad.image_url && /^https?:\/\//i.test(ad.image_url)) ? esc(ad.image_url) : '';
+        const bannerHtml = safeImg
+          ? '<div class="pioneer-card__banner"><img src="' + safeImg + '" alt="' + esc(ad.title || '') + '" loading="lazy" /></div>'
+          : '';
+        return (
+          '<article class="pioneer-card pioneer-card--' + tier + '">' +
+            bannerHtml +
+            '<div class="pioneer-card__top">' +
+              '<span class="pioneer-card__badge pioneer-badge--' + tier + '">' + badgeLabel + '</span>' +
+              '<a href="pioneiro?u=' + encodeURIComponent(authorRaw) + '" class="pioneer-card__author">@' + esc(authorRaw) + '</a>' +
+            '</div>' +
+            '<h3 class="pioneer-card__title">' + esc(ad.title || '') + '</h3>' +
+            '<p class="pioneer-card__desc">' + esc(String(ad.description || '').slice(0, 140)) + '</p>' +
+            '<div class="pioneer-card__footer">' +
+              '<a href="' + targetHref + '" class="pioneer-card__link">Ver Oferta na Vila →</a>' +
+              '<span class="pioneer-card__price-tag">' + itemPriceText + '</span>' +
+            '</div>' +
+          '</article>'
+        );
+      }).join('');
+    } catch (_) {
+      grid.innerHTML =
+        '<div style="grid-column:1/-1;text-align:center;padding:28px 16px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1)">' +
+          '<p style="color:var(--text-secondary);margin:0 0 12px;font-size:0.9rem">Acesse A Vila para conferir as ofertas e oportunidades em tempo real.</p>' +
+          '<a href="mural" class="portal-btn portal-btn--amber portal-btn--sm">🏘️ Abrir A Vila →</a>' +
+        '</div>';
+    }
+  }
+
+  // ─── 9. Inicialização ──────────────────────────────────────
   function init() {
     initMobileDrawer();
     initModals();
@@ -406,6 +542,7 @@
     initPartnerProposal();
     initCommunityWaitlist();
     initManualLeadUnlock();
+    initHomeVilaLivePreview();
   }
 
   window.HokagePortal = {

@@ -23,13 +23,18 @@
       prompt: '<strong>2/5 — Em qual categoria seu anúncio se encaixa melhor?</strong>',
       type: 'choices',
       options: [
-        { value: 'produto', label: '🛍️ Produto / Loja' },
-        { value: 'servico', label: '🛠️ Serviço Profissional' },
+        { value: 'produto', label: '🛍️ Produto Físico' },
+        { value: 'digital', label: '📦 Produto Digital' },
+        { value: 'servico', label: '🛠️ Serviço / Negócio' },
         { value: 'tecnologia', label: '💻 Tech & Apps' },
         { value: 'educacao', label: '🎓 Educação & Cursos' },
-        { value: 'alimentacao', label: '🍔 Alimentação / Local' },
+        { value: 'alimentacao', label: '🍔 Alimentação' },
+        { value: 'vaga', label: '💼 Vaga / Emprego' },
+        { value: 'freelancer', label: '🧑‍💻 Freelancer' },
+        { value: 'aviso', label: '📢 Aviso / Evento' },
+        { value: 'procura', label: '🔎 Procura-se' },
         { value: 'youtube', label: '▶ Canal YouTube' },
-        { value: 'mensagem', label: '💬 Recado da Comunidade' }
+        { value: 'mensagem', label: '💬 Recado' }
       ]
     },
     {
@@ -44,12 +49,13 @@
     },
     {
       key: 'tier',
-      prompt: '<strong>5/5 — Escolha o nível de destaque na Vila:</strong><br><span style="font-size:0.78rem;color:#a1a1aa">Se você tiver crédito Bronze grátis de convite, ele será aplicado na tela seguinte!</span>',
+      prompt: '<strong>5/5 — Escolha o nível de destaque na Vila:</strong><br><span style="font-size:0.78rem;color:#a1a1aa">Você pode começar no plano gratuito ou destacar com Pi (crédito de indicação libera Bronze grátis)!</span>',
       type: 'choices',
       options: [
-        { value: 'ouro', label: '🥇 Ouro (3.14 π · Topo + Foto + Link)' },
-        { value: 'prata', label: '🥈 Prata (1.0 π · Destaque + Foto + Link)' },
-        { value: 'bronze', label: '🥉 Bronze (0.314 π · Classificado)' }
+        { value: 'gratis', label: '🌱 Grátis (0 π · 1 publicação / 7 dias)' },
+        { value: 'bronze', label: '🥉 Bronze (0.314 π · Com foto)' },
+        { value: 'prata', label: '🥈 Prata (1.0 π · Destaque + Link)' },
+        { value: 'ouro', label: '🥇 Ouro (3.14 π · Topo VIP + Foto + Link)' }
       ]
     }
   ];
@@ -187,7 +193,7 @@
       if (catEl) catEl.value = draft.category;
       if (descEl) descEl.value = draft.desc;
       if (countryEl) countryEl.value = draft.country;
-      if (locEl) locEl.value = draft.location ? (draft.location + ' [' + draft.lang + ']') : ('[' + draft.lang + ']');
+      if (locEl) locEl.value = (draft.location && draft.location.trim()) ? draft.location.trim() : 'Online';
       if (linkEl && draft.link) linkEl.value = draft.link;
 
       if (window.IsarMural && typeof window.IsarMural.selectTier === 'function') {
@@ -244,7 +250,7 @@
         '</div>';
     } else if (step.type === 'desc_link') {
       controlsHtml =
-        '<textarea id="hk-bot-desc" class="hk-bot-input" rows="3" maxlength="160" placeholder="Descreva seu produto, serviço ou recado...">' + esc(draft.desc) + '</textarea>' +
+        '<textarea id="hk-bot-desc" class="hk-bot-input" rows="4" maxlength="1000" placeholder="Descreva seu produto, serviço ou recado...">' + esc(draft.desc) + '</textarea>' +
         '<input type="text" id="hk-bot-link" class="hk-bot-input" placeholder="Link opcional (WhatsApp, Passaporte, YouTube...)" value="' + esc(draft.link) + '" />' +
         '<div style="display:flex;justify-content:space-between;gap:8px">' +
           '<button type="button" id="hk-bot-back-btn" class="portal-btn portal-btn--outline portal-btn--sm">← Voltar</button>' +
@@ -254,7 +260,16 @@
 
     body.innerHTML =
       '<div class="hk-bot-bubble">' + step.prompt + '</div>' +
+      '<div id="hk-bot-error-msg" role="alert" style="display:none;background:rgba(239,68,68,0.14);border:1px solid rgba(239,68,68,0.45);color:#fca5a5;padding:9px 12px;border-radius:10px;font-size:0.82rem;font-weight:600"></div>' +
       controlsHtml;
+
+    function showBotError(msg) {
+      const errEl = document.getElementById('hk-bot-error-msg');
+      if (errEl) {
+        errEl.textContent = msg;
+        errEl.style.display = 'block';
+      }
+    }
 
     const backBtn = document.getElementById('hk-bot-back-btn');
     if (backBtn) {
@@ -270,7 +285,7 @@
         if (step.key === 'title') {
           const val = (document.getElementById('hk-bot-text-val').value || '').trim();
           if (val.length < 3) {
-            alert('Digite um título com pelo menos 3 caracteres.');
+            showBotError('Digite um título com pelo menos 3 caracteres.');
             return;
           }
           draft.title = val;
@@ -281,11 +296,11 @@
         } else if (step.key === 'desc') {
           const d = (document.getElementById('hk-bot-desc').value || '').trim();
           if (d.length < 6) {
-            alert('Escreva uma descrição curta (pelo menos 6 caracteres).');
+            showBotError('Escreva uma descrição curta (pelo menos 6 caracteres).');
             return;
           }
           if (/(passphrase|24\s*palavras|seed\s*phrase)/i.test(d)) {
-            alert('Por segurança, nunca inclua passphrase ou termos de frase secreta.');
+            showBotError('Por segurança, nunca inclua passphrase ou termos de frase secreta.');
             return;
           }
           draft.desc = d;
@@ -340,6 +355,14 @@
         window.IsarMural.openModal();
       }
     });
+    if (!window._hkChatbotEscBound) {
+      window._hkChatbotEscBound = true;
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && document.getElementById('hk-mural-chatbot-modal')) {
+          closeBot();
+        }
+      });
+    }
     renderStep();
   }
 

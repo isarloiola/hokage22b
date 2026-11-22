@@ -5,7 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://sdk.minepi.com https://cdn.jsdelivr.net https://unpkg.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self';" />
+
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://sdk.minepi.com https://cdn.jsdelivr.net https://unpkg.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https: wss: https://cloudflareinsights.com; object-src 'none'; base-uri 'self';" />
   <title>HOKAGE22B — Seja pioneiro. Torne-se Hokage.</title>
 
   <meta name="description"
@@ -53,8 +55,8 @@
   <meta name="theme-color" content="#09090b" />
 
   <!-- Stylesheets com Cache Buster -->
-  <link rel="stylesheet" href="assets/css/style.css?v=5.1" />
-  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.6" />
+  <link rel="stylesheet" href="assets/css/style.css?v=5.4" />
+  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.7" />
 
   <!-- Pi Network SDK Oficial v2.0 (Produção no Pi Browser / Sandbox automático) -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -66,7 +68,7 @@
         var isPiSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || _h === 'localhost' || _h === '127.0.0.1' || (!_prod && /[?&]sandbox=(1|true)/i.test(location.search));
         window.Pi.init({ version: "2.0", sandbox: isPiSandbox });
       }
-    } catch (_) {}
+    } catch (_) { }
   </script>
 
   <!-- Structured Data (JSON-LD) -->
@@ -128,27 +130,32 @@
     <div class="portal-container">
       <div class="portal-header__inner">
         <div class="portal-header__brand-group">
-          <a href="#hero" class="portal-brand" aria-label="HOKAGE22B Início" style="display:inline-flex;align-items:center;gap:9px">
-            <img src="assets/img/brand/hokage22b-logo.svg" alt="" width="22" height="22" aria-hidden="true" style="width:22px;height:22px;display:block;flex-shrink:0" />
+          <a href="#hero" class="portal-brand" aria-label="HOKAGE22B Início"
+            style="display:inline-flex;align-items:center;gap:9px">
+            <img src="assets/img/brand/hokage22b-logo.svg" alt="" width="22" height="22" aria-hidden="true"
+              style="width:22px;height:22px;display:block;flex-shrink:0" />
             <span>HOKAGE22B</span>
             <span class="portal-brand__dot" aria-hidden="true"></span>
           </a>
 
-          <nav class="portal-nav-desktop" aria-label="Navegação Principal">
-            <li><a href="zero" style="color:var(--amber-light);font-weight:700">Pi do Zero</a></li>
-            <li><a href="um" style="color:var(--amber-light);font-weight:700">Passo 1</a></li>
-            <li><a href="pioneiro" style="color:var(--accent-light);font-weight:700">Passaporte</a></li>
-            <li><a href="mural" style="color:var(--amber-light);font-weight:700">A Vila (P2P)</a></li>
-            <li><a href="monte" style="color:#fb923c;font-weight:700">Monte</a></li>
-            <li><a href="ferramentas" style="color:#6ee7b7;font-weight:700">Ferramentas</a></li>
-            <li><a href="construir">Construir</a></li>
+          <nav aria-label="Navegação Principal">
+            <ul class="portal-nav-desktop">
+              <li><a href="zero" style="color:var(--amber-light);font-weight:700">Pi do Zero</a></li>
+              <li><a href="um" style="color:var(--amber-light);font-weight:700">Passo 1</a></li>
+              <li><a href="pioneiro" style="color:var(--accent-light);font-weight:700">Passaporte</a></li>
+              <li><a href="mural" style="color:var(--amber-light);font-weight:700">A Vila (P2P)</a></li>
+              <li><a href="monte" style="color:#fb923c;font-weight:700">Monte</a></li>
+              <li><a href="ferramentas" style="color:#6ee7b7;font-weight:700">Ferramentas</a></li>
+              <li><a href="construir">Construir</a></li>
+            </ul>
           </nav>
         </div>
 
         <div class="portal-header__actions">
           <div class="lang-mount-point"></div>
-          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm pi-auth-header-btn" id="header-pi-auth-btn"
-            onclick="HokagePi.loginWithPi()" title="Conectar Pi Network" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);white-space:nowrap!important;display:inline-flex!important;align-items:center!important">
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm pi-auth-header-btn"
+            id="header-pi-auth-btn" onclick="HokagePi.loginWithPi()" title="Conectar Pi Network"
+            style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);white-space:nowrap!important;display:inline-flex!important;align-items:center!important">
             <span class="pi-btn-full">⚡ Conectar Pi</span>
             <span class="pi-btn-short">⚡ Pi</span>
           </button>
@@ -164,45 +171,58 @@
   <!-- Mobile Drawer Menu -->
   <div class="portal-drawer" id="portal-drawer" role="navigation" aria-label="Menu Mobile">
     <!-- Seletor de Idioma no Menu Mobile -->
-    <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.08)">
+    <div
+      style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.08)">
       <span style="font-size:0.8rem;color:var(--text-secondary);font-weight:600">🌐 Idioma / Language</span>
       <div class="lang-mount-point"></div>
     </div>
 
     <!-- Pi Status no Topo do Menu Mobile -->
-    <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+    <div
+      style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:8px">
       <div>
-        <span style="font-size:0.7rem;text-transform:uppercase;color:var(--text-muted);display:block;letter-spacing:0.05em">Sessão Pi Network</span>
+        <span
+          style="font-size:0.7rem;text-transform:uppercase;color:var(--text-muted);display:block;letter-spacing:0.05em">Sessão
+          Pi Network</span>
         <span class="pi-drawer-user-status" style="font-size:0.9rem;font-weight:700;color:#fff">⚪ Não conectado</span>
       </div>
-      <button type="button" class="portal-btn portal-btn--outline portal-btn--sm pi-auth-header-btn" onclick="HokagePi.loginWithPi()" style="padding:6px 12px;font-size:0.8rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
+      <button type="button" class="portal-btn portal-btn--outline portal-btn--sm pi-auth-header-btn"
+        onclick="HokagePi.loginWithPi()"
+        style="padding:6px 12px;font-size:0.8rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light)">
         ⚡ Conectar Pi
       </button>
     </div>
 
     <div class="portal-drawer__nav">
       <div style="margin-bottom:10px">
-        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">Trilha</div>
+        <div
+          style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">
+          Trilha</div>
         <a href="zero" style="color:var(--amber-light);font-weight:700">📘 Pi do Zero</a>
         <a href="um" style="color:var(--amber-light);font-weight:700">🚀 Passo 1: Além do Clique</a>
         <a href="jornada" style="font-weight:700">🧭 Começar Jornada</a>
       </div>
       <div style="margin-bottom:10px">
-        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">Ecossistema</div>
+        <div
+          style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">
+          Ecossistema</div>
         <a href="pioneiro" style="color:var(--accent-light);font-weight:700">🪪 Passaporte</a>
         <a href="mural" style="color:var(--amber-light);font-weight:700">🏘️ A Vila (P2P)</a>
         <a href="vender" style="font-weight:700">🏷️ Como Vender</a>
         <a href="monte" style="color:#fb923c;font-weight:700">🏔️ Monte Hokage</a>
       </div>
       <div style="margin-bottom:10px">
-        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">Ferramentas &amp; Devs</div>
+        <div
+          style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">
+          Ferramentas &amp; Devs</div>
         <a href="ferramentas" style="color:#6ee7b7;font-weight:700">🛠️ Ferramentas Web3</a>
         <a href="construir" style="font-weight:700">⚡ Construir (API &amp; Devs)</a>
         <a href="#produtos" style="color:var(--text-secondary)">📚 E-books &amp; Produtos</a>
       </div>
     </div>
 
-    <div style="display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:1px solid var(--border-subtle);margin-top:10px">
+    <div
+      style="display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:1px solid var(--border-subtle);margin-top:10px">
       <button type="button" class="portal-btn portal-btn--primary portal-btn--full"
         onclick="HokagePortal.openModal('modal-manual-download');HokagePortal.closeMobileDrawer()">
         Baixar Manual Gratuito
@@ -225,8 +245,10 @@
             <img src="assets/img/brand/hokage22b-logo.svg" alt="HOKAGE22B" width="40" height="40" />
           </div>
 
-          <div id="hero-pi-status-badge" class="portal-hero__badge" style="display:none;background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.35);color:#34d399;margin-bottom:16px;padding:4px 12px;font-size:0.78rem">
-            <span class="portal-hero__badge-pulse" style="background:#10b981;box-shadow:0 0 8px #10b981" aria-hidden="true"></span>
+          <div id="hero-pi-status-badge" class="portal-hero__badge"
+            style="display:none;background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.35);color:#34d399;margin-bottom:16px;padding:4px 12px;font-size:0.78rem">
+            <span class="portal-hero__badge-pulse" style="background:#10b981;box-shadow:0 0 8px #10b981"
+              aria-hidden="true"></span>
             <span id="hero-pi-status-text"></span>
           </div>
 
@@ -234,16 +256,19 @@
             Seja pioneiro.<br />Torne-se Hokage.
           </h1>
 
-          <p class="portal-hero__subtitle" style="font-size:clamp(1.16rem, 2.4vw, 1.48rem);color:var(--text-primary);font-weight:700;margin-bottom:10px;line-height:1.38">
+          <p class="portal-hero__subtitle"
+            style="font-size:clamp(1.16rem, 2.4vw, 1.48rem);color:var(--text-primary);font-weight:700;margin-bottom:10px;line-height:1.38">
             Não espere o futuro acontecer. <span style="color:var(--amber-light)">Construa seu lugar nele.</span>
           </p>
 
-          <p class="portal-hero__desc" style="margin:0 auto 24px;font-size:clamp(0.98rem, 2vw, 1.14rem);line-height:1.55">
+          <p class="portal-hero__desc"
+            style="margin:0 auto 24px;font-size:clamp(0.98rem, 2vw, 1.14rem);line-height:1.55">
             Tecnologia, IA e economia digital na prática — encontre seu caminho em 1 minuto.
           </p>
 
           <div class="portal-hero__actions hk-hero-cta-stack">
-            <img src="assets/img/brand/hokage22b-thelema-seal.svg" alt="" aria-hidden="true" class="hk-hero-watermark" />
+            <img src="assets/img/brand/hokage22b-thelema-seal.svg" alt="" aria-hidden="true"
+              class="hk-hero-watermark" />
 
             <div class="hk-hero-cta-group">
               <a href="jornada" class="portal-btn portal-btn--primary hk-hero-cta-primary">
@@ -278,93 +303,165 @@
           </div>
 
           <!-- MOCKUP AO VIVO / EXEMPLO VISUAL DA VITRINE (FIEL À VITRINE ORIGINAL) -->
-          <div class="hero-vitrine-mockup" style="max-width:480px;margin:28px auto 36px;background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98));border:1px solid rgba(139,92,246,0.45);border-radius:24px;padding:24px 20px;box-shadow:0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(139,92,246,0.22);text-align:center;position:relative;overflow:hidden">
-            <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true" style="position:absolute;top:14px;right:-26px;width:190px;height:190px;opacity:0.08;pointer-events:none;z-index:0" />
-            
+          <div class="hero-vitrine-mockup"
+            style="max-width:480px;margin:28px auto 36px;background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98));border:1px solid rgba(139,92,246,0.45);border-radius:24px;padding:24px 20px;box-shadow:0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(139,92,246,0.22);text-align:center;position:relative;overflow:hidden">
+            <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true"
+              style="position:absolute;top:14px;right:-26px;width:190px;height:190px;opacity:0.08;pointer-events:none;z-index:0" />
+
             <!-- Badge superior flutuante -->
-            <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;font-size:0.74rem;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:16px;max-width:100%;box-sizing:border-box;line-height:1.3">
-              <span style="width:6px;height:6px;background:#10b981;border-radius:50%;box-shadow:0 0 8px #10b981;flex-shrink:0"></span>
+            <div
+              style="display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;font-size:0.74rem;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:16px;max-width:100%;box-sizing:border-box;line-height:1.3">
+              <span
+                style="width:6px;height:6px;background:#10b981;border-radius:50%;box-shadow:0 0 8px #10b981;flex-shrink:0"></span>
               <span>Exemplo Real: Veja como fica o seu Passaporte</span>
             </div>
 
             <!-- Avatar + Handle + Bio + Badges KYC & Embaixador -->
-            <div style="position:relative;width:116px;height:116px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;overflow:visible">
-              <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:186px;height:186px;opacity:0.48;pointer-events:none;z-index:0;filter:drop-shadow(0 0 16px rgba(249,115,22,0.38))" />
-              <div style="position:relative;z-index:1;width:76px;height:76px;border-radius:50%;overflow:hidden;box-shadow:0 0 24px rgba(139,92,246,0.55);border:2px solid rgba(255,255,255,0.3);background:#0a0113">
-                <img src="assets/img/founder-profile.jpg" id="hero-founder-avatar-img" class="pioneer-founder-avatar-img" alt="Avatar @hokage22b" style="width:100%;height:100%;object-fit:cover;display:block" />
+            <div
+              style="position:relative;width:116px;height:116px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;overflow:visible">
+              <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true"
+                style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:186px;height:186px;opacity:0.48;pointer-events:none;z-index:0;filter:drop-shadow(0 0 16px rgba(249,115,22,0.38))" />
+              <div
+                style="position:relative;z-index:1;width:76px;height:76px;border-radius:50%;overflow:hidden;box-shadow:0 0 24px rgba(139,92,246,0.55);border:2px solid rgba(255,255,255,0.3);background:#0a0113">
+                <img src="assets/img/founder-profile.jpg" id="hero-founder-avatar-img"
+                  class="pioneer-founder-avatar-img" alt="Avatar @hokage22b"
+                  style="width:100%;height:100%;object-fit:cover;display:block" />
               </div>
             </div>
-            <h3 class="notranslate" translate="no" style="font-size:1.35rem;font-weight:800;color:#fff;margin:0 0 6px;letter-spacing:-0.01em">
+            <h3 class="notranslate" translate="no"
+              style="font-size:1.35rem;font-weight:800;color:#fff;margin:0 0 6px;letter-spacing:-0.01em">
               @hokage22b
             </h3>
             <p style="font-size:0.82rem;color:var(--text-secondary);margin:0 0 12px;line-height:1.45">
-              Fundador do HOKAGE22B.COM · Educação Web3, ferramentas para pioneiros e comércio seguro na Pi Network. Aceitando 100% Pi na Mainnet.
+              Fundador do HOKAGE22B.COM · Educação Web3, ferramentas para pioneiros e comércio seguro na Pi Network.
+              Aceitando 100% Pi na Mainnet.
             </p>
 
             <!-- Título de Mérito (Simples e Direto) -->
-            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:12px">
-              <span style="font-size:0.72rem;background:rgba(249,115,22,0.16);border:1px solid rgba(249,115,22,0.45);color:#fb923c;padding:4px 12px;border-radius:999px;font-weight:700">🔥 Hokage · Construtor Líder</span>
+            <div
+              style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+              <span
+                style="font-size:0.72rem;background:rgba(249,115,22,0.16);border:1px solid rgba(249,115,22,0.45);color:#fb923c;padding:4px 12px;border-radius:999px;font-weight:700">🔥
+                Hokage · Construtor Líder</span>
             </div>
 
             <!-- Link Curto Oficial da Vitrine -->
-            <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.12);border-radius:999px;padding:4px 12px;font-size:0.74rem;max-width:100%;box-sizing:border-box">
+            <div
+              style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.12);border-radius:999px;padding:4px 12px;font-size:0.74rem;max-width:100%;box-sizing:border-box">
               <span style="color:var(--text-muted)">Link:</span>
-              <span class="notranslate" translate="no" style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@hokage22b</span>
+              <span class="notranslate" translate="no"
+                style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@hokage22b</span>
             </div>
 
             <!-- Barra de Ícones das Redes Sociais (Idêntica à Vitrine Original) -->
-            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;margin:14px auto 0">
-              <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&amp;p=a&amp;iam=2" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.45);text-decoration:none;transition:transform 0.2s ease">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z"/></svg>
+            <div
+              style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;margin:14px auto 0">
+              <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&amp;p=a&amp;iam=2" target="_blank"
+                rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"
+                style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="#25d366">
+                  <path
+                    d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z" />
+                </svg>
               </a>
-              <a href="https://www.youtube.com/@justhokage22b" target="_blank" rel="noopener noreferrer" title="YouTube" aria-label="YouTube" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.45);text-decoration:none;transition:transform 0.2s ease">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <a href="https://www.youtube.com/@justhokage22b" target="_blank" rel="noopener noreferrer" title="YouTube"
+                aria-label="YouTube"
+                style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="#ef4444">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
               </a>
-              <a href="https://instagram.com/hokage22b" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(225,48,108,0.12);border:1px solid rgba(225,48,108,0.45);text-decoration:none;transition:transform 0.2s ease">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+              <a href="https://instagram.com/hokage22b" target="_blank" rel="noopener noreferrer" title="Instagram"
+                aria-label="Instagram"
+                style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(225,48,108,0.12);border:1px solid rgba(225,48,108,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                </svg>
               </a>
-              <a href="https://twitter.com/hokage22b" target="_blank" rel="noopener noreferrer" title="X / Twitter" aria-label="X / Twitter" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.28);text-decoration:none;transition:transform 0.2s ease">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              <a href="https://twitter.com/hokage22b" target="_blank" rel="noopener noreferrer" title="X / Twitter"
+                aria-label="X / Twitter"
+                style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.28);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff">
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
               </a>
-              <a href="https://t.me/hokage22b_oficial_bot?start=ia_na_pratica" target="_blank" rel="noopener noreferrer" title="Telegram Oficial (E-book IA na Prática)" aria-label="Bot Oficial no Telegram" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(36,161,222,0.12);border:1px solid rgba(36,161,222,0.45);text-decoration:none;transition:transform 0.2s ease">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="#24a1de"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.818 8.234-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.211-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.833.941z"/></svg>
+              <a href="https://t.me/hokage22b_oficial_bot?start=ia_na_pratica" target="_blank" rel="noopener noreferrer"
+                title="Telegram Oficial (E-book IA na Prática)" aria-label="Bot Oficial no Telegram"
+                style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(36,161,222,0.12);border:1px solid rgba(36,161,222,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="#24a1de">
+                  <path
+                    d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.818 8.234-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.211-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.833.941z" />
+                </svg>
               </a>
-              <a href="pioneiro?u=@hokage22b" title="Site Oficial" aria-label="Site Oficial" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.45);text-decoration:none;transition:transform 0.2s ease">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              <a href="pioneiro?u=@hokage22b" title="Site Oficial" aria-label="Site Oficial"
+                style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                  </path>
+                </svg>
               </a>
-              <a href="https://github.com/isarloiola/hokage22b" target="_blank" rel="noopener noreferrer" title="GitHub (Código Aberto)" aria-label="GitHub" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.3);text-decoration:none;transition:transform 0.2s ease">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#f4f4f5"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              <a href="https://github.com/isarloiola/hokage22b" target="_blank" rel="noopener noreferrer"
+                title="GitHub (Código Aberto)" aria-label="GitHub"
+                style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.3);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#f4f4f5">
+                  <path
+                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                </svg>
               </a>
-              <a href="https://www.linkedin.com/in/isarloiola/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn" style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(10,102,194,0.14);border:1px solid rgba(10,102,194,0.45);text-decoration:none;transition:transform 0.2s ease">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              <a href="https://www.linkedin.com/in/isarloiola/" target="_blank" rel="noopener noreferrer"
+                title="LinkedIn" aria-label="LinkedIn"
+                style="width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(10,102,194,0.14);border:1px solid rgba(10,102,194,0.45);text-decoration:none;transition:transform 0.2s ease">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2">
+                  <path
+                    d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                </svg>
               </a>
             </div>
 
             <!-- Barra Compacta de Pagamento Direto com Pi Wallet (Mainnet P2P) -->
-            <div style="background:rgba(0,0,0,0.55);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:10px 12px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;text-align:left;box-sizing:border-box">
+            <div
+              style="background:rgba(0,0,0,0.55);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:10px 12px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;text-align:left;box-sizing:border-box">
               <div style="display:flex;align-items:center;gap:8px;min-width:140px;flex:1">
                 <span style="font-size:1.1rem;color:var(--amber-light);flex-shrink:0">⚡</span>
                 <div style="line-height:1.2">
                   <div style="display:flex;align-items:center;gap:6px">
-                    <span style="font-size:0.66rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);font-weight:700">Carteira Pi (P2P)</span>
+                    <span
+                      style="font-size:0.66rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);font-weight:700">Carteira
+                      Pi (P2P)</span>
                     <span style="font-size:0.66rem;color:#10b981;font-weight:700">✓ Válida</span>
                   </div>
-                  <div style="font-family:var(--font-mono);font-size:0.8rem;color:#fff;font-weight:700;display:flex;align-items:center;gap:4px">
+                  <div
+                    style="font-family:var(--font-mono);font-size:0.8rem;color:#fff;font-weight:700;display:flex;align-items:center;gap:4px">
                     <span class="notranslate" translate="no" style="color:var(--amber-light)">GA5F...XPUR</span>
                     <span title="Proteção Anti-Clipper Guard" style="font-size:0.72rem">🛡️</span>
                   </div>
                 </div>
               </div>
               <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
-                <button type="button" onclick="navigator.clipboard.writeText('GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR');this.textContent='✓ Copiado!';setTimeout(()=>this.textContent='📋 Copiar',2000)" style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.18);color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;cursor:pointer">📋 Copiar</button>
-                <a href="pioneiro?u=@hokage22b&amp;pay=1" style="font-size:0.74rem;background:linear-gradient(135deg,#f59e0b,#d97706);color:#09090b;padding:6px 11px;border-radius:8px;font-weight:800;text-decoration:none">⚡ Pagar / QR</a>
+                <button type="button"
+                  onclick="navigator.clipboard.writeText('GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR');this.textContent='✓ Copiado!';setTimeout(()=>this.textContent='📋 Copiar',2000)"
+                  style="font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.18);color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;cursor:pointer">📋
+                  Copiar</button>
+                <a href="pioneiro?u=@hokage22b&amp;pay=1"
+                  style="font-size:0.74rem;background:linear-gradient(135deg,#f59e0b,#d97706);color:#09090b;padding:6px 11px;border-radius:8px;font-weight:800;text-decoration:none">⚡
+                  Pagar / QR</a>
               </div>
             </div>
 
             <!-- Seção: Produtos & Serviços (Fiel à Vitrine Original) -->
             <div style="margin-top:20px;text-align:left">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px">
-                <div style="font-size:0.76rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:800">
+              <div
+                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px">
+                <div
+                  style="font-size:0.76rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:800">
                   🛍️ Produtos &amp; Serviços
                 </div>
                 <span style="font-size:0.68rem;color:var(--text-muted)">Em Pi (π) e Moeda Local (USD / EUR / BRL)</span>
@@ -372,39 +469,64 @@
 
               <div style="display:flex;flex-direction:column;gap:10px">
                 <!-- Produto 1: IA na Prática -->
-                <div style="background:rgba(0,0,0,0.52);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box">
+                <div
+                  style="background:rgba(0,0,0,0.52);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box">
                   <div style="display:flex;align-items:center;gap:12px;width:100%;min-width:0">
-                    <img src="assets/img/ebook-ia-na-pratica.png" alt="IA na Prática" style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid rgba(255,255,255,0.15);flex-shrink:0" />
+                    <img src="assets/img/ebook-ia-na-pratica.png" alt="IA na Prática"
+                      style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid rgba(255,255,255,0.15);flex-shrink:0" />
                     <div style="flex:1;min-width:0">
-                      <strong style="display:block;font-size:0.86rem;color:#fff;line-height:1.3;margin-bottom:5px">IA na Prática: O Seu Assistente Pessoal (293 pág.)</strong>
+                      <strong style="display:block;font-size:0.86rem;color:#fff;line-height:1.3;margin-bottom:5px">IA na
+                        Prática: O Seu Assistente Pessoal (293 pág.)</strong>
                       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-                        <span style="font-size:0.74rem;font-weight:800;color:var(--amber-light);background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);padding:2px 7px;border-radius:6px">7.50 π</span>
-                        <span style="font-size:0.74rem;font-weight:800;color:#34d399;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.35);padding:2px 7px;border-radius:6px">R$ 47,00</span>
-                        <span style="font-size:0.66rem;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:2px 7px;border-radius:6px;font-weight:700">Lançamento · 50 Prompts</span>
+                        <span
+                          style="font-size:0.74rem;font-weight:800;color:var(--amber-light);background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);padding:2px 7px;border-radius:6px">7.50
+                          π</span>
+                        <span
+                          style="font-size:0.74rem;font-weight:800;color:#34d399;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.35);padding:2px 7px;border-radius:6px">R$
+                          47,00</span>
+                        <span
+                          style="font-size:0.66rem;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:2px 7px;border-radius:6px;font-weight:700">Lançamento
+                          · 50 Prompts</span>
                       </div>
                     </div>
                   </div>
                   <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a href="#produto-ia-na-pratica" style="flex:1;min-width:120px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#09090b;font-size:0.76rem;font-weight:800;padding:7px 10px;border-radius:8px;text-align:center;text-decoration:none">Ver Lançamento →</a>
-                    <a href="mural" style="flex:1;min-width:120px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light);font-size:0.74rem;font-weight:700;padding:7px 10px;border-radius:8px;text-align:center;text-decoration:none">📢 Impulsionar no Mural</a>
+                    <a href="#produto-ia-na-pratica"
+                      style="flex:1;min-width:120px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#09090b;font-size:0.76rem;font-weight:800;padding:7px 10px;border-radius:8px;text-align:center;text-decoration:none">Ver
+                      Lançamento →</a>
+                    <a href="mural"
+                      style="flex:1;min-width:120px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light);font-size:0.74rem;font-weight:700;padding:7px 10px;border-radius:8px;text-align:center;text-decoration:none">📢
+                      Impulsionar no Mural</a>
                   </div>
                 </div>
 
                 <!-- Produto 2: E-book Pi para seu Negócio -->
-                <div style="background:rgba(0,0,0,0.52);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box">
+                <div
+                  style="background:rgba(0,0,0,0.52);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box">
                   <div style="display:flex;align-items:center;gap:12px;width:100%;min-width:0">
-                    <img src="assets/img/ebook-pago-negocios.jpg" alt="E-book Pi para seu Negócio" style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid rgba(255,255,255,0.15);flex-shrink:0" />
+                    <img src="assets/img/ebook-pago-negocios.jpg" alt="E-book Pi para seu Negócio"
+                      style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid rgba(255,255,255,0.15);flex-shrink:0" />
                     <div style="flex:1;min-width:0">
-                      <strong style="display:block;font-size:0.86rem;color:#fff;line-height:1.3;margin-bottom:5px">E-book Pi para seu Negócio (Edição Comercial)</strong>
+                      <strong
+                        style="display:block;font-size:0.86rem;color:#fff;line-height:1.3;margin-bottom:5px">E-book Pi
+                        para seu Negócio (Edição Comercial)</strong>
                       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-                        <span style="font-size:0.74rem;font-weight:800;color:var(--amber-light);background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);padding:2px 7px;border-radius:6px">3.14 π</span>
-                        <span style="font-size:0.74rem;font-weight:800;color:#34d399;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.35);padding:2px 7px;border-radius:6px">R$ 19,90</span>
-                        <span style="font-size:0.66rem;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:2px 7px;border-radius:6px;font-weight:700">Manual Comercial</span>
+                        <span
+                          style="font-size:0.74rem;font-weight:800;color:var(--amber-light);background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);padding:2px 7px;border-radius:6px">3.14
+                          π</span>
+                        <span
+                          style="font-size:0.74rem;font-weight:800;color:#34d399;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.35);padding:2px 7px;border-radius:6px">R$
+                          19,90</span>
+                        <span
+                          style="font-size:0.66rem;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:2px 7px;border-radius:6px;font-weight:700">Manual
+                          Comercial</span>
                       </div>
                     </div>
                   </div>
                   <div style="display:flex;gap:8px;flex-wrap:wrap">
-                    <a href="#produtos" style="flex:1;min-width:120px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#09090b;font-size:0.76rem;font-weight:800;padding:7px 10px;border-radius:8px;text-align:center;text-decoration:none">Adquirir (3.14 π) →</a>
+                    <a href="#produtos"
+                      style="flex:1;min-width:120px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#09090b;font-size:0.76rem;font-weight:800;padding:7px 10px;border-radius:8px;text-align:center;text-decoration:none">Adquirir
+                      (3.14 π) →</a>
                   </div>
                 </div>
               </div>
@@ -412,26 +534,40 @@
 
             <!-- Seção: Anúncios no Mural Pi (Fiel à Vitrine Original) -->
             <div style="margin-top:20px;margin-bottom:16px;text-align:left">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px">
-                <div style="font-size:0.76rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:800">
+              <div
+                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:4px">
+                <div
+                  style="font-size:0.76rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:800">
                   📢 Anúncios em Destaque no Mural Pi
                 </div>
-                <a href="mural" style="font-size:0.72rem;color:var(--accent-light);text-decoration:none;font-weight:600">Ver todos no Mural →</a>
+                <a href="mural"
+                  style="font-size:0.72rem;color:var(--accent-light);text-decoration:none;font-weight:600">Ver todos no
+                  Mural →</a>
               </div>
 
-              <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(245,158,11,0.32);border-radius:14px;padding:12px;text-align:left">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:4px">
-                  <span style="font-size:0.7rem;color:var(--amber-light);font-weight:800;background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);padding:2px 8px;border-radius:999px">📢 OURO · PERMANENTE</span>
-                  <span style="font-size:0.68rem;color:var(--text-muted)">👁️ 1.420 visualizações · 🖱️ 318 cliques</span>
+              <div
+                style="background:rgba(255,255,255,0.03);border:1px solid rgba(245,158,11,0.32);border-radius:14px;padding:12px;text-align:left">
+                <div
+                  style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:4px">
+                  <span
+                    style="font-size:0.7rem;color:var(--amber-light);font-weight:800;background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.35);padding:2px 8px;border-radius:999px">📢
+                    OURO · PERMANENTE</span>
+                  <span style="font-size:0.68rem;color:var(--text-muted)">👁️ 1.420 visualizações · 🖱️ 318
+                    cliques</span>
                 </div>
-                <h4 style="color:#fff;font-size:0.88rem;font-weight:800;margin:0 0 4px;line-height:1.3">Consultoria Web3 &amp; Lojas Aceitando Pi na Mainnet</h4>
-                <p style="color:var(--text-secondary);font-size:0.76rem;margin:0 0 10px;line-height:1.4">Configure seu Passaporte verificado, QR Code POS e catálogo de produtos com suporte direto na comunidade.</p>
-                <a href="mural" style="display:inline-block;background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light);font-size:0.74rem;font-weight:700;padding:5px 12px;border-radius:8px;text-decoration:none">Acessar Oferta no Mural →</a>
+                <h4 style="color:#fff;font-size:0.88rem;font-weight:800;margin:0 0 4px;line-height:1.3">Consultoria Web3
+                  &amp; Lojas Aceitando Pi na Mainnet</h4>
+                <p style="color:var(--text-secondary);font-size:0.76rem;margin:0 0 10px;line-height:1.4">Configure seu
+                  Passaporte verificado, QR Code POS e catálogo de produtos com suporte direto na comunidade.</p>
+                <a href="mural"
+                  style="display:inline-block;background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light);font-size:0.74rem;font-weight:700;padding:5px 12px;border-radius:8px;text-decoration:none">Acessar
+                  Oferta no Mural →</a>
               </div>
             </div>
 
             <!-- Chamada Final do Mockup -->
-            <a href="pioneiro?u=@hokage22b" style="display:block;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.45);border-radius:12px;padding:12px;color:var(--accent-light);font-size:0.86rem;font-weight:800;text-decoration:none;transition:all 0.2s ease">
+            <a href="pioneiro?u=@hokage22b"
+              style="display:block;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.45);border-radius:12px;padding:12px;color:var(--accent-light);font-size:0.86rem;font-weight:800;text-decoration:none;transition:all 0.2s ease">
               👀 Explorar este Passaporte ao Vivo ↗
             </a>
           </div>
@@ -457,73 +593,92 @@
     <!-- ============================================================
          4.2B. DIFERENCIAL ÉPICO: IDENTIDADE E VALIDAÇÃO DE PIONEIROS (KYC)
     ============================================================ -->
-    <section class="portal-section" id="diferencial-kyc" style="padding-top:48px;padding-bottom:60px;background:linear-gradient(180deg, rgba(16,185,129,0.03) 0%, rgba(9,9,11,0.6) 100%)">
+    <section class="portal-section" id="diferencial-kyc"
+      style="padding-top:48px;padding-bottom:60px;background:linear-gradient(180deg, rgba(16,185,129,0.03) 0%, rgba(9,9,11,0.6) 100%)">
       <div class="portal-container">
-        
+
         <div class="section-heading-wrap" style="text-align:center;max-width:780px;margin:0 auto 36px">
-          <div class="section-tag" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.35);color:#34d399">
+          <div class="section-tag"
+            style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.35);color:#34d399">
             🛡️ Identidade Verificada &amp; Reputação
           </div>
           <h2 class="section-title" style="font-size:clamp(1.8rem, 3.8vw, 2.6rem);margin-bottom:14px">
             Como a identidade verificada fortalece as conexões no ecossistema Pi?
           </h2>
           <p class="section-desc" style="font-size:1.02rem;line-height:1.6">
-            Diferente de ambientes abertos onde perfis anônimos proliferam sem rastreabilidade, na Pi Network a validação por KYC atesta a existência de uma pessoa real. Essa camada adicional de confiança reduz bots e perfis fantasmas, permitindo que pioneiros e pequenos empreendedores apresentem seus projetos com maior credibilidade.
+            Diferente de ambientes abertos onde perfis anônimos proliferam sem rastreabilidade, na Pi Network a
+            validação por KYC atesta a existência de uma pessoa real. Essa camada adicional de confiança reduz bots e
+            perfis fantasmas, permitindo que pioneiros e pequenos empreendedores apresentem seus projetos com maior
+            credibilidade.
           </p>
         </div>
 
         <!-- Comparativo Visual Lado a Lado -->
         <div class="kyc-comparison-grid">
-          
+
           <!-- Card 1: O Risco da Web2 Comum -->
           <div class="kyc-card kyc-card--risk">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
               <span style="font-size:1.5rem">⚠️</span>
               <div>
-                <h3 style="font-size:1.15rem;color:#f87171;font-weight:800;margin:0">Redes Comuns &amp; Links Anônimos</h3>
-                <span style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">Anonimato e Vulnerabilidade</span>
+                <h3 style="font-size:1.15rem;color:#f87171;font-weight:800;margin:0">Redes Comuns &amp; Links Anônimos
+                </h3>
+                <span style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">Anonimato e
+                  Vulnerabilidade</span>
               </div>
             </div>
-            <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:0.9rem;color:var(--text-secondary)">
+            <ul
+              style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:0.9rem;color:var(--text-secondary)">
               <li style="display:flex;align-items:flex-start;gap:8px">
                 <span style="color:#ef4444;font-weight:700">✕</span>
-                <span><strong>Perfis Anônimos e Automações:</strong> Criação massiva de contas descartáveis sem qualquer vínculo com indivíduos reais.</span>
+                <span><strong>Perfis Anônimos e Automações:</strong> Criação massiva de contas descartáveis sem qualquer
+                  vínculo com indivíduos reais.</span>
               </li>
               <li style="display:flex;align-items:flex-start;gap:8px">
                 <span style="color:#ef4444;font-weight:700">✕</span>
-                <span><strong>Links de Phishing &amp; Golpes:</strong> Ausência de critérios de identidade facilita a disseminação de páginas clonadas.</span>
+                <span><strong>Links de Phishing &amp; Golpes:</strong> Ausência de critérios de identidade facilita a
+                  disseminação de páginas clonadas.</span>
               </li>
               <li style="display:flex;align-items:flex-start;gap:8px">
                 <span style="color:#ef4444;font-weight:700">✕</span>
-                <span><strong>Ausência de Responsabilidade:</strong> Quem comete fraudes em redes anônimas descarta o perfil sem consequências para sua identidade real.</span>
+                <span><strong>Ausência de Responsabilidade:</strong> Quem comete fraudes em redes anônimas descarta o
+                  perfil sem consequências para sua identidade real.</span>
               </li>
             </ul>
           </div>
 
           <!-- Card 2: A Segurança Consciente do HOKAGE22B Web3 -->
           <div class="kyc-card kyc-card--trust">
-            <span style="position:absolute;top:-12px;right:20px;background:linear-gradient(135deg, #10b981, #059669);color:#fff;font-size:0.72rem;font-weight:800;padding:3px 12px;border-radius:12px;text-transform:uppercase;letter-spacing:0.05em;box-shadow:0 4px 12px rgba(16,185,129,0.35)">
+            <span
+              style="position:absolute;top:-12px;right:20px;background:linear-gradient(135deg, #10b981, #059669);color:#fff;font-size:0.72rem;font-weight:800;padding:3px 12px;border-radius:12px;text-transform:uppercase;letter-spacing:0.05em;box-shadow:0 4px 12px rgba(16,185,129,0.35)">
               Camada de Confiança
             </span>
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
               <span style="font-size:1.5rem">🛡️</span>
               <div>
-                <h3 style="font-size:1.15rem;color:#34d399;font-weight:800;margin:0">Passaportes &amp; Ecossistema HOKAGE22B</h3>
-                <span style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">Identidade Real &amp; Boas Práticas</span>
+                <h3 style="font-size:1.15rem;color:#34d399;font-weight:800;margin:0">Passaportes &amp; Ecossistema
+                  HOKAGE22B</h3>
+                <span style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">Identidade Real &amp;
+                  Boas Práticas</span>
               </div>
             </div>
-            <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:0.9rem;color:#fff">
+            <ul
+              style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:0.9rem;color:#fff">
               <li style="display:flex;align-items:flex-start;gap:8px">
                 <span style="color:#10b981;font-weight:800">✓</span>
-                <span><strong>Identidade Humana Validada por KYC:</strong> Contas vinculadas a pioneiros reais validados no ecossistema Pi Network.</span>
+                <span><strong>Identidade Humana Validada por KYC:</strong> Contas vinculadas a pioneiros reais validados
+                  no ecossistema Pi Network.</span>
               </li>
               <li style="display:flex;align-items:flex-start;gap:8px">
                 <span style="color:#10b981;font-weight:800">✓</span>
-                <span><strong>Chave Pública da Pi Wallet Transparente:</strong> Pagamentos diretos peer-to-peer (P2P) entre pioneiros, sem retenção de custódia.</span>
+                <span><strong>Chave Pública da Pi Wallet Transparente:</strong> Pagamentos diretos peer-to-peer (P2P)
+                  entre pioneiros, sem retenção de custódia.</span>
               </li>
               <li style="display:flex;align-items:flex-start;gap:8px">
                 <span style="color:#10b981;font-weight:800">✓</span>
-                <span><strong>Reputação e Transparência:</strong> O pioneiro coloca sua presença e credibilidade em jogo. Lembre-se: verificação de identidade é uma camada de proteção, mas não dispensa a cautela pessoal.</span>
+                <span><strong>Reputação e Transparência:</strong> O pioneiro coloca sua presença e credibilidade em
+                  jogo. Lembre-se: verificação de identidade é uma camada de proteção, mas não dispensa a cautela
+                  pessoal.</span>
               </li>
             </ul>
           </div>
@@ -532,7 +687,8 @@
 
         <!-- CTA Rápido do Bloco -->
         <div style="text-align:center;margin-top:32px">
-          <a href="pioneiro" class="portal-btn portal-btn--primary" style="padding:12px 28px;font-size:0.95rem;font-weight:700">
+          <a href="pioneiro" class="portal-btn portal-btn--primary"
+            style="padding:12px 28px;font-size:0.95rem;font-weight:700">
             ⚡ Criar Meu Passaporte Verificado Grátis →
           </a>
         </div>
@@ -549,10 +705,12 @@
           <div class="section-tag section-tag--amber">Jornada Oficial HOKAGE22B</div>
           <h2 class="section-title" id="start-title">De Pioneiro a Hokage: sua trilha na rede</h2>
           <p class="section-desc">
-            Comece por onde fizer sentido para o seu momento — todas as etapas são abertas para explorar e conectam aprendizado, prática e liderança por contribuição real:
+            Comece por onde fizer sentido para o seu momento — todas as etapas são abertas para explorar e conectam
+            aprendizado, prática e liderança por contribuição real:
           </p>
 
-          <div style="display:inline-flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:18px;padding:8px 16px;border-radius:999px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);font-size:0.78rem;font-weight:700">
+          <div
+            style="display:inline-flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:18px;padding:8px 16px;border-radius:999px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);font-size:0.78rem;font-weight:700">
             <span style="color:var(--amber-light)">01. Pioneiro</span>
             <span style="color:var(--text-muted)">→</span>
             <span style="color:var(--accent-light)">02. Construtor</span>
@@ -562,12 +720,16 @@
         </div>
 
         <div class="portal-start-grid">
-          
+
           <!-- ETAPA 01: PIONEIRO -->
-          <article class="start-card start-card--featured" style="border-color:rgba(245,158,11,0.45);background:linear-gradient(180deg, rgba(35,22,10,0.95), rgba(13,13,20,0.98))">
-            <div class="start-card__visual" style="background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(139,92,246,0.15));border-radius:var(--radius-sm);padding:18px 14px;text-align:center;border:1px solid rgba(245,158,11,0.35)">
+          <article class="start-card start-card--featured"
+            style="border-color:rgba(245,158,11,0.45);background:linear-gradient(180deg, rgba(35,22,10,0.95), rgba(13,13,20,0.98))">
+            <div class="start-card__visual"
+              style="background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(139,92,246,0.15));border-radius:var(--radius-sm);padding:18px 14px;text-align:center;border:1px solid rgba(245,158,11,0.35)">
               <span style="font-size:2.6rem;display:block;margin-bottom:6px">🛡️</span>
-              <span style="font-size:0.75rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:3px 10px;border-radius:12px;font-weight:700">Etapa 01 · Base &amp; Identidade</span>
+              <span
+                style="font-size:0.75rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:3px 10px;border-radius:12px;font-weight:700">Etapa
+                01 · Base &amp; Identidade</span>
             </div>
             <div class="start-card__body">
               <div class="start-card__top">
@@ -581,7 +743,8 @@
               </div>
               <h3 class="start-card__title">Comece com Segurança e Ative seu Passaporte</h3>
               <p class="start-card__desc">
-                Domine os fundamentos da Pi Network sem hype, proteja sua Passphrase de 24 palavras e publique seu Passaporte do Pioneiro verificado via Pi KYC.
+                Domine os fundamentos da Pi Network sem hype, proteja sua Passphrase de 24 palavras e publique seu
+                Passaporte do Pioneiro verificado via Pi KYC.
               </p>
               <ul class="start-card__meta-list">
                 <li>✓ <strong>Pi do Zero:</strong> Trilha educativa anti-golpes</li>
@@ -590,20 +753,26 @@
               </ul>
             </div>
             <div class="start-card__actions">
-              <a href="zero" class="portal-btn portal-btn--amber portal-btn--sm" style="width:100%;text-align:center;font-weight:700">
+              <a href="zero" class="portal-btn portal-btn--amber portal-btn--sm"
+                style="width:100%;text-align:center;font-weight:700">
                 Iniciar em Pi do Zero →
               </a>
-              <a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm" style="width:100%;text-align:center">
+              <a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm"
+                style="width:100%;text-align:center">
                 Criar Meu Passaporte Grátis
               </a>
             </div>
           </article>
 
           <!-- ETAPA 02: CONSTRUTOR -->
-          <article class="start-card start-card--featured" style="border-color:rgba(139,92,246,0.45);background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98))">
-            <div class="start-card__visual" style="background:linear-gradient(135deg, rgba(139,92,246,0.18), rgba(245,158,11,0.15));border-radius:var(--radius-sm);padding:18px 14px;text-align:center;border:1px solid rgba(139,92,246,0.3)">
+          <article class="start-card start-card--featured"
+            style="border-color:rgba(139,92,246,0.45);background:linear-gradient(180deg, rgba(26,16,45,0.95), rgba(13,13,20,0.98))">
+            <div class="start-card__visual"
+              style="background:linear-gradient(135deg, rgba(139,92,246,0.18), rgba(245,158,11,0.15));border-radius:var(--radius-sm);padding:18px 14px;text-align:center;border:1px solid rgba(139,92,246,0.3)">
               <span style="font-size:2.6rem;display:block;margin-bottom:6px">⚡</span>
-              <span style="font-size:0.75rem;background:rgba(139,92,246,0.22);border:1px solid rgba(139,92,246,0.45);color:var(--accent-light);padding:3px 10px;border-radius:12px;font-weight:700">Etapa 02 · Utilidade &amp; Ação</span>
+              <span
+                style="font-size:0.75rem;background:rgba(139,92,246,0.22);border:1px solid rgba(139,92,246,0.45);color:var(--accent-light);padding:3px 10px;border-radius:12px;font-weight:700">Etapa
+                02 · Utilidade &amp; Ação</span>
             </div>
             <div class="start-card__body">
               <div class="start-card__top">
@@ -617,7 +786,8 @@
               </div>
               <h3 class="start-card__title">Saia do Clique e Gere Utilidade Real</h3>
               <p class="start-card__desc">
-                Deixe de ser espectador: use ferramentas Web3 offline, aceite Pi por produtos ou serviços reais e conecte-se na A Vila · Central P2P.
+                Deixe de ser espectador: use ferramentas Web3 offline, aceite Pi por produtos ou serviços reais e
+                conecte-se na A Vila · Central P2P.
               </p>
               <ul class="start-card__meta-list">
                 <li>✓ <strong>Além do Clique:</strong> Guia e checklist do construtor</li>
@@ -626,33 +796,43 @@
               </ul>
             </div>
             <div class="start-card__actions">
-              <a href="um" class="portal-btn portal-btn--primary portal-btn--sm" style="width:100%;text-align:center;font-weight:700">
+              <a href="um" class="portal-btn portal-btn--primary portal-btn--sm"
+                style="width:100%;text-align:center;font-weight:700">
                 Acessar Guia do Construtor →
               </a>
-              <a href="mural" class="portal-btn portal-btn--outline portal-btn--sm" style="width:100%;text-align:center">
+              <a href="mural" class="portal-btn portal-btn--outline portal-btn--sm"
+                style="width:100%;text-align:center">
                 Entrar na Vila · Central P2P ↗
               </a>
             </div>
           </article>
 
           <!-- ETAPA 03: HOKAGE -->
-          <article class="start-card" style="border-color:rgba(249,115,22,0.45);background:linear-gradient(180deg, rgba(35,16,10,0.95), rgba(13,13,20,0.98))">
-            <div class="start-card__visual" style="background:linear-gradient(135deg, rgba(249,115,22,0.2), rgba(0,0,0,0.45));border-radius:var(--radius-sm);padding:18px 14px;text-align:center;border:1px solid rgba(249,115,22,0.35)">
-              <img src="assets/img/brand/hokage22b-logo.svg" alt="Selo Hokage" width="44" height="44" style="width:44px;height:44px;margin:0 auto 8px;display:block" />
-              <span style="font-size:0.75rem;background:rgba(249,115,22,0.2);border:1px solid rgba(249,115,22,0.45);color:#fb923c;padding:3px 10px;border-radius:12px;font-weight:700">Etapa 03 · Liderança por Mérito</span>
+          <article class="start-card"
+            style="border-color:rgba(249,115,22,0.45);background:linear-gradient(180deg, rgba(35,16,10,0.95), rgba(13,13,20,0.98))">
+            <div class="start-card__visual"
+              style="background:linear-gradient(135deg, rgba(249,115,22,0.2), rgba(0,0,0,0.45));border-radius:var(--radius-sm);padding:18px 14px;text-align:center;border:1px solid rgba(249,115,22,0.35)">
+              <img src="assets/img/brand/hokage22b-logo.svg" alt="Selo Hokage" width="44" height="44"
+                style="width:44px;height:44px;margin:0 auto 8px;display:block" />
+              <span
+                style="font-size:0.75rem;background:rgba(249,115,22,0.2);border:1px solid rgba(249,115,22,0.45);color:#fb923c;padding:3px 10px;border-radius:12px;font-weight:700">Etapa
+                03 · Liderança por Mérito</span>
             </div>
             <div class="start-card__body">
               <div class="start-card__top">
                 <div class="start-card__icon" aria-hidden="true" style="color:#fb923c">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
                 </div>
-                <span class="start-card__badge" style="background:rgba(249,115,22,0.18);color:#fb923c;border:1px solid rgba(249,115,22,0.4)">Hokage</span>
+                <span class="start-card__badge"
+                  style="background:rgba(249,115,22,0.18);color:#fb923c;border:1px solid rgba(249,115,22,0.4)">Hokage</span>
               </div>
               <h3 class="start-card__title">Conquiste o Monte Hokage</h3>
               <p class="start-card__desc">
-                Hokage não se compra — conquista-se por contribuição real: educar iniciantes sem hype, operar comércio/serviços em Pi ou construir ferramentas úteis.
+                Hokage não se compra — conquista-se por contribuição real: educar iniciantes sem hype, operar
+                comércio/serviços em Pi ou construir ferramentas úteis.
               </p>
               <ul class="start-card__meta-list">
                 <li>✓ <strong>Monte Hokage:</strong> Galeria exclusiva dos líderes por mérito</li>
@@ -661,10 +841,12 @@
               </ul>
             </div>
             <div class="start-card__actions">
-              <a href="monte" class="portal-btn portal-btn--amber portal-btn--sm" style="width:100%;text-align:center;font-weight:700;background:linear-gradient(135deg,#f97316,#f59e0b);border-color:#f97316;color:#09090b">
+              <a href="monte" class="portal-btn portal-btn--amber portal-btn--sm"
+                style="width:100%;text-align:center;font-weight:700;background:linear-gradient(135deg,#f97316,#f59e0b);border-color:#f97316;color:#09090b">
                 Explorar o Monte Hokage →
               </a>
-              <a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm" style="width:100%;text-align:center">
+              <a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm"
+                style="width:100%;text-align:center">
                 Começar Minha Jornada →
               </a>
             </div>
@@ -688,108 +870,143 @@
           <p class="section-desc">
             Um projeto independente (HOKAGE22B / Isar Loiola) tirou do papel um ecossistema completo — Passaporte Web3,
             integração com Supabase, A Vila · Central P2P, Guia Pi do Zero e um manual de 293 páginas — usando a
-            <strong>Inteligência Artificial como assistente de engenharia, conteúdo e segurança</strong>, com método e critério humano.
+            <strong>Inteligência Artificial como assistente de engenharia, conteúdo e segurança</strong>, com método e
+            critério humano.
           </p>
         </div>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 270px), 1fr));gap:20px;margin-top:28px">
-          <article class="start-card" style="border-color:rgba(139,92,246,0.35);background:linear-gradient(180deg, rgba(24,18,40,0.92), rgba(13,13,20,0.96))">
+        <div
+          style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 270px), 1fr));gap:20px;margin-top:28px">
+          <article class="start-card"
+            style="border-color:rgba(139,92,246,0.35);background:linear-gradient(180deg, rgba(24,18,40,0.92), rgba(13,13,20,0.96))">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px">
               <span style="font-size:1.5rem">👤</span>
-              <span style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(139,92,246,0.16);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light)">pioneiro</span>
+              <span
+                style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(139,92,246,0.16);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light)">pioneiro</span>
             </div>
             <h3 style="font-size:1.08rem;font-weight:800;color:#fff;margin:0 0 8px">
               Plataforma Web3 &amp; Passaporte Grátis
             </h3>
             <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.55;margin:0">
-              Arquitetura completa de páginas, fluxos de links verificados e integração de pagamentos Pi P2P projetados com auxílio de IA.
+              Arquitetura completa de páginas, fluxos de links verificados e integração de pagamentos Pi P2P projetados
+              com auxílio de IA.
             </p>
           </article>
 
-          <article class="start-card" style="border-color:rgba(245,158,11,0.35);background:linear-gradient(180deg, rgba(30,22,12,0.92), rgba(13,13,20,0.96))">
+          <article class="start-card"
+            style="border-color:rgba(245,158,11,0.35);background:linear-gradient(180deg, rgba(30,22,12,0.92), rgba(13,13,20,0.96))">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px">
               <span style="font-size:1.5rem">📢</span>
-              <span style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light)">mural</span>
+              <span
+                style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light)">mural</span>
             </div>
             <h3 style="font-size:1.08rem;font-weight:800;color:#fff;margin:0 0 8px">
               A Vila · Central P2P &amp; Automação
             </h3>
             <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.55;margin:0">
-              Mural comunitário vivo, publicação dinâmica de anúncios e organização estruturada de dados conectada ao banco em nuvem.
+              Mural comunitário vivo, publicação dinâmica de anúncios e organização estruturada de dados conectada ao
+              banco em nuvem.
             </p>
           </article>
 
-          <article class="start-card" style="border-color:rgba(16,185,129,0.35);background:linear-gradient(180deg, rgba(12,28,24,0.92), rgba(13,13,20,0.96))">
+          <article class="start-card"
+            style="border-color:rgba(16,185,129,0.35);background:linear-gradient(180deg, rgba(12,28,24,0.92), rgba(13,13,20,0.96))">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px">
               <span style="font-size:1.5rem">📘</span>
-              <span style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#34d399">293 Páginas</span>
+              <span
+                style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#34d399">293
+                Páginas</span>
             </div>
             <h3 style="font-size:1.08rem;font-weight:800;color:#fff;margin:0 0 8px">
               Manual "IA na Prática"
             </h3>
             <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.55;margin:0">
-              Estruturado com o <strong>Método C.O.P.I.L.O.T.O.</strong>, <strong>50 Prompts Prontos</strong> e <strong>Módulo Master de Cibersegurança</strong> (LGPD, CERT.br e OWASP).
+              Estruturado com o <strong>Método C.O.P.I.L.O.T.O.</strong>, <strong>50 Prompts Prontos</strong> e
+              <strong>Módulo Master de Cibersegurança</strong> (LGPD, CERT.br e OWASP).
             </p>
           </article>
         </div>
 
-        <div style="margin-top:26px;padding:20px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+        <div
+          style="margin-top:26px;padding:20px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
           <div style="max-width:520px">
             <strong style="color:#fff;font-size:0.96rem;display:block;margin-bottom:4px">
               Quer criar sua presença na Web3 ou dominar o método usado para construir este portal?
             </strong>
             <span style="font-size:0.84rem;color:var(--text-secondary);display:block">
-              O mesmo método aplicado aqui no HOKAGE22B está documentado passo a passo no e-book <strong>IA na Prática</strong>.
+              O mesmo método aplicado aqui no HOKAGE22B está documentado passo a passo no e-book <strong>IA na
+                Prática</strong>.
             </span>
-            <div id="pi-live-ticker" style="display:none;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;padding:6px 11px;border-radius:999px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.22);font-size:0.8rem"></div>
+            <div id="pi-live-ticker"
+              style="display:none;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;padding:6px 11px;border-radius:999px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.22);font-size:0.8rem">
+            </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:10px;flex:1;min-width:240px;max-width:460px;width:100%">
-            <a href="pioneiro" class="portal-btn portal-btn--primary" style="font-weight:700;width:100%;justify-content:center;text-align:center;white-space:normal">
+            <a href="pioneiro" class="portal-btn portal-btn--primary"
+              style="font-weight:700;width:100%;justify-content:center;text-align:center;white-space:normal">
               🪪 Criar Meu Passaporte Web3 Grátis →
             </a>
-            <a href="#produto-ia-na-pratica" class="portal-btn portal-btn--amber" style="font-weight:700;width:100%;justify-content:center;text-align:center;white-space:normal">
+            <a href="#produto-ia-na-pratica" class="portal-btn portal-btn--amber"
+              style="font-weight:700;width:100%;justify-content:center;text-align:center;white-space:normal">
               📘 Aprender a Construir com IA →
             </a>
-            <a href="pioneiro?u=hokage22b" class="portal-btn portal-btn--outline" style="font-weight:700;width:100%;justify-content:center;text-align:center;white-space:normal;border-color:rgba(139,92,246,0.4);color:#c4b5fd">
+            <a href="pioneiro?u=hokage22b" class="portal-btn portal-btn--outline"
+              style="font-weight:700;width:100%;justify-content:center;text-align:center;white-space:normal;border-color:rgba(139,92,246,0.4);color:#c4b5fd">
               🌟 Visualizar Passaporte @hokage22b →
             </a>
           </div>
         </div>
 
-        <details style="margin-top:14px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);overflow:hidden">
-          <summary style="padding:13px 18px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:0.86rem;font-weight:600;color:#e4e4e7">
+        <details
+          style="margin-top:14px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);overflow:hidden">
+          <summary
+            style="padding:13px 18px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:0.86rem;font-weight:600;color:#e4e4e7">
             <span>📈 Por que o Pi tem valor hoje? Entenda a trajetória até a cotação atual</span>
             <span style="font-size:0.75rem;color:#fcd34d;white-space:nowrap">Ver linha do tempo ▾</span>
           </summary>
           <div style="padding:0 18px 18px;border-top:1px solid rgba(255,255,255,0.06)">
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:14px">
-              <div style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)">
-                <div style="font-size:0.74rem;font-weight:700;color:#a78bfa;margin-bottom:4px">2019 · Início no Celular</div>
+              <div
+                style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)">
+                <div style="font-size:0.74rem;font-weight:700;color:#a78bfa;margin-bottom:4px">2019 · Início no Celular
+                </div>
                 <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin:0">
-                  Criado por doutores de Stanford para permitir mineração mobile acessível, formando dezenas de milhões de Pioneiros pelo mundo.
+                  Criado por doutores de Stanford para permitir mineração mobile acessível, formando dezenas de milhões
+                  de Pioneiros pelo mundo.
                 </p>
               </div>
-              <div style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)">
-                <div style="font-size:0.74rem;font-weight:700;color:#60a5fa;margin-bottom:4px">2021–2024 · Mainnet Fechada &amp; KYC</div>
+              <div
+                style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)">
+                <div style="font-size:0.74rem;font-weight:700;color:#60a5fa;margin-bottom:4px">2021–2024 · Mainnet
+                  Fechada &amp; KYC</div>
                 <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin:0">
-                  Verificação de identidade em massa (KYC), segurança da blockchain e desenvolvimento dos primeiros aplicativos dentro do ecossistema.
+                  Verificação de identidade em massa (KYC), segurança da blockchain e desenvolvimento dos primeiros
+                  aplicativos dentro do ecossistema.
                 </p>
               </div>
-              <div style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)">
-                <div style="font-size:0.74rem;font-weight:700;color:#34d399;margin-bottom:4px">Fev/2025 · Open Network</div>
+              <div
+                style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)">
+                <div style="font-size:0.74rem;font-weight:700;color:#34d399;margin-bottom:4px">Fev/2025 · Open Network
+                </div>
                 <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin:0">
-                  Abertura da rede para o mercado externo, permitindo liquidez em exchanges globais e formação livre de preço por oferta e demanda.
+                  Abertura da rede para o mercado externo, permitindo liquidez em exchanges globais e formação livre de
+                  preço por oferta e demanda.
                 </p>
               </div>
-              <div style="padding:12px;border-radius:8px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2)">
-                <div style="font-size:0.74rem;font-weight:700;color:#fcd34d;margin-bottom:4px">Hoje · Preço Atual &amp; Economia Real</div>
+              <div
+                style="padding:12px;border-radius:8px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2)">
+                <div style="font-size:0.74rem;font-weight:700;color:#fcd34d;margin-bottom:4px">Hoje · Preço Atual &amp;
+                  Economia Real</div>
                 <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin:0">
-                  Cotação ao vivo: <strong data-pi-inline-price style="color:#fcd34d">acompanhando mercado</strong><span data-pi-inline-change style="font-weight:600"></span>. A utilidade em serviços, Passaportes e apps reais é o que sustenta o ecossistema.
+                  Cotação ao vivo: <strong data-pi-inline-price style="color:#fcd34d">acompanhando mercado</strong><span
+                    data-pi-inline-change style="font-weight:600"></span>. A utilidade em serviços, Passaportes e apps
+                  reais é o que sustenta o ecossistema.
                 </p>
               </div>
             </div>
             <p style="font-size:0.72rem;color:var(--text-muted,#71717a);margin:12px 0 0;line-height:1.45">
-              Dados em tempo real via CoinGecko (atualização automática na moeda local). Conteúdo meramente informativo — não constitui recomendação financeira.
+              Dados em tempo real via CoinGecko (atualização automática na moeda local). Conteúdo meramente informativo
+              — não constitui recomendação financeira.
             </p>
           </div>
         </details>
@@ -808,9 +1025,14 @@
             Materiais práticos e aprofundados desenvolvidos para quem busca ir além do básico e transformar conhecimento
             em vantagem competitiva.
           </p>
-          <div style="margin-top:14px;display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:8px 14px">
-            <span style="font-size:0.8rem;color:#d4d4d8">📚 <strong>Já adquiriu algum E-book com Pi?</strong> Seu acesso é vitalício:</span>
-            <button type="button" onclick="if(window.HokagePi && window.HokagePi.restoreOwnedEbooks) window.HokagePi.restoreOwnedEbooks()" class="portal-btn portal-btn--outline portal-btn--sm" style="padding:5px 12px;font-size:0.76rem;font-weight:800;border-color:rgba(16,185,129,0.5);color:#34d399">
+          <div
+            style="margin-top:14px;display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:8px 14px">
+            <span style="font-size:0.8rem;color:#d4d4d8">📚 <strong>Já adquiriu algum E-book com Pi?</strong> Seu acesso
+              é vitalício:</span>
+            <button type="button"
+              onclick="if(window.HokagePi && window.HokagePi.restoreOwnedEbooks) window.HokagePi.restoreOwnedEbooks()"
+              class="portal-btn portal-btn--outline portal-btn--sm"
+              style="padding:5px 12px;font-size:0.76rem;font-weight:800;border-color:rgba(16,185,129,0.5);color:#34d399">
               🔄 Restaurar Meus Downloads em Pi
             </button>
           </div>
@@ -820,7 +1042,8 @@
         <div class="product-showcase">
           <div class="product-cover-wrap">
             <img src="assets/img/ebook-pago-negocios.jpg" alt="Capa do E-book Pi Network para seu Negócio — HOKAGE22B"
-              class="product-cover-img" loading="lazy" style="box-shadow:0 12px 36px rgba(0,0,0,0.7);border-radius:10px" />
+              class="product-cover-img" loading="lazy"
+              style="box-shadow:0 12px 36px rgba(0,0,0,0.7);border-radius:10px" />
           </div>
 
           <div class="product-details">
@@ -868,57 +1091,73 @@
 
               <!-- MODO PI BROWSER (NATIVO) -->
               <div class="price-box" data-channel="pi">
-                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">🔒 Exclusivo na Open Mainnet</span> · Preço de Lançamento</span>
-                <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">3.14 π</span>
-                <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta P2P na Mainnet da Pi Network (Não aceita Test-Pi)</span>
+                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">⚡ Pi Network Mainnet</span> · Preço Comunitário</span>
+                <span class="price-val"
+                  style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">3.14
+                  π</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta P2P na Mainnet da Pi
+                  Network (Não aceita Test-Pi)</span>
               </div>
               <div class="product-actions" data-channel="pi">
                 <button type="button" class="portal-btn portal-btn--primary"
-                  onclick="HokagePortal.openModal('modal-waitlist-comunidade')" style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.35)">
-                  🔔 Entrar na Lista de Espera (Open Mainnet) →
+                  onclick="HokagePortal.openModal('modal-pagamento-pi')"
+                  style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.35)">
+                  ⚡ Adquirir com Pi Mainnet (3.14 π) →
                 </button>
               </div>
 
               <!-- MODO NAVEGADOR CONVENCIONAL (HOTMART / PIX / CARTÃO) -->
               <div class="price-box" data-channel="web2" style="display:none">
-                <span class="price-label"><span style="color:#10b981;font-weight:700">⚡ Acesso Imediato</span> · PIX ou Cartão</span>
-                <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$ 19,90</span>
-                <span class="price-sub" style="color:var(--text-secondary)">Pagamento facilitado via PIX ou Cartão de Crédito com entrega automática</span>
+                <span class="price-label"><span style="color:#10b981;font-weight:700">⚡ Acesso Imediato</span> · PIX ou
+                  Cartão</span>
+                <span class="price-val"
+                  style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$
+                  19,90</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Pagamento facilitado via PIX ou Cartão de
+                  Crédito com entrega automática</span>
               </div>
               <div class="product-actions" data-channel="web2" style="display:none">
                 <a href="https://pay.hotmart.com/A108356534I" target="_blank" rel="noopener noreferrer"
-                  data-hotmart-link="pi-para-seu-negocio"
-                  class="portal-btn portal-btn--primary" style="font-weight:800;box-shadow:0 0 25px rgba(245,158,11,0.35)">
+                  data-hotmart-link="pi-para-seu-negocio" class="portal-btn portal-btn--primary"
+                  style="font-weight:800;box-shadow:0 0 25px rgba(245,158,11,0.35)">
                   🛒 Comprar Agora por R$ 19,90 →
                 </a>
               </div>
             </div>
 
             <!-- BIBLIOTECA VITALÍCIA DO PIONEIRO (EXIBIDA QUANDO A CONTA PI POSSUI A COMPRA) -->
-            <div id="pi-owned-library-pi-para-seu-negocio" style="display:none;margin-top:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);border-radius:var(--radius-sm);padding:16px">
+            <div id="pi-owned-library-pi-para-seu-negocio"
+              style="display:none;margin-top:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);border-radius:var(--radius-sm);padding:16px">
               <div style="color:#34d399;font-weight:800;font-size:0.92rem;margin-bottom:8px">
                 ✓ Compra Verificada na sua Conta Pi — Acesso Vitalício Liberado
               </div>
               <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="HokagePi.downloadOwnedEbook('pi-para-seu-negocio', 'pdf')" style="font-weight:800">
+                <button type="button" class="portal-btn portal-btn--amber portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('pi-para-seu-negocio', 'pdf')" style="font-weight:800">
                   ⬇ Baixar PDF Oficial
                 </button>
-                <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="HokagePi.downloadOwnedEbook('pi-para-seu-negocio', 'epub')" style="font-weight:700">
+                <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('pi-para-seu-negocio', 'epub')" style="font-weight:700">
                   ⬇ Baixar EPUB
                 </button>
               </div>
             </div>
 
             <!-- BOX DE ACESSO ANTECIPADO DIRETO COM HOKAGE22B -->
-            <div style="margin-top:16px;background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(20,15,30,0.85));border:1px solid rgba(245,158,11,0.4);border-radius:var(--radius-sm);padding:18px;box-sizing:border-box">
+            <div
+              style="margin-top:16px;background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(20,15,30,0.85));border:1px solid rgba(245,158,11,0.4);border-radius:var(--radius-sm);padding:18px;box-sizing:border-box">
               <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px">
                 <span style="font-size:1.8rem;line-height:1">⚡</span>
                 <div>
                   <strong style="color:var(--amber-light);font-size:0.95rem;display:block;margin-bottom:4px">
-                    Deseja Acesso Antecipado com Pi na Mainnet por apenas <span style="color:#fff;background:rgba(245,158,11,0.22);border:1px solid rgba(245,158,11,0.45);padding:1px 8px;border-radius:6px;font-family:var(--font-mono)">3.14 π</span>?
+                    Deseja Acesso Antecipado com Pi na Mainnet por apenas <span
+                      style="color:#fff;background:rgba(245,158,11,0.22);border:1px solid rgba(245,158,11,0.45);padding:1px 8px;border-radius:6px;font-family:var(--font-mono)">3.14
+                      π</span>?
                   </strong>
                   <p style="font-size:0.86rem;color:var(--text-secondary);line-height:1.55;margin:0">
-                    Na comunidade Pi Network o acesso sai mais em conta que em moeda tradicional (<strong>3.14 π</strong>). O pagamento automático via Pi SDK aguarda a abertura da <strong>Open Mainnet</strong> para evitar Test-Pi; para liberar agora via P2P na Mainnet, fale diretamente com <strong>@hokage22b</strong>:
+                    Na comunidade Pi Network o acesso sai mais em conta que em moeda tradicional (<strong>3.14
+                      π</strong>). Adquira via transferência direta P2P na <strong>Mainnet real</strong> (sem Test-Pi) falando diretamente com
+                    <strong>@hokage22b</strong>:
                   </p>
                   <div style="margin-top:8px;font-size:0.8rem">
                     <a href="zero" style="color:var(--accent-light);font-weight:700;text-decoration:none">
@@ -928,39 +1167,50 @@
                 </div>
               </div>
               <div class="product-early-access-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
-                <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700">
+                <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank"
+                  rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm"
+                  style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700">
                   💬 Falar no WhatsApp ↗
                 </a>
-                <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700">
+                <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer"
+                  class="portal-btn portal-btn--outline portal-btn--sm"
+                  style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700">
                   𝕏 Mensagem no X (@hokage22b) ↗
                 </a>
-                <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
+                <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--sm"
+                  style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
                   🪪 Passaporte Oficial (@hokage22b) ↗
                 </a>
               </div>
             </div>
 
             <!-- VANTAGENS EXCLUSIVAS DO MODELO NATIVO PI -->
-            <div style="margin-top:18px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:16px;box-sizing:border-box">
-              <div style="font-size:0.8rem;text-transform:uppercase;color:var(--amber-light);font-weight:800;letter-spacing:0.05em;margin-bottom:10px">
+            <div
+              style="margin-top:18px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:16px;box-sizing:border-box">
+              <div
+                style="font-size:0.8rem;text-transform:uppercase;color:var(--amber-light);font-weight:800;letter-spacing:0.05em;margin-bottom:10px">
                 💎 Vantagens do Pagamento Nativo no Ecossistema Pi:
               </div>
-              <div class="product-perks-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 200px), 1fr));gap:12px;font-size:0.84rem;color:var(--text-secondary)">
+              <div class="product-perks-grid"
+                style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 200px), 1fr));gap:12px;font-size:0.84rem;color:var(--text-secondary)">
                 <div style="display:flex;align-items:flex-start;gap:8px">
                   <span style="color:#10b981">✓</span>
                   <span><strong>Zero Intermediários:</strong> Sem retenções bancárias ou taxas abusivas da Web2.</span>
                 </div>
                 <div style="display:flex;align-items:flex-start;gap:8px">
                   <span style="color:#10b981">✓</span>
-                  <span><strong>Liquidação On-Chain:</strong> Registro transparente e auditável na blockchain da Pi.</span>
+                  <span><strong>Liquidação On-Chain:</strong> Registro transparente e auditável na blockchain da
+                    Pi.</span>
                 </div>
                 <div style="display:flex;align-items:flex-start;gap:8px">
                   <span style="color:#10b981">✓</span>
-                  <span><strong>Economia Circular:</strong> 100% dos fundos são reinvestidos em melhorias da plataforma.</span>
+                  <span><strong>Economia Circular:</strong> 100% dos fundos são reinvestidos em melhorias da
+                    plataforma.</span>
                 </div>
                 <div style="display:flex;align-items:flex-start;gap:8px">
                   <span style="color:#10b981">✓</span>
-                  <span><strong>Acesso Global Imediato:</strong> Aberto a pioneiros de qualquer país, sem barreiras de câmbio.</span>
+                  <span><strong>Acesso Global Imediato:</strong> Aberto a pioneiros de qualquer país, sem barreiras de
+                    câmbio.</span>
                 </div>
               </div>
             </div>
@@ -971,10 +1221,12 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
-                <span style="color:#fff;font-size:0.85rem"><strong>Entrega Digital Imediata:</strong> Download liberado instantaneamente com registro da transação.</span>
+                <span style="color:#fff;font-size:0.85rem"><strong>Entrega Digital Imediata:</strong> Download liberado
+                  instantaneamente com registro da transação.</span>
               </div>
               <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-                <a href="https://affiliate.hotmart.com/affiliate-recruiting/view/9871P108356555" target="_blank" rel="noopener noreferrer"
+                <a href="https://affiliate.hotmart.com/affiliate-recruiting/view/9871P108356555" target="_blank"
+                  rel="noopener noreferrer"
                   style="font-size:0.78rem;color:var(--amber-light);font-weight:700;text-decoration:none;border:1px solid rgba(245,158,11,0.35);background:rgba(245,158,11,0.1);padding:4px 10px;border-radius:999px">
                   🤝 Seja Afiliado e lucre divulgando ↗
                 </a>
@@ -987,24 +1239,34 @@
         </div>
 
         <!-- PRODUTO LANÇAMENTO: IA NA PRÁTICA -->
-        <div class="product-showcase" id="produto-ia-na-pratica" style="margin-top:36px;border-color:rgba(139,92,246,0.4);background:linear-gradient(180deg, rgba(20,16,36,0.92), rgba(13,13,20,0.98))">
+        <div class="product-showcase" id="produto-ia-na-pratica"
+          style="margin-top:36px;border-color:rgba(139,92,246,0.4);background:linear-gradient(180deg, rgba(20,16,36,0.92), rgba(13,13,20,0.98))">
           <div class="product-cover-wrap">
             <img src="assets/img/ebook-ia-na-pratica.png" alt="Capa do E-book IA na Prática — HOKAGE22B"
-              class="product-cover-img" loading="lazy" style="box-shadow:0 12px 36px rgba(139,92,246,0.35);border-radius:10px" />
+              class="product-cover-img" loading="lazy"
+              style="box-shadow:0 12px 36px rgba(139,92,246,0.35);border-radius:10px" />
           </div>
 
           <div class="product-details">
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
-              <span style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(245,158,11,0.16);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light)">🚀 Lançamento Oficial</span>
-              <span style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.45);color:var(--accent-light)">✦ Edição Definitiva · 293 Páginas</span>
-              <span style="font-size:0.72rem;font-weight:800;letter-spacing:0.02em;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#34d399">🛡️ Inclui Módulo Master de Cibersegurança &amp; 50 Prompts Prontos</span>
+              <span
+                style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(245,158,11,0.16);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light)">🚀
+                Lançamento Oficial</span>
+              <span
+                style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.45);color:var(--accent-light)">✦
+                Edição Definitiva · 293 Páginas</span>
+              <span
+                style="font-size:0.72rem;font-weight:800;letter-spacing:0.02em;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#34d399">🛡️
+                Inclui Módulo Master de Cibersegurança &amp; 50 Prompts Prontos</span>
             </div>
 
             <div class="product-headline" style="color:var(--accent-light)">IA na Prática</div>
             <h3 class="product-title">Transforme a Inteligência Artificial no Seu Assistente Pessoal</h3>
             <p class="product-desc">
               Manual completo de 293 páginas focado em produtividade real, automação de negócios e segurança digital.
-              <strong>Aprenda exatamente o Método C.O.P.I.L.O.T.O. e os protocolos de segurança digital aplicados na construção deste próprio portal HOKAGE22B</strong>, com proteção de dados (LGPD) e boas práticas alinhadas ao CERT.br.
+              <strong>Aprenda exatamente o Método C.O.P.I.L.O.T.O. e os protocolos de segurança digital aplicados na
+                construção deste próprio portal HOKAGE22B</strong>, com proteção de dados (LGPD) e boas práticas
+              alinhadas ao CERT.br.
             </p>
 
             <ul class="product-benefits">
@@ -1012,19 +1274,22 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                <span><strong>Produtividade e Negócios:</strong> Fluxos práticos para atendimento, criação de conteúdo, análise e organização operacional.</span>
+                <span><strong>Produtividade e Negócios:</strong> Fluxos práticos para atendimento, criação de conteúdo,
+                  análise e organização operacional.</span>
               </li>
               <li class="product-benefit-item">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                <span><strong>Módulo Master de Cibersegurança:</strong> Blindagem de contas, prevenção contra engenharia social, conformidade LGPD e diretrizes CERT.br.</span>
+                <span><strong>Módulo Master de Cibersegurança:</strong> Blindagem de contas, prevenção contra engenharia
+                  social, conformidade LGPD e diretrizes CERT.br.</span>
               </li>
               <li class="product-benefit-item">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                <span><strong>50 Prompts Prontos para Copiar e Colar:</strong> Estruturas testadas para acelerar resultados imediatos sem curva de aprendizado longa.</span>
+                <span><strong>50 Prompts Prontos para Copiar e Colar:</strong> Estruturas testadas para acelerar
+                  resultados imediatos sem curva de aprendizado longa.</span>
               </li>
             </ul>
 
@@ -1033,61 +1298,78 @@
 
               <!-- MODO PI BROWSER (7.50 π) -->
               <div class="price-box" data-channel="pi">
-                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">🔒 Exclusivo na Open Mainnet</span> · Preço de Lançamento</span>
-                <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">7.50 π</span>
-                <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta P2P na Mainnet da Pi Network (Não aceita Test-Pi)</span>
+                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">⚡ Pi Network Mainnet</span> · Preço Comunitário</span>
+                <span class="price-val"
+                  style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">7.50
+                  π</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta P2P na Mainnet da Pi
+                  Network (Não aceita Test-Pi)</span>
               </div>
               <div class="product-actions" data-channel="pi">
                 <button type="button" class="portal-btn portal-btn--primary"
-                  onclick="HokagePortal.openModal('modal-waitlist-comunidade')"
+                  onclick="HokagePortal.openModal('modal-pagamento-pi')"
                   style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.4)">
-                  🔔 Entrar na Lista de Espera (Open Mainnet) →
+                  ⚡ Adquirir com Pi Mainnet (7.50 π) →
                 </button>
               </div>
 
               <!-- MODO NAVEGADOR CONVENCIONAL (R$ 47,00 HOTMART) -->
               <div class="price-box" data-channel="web2" style="display:none">
-                <span class="price-label"><span style="color:#10b981;font-weight:700">🔥 Oferta de Lançamento</span> · PIX ou Cartão</span>
-                <span class="price-val" style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$ 47,00</span>
-                <span class="price-sub" style="color:var(--text-secondary)">Acesso imediato ao PDF completo (293 páginas) + 50 Prompts Prontos</span>
+                <span class="price-label"><span style="color:#10b981;font-weight:700">🔥 Oferta de Lançamento</span> ·
+                  PIX ou Cartão</span>
+                <span class="price-val"
+                  style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$
+                  47,00</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Acesso imediato ao PDF completo (293
+                  páginas) + 50 Prompts Prontos</span>
               </div>
               <div class="product-actions" data-channel="web2" style="display:none">
                 <a href="https://pay.hotmart.com/J108469065H" target="_blank" rel="noopener noreferrer"
-                  data-hotmart-link="ia-na-pratica"
-                  class="portal-btn portal-btn--primary" style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.4)">
+                  data-hotmart-link="ia-na-pratica" class="portal-btn portal-btn--primary"
+                  style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.4)">
                   🚀 Comprar Agora por R$ 47,00 →
                 </a>
               </div>
             </div>
 
             <!-- BIBLIOTECA VITALÍCIA DO PIONEIRO (EXIBIDA QUANDO A CONTA PI POSSUI A COMPRA) -->
-            <div id="pi-owned-library-ia-na-pratica" style="display:none;margin-top:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);border-radius:var(--radius-sm);padding:16px">
+            <div id="pi-owned-library-ia-na-pratica"
+              style="display:none;margin-top:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);border-radius:var(--radius-sm);padding:16px">
               <div style="color:#34d399;font-weight:800;font-size:0.92rem;margin-bottom:8px">
                 ✓ Compra Verificada na sua Conta Pi — Acesso Vitalício Liberado
               </div>
               <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="HokagePi.downloadOwnedEbook('ia-na-pratica', 'pdf')" style="font-weight:800">
+                <button type="button" class="portal-btn portal-btn--amber portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('ia-na-pratica', 'pdf')" style="font-weight:800">
                   ⬇ Baixar PDF Completo (293 págs)
                 </button>
-                <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="HokagePi.downloadOwnedEbook('ia-na-pratica', 'epub')" style="font-weight:700">
+                <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('ia-na-pratica', 'epub')" style="font-weight:700">
                   ⬇ Baixar EPUB (Kindle/Mobile)
                 </button>
-                <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="HokagePi.downloadOwnedEbook('ia-na-pratica', 'bonus')" style="border-color:rgba(16,185,129,0.5);color:#34d399;font-weight:700">
+                <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('ia-na-pratica', 'bonus')"
+                  style="border-color:rgba(16,185,129,0.5);color:#34d399;font-weight:700">
                   🎁 Baixar Bônus Checklist (PDF)
                 </button>
               </div>
             </div>
 
             <!-- BOX DE ACESSO ANTECIPADO DIRETO COM HOKAGE22B -->
-            <div style="margin-top:16px;background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(20,15,30,0.85));border:1px solid rgba(245,158,11,0.4);border-radius:var(--radius-sm);padding:18px;box-sizing:border-box">
+            <div
+              style="margin-top:16px;background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(20,15,30,0.85));border:1px solid rgba(245,158,11,0.4);border-radius:var(--radius-sm);padding:18px;box-sizing:border-box">
               <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px">
                 <span style="font-size:1.8rem;line-height:1">⚡</span>
                 <div>
                   <strong style="color:var(--amber-light);font-size:0.95rem;display:block;margin-bottom:4px">
-                    Deseja Acesso Antecipado com Pi na Mainnet por apenas <span style="color:#fff;background:rgba(245,158,11,0.22);border:1px solid rgba(245,158,11,0.45);padding:1px 8px;border-radius:6px;font-family:var(--font-mono)">7.50 π</span>?
+                    Deseja Acesso Antecipado com Pi na Mainnet por apenas <span
+                      style="color:#fff;background:rgba(245,158,11,0.22);border:1px solid rgba(245,158,11,0.45);padding:1px 8px;border-radius:6px;font-family:var(--font-mono)">7.50
+                      π</span>?
                   </strong>
                   <p style="font-size:0.86rem;color:var(--text-secondary);line-height:1.55;margin:0">
-                    Na comunidade Pi Network o acesso sai mais em conta que em moeda tradicional (<strong>7.50 π</strong>). O pagamento automático via Pi SDK aguarda a abertura da <strong>Open Mainnet</strong> para evitar Test-Pi; para liberar agora via P2P na Mainnet, fale diretamente com <strong>@hokage22b</strong>:
+                    Na comunidade Pi Network o acesso sai mais em conta que em moeda tradicional (<strong>7.50
+                      π</strong>). Adquira via transferência direta P2P na <strong>Mainnet real</strong> (sem Test-Pi) falando diretamente com
+                    <strong>@hokage22b</strong>:
                   </p>
                   <div style="margin-top:8px;font-size:0.8rem">
                     <a href="zero" style="color:var(--accent-light);font-weight:700;text-decoration:none">
@@ -1097,13 +1379,18 @@
                 </div>
               </div>
               <div class="product-early-access-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
-                <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700">
+                <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank"
+                  rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm"
+                  style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700">
                   💬 Falar no WhatsApp ↗
                 </a>
-                <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700">
+                <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer"
+                  class="portal-btn portal-btn--outline portal-btn--sm"
+                  style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700">
                   𝕏 Mensagem no X (@hokage22b) ↗
                 </a>
-                <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
+                <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--sm"
+                  style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
                   🪪 Passaporte Oficial (@hokage22b) ↗
                 </a>
               </div>
@@ -1115,14 +1402,17 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
-                <span style="color:#fff;font-size:0.85rem"><strong>Entrega Digital Imediata:</strong> Download liberado logo após confirmação do pagamento.</span>
+                <span style="color:#fff;font-size:0.85rem"><strong>Entrega Digital Imediata:</strong> Download liberado
+                  logo após confirmação do pagamento.</span>
               </div>
               <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-                <a href="https://affiliate.hotmart.com/affiliate-recruiting/view/1605I108469086" target="_blank" rel="noopener noreferrer"
+                <a href="https://affiliate.hotmart.com/affiliate-recruiting/view/1605I108469086" target="_blank"
+                  rel="noopener noreferrer"
                   style="font-size:0.78rem;color:var(--amber-light);font-weight:700;text-decoration:none;border:1px solid rgba(245,158,11,0.35);background:rgba(245,158,11,0.1);padding:4px 10px;border-radius:999px">
                   🤝 Seja Afiliado e lucre divulgando ↗
                 </a>
-                <span style="font-size:0.8rem;color:var(--accent-light);font-weight:700">✦ 293 Páginas · Edição Definitiva</span>
+                <span style="font-size:0.8rem;color:var(--accent-light);font-weight:700">✦ 293 Páginas · Edição
+                  Definitiva</span>
               </div>
             </div>
           </div>
@@ -1258,111 +1548,38 @@
     <!-- ============================================================
          4.5B. A VILA · CENTRAL P2P — NEGÓCIOS E CLASSIFICADOS WEB3
     ============================================================ -->
-    <section class="portal-section" id="mural" aria-labelledby="mural-section-title" style="background:linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(9,9,11,0.8) 100%)">
+    <section class="portal-section" id="mural" aria-labelledby="mural-section-title"
+      style="background:linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(9,9,11,0.8) 100%)">
       <div class="portal-container">
-        <div class="section-heading-wrap" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
+        <div class="section-heading-wrap"
+          style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
           <div>
             <div class="section-tag section-tag--amber">Funcionalidade Primordial · Comunidade</div>
-            <h2 class="section-title" id="mural-section-title">A A Vila · Central P2P</h2>
+            <h2 class="section-title" id="mural-section-title">A Vila · Central P2P</h2>
             <p class="section-desc">
-              O mural descentralizado da comunidade: conecte-se com canais de YouTube, lojas que aceitam Pi, desenvolvedores e recados de pioneiros de todo o país.
+              O mural descentralizado da comunidade: conecte-se com produtos, serviços, oportunidades de trabalho e recados de pioneiros verificados.
             </p>
           </div>
           <div class="mural-header-actions" style="display:flex;gap:10px;flex-wrap:wrap">
             <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm">
-              Ver Mural Completo ↗
+              Ver Vila Completa ↗
             </a>
-            <a href="mural" class="portal-btn portal-btn--outline portal-btn--sm">
-              📢 Publicar Meu Anúncio (a partir de 0.314 π)
+            <a href="mural?publish=1" class="portal-btn portal-btn--outline portal-btn--sm">
+              📢 Publicar Grátis ou em Pi
             </a>
           </div>
         </div>
 
-        <!-- Vitrine de Anúncios da Gazeta (Grid Estilo Jornal) -->
-        <div class="mural-grid" style="margin-top:32px">
-          <!-- 1. DESTAQUE OURO (CARD DUPLO VIP COM BANNER VISUAL) -->
-          <article class="pioneer-card pioneer-card--ouro">
-            <div class="pioneer-card__banner">
-              <img src="assets/img/ebook-pago-negocios.jpg" alt="Canal @justhokage22b no YouTube" loading="lazy" />
-              <div class="pioneer-card__banner-overlay">
-                <span style="font-size:0.72rem;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 10px;border-radius:4px;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.25)">
-                  👑 DESTAQUE VIP · VÍDEOS &amp; ANÁLISES
-                </span>
-              </div>
-            </div>
-            <div class="pioneer-card__top">
-              <span class="pioneer-card__badge pioneer-badge--ouro">👑 Destaque Ouro · Card Duplo</span>
-              <span class="pioneer-card__author">@hokage22b</span>
-            </div>
-            <h3 class="pioneer-card__title">Canal @justhokage22b no YouTube</h3>
-            <p class="pioneer-card__desc">
-              Análises semanais sérias e sem hype sobre Pi Network, Web3, nós validadores e finanças descentralizadas no Brasil. Conteúdo com embasamento técnico e foco na Open Mainnet.
-            </p>
-            <div class="pioneer-card__footer">
-              <a href="https://www.youtube.com/@justhokage22b" target="_blank" rel="noopener noreferrer nofollow" class="pioneer-card__link pioneer-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">
-                ⚡ Assistir ao Canal no YouTube →
-              </a>
-              <span class="pioneer-card__price-tag">3.14 π</span>
-            </div>
-          </article>
-
-          <!-- 2. DESTAQUE PRATA (SERVIÇO) -->
-          <article class="pioneer-card pioneer-card--prata">
-            <div class="pioneer-card__top">
-              <span class="pioneer-card__badge pioneer-badge--prata">🥈 Destaque Prata · Serviços</span>
-              <span class="pioneer-card__author">@carlos_dev</span>
-            </div>
-            <h3 class="pioneer-card__title">Desenvolvimento de dApps no Pi Browser</h3>
-            <p class="pioneer-card__desc">
-              Programador front-end cria páginas modernas e integrações com o Pi SDK oficial para comércios e criadores que desejam aceitar Pi.
-            </p>
-            <div class="pioneer-card__footer">
-              <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer nofollow" class="pioneer-card__link">
-                Falar no WhatsApp →
-              </a>
-              <span class="pioneer-card__price-tag">1.00 π</span>
-            </div>
-          </article>
-
-          <!-- 3. DESTAQUE PRATA (PRODUTO) -->
-          <article class="pioneer-card pioneer-card--prata">
-            <div class="pioneer-card__top">
-              <span class="pioneer-card__badge pioneer-badge--prata">🥈 Destaque Prata · Comércio</span>
-              <span class="pioneer-card__author">@artes_brasil</span>
-            </div>
-            <h3 class="pioneer-card__title">Artesanato Mineiro Aceitando Pi (P2P)</h3>
-            <p class="pioneer-card__desc">
-              Peças artesanais em madeira e cerâmica com frete para todo o Brasil. Aceitamos 100% em Pi na Mainnet para pioneiros verificados.
-            </p>
-            <div class="pioneer-card__footer">
-              <a href="https://instagram.com/hokage22b" target="_blank" rel="noopener noreferrer nofollow" class="pioneer-card__link">
-                Ver Catálogo no Instagram →
-              </a>
-              <span class="pioneer-card__price-tag">1.00 π</span>
-            </div>
-          </article>
-
-          <!-- 4. CLASSIFICADO BRONZE (MENSAGEM DA COMUNIDADE SEM LINK EXTERNO) -->
-          <article class="pioneer-card pioneer-card--bronze">
-            <div class="pioneer-card__top">
-              <span class="pioneer-card__badge pioneer-badge--bronze">🥉 Classificado Bronze · Recado</span>
-              <span class="pioneer-card__author">@pioneiro_cwb</span>
-            </div>
-            <h3 class="pioneer-card__title">Rumo à Open Mainnet!</h3>
-            <p class="pioneer-card__desc">
-              Apoiando o portal HOKAGE22B pela seriedade e compromisso com a verdade. Sucesso a todos os pioneiros focados em construir a economia real!
-            </p>
-            <div class="pioneer-card__footer">
-              <span style="color:var(--text-muted);font-size:0.8rem;display:inline-flex;align-items:center;gap:4px">
-                💬 Recado Fraterno da Comunidade
-              </span>
-              <span class="pioneer-card__price-tag">0.314 π</span>
-            </div>
-          </article>
+        <!-- Vitrine Ao Vivo da Vila (Dados Reais via Public API) -->
+        <div class="mural-grid" id="home-vila-live-grid" style="margin-top:32px" aria-live="polite">
+          <div style="grid-column:1/-1;text-align:center;padding:28px 16px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);font-size:0.9rem">
+            ⏳ Carregando anúncios reais da Vila...
+          </div>
         </div>
 
         <div style="text-align:center;margin-top:28px">
-          <a href="mural" class="portal-btn portal-btn--outline" style="padding:12px 28px;font-size:0.95rem;max-width:100%;box-sizing:border-box">
+          <a href="mural" class="portal-btn portal-btn--outline"
+            style="padding:12px 28px;font-size:0.95rem;max-width:100%;box-sizing:border-box">
             🏘️ Ver Todos os Anúncios &amp; Filtrar Categorias na Vila ↗
           </a>
         </div>
@@ -1469,8 +1686,8 @@
           </p>
 
           <div class="community-box__actions">
-            <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer"
-              class="portal-btn portal-btn--primary">
+            <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank"
+              rel="noopener noreferrer" class="portal-btn portal-btn--primary">
               Conhecer a comunidade no WhatsApp ↗
             </a>
             <button type="button" class="portal-btn portal-btn--outline"
@@ -1507,7 +1724,7 @@
             </div>
 
             <label class="newsletter-consent">
-              <input type="checkbox" id="newsletter-consent" required checked />
+              <input type="checkbox" id="newsletter-consent" required />
               <span>Concordo em receber comunicados editoriais do portal HOKAGE22B. Tratamento de dados conforme a LGPD;
                 você pode cancelar a inscrição a qualquer momento.</span>
             </label>
@@ -1619,7 +1836,8 @@
         <div class="about-wrap">
           <div class="about-manifesto">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-              <img src="assets/img/brand/hokage22b-thelema-seal.svg" alt="Selo HOKAGE22B" width="40" height="40" style="width:40px;height:40px;opacity:0.9;flex-shrink:0" />
+              <img src="assets/img/brand/hokage22b-thelema-seal.svg" alt="Selo HOKAGE22B" width="40" height="40"
+                style="width:40px;height:40px;opacity:0.9;flex-shrink:0" />
               <div>
                 <div class="section-tag" style="margin-bottom:2px">Sobre Nós</div>
                 <h2 class="section-title" id="about-title" style="margin:0">A Marca HOKAGE22B</h2>
@@ -1674,13 +1892,15 @@
       <div class="footer-top">
         <div class="footer-brand-col">
           <div class="portal-brand" style="display:inline-flex;align-items:center;gap:10px">
-            <img src="assets/img/brand/hokage22b-logo.svg" alt="HOKAGE22B" width="22" height="22" style="width:22px;height:22px;display:block;flex-shrink:0" />
+            <img src="assets/img/brand/hokage22b-logo.svg" alt="HOKAGE22B" width="22" height="22"
+              style="width:22px;height:22px;display:block;flex-shrink:0" />
             <span>HOKAGE22B</span>
             <span class="portal-brand__dot" aria-hidden="true"></span>
           </div>
           <p>
             <strong style="color:var(--text-primary)">Seja pioneiro. Torne-se Hokage.</strong><br />
-            Liderança que constrói o futuro — um espaço independente para tecnologia, educação Web3 e execução prática na economia digital.
+            Liderança que constrói o futuro — um espaço independente para tecnologia, educação Web3 e execução prática
+            na economia digital.
           </p>
           <p style="font-size:0.74rem;color:#71717a;margin-top:-6px;margin-bottom:14px">
             Autonomia digital, senso crítico e construção colaborativa.
@@ -1698,17 +1918,26 @@
               aria-label="Twitter / X">
               𝕏
             </a>
-            <a href="https://github.com/isarloiola/hokage22b" target="_blank" rel="noopener noreferrer" class="footer-social-btn"
-              aria-label="GitHub (Código Aberto)" title="GitHub">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            <a href="https://github.com/isarloiola/hokage22b" target="_blank" rel="noopener noreferrer"
+              class="footer-social-btn" aria-label="GitHub (Código Aberto)" title="GitHub">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+              </svg>
             </a>
-            <a href="https://www.linkedin.com/in/isarloiola/" target="_blank" rel="noopener noreferrer" class="footer-social-btn"
-              aria-label="LinkedIn" title="LinkedIn">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+            <a href="https://www.linkedin.com/in/isarloiola/" target="_blank" rel="noopener noreferrer"
+              class="footer-social-btn" aria-label="LinkedIn" title="LinkedIn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+              </svg>
             </a>
-            <a href="https://t.me/hokage22b_oficial_bot?start=ia_na_pratica" target="_blank" rel="noopener noreferrer" class="footer-social-btn"
-              aria-label="Bot Oficial no Telegram" title="Bot Oficial no Telegram">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.818 8.234-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.211-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.833.941z"/></svg>
+            <a href="https://t.me/hokage22b_oficial_bot?start=ia_na_pratica" target="_blank" rel="noopener noreferrer"
+              class="footer-social-btn" aria-label="Bot Oficial no Telegram" title="Bot Oficial no Telegram">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.818 8.234-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.211-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.833.941z" />
+              </svg>
             </a>
           </div>
         </div>
@@ -1776,7 +2005,7 @@
 
   <!-- Modal 1: Download do Manual Mediante Cadastro de E-mail (Geração de Lead) -->
   <div class="portal-modal-overlay" id="modal-manual-download" role="dialog" aria-modal="true"
-    aria-labelledby="manual-modal-title">
+    aria-labelledby="manual-modal-title" aria-hidden="true">
     <div class="portal-modal">
       <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
       <div class="section-tag">Acesso Gratuito Oficial</div>
@@ -1784,11 +2013,15 @@
 
       <!-- ETAPA 1: FORMULÁRIO DE CAPTURA DO LEAD -->
       <div id="manual-lead-box">
-        <div style="display:flex;gap:18px;align-items:center;margin-bottom:18px;background:rgba(255,255,255,0.03);border:1px solid var(--border-subtle);padding:14px;border-radius:var(--radius-sm)">
-          <img src="assets/img/ebook-cover.png" alt="Capa Oficial do Manual Pi Network" style="width:72px;height:auto;border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,0.5);flex-shrink:0" />
+        <div
+          style="display:flex;gap:18px;align-items:center;margin-bottom:18px;background:rgba(255,255,255,0.03);border:1px solid var(--border-subtle);padding:14px;border-radius:var(--radius-sm)">
+          <img src="assets/img/ebook-cover.png" alt="Capa Oficial do Manual Pi Network"
+            style="width:72px;height:auto;border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,0.5);flex-shrink:0" />
           <div>
-            <strong style="color:#fff;font-size:0.95rem;display:block">Manual Prático Pi Network (Edição Oficial)</strong>
-            <span style="font-size:0.8rem;color:var(--text-secondary);display:block;margin-top:4px">23 capítulos completos · Formatos PDF e EPUB · Acesso 100% Gratuito</span>
+            <strong style="color:#fff;font-size:0.95rem;display:block">Manual Prático Pi Network (Edição
+              Oficial)</strong>
+            <span style="font-size:0.8rem;color:var(--text-secondary);display:block;margin-top:4px">23 capítulos
+              completos · Formatos PDF e EPUB · Acesso 100% Gratuito</span>
           </div>
         </div>
         <p style="font-size:0.92rem;margin-bottom:18px;color:var(--text-secondary)">
@@ -1813,7 +2046,7 @@
           </div>
 
           <label class="newsletter-consent" style="margin-top:4px">
-            <input type="checkbox" id="manual-lead-consent" required checked />
+            <input type="checkbox" id="manual-lead-consent" required />
             <span>Concordo em receber o manual e comunicados editoriais do portal HOKAGE22B. Dados protegidos conforme a
               LGPD; cancelamento a qualquer momento.</span>
           </label>
@@ -1861,7 +2094,7 @@
 
   <!-- Modal 2: Apresentar Proposta Comercial / Parceria -->
   <div class="portal-modal-overlay" id="modal-proposta" role="dialog" aria-modal="true"
-    aria-labelledby="prop-modal-title">
+    aria-labelledby="prop-modal-title" aria-hidden="true">
     <div class="portal-modal">
       <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
       <div class="section-tag">Contato Comercial</div>
@@ -1918,56 +2151,62 @@
     </div>
   </div>
 
-  <!-- Modal 3: Pagamento com Pi (3.14 π) -->
+  <!-- Modal 3: Pagamento com Pi Mainnet -->
   <div class="portal-modal-overlay" id="modal-pagamento-pi" role="dialog" aria-modal="true"
-    aria-labelledby="pi-pay-title">
+    aria-labelledby="pi-pay-title" aria-hidden="true">
     <div class="portal-modal" id="pi-modal-content-area">
       <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
-      <div class="section-tag section-tag--amber">Status: Aguardando Open Mainnet</div>
-      <h3 id="pi-pay-title" style="font-size:1.35rem;margin-bottom:10px">E-book "Pi para seu Negócio"</h3>
+      <div class="section-tag section-tag--amber">⚡ Pagamento em Pi (Mainnet P2P)</div>
+      <h3 id="pi-pay-title" style="font-size:1.35rem;margin-bottom:10px">E-books Oficiais com Pi na Mainnet</h3>
       <p style="font-size:0.92rem;margin-bottom:16px;color:var(--text-secondary);line-height:1.55">
-        O pagamento automatizado de 1 clique via Pi SDK está temporariamente suspenso para evitar pagamentos com <strong>Test-Pi (Testnet)</strong>. Este produto é comercializado exclusivamente por <strong>3.14 π na Mainnet real</strong>.
+        Os e-books em Pi Network são liquidados exclusivamente na <strong>Mainnet real</strong> via transferência P2P direta com
+        <strong>@hokage22b</strong>, evitando transações acidentais com Test-Pi (Testnet).
       </p>
 
       <!-- Alerta de Segurança e Explicação -->
-      <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px">
+      <div
+        style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px">
         <strong style="color:var(--amber-light);font-size:0.88rem;display:block;margin-bottom:4px">
-          🔒 Lançamento Oficial na Open Mainnet
+          🔔 Quer receber atualizações e novidades VIP?
         </strong>
         <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;margin:0">
-          Cadastre seu e-mail para receber em primeira mão o aviso assim que a Open Mainnet for liberada e o download for aberto.
+          Cadastre seu e-mail na lista VIP para receber novidades de lançamentos, novas edições e oportunidades do ecossistema.
         </p>
       </div>
 
-      <!-- Botão de Ação: Cadastro na Lista de Espera -->
+      <!-- Botão de Ação: Lista VIP -->
       <div style="margin-bottom:20px">
         <button type="button" class="portal-btn portal-btn--primary portal-btn--full"
           onclick="HokagePortal.closeModal('modal-pagamento-pi');HokagePortal.openModal('modal-waitlist-comunidade')"
           style="padding:14px;font-size:0.98rem;font-weight:700">
-          🔔 Cadastrar na Lista de Espera da Open Mainnet →
+          🔔 Entrar na Lista VIP da Comunidade →
         </button>
       </div>
 
       <!-- Acesso Antecipado P2P na Mainnet Direto com Hokage22b -->
       <div style="border-top:1px solid var(--border-subtle);padding-top:16px;margin-top:16px">
-        <div style="font-size:0.88rem;color:#fff;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+        <div
+          style="font-size:0.88rem;color:#fff;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px">
           <span>⚡</span> Deseja Acesso Antecipado com Pi na Mainnet?
         </div>
         <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:14px;line-height:1.5">
-          Para pioneiros que já possuem saldo transferível na Mainnet e desejam adquirir agora, a liquidação é feita diretamente via transferência P2P. Entre em contato direto com <strong>@hokage22b</strong> para liberação:
+          Para pioneiros que já possuem saldo transferível na Mainnet e desejam adquirir agora, a liquidação é feita
+          diretamente via transferência P2P. Entre em contato direto com <strong>@hokage22b</strong> para liberação:
         </p>
 
         <div style="display:flex;flex-direction:column;gap:8px">
-          <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank" rel="noopener noreferrer"
-            class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700;justify-content:center">
+          <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank"
+            rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm"
+            style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700;justify-content:center">
             💬 Conversar com Hokage22b no WhatsApp ↗
           </a>
           <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer"
-            class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700;justify-content:center">
+            class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm"
+            style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700;justify-content:center">
             𝕏 Mensagem Direta no X (@hokage22b) ↗
           </a>
-          <a href="pioneiro?u=@hokage22b"
-            class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;justify-content:center">
+          <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm"
+            style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;justify-content:center">
             🪪 Ver Carteira no Passaporte Oficial (@hokage22b) ↗
           </a>
         </div>
@@ -1977,7 +2216,7 @@
 
   <!-- Modal 4: Lista de Espera da Plataforma Própria -->
   <div class="portal-modal-overlay" id="modal-waitlist-comunidade" role="dialog" aria-modal="true"
-    aria-labelledby="wait-title">
+    aria-labelledby="wait-title" aria-hidden="true">
     <div class="portal-modal">
       <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
       <div class="section-tag">Plataforma Própria</div>
@@ -1999,15 +2238,17 @@
   </div>
 
   <!-- Scripts do Portal com Cache Buster -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
-  <script src="assets/js/modules/i18n.js?v=4.5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"
+    integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil"
+    crossorigin="anonymous"></script>
+  <script src="assets/js/modules/i18n.js?v=4.7"></script>
   <script src="assets/js/config.js?v=7.3"></script>
-  <script src="assets/js/modules/db.js?v=6.0"></script>
-  <script src="assets/js/modules/pi-pay.js?v=7.7"></script>
-  <script src="assets/js/modules/portal.js?v=3.2"></script>
+  <script src="assets/js/modules/db.js?v=6.1"></script>
+  <script src="assets/js/modules/pi-pay.js?v=7.8"></script>
+  <script src="assets/js/modules/portal.js?v=3.3"></script>
   <script src="assets/js/modules/pi-ticker.js?v=1.1"></script>
-  <script src="assets/js/modules/referral.js?v=2.6"></script>
-  <script src="assets/js/modules/analytics-tg.js?v=2.1"></script>
+  <script src="assets/js/modules/referral.js?v=2.7"></script>
+  <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script>
     (function syncHeroPiBadge() {
@@ -2022,7 +2263,7 @@
           textEl.textContent = handle + ' · Sessão Pi Conectada';
           badge.style.display = 'inline-flex';
         }
-      } catch (_) {}
+      } catch (_) { }
     })();
   </script>
   <script>
@@ -2044,11 +2285,11 @@
             const dbProf = await window.IsarDB.getPioneerFullProfile('@hokage22b');
             if (dbProf && dbProf.avatar_url) {
               setFounderAvatars(dbProf.avatar_url);
-              try { localStorage.setItem('hokage_pioneer_avatar_hokage22b', dbProf.avatar_url); } catch (_) {}
+              try { localStorage.setItem('hokage_pioneer_avatar_hokage22b', dbProf.avatar_url); } catch (_) { }
             }
-          } catch (_) {}
+          } catch (_) { }
         }
-      } catch (_) {}
+      } catch (_) { }
     });
   </script>
   <script>

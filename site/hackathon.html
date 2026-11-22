@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://sdk.minepi.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://sdk.minepi.com https://cdn.jsdelivr.net https://unpkg.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https: wss: https://cloudflareinsights.com; object-src 'none'; base-uri 'self';" />
   <title>HOKAGE22B — Pi Network Hackathon Official Pitch &amp; Live Judge Portal</title>
   <meta name="description" content="Official Pi Network Hackathon Pitch: Web3 Pioneer Storefronts, Dynamic Pi POS QR Engine, P2P Classifieds Mural &amp; Zero-Trust Server Security." />
   <link rel="canonical" href="https://hokage22b.com/hackathon" />
@@ -19,7 +19,7 @@
 
   <link rel="icon" href="assets/img/brand/favicon.ico" sizes="any" />
   <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
-  <link rel="stylesheet" href="assets/css/style.css?v=4.5" />
+  <link rel="stylesheet" href="assets/css/style.css?v=5.2" />
 
   <!-- Pi Network SDK v2.0 (Produção no Pi Browser / Sandbox automático) -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -259,7 +259,7 @@
           <div class="judge-step__num">4</div>
           <div>
             <strong style="color:#fff;display:block;margin-bottom:4px" data-i18n="step4Title">Server-Verified Security</strong>
-            <p style="font-size:0.84rem;color:var(--text-secondary);margin:0" data-i18n="step4Desc">Every ad, 24h edit, renewal, comment (15s rate limit), and review is verified via Pi API (/v2/me &amp; /v2/payments).</p>
+            <p style="font-size:0.84rem;color:var(--text-secondary);margin:0" data-i18n="step4Desc">Every ad, owner edit, renewal, comment (15s rate limit), and review is verified via Pi API (/v2/me &amp; /v2/payments).</p>
           </div>
         </div>
       </div>
@@ -299,7 +299,7 @@
           <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-size:0.9rem;color:#fff">
             <li data-i18n="sol1">✅ <strong>Free Web3 Storefront (Linktree):</strong> 1-click pioneer profile with verified Pi identity, catalog, and direct Pi Wallet.</li>
             <li data-i18n="sol2">✅ <strong>Dynamic POS QR Terminal:</strong> Instant payment QR codes with pre-filled Pi amount and memo.</li>
-            <li data-i18n="sol3">✅ <strong>Pi-First Classifieds &amp; Reputation:</strong> Country-filterable Mural, 24h edit transparency, and Pi-verified reviews.</li>
+            <li data-i18n="sol3">✅ <strong>Pi-First Classifieds &amp; Reputation:</strong> Country-filterable Mural, full owner ad controls, and Pi-verified reviews.</li>
           </ul>
         </div>
       </div>
@@ -328,7 +328,7 @@
             <p style="font-size:0.86rem;color:var(--text-secondary);margin:6px 0 0;line-height:1.55" data-i18n="archC2Desc">
               • <code>pi-profile</code>, <code>pi-payment</code> &amp; <code>mural-action</code><br>
               • Verifies Bearer tokens on <code>/v2/me</code> &amp; payments on <code>/v2/payments</code><br>
-              • Enforces 24h edit window, 15s comment cooldown &amp; auto-moderation
+              • Enforces owner auth, 15s comment cooldown &amp; auto-moderation
             </p>
           </div>
           <div>
@@ -384,9 +384,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
   <script src="assets/js/config.js?v=7.3"></script>
-  <script src="assets/js/modules/referral.js?v=2.4"></script>
-  <script src="assets/js/modules/db.js?v=6.0"></script>
-  <script src="assets/js/modules/pi-pay.js?v=7.7"></script>
+  <script src="assets/js/modules/referral.js?v=2.7"></script>
+  <script src="assets/js/modules/db.js?v=6.1"></script>
+  <script src="assets/js/modules/pi-pay.js?v=7.8"></script>
   <script>
     (function () {
       const PT_DICT = {
@@ -412,7 +412,7 @@
         step3Title: 'Mural Global Pi-First',
         step3Desc: 'Filtre classificados por país, categoria e formato Pi; impulsione produtos do Passaporte direto para A Vila · Central P2P em 1 clique.',
         step4Title: 'Segurança Verificada no Servidor',
-        step4Desc: 'Todo anúncio, edição (24h), renovação, comentário (rate limit 15s) e avaliação é validado via API da Pi (/v2/me e /v2/payments).',
+        step4Desc: 'Todo anúncio, edição do anunciante, renovação, comentário (rate limit 15s) e avaliação é validado via API da Pi (/v2/me e /v2/payments).',
         probTag: 'Problema &amp; Solução',
         probTitle: 'Por Que o HOKAGE22B é Vital para a Pi Mainnet',
         probCardTitle: 'Fricção do Ecossistema',
@@ -424,14 +424,14 @@
         solCardSub: 'Utilidade Pi Sem Fricção',
         sol1: '✅ <strong>Passaporte Web3 Gratuito:</strong> Perfil em 1 clique com identidade Pi verificada, catálogo e Pi Wallet direta.',
         sol2: '✅ <strong>Terminal POS com QR Code:</strong> QR codes instantâneos com valor em Pi e motivo pré-preenchidos.',
-        sol3: '✅ <strong>Classificados Pi-First &amp; Reputação:</strong> Mural com filtro por país, janela de edição 24h e recomendações verificadas.',
+        sol3: '✅ <strong>Classificados Pi-First &amp; Reputação:</strong> Mural com filtro por país, gestão completa pelo anunciante e recomendações verificadas.',
         archTag: 'Segurança &amp; Arquitetura',
         archTitle: 'Construído sob Princípios Zero-Trust Web3',
         archSub: 'Sem gravação anônima, sem replay de TXID e validação server-side em toda ação Pi:',
         archC1: 'Camada Cliente',
         archC1Desc: '• Pi SDK Oficial v2.0 (<code>sdk.minepi.com</code>)<br>• Zero chaves privadas ou passphrases solicitadas<br>• CSP estrita e proteção anti-XSS nos cards',
         archC2: 'Edge Functions (Servidor)',
-        archC2Desc: '• <code>pi-profile</code>, <code>pi-payment</code> e <code>mural-action</code><br>• Valida Bearer token em <code>/v2/me</code> e pagamentos em <code>/v2/payments</code><br>• Impõe janela de edição 24h, cooldown de 15s e auto-moderação',
+        archC2Desc: '• <code>pi-profile</code>, <code>pi-payment</code> e <code>mural-action</code><br>• Valida Bearer token em <code>/v2/me</code> e pagamentos em <code>/v2/payments</code><br>• Impõe autenticação do dono, cooldown de 15s e auto-moderação',
         archC3: 'PostgreSQL &amp; RLS',
         archC3Desc: '• RLS Zero-Trust: escrita direta <code>anon</code> bloqueada<br>• Índice único em <code>payment_txid</code> (anti-replay)<br>• Regex Stellar Ed25519 (<code>^G[A-Z2-7]{55}$</code>)',
         archBadge: 'Validado por CI &amp; Blindagem Zero-Trust',

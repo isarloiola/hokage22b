@@ -106,7 +106,11 @@
     if (rawPath === 'pioneiro' && search) {
       const m = search.match(/[?&]u=([^&]+)/i);
       if (m && m[1]) {
-        label += ' (@' + decodeURIComponent(m[1]).replace(/^@+/, '').slice(0, 20) + ')';
+        try {
+          label += ' (@' + decodeURIComponent(m[1]).replace(/^@+/, '').slice(0, 20) + ')';
+        } catch (_) {
+          label += ' (@' + String(m[1]).replace(/^@+/, '').slice(0, 20) + ')';
+        }
       }
     }
     return label;
@@ -201,15 +205,11 @@
         durationSec: durationSec
       });
 
-      if (navigator.sendBeacon) {
-        const blob = new Blob([payload], { type: 'application/json' });
-        if (navigator.sendBeacon(ENDPOINT, blob)) return;
-      }
-
       fetch(ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: payload,
+        credentials: 'omit',
         keepalive: true
       }).catch(function () {});
     } catch (_) {}
@@ -268,13 +268,9 @@
     if (/runAddressCheck|runLinkCheck|generateVitrineQr|runBalcaoCalc/i.test(onclick)) {
       return { event: '🛠️ Usou Ferramenta Web3', detail: label, key: 'tool_' + onclick.split('(')[0] };
     }
-    // Cliques em links internos principais / CTAs de trilha
+    // Ignora cliques comuns de navegação interna para evitar ruído no Telegram
     if (href && !href.startsWith('#') && !href.startsWith('http') && !href.startsWith('mailto:')) {
-      return {
-        event: '👆 Clique de Navegação',
-        detail: (label ? label + ' → ' : '') + href,
-        key: 'nav_' + getPageLabel() + '_' + href.slice(0, 24)
-      };
+      return null;
     }
     return null;
   }

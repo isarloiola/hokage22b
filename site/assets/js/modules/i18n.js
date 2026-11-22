@@ -130,8 +130,6 @@
       deleteCookie(COOKIE_NAME);
       deleteCookie('googtrans');
       try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
-      setCookie(COOKIE_NAME, '/pt/pt', 0);
-      setCookie('googtrans', '/pt/pt', 0);
       window.location.reload();
       return;
     }
@@ -170,6 +168,7 @@
       if (flagSpan && langObj.flag) {
         flagSpan.textContent = langObj.flag;
       }
+      btn.setAttribute('aria-label', langObj.tag + ' — Alterar idioma');
     });
 
     // Atualiza classes ativas dentro dos dropdowns
@@ -186,8 +185,8 @@
     var mainLangs = LANGUAGES.filter(function (l) { return l.group === 'main'; });
     var globalLangs = LANGUAGES.filter(function (l) { return l.group === 'global'; });
 
-    var html = '<div class="lang-selector" id="hokage-lang-selector">';
-    html += '<button type="button" class="lang-btn-trigger" aria-label="Alterar idioma / Change Language" aria-expanded="false">';
+    var html = '<div class="lang-selector">';
+    html += '<button type="button" class="lang-btn-trigger" aria-label="' + currentObj.tag + ' — Alterar idioma" aria-expanded="false">';
     html += '  <span class="lang-globe-icon">' + currentObj.flag + '</span>';
     html += '  <span class="lang-code">' + currentObj.tag + '</span>';
     html += '  <span class="lang-arrow">▼</span>';
@@ -278,11 +277,11 @@
 
     resetBodyTop();
 
-    if (window.MutationObserver) {
+    if (window.MutationObserver && document.body) {
       var observer = new MutationObserver(function () {
         resetBodyTop();
       });
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'], subtree: true });
+      observer.observe(document.body, { childList: true, attributes: true, attributeFilter: ['style', 'class'] });
     }
 
     var count = 0;
@@ -297,6 +296,14 @@
   function bindEvents() {
     if (isEventsBound) return;
     isEventsBound = true;
+
+    function closeAllSelectors() {
+      document.querySelectorAll('.lang-selector.open').forEach(function (s) {
+        s.classList.remove('open');
+        var tr = s.querySelector('.lang-btn-trigger');
+        if (tr) tr.setAttribute('aria-expanded', 'false');
+      });
+    }
 
     // Abrir/Fechar Dropdown
     document.addEventListener('click', function (e) {
@@ -320,20 +327,27 @@
         var parentSel = item.closest('.lang-selector');
         if (parentSel) {
           parentSel.classList.remove('open');
+          var tr = parentSel.querySelector('.lang-btn-trigger');
+          if (tr) tr.setAttribute('aria-expanded', 'false');
         }
         return;
       }
 
       // Clicou fora: fecha qualquer seletor aberto
-      document.querySelectorAll('.lang-selector.open').forEach(function (s) {
-        s.classList.remove('open');
-        var tr = s.querySelector('.lang-btn-trigger');
-        if (tr) tr.setAttribute('aria-expanded', 'false');
-      });
+      closeAllSelectors();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeAllSelectors();
+      }
     });
   }
 
+  var hasInitialized = false;
   function init() {
+    if (hasInitialized) return;
+    hasInitialized = true;
     // Supressão ativa de banner do Google
     suppressGoogleBanner();
 

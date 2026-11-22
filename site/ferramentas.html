@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; frame-src 'self' https://translate.google.com; connect-src 'self' https://yhzoehwkuxteihsnagcj.supabase.co https://api.coingecko.com https://translate.googleapis.com https://translate-pa.googleapis.com; object-src 'none'; base-uri 'self';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; frame-src 'self' https://translate.google.com; connect-src 'self' https://yhzoehwkuxteihsnagcj.supabase.co https://api.coingecko.com https://translate.googleapis.com https://translate-pa.googleapis.com https://cloudflareinsights.com; object-src 'none'; base-uri 'self';" />
   <title>Ferramentas Web3 &amp; Segurança Pi | HOKAGE22B</title>
   <meta name="description"
     content="Validador criptográfico de Chave Pública Pi (G...), detector anti-golpe de links e gerador gratuito de QR Code/Placa de Balcão para seu Passaporte Web3." />
@@ -13,9 +13,8 @@
   <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
   <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
   <meta name="theme-color" content="#09090b" />
-  <link rel="stylesheet" href="assets/css/style.css?v=4.6" />
-  <link rel="stylesheet" href="assets/css/portal.css?v=3.0" />
-  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.6" />
+  <link rel="stylesheet" href="assets/css/style.css?v=5.2" />
+  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.7" />
   <style>
     .tools-hero {
       position: relative;
@@ -161,7 +160,7 @@
 
 <body style="background:#09090b;color:#f4f4f5">
   <div id="hk-site-header-root"></div>
-  <script src="assets/js/modules/site-header.js?v=1.0"></script>
+  <script src="assets/js/modules/site-header.js?v=1.2"></script>
 
   <main>
     <section class="tools-hero">
@@ -373,12 +372,29 @@
     </section>
   </main>
 
+  <footer class="portal-footer" style="background:#09090b;border-top:1px solid rgba(255,255,255,0.08);padding:32px 0 24px;text-align:center">
+    <div class="portal-container" style="max-width:960px;margin:0 auto;padding:0 16px">
+      <div style="display:flex;justify-content:center;gap:12px 20px;font-size:0.84rem;flex-wrap:wrap;margin-bottom:14px">
+        <a href="./" style="color:var(--text-secondary);text-decoration:none">Início</a>
+        <a href="jornada" style="color:var(--text-secondary);text-decoration:none">Jornada</a>
+        <a href="pioneiro" style="color:var(--text-secondary);text-decoration:none">Passaporte</a>
+        <a href="mural" style="color:var(--text-secondary);text-decoration:none">A Vila (P2P)</a>
+        <a href="construir" style="color:var(--text-secondary);text-decoration:none">Construir</a>
+        <a href="legal/politica-de-privacidade" style="color:var(--text-muted);text-decoration:none">Privacidade</a>
+        <a href="legal/termos-de-uso" style="color:var(--text-muted);text-decoration:none">Termos</a>
+      </div>
+      <div style="font-size:0.78rem;color:var(--text-muted)">
+        © 2026 HOKAGE22B (hokage22b.com) · Código de Convite Pi: <strong>hokage22b</strong>
+      </div>
+    </div>
+  </footer>
+
   <script src="assets/js/config.js?v=7.3"></script>
-  <script src="assets/js/modules/pi-tools-core.js?v=1.1"></script>
-  <script src="assets/js/modules/monte-progression.js?v=1.3"></script>
-  <script src="assets/js/modules/i18n.js?v=4.6"></script>
-  <script src="assets/js/modules/referral.js?v=2.4"></script>
-  <script src="assets/js/modules/analytics-tg.js?v=2.1"></script>
+  <script src="assets/js/modules/pi-tools-core.js?v=1.2"></script>
+  <script src="assets/js/modules/monte-progression.js?v=1.4"></script>
+  <script src="assets/js/modules/i18n.js?v=4.7"></script>
+  <script src="assets/js/modules/referral.js?v=2.7"></script>
+  <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script>
     (function () {
@@ -400,9 +416,13 @@
         const inputEl = document.getElementById('tool-address-input');
         const box = document.getElementById('tool-address-result');
         const res = window.HokagePiTools.inspectPiAddress(inputEl.value);
-        if (res.valid && window.HokageMonteProgression) {
-          window.HokageMonteProgression.markQuestFlag('wallet_checked');
+        if (res.valid) {
+          if (window.HokageMonteProgression) {
+            window.HokageMonteProgression.markQuestFlag('wallet_checked');
+          }
+          window.dispatchEvent(new CustomEvent('hokage:action', { detail: { action: 'wallet_checked' } }));
         }
+        window.dispatchEvent(new CustomEvent('hokage:action', { detail: { action: 'tool_used' } }));
         box.style.display = 'block';
         box.className = 'tool-result ' + (res.riskLevel ? res.riskLevel.toLowerCase() : '');
         const badge = res.valid ? '✅ CHAVE VÁLIDA' : (res.riskLevel === 'CRITICAL' ? '🚨 ALERTA CRÍTICO' : '⚠️ INVÁLIDA');
@@ -428,6 +448,7 @@
         const inputEl = document.getElementById('tool-link-input');
         const box = document.getElementById('tool-link-result');
         const res = window.HokagePiTools.inspectPiLinkOrText(inputEl.value);
+        window.dispatchEvent(new CustomEvent('hokage:action', { detail: { action: 'tool_used' } }));
         box.style.display = 'block';
         box.className = 'tool-result ' + (res.riskLevel ? res.riskLevel.toLowerCase() : '');
         const badge = res.safe ? '✅ DOMÍNIO OFICIAL' : (res.riskLevel === 'CRITICAL' ? '🚨 RISCO DE GOLPE' : '⚠️ ATENÇÃO');
@@ -458,6 +479,7 @@
           return;
         }
         lastQrPayload = payload;
+        window.dispatchEvent(new CustomEvent('hokage:action', { detail: { action: 'tool_used' } }));
         area.innerHTML =
           '<div style="font-size:0.75rem;color:#c4b5fd;font-weight:800;text-transform:uppercase;letter-spacing:0.05em">✦ HOKAGE22B · Passaporte Web3 Pi</div>' +
           '<h3 style="margin:8px 0 4px;font-size:1.25rem;color:#fff">' + esc(payload.title) + '</h3>' +
@@ -473,9 +495,21 @@
         if (window.HokageMonteProgression) {
           window.HokageMonteProgression.markQuestFlag('shared_or_qr');
         }
+        window.dispatchEvent(new CustomEvent('hokage:action', { detail: { action: 'shared_or_qr' } }));
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(lastQrPayload.shortUrl).then(function () {
-            alert('✓ Link curto copiado:\n' + lastQrPayload.shortUrl);
+            let fb = document.getElementById('qr-copy-feedback');
+            if (!fb) {
+              fb = document.createElement('div');
+              fb.id = 'qr-copy-feedback';
+              fb.setAttribute('role', 'status');
+              fb.style.cssText = 'margin-top:8px;font-size:0.8rem;font-weight:700;color:#6ee7b7';
+              const area = document.getElementById('qr-print-area');
+              if (area) area.appendChild(fb);
+            }
+            fb.textContent = '✓ Link curto copiado: ' + lastQrPayload.shortUrl;
+          }).catch(function () {
+            window.prompt('Copie o link do seu Passaporte:', lastQrPayload.shortUrl);
           });
         } else {
           window.prompt('Copie o link do seu Passaporte:', lastQrPayload.shortUrl);
@@ -510,6 +544,7 @@
 
       window.fetchLivePiRatesForCalc = async function () {
         const statusEl = document.getElementById('calc-rate-status');
+        if (statusEl) statusEl.textContent = '🔄 Buscando cotação ao vivo...';
         try {
           const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=brl,usd', {
             headers: { Accept: 'application/json' }

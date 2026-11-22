@@ -1012,7 +1012,7 @@ serve(async (req) => {
         ? (body.adPayload as Record<string, unknown>)
         : {};
       const title = String(payloadObj.title || "").trim().slice(0, 120);
-      const description = String(payloadObj.description || "").trim().slice(0, 600);
+      const description = String(payloadObj.description || "").trim().slice(0, 1000);
       if (title.length < 3 || description.length < 5) {
         return jsonError("INVALID_AD", "Informe título e descrição válidos para publicar na Vila.", corsHeaders, 400);
       }
@@ -1040,6 +1040,11 @@ serve(async (req) => {
       const rawCountry = String(payloadObj.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6) || "GLOBAL";
       const rawPayMode = String(payloadObj.payment_modes || "pi").trim().toLowerCase();
       const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
+      const rawCat = String(payloadObj.category || "geral").trim().toLowerCase().slice(0, 40);
+      const category = MURAL_CONFIG.categories.includes(rawCat) ? rawCat : "geral";
+      const itemPrice = payloadObj.item_price ? String(payloadObj.item_price).trim().slice(0, 40) : null;
+      const rawItemCurr = String(payloadObj.item_currency || "PI").trim().toUpperCase();
+      const itemCurrency = (["PI", "BRL", "USD", "A_COMBINAR"].includes(rawItemCurr)) ? rawItemCurr : "PI";
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
       const { error: insertErr } = await supabase.from("anuncios").insert({
@@ -1048,10 +1053,12 @@ serve(async (req) => {
         description,
         link_url: null,
         image_url: null,
-        category: String(payloadObj.category || "geral").slice(0, 40),
+        category,
         location: String(payloadObj.location || "Online / Global").slice(0, 60) || "Online / Global",
         country_code: rawCountry,
         payment_modes: paymentModes,
+        item_price: itemPrice,
+        item_currency: itemCurrency,
         pioneer_username: "@" + cleanHandle,
         pioneer_name: cleanHandle,
         plan_tier: "gratis",
@@ -1290,16 +1297,23 @@ serve(async (req) => {
               const rawCountry = String(adPayload.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6) || "GLOBAL";
               const rawPayMode = String(adPayload.payment_modes || "pi").trim().toLowerCase();
               const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
+              const rawCat = String(adPayload.category || "geral").trim().toLowerCase().slice(0, 40);
+              const category = MURAL_CONFIG.categories.includes(rawCat) ? rawCat : "geral";
+              const itemPrice = adPayload.item_price ? String(adPayload.item_price).trim().slice(0, 40) : null;
+              const rawItemCurr = String(adPayload.item_currency || "PI").trim().toUpperCase();
+              const itemCurrency = (["PI", "BRL", "USD", "A_COMBINAR"].includes(rawItemCurr)) ? rawItemCurr : "PI";
               const { error: adInsertErr } = await supabase.from("anuncios").insert({
                 id: String(metadata.adId),
                 title: String(adPayload.title || "").slice(0, 120),
-                description: String(adPayload.description || "").slice(0, 600),
+                description: String(adPayload.description || "").slice(0, 1000),
                 link_url: cleanTier !== "bronze" ? sanitizeHttpUrl(adPayload.link_url) : null,
                 image_url: sanitizeAdImageUrl(adPayload.image_url),
-                category: String(adPayload.category || "geral").slice(0, 40),
+                category,
                 location: String(adPayload.location || "Online / Global").slice(0, 60) || "Online / Global",
                 country_code: rawCountry,
                 payment_modes: paymentModes,
+                item_price: itemPrice,
+                item_currency: itemCurrency,
                 pioneer_username: "@" + verifiedHandle,
                 pioneer_name: verifiedHandle,
                 plan_tier: cleanTier,

@@ -22,8 +22,17 @@ body {
   color: var(--white);
   font-family: var(--font-body);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
+}
+
+html {
+  overflow-x: clip;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--amber, #f59e0b);
+  outline-offset: 2px;
 }
 
 img {

@@ -2,7 +2,7 @@
  * ============================================================
  * HOKAGE22B.COM — Public Open API SDK (v1.0)
  * Zero-dependency client for browser & Node.js
- * Docs: https://hokage22b.com/desenvolvedores
+ * Docs: https://hokage22b.com/construir
  * ============================================================
  */
 (function (root, factory) {

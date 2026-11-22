@@ -60,6 +60,35 @@ function sanitizeProducts(rawProducts: unknown): Record<string, unknown>[] {
   return clean;
 }
 
+function decodeProfileImageDataUrl(raw: unknown): { bytes: Uint8Array; ext: string; mime: string } {
+  if (!raw || typeof raw !== "string") {
+    throw new HttpPayloadError("INVALID_IMAGE", "Imagem Base64 inválida.", 400);
+  }
+  const trimmed = raw.trim();
+  const match = trimmed.match(/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/i);
+  if (!match || trimmed.length > 2.8 * 1024 * 1024) {
+    throw new HttpPayloadError("INVALID_IMAGE", "Formato inválido. Use JPEG, PNG ou WebP (máx. 2 MB).", 400);
+  }
+  const binaryStr = atob(match[2]);
+  if (binaryStr.length < 16 || binaryStr.length > 2 * 1024 * 1024) {
+    throw new HttpPayloadError("IMAGE_TOO_LARGE", "Tamanho da imagem fora do limite permitido (máx. 2 MB).", 413);
+  }
+  const bytes = new Uint8Array(binaryStr.length);
+  for (let i = 0; i < binaryStr.length; i++) {
+    bytes[i] = binaryStr.charCodeAt(i);
+  }
+  const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  const isPng = bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
+  const isWebp =
+    bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 &&
+    bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50;
+
+  if (isJpeg) return { bytes, ext: "jpg", mime: "image/jpeg" };
+  if (isPng) return { bytes, ext: "png", mime: "image/png" };
+  if (isWebp) return { bytes, ext: "webp", mime: "image/webp" };
+  throw new HttpPayloadError("INVALID_IMAGE_BYTES", "Assinatura binária da imagem inválida.", 400);
+}
+
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req, true);
 
@@ -73,8 +102,8 @@ serve(async (req) => {
   }
 
   try {
-    const body = await parseJsonBody(req, 512 * 1024);
-    const { accessToken, profileData, refCode } = body;
+    const body = await parseJsonBody(req, 1024 * 1024);
+    const { action, dataUrl, accessToken, profileData, refCode } = body;
 
     // 1. VALIDAÇÃO CRIPTOGRÁFICA DO TOKEN DIRETAMENTE NA API DA PI CORE TEAM (/v2/me)
     const piUser = await verifyPiAccessToken(accessToken);
@@ -85,6 +114,24 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    if (action === "upload_profile_image") {
+      const { bytes, ext, mime } = decodeProfileImageDataUrl(dataUrl);
+      const cleanH = normalizeHandle(verifiedUsername) || "pioneiro";
+      const filePath = `profiles/${cleanH}/${Date.now()}_${crypto.randomUUID().slice(0, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("mural-images")
+        .upload(filePath, bytes, {
+          contentType: mime,
+          cacheControl: "31536000",
+          upsert: false,
+        });
+      if (upErr) {
+        throw new Error(upErr.message || "Falha ao enviar imagem para o Storage.");
+      }
+      const { data: pubData } = supabase.storage.from("mural-images").getPublicUrl(filePath);
+      return jsonOk("PROFILE_IMAGE_UPLOADED", { publicUrl: pubData.publicUrl }, corsHeaders, 200);
+    }
 
     // 3. SANITIZAÇÃO E VALIDAÇÃO DOS DADOS DO PERFIL
     const safeData = profileData || {};
@@ -107,16 +154,16 @@ serve(async (req) => {
     const cleanAvatar = sanitizeProfileImageUrl(safeData.avatar_url);
     const cleanProducts = sanitizeProducts(safeData.products);
 
-    // Consulta estado real no servidor para validar títulos meritocráticos
+    // Consulta estado real no servidor para validar títulos meritocráticos e preservar checklist_state
     const { data: existingByUser } = await supabase
       .from("pioneiros")
-      .select("uid, is_ambassador, referral_qualified_count, wallet_address, referred_by_username")
+      .select("uid, is_ambassador, referral_qualified_count, reputation_score, wallet_address, referred_by_username, checklist_state, hokage_since")
       .ilike("username", verifiedUsername)
       .maybeSingle();
 
     const { data: existingByUid } = await supabase
       .from("pioneiros")
-      .select("uid, is_ambassador, referral_qualified_count, wallet_address, referred_by_username")
+      .select("uid, is_ambassador, referral_qualified_count, reputation_score, wallet_address, referred_by_username, checklist_state, hokage_since")
       .eq("uid", verifiedUid)
       .maybeSingle();
 
@@ -131,16 +178,24 @@ serve(async (req) => {
       .limit(1);
     const hasActiveAd = Boolean(activeAds && activeAds.length > 0);
 
+    const existingChecklist = (existingFlags?.checklist_state && typeof existingFlags.checklist_state === "object" && !Array.isArray(existingFlags.checklist_state))
+      ? (existingFlags.checklist_state as Record<string, unknown>)
+      : {};
     const rawChecklist = (safeData.checklist_state && typeof safeData.checklist_state === "object" && !Array.isArray(safeData.checklist_state))
       ? (safeData.checklist_state as Record<string, unknown>)
       : {};
-    const checklistState: Record<string, unknown> = { ...rawChecklist };
+    const checklistState: Record<string, unknown> = { ...existingChecklist, ...rawChecklist };
     if (safeData.showcase_zero !== undefined) checklistState.showcase_zero = Boolean(safeData.showcase_zero);
     if (safeData.showcase_mural !== undefined) checklistState.showcase_mural = Boolean(safeData.showcase_mural);
+    if (safeData.dev_api_used !== undefined) checklistState.dev_api_used = Boolean(safeData.dev_api_used);
 
-    if (Array.isArray(rawChecklist.social_links)) {
+    const incomingSocialLinks = Array.isArray(rawChecklist.social_links)
+      ? rawChecklist.social_links
+      : (Array.isArray(safeData.social_links) ? safeData.social_links : null);
+
+    if (incomingSocialLinks) {
       const sanitizedLinks: Array<{ network: string; url: string }> = [];
-      for (const entry of rawChecklist.social_links.slice(0, 12)) {
+      for (const entry of incomingSocialLinks.slice(0, 12)) {
         if (!entry || typeof entry !== "object") continue;
         const eObj = entry as Record<string, unknown>;
         const safeSocialUrl = sanitizeProfileHttpUrl(eObj.url);
@@ -163,14 +218,18 @@ serve(async (req) => {
       (checklistState.social_links as Array<{ network: string }>).some((s) => s.network === "github");
     const unlockedServerTitles = new Set<string>(["pioneiro", "pi_kyc"]);
     if (Boolean(cleanWallet) || cleanProducts.length > 0 || isHokageServer) unlockedServerTitles.add("construtor");
-    if (hasGithubSocial || Boolean(rawChecklist.dev_api_used) || cleanHandle === "hokage22b") unlockedServerTitles.add("desenvolvedor");
+    if (hasGithubSocial || Boolean(checklistState.dev_api_used) || cleanHandle === "hokage22b") unlockedServerTitles.add("desenvolvedor");
     if (isHokageServer) unlockedServerTitles.add("hokage");
     if (cleanProducts.length > 0 || hasActiveAd) unlockedServerTitles.add("comerciante");
     if (isAmbassadorServer) unlockedServerTitles.add("embaixador");
 
-    if (Array.isArray(rawChecklist.selected_titles)) {
+    const rawSelectedTitles = Array.isArray(rawChecklist.selected_titles)
+      ? rawChecklist.selected_titles
+      : (Array.isArray(checklistState.selected_titles) ? checklistState.selected_titles : null);
+
+    if (rawSelectedTitles) {
       const filteredTitles: string[] = [];
-      for (const tid of rawChecklist.selected_titles) {
+      for (const tid of rawSelectedTitles) {
         const cleanTid = String(tid || "").trim().toLowerCase();
         if (unlockedServerTitles.has(cleanTid) && !filteredTitles.includes(cleanTid)) {
           filteredTitles.push(cleanTid);
@@ -179,6 +238,11 @@ serve(async (req) => {
       }
       checklistState.selected_titles = filteredTitles.length > 0 ? filteredTitles : ["pioneiro"];
     }
+
+    const repScore = Number(existingFlags?.reputation_score ?? 50);
+    const computedJourneyTier = isHokageServer
+      ? "hokage"
+      : (Boolean(cleanWallet) && (cleanProducts.length > 0 || repScore >= 70) ? "construtor" : "pioneiro");
 
     const updatePayload = {
       uid: verifiedUid,
@@ -192,6 +256,7 @@ serve(async (req) => {
       instagram_url: sanitizeProfileHttpUrl(safeData.instagram_url),
       checklist_state: checklistState,
       products: cleanProducts,
+      journey_tier: computedJourneyTier,
       updated_at: new Date().toISOString(),
     };
 

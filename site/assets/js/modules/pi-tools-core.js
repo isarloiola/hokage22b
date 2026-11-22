@@ -350,7 +350,7 @@
     },
     {
       name: 'buildVitrineQrPayload',
-      description: 'Gera link curto oficial (/@usuario), deep link pi:// e QR Code de balcão para uma Passaporte Web3 HOKAGE22B.',
+      description: 'Gera link curto oficial (/@usuario), deep link pi:// e QR Code de balcão para um Passaporte Web3 HOKAGE22B.',
       parameters: {
         type: 'object',
         properties: {

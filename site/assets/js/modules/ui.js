@@ -161,8 +161,16 @@
     const toastIcon = document.getElementById('toast-icon');
     if (!toast) return;
 
+    const iconMap = {
+      info: 'ℹ️',
+      success: '✓',
+      error: '⚠️',
+      warning: '⚠️'
+    };
+    const safeIcon = iconMap[icon] || icon || 'ℹ️';
+
     if (toastText) toastText.textContent = message;
-    if (toastIcon) toastIcon.textContent = icon || 'ℹ️';
+    if (toastIcon) toastIcon.textContent = safeIcon;
 
     toast.classList.add('show');
     clearTimeout(window._toastTimer);
@@ -183,7 +191,7 @@
     }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(code).then(success);
+      navigator.clipboard.writeText(code).then(success).catch(function () {});
     } else {
       const ta = document.createElement('textarea');
       ta.value = code;
@@ -199,13 +207,13 @@
 
   // --- Copy Site URL for Pi Browser ---
   window.copySiteUrl = function () {
-    const url = 'https://isarloiola.github.io/hokage22b/';
+    const url = 'https://hokage22b.com/';
     function done() {
       window.showToast('Link copiado! Cole na barra do Pi Browser.', '📋');
     }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(done);
+      navigator.clipboard.writeText(url).then(done).catch(done);
     } else {
       const ta = document.createElement('textarea');
       ta.value = url;

@@ -6,7 +6,11 @@
   <title>HOKAGE22B — Console de Administração Web3 &amp; Gestão</title>
   <meta name="robots" content="noindex, nofollow">
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://sdk.minepi.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; frame-src 'self' https://*.minepi.com https://minepi.com https://sandbox.minepi.com https://socialchain.app https://*.socialchain.app https://*.pinet.com https://app-cdn.minepi.com; connect-src 'self' https://yhzoehwkuxteihsnagcj.supabase.co https://api.minepi.com https://*.minepi.com https://minepi.com https://sandbox.minepi.com https://socialchain.app https://*.socialchain.app https://*.pinet.com; object-src 'none'; base-uri 'self';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://sdk.minepi.com https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; frame-src 'self' https://*.minepi.com https://minepi.com https://sandbox.minepi.com https://socialchain.app https://*.socialchain.app https://*.pinet.com https://app-cdn.minepi.com; connect-src 'self' https://yhzoehwkuxteihsnagcj.supabase.co https://api.minepi.com https://*.minepi.com https://minepi.com https://sandbox.minepi.com https://socialchain.app https://*.socialchain.app https://*.pinet.com https://cloudflareinsights.com; object-src 'none'; base-uri 'self';" />
+  <link rel="icon" href="assets/img/brand/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
+  <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
+  <meta name="theme-color" content="#09090b" />
 
   <!-- Clean URLs (Remove .html da barra de endereços) -->
   <script>
@@ -593,16 +597,17 @@
 
     <!-- Método B: Senha Mestra -->
     <form onsubmit="handlePasswordLogin(event)">
+      <input type="text" name="username" value="@hokage22b" autocomplete="username" style="display:none" aria-hidden="true" tabindex="-1" />
       <div class="form-group">
         <label class="form-label" for="admin-pass">Chave Mestra</label>
         <div class="form-input-wrap">
           <input type="password" id="admin-pass" class="form-input" placeholder="Cole sua chave mestra..." autocomplete="current-password" required />
-          <button type="button" class="input-toggle-eye" onclick="togglePassVisibility()" title="Exibir/Ocultar">👁️</button>
+          <button type="button" class="input-toggle-eye" aria-label="Exibir ou ocultar senha" onclick="togglePassVisibility()" title="Exibir/Ocultar">👁️</button>
         </div>
       </div>
 
       <div style="text-align:left;margin-bottom:16px">
-        <label style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;cursor:pointer">
+        <label for="chk-remember-device" style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;cursor:pointer">
           <input type="checkbox" id="chk-remember-device" style="accent-color:var(--amber)" checked />
           <span>Manter sessão desbloqueada apenas nesta aba (sessionStorage)</span>
         </label>
@@ -646,18 +651,30 @@
     </section>
 
     <!-- Navegação por Abas -->
-    <nav class="tab-bar">
-      <button class="tab-btn active" onclick="switchTab('tab-ads', this)">
-        📢 Moderação de Anúncios (<span id="tab-count-ads">0</span>)
+    <nav class="tab-bar" aria-label="Seções administrativas">
+      <button type="button" class="tab-btn active" onclick="switchTab('tab-ads', this)">
+        📢 Anúncios (<span id="tab-count-ads">0</span>)
       </button>
-      <button class="tab-btn" onclick="switchTab('tab-affiliates', this)">
-        💸 Comissões de Afiliados (<span id="tab-count-affiliates">0</span>)
+      <button type="button" class="tab-btn" onclick="switchTab('tab-reports', this)">
+        🚩 Denúncias (<span id="tab-count-reports">0</span>)
       </button>
-      <button class="tab-btn" onclick="switchTab('tab-leads', this)">
-        👥 Leads &amp; Contatos (<span id="tab-count-leads">0</span>)
+      <button type="button" class="tab-btn" onclick="switchTab('tab-pioneers', this)">
+        🔥 Pioneiros (<span id="tab-count-pioneers">0</span>)
       </button>
-      <button class="tab-btn" onclick="switchTab('tab-system', this)">
-        📚 E-books &amp; Sistema
+      <button type="button" class="tab-btn" onclick="switchTab('tab-transactions', this)">
+        ⚡ Transações Pi (<span id="tab-count-transactions">0</span>)
+      </button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab-comments', this)">
+        💬 Comentários (<span id="tab-count-comments">0</span>)
+      </button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab-affiliates', this)">
+        💸 Afiliados (<span id="tab-count-affiliates">0</span>)
+      </button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab-leads', this)">
+        👥 Leads (<span id="tab-count-leads">0</span>)
+      </button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab-system', this)">
+        📚 E-books &amp; Sistema (<span id="tab-count-ebooks">0</span>)
       </button>
     </nav>
 
@@ -725,7 +742,7 @@
               <th>E-mail</th>
               <th>Origem</th>
               <th>Data de Cadastro</th>
-              <th style="text-align:right">Contato Rápido</th>
+              <th style="text-align:right">Ações (LGPD)</th>
             </tr>
           </thead>
           <tbody id="leads-table-body">
@@ -841,41 +858,167 @@
           </div>
         </div>
       </div>
+
+      <div class="panel-card" style="margin-top:20px">
+        <div class="actions-bar" style="margin-bottom:12px">
+          <div>
+            <h3 style="margin-bottom:4px">📚 Acessos Ativos a E-books &amp; Revogação (CDC)</h3>
+            <p class="panel-sub" style="margin-bottom:0">Visualize acessos liberados e revogue acesso imediatamente em caso de reembolso.</p>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" onclick="loadAllEbooks()">🔄 Atualizar E-books</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Pioneiro</th>
+                <th>Produto</th>
+                <th>Pagamento / Origem</th>
+                <th>Liberado em</th>
+                <th style="text-align:right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="ebooks-table-body">
+              <tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">Carregando acessos de E-books...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 4: DENÚNCIAS DA COMUNIDADE -->
+    <section id="tab-reports" class="tab-pane">
+      <div class="actions-bar">
+        <p style="color:var(--text-muted);font-size:0.86rem">Fila de moderação da Vila. Suspenda ofertas irregulares ou descarte denúncias improcedentes.</p>
+        <button type="button" class="btn btn-outline btn-sm" onclick="loadAllDenuncias()">🔄 Atualizar Denúncias</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Anúncio Denunciado</th>
+              <th>Motivo / Detalhes</th>
+              <th>Denunciante</th>
+              <th>Data</th>
+              <th style="text-align:right">Moderação</th>
+            </tr>
+          </thead>
+          <tbody id="reports-table-body">
+            <tr><td colspan="6" style="text-align:center;padding:28px;color:var(--text-muted)">Carregando denúncias...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 5: PIONEIROS & MÉRITO HOKAGE -->
+    <section id="tab-pioneers" class="tab-pane">
+      <div class="actions-bar">
+        <input type="search" id="admin-pioneer-search" oninput="renderPioneirosTable()" placeholder="🔍 Buscar pioneiro por @handle ou bio..." aria-label="Buscar pioneiro" style="padding:7px 12px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.16);border-radius:6px;color:#fff;font-size:0.84rem;min-width:240px" />
+        <button type="button" class="btn btn-outline btn-sm" onclick="loadAllPioneiros()">🔄 Atualizar Pioneiros</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Pioneiro</th>
+              <th>Nível / Embaixador</th>
+              <th>Indicados / Rep.</th>
+              <th>Carteira</th>
+              <th style="text-align:right">Atualizar Mérito</th>
+            </tr>
+          </thead>
+          <tbody id="pioneers-table-body">
+            <tr><td colspan="5" style="text-align:center;padding:28px;color:var(--text-muted)">Carregando pioneiros...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 6: TRANSAÇÕES PI UNIFICADAS -->
+    <section id="tab-transactions" class="tab-pane">
+      <div class="actions-bar">
+        <p style="color:var(--text-muted);font-size:0.86rem">Registro consolidado de pagamentos Pi de anúncios, e-books e doações verificadas.</p>
+        <button type="button" class="btn btn-outline btn-sm" onclick="loadAllTransactions()">🔄 Atualizar Transações</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Origem</th>
+              <th>Referência / TXID</th>
+              <th>Pioneiro</th>
+              <th>Valor (π)</th>
+              <th>Status</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody id="transactions-table-body">
+            <tr><td colspan="6" style="text-align:center;padding:28px;color:var(--text-muted)">Carregando histórico financeiro Pi...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 7: MODERAÇÃO DE COMENTÁRIOS -->
+    <section id="tab-comments" class="tab-pane">
+      <div class="actions-bar">
+        <p style="color:var(--text-muted);font-size:0.86rem">Comentários recentes publicados nos cards da Vila · Central P2P.</p>
+        <button type="button" class="btn btn-outline btn-sm" onclick="loadAllComments()">🔄 Atualizar Comentários</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Autor</th>
+              <th>Anúncio</th>
+              <th>Comentário</th>
+              <th>Data</th>
+              <th style="text-align:right">Ação</th>
+            </tr>
+          </thead>
+          <tbody id="comments-table-body">
+            <tr><td colspan="5" style="text-align:center;padding:28px;color:var(--text-muted)">Carregando comentários...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
 
   <!-- MODAL: CRIAR ANÚNCIO MANUAL -->
-  <div id="modal-create-ad" class="modal-overlay">
+  <div id="modal-create-ad" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-create-ad-title">
     <div class="modal-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="color:#fff;font-family:var(--font-head);font-size:1.2rem">Adicionar Anúncio Manualmente</h3>
-        <button type="button" class="btn btn-outline btn-sm" onclick="closeCreateAdModal()">✕</button>
+        <h3 id="modal-create-ad-title" style="color:#fff;font-family:var(--font-head);font-size:1.2rem">Adicionar Anúncio Manualmente</h3>
+        <button type="button" class="btn btn-outline btn-sm" aria-label="Fechar modal" onclick="closeCreateAdModal()">✕</button>
       </div>
       <form onsubmit="handleManualAdCreate(event)">
         <div class="form-group">
-          <label class="form-label">Título do Anúncio</label>
+          <label class="form-label" for="new-ad-title">Título do Anúncio</label>
           <input type="text" id="new-ad-title" class="form-input" required placeholder="Ex: Meu Canal no YouTube" />
         </div>
         <div class="form-group">
-          <label class="form-label">Descrição</label>
+          <label class="form-label" for="new-ad-desc">Descrição</label>
           <textarea id="new-ad-desc" class="form-input" style="height:70px;resize:vertical" required placeholder="Detalhes do anúncio..."></textarea>
         </div>
         <div class="form-group">
-          <label class="form-label">Link de Destino</label>
+          <label class="form-label" for="new-ad-link">Link de Destino</label>
           <input type="url" id="new-ad-link" class="form-input" placeholder="https://..." />
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div class="form-group">
-            <label class="form-label">Categoria</label>
+            <label class="form-label" for="new-ad-category">Categoria</label>
             <select id="new-ad-category" class="form-input" style="font-family:var(--font)">
-              <option value="youtube">▶ Canal YouTube</option>
               <option value="produto">🛍️ Produto</option>
+              <option value="digital">📦 Digital</option>
               <option value="servico">🛠️ Serviço</option>
+              <option value="vaga">💼 Vaga</option>
+              <option value="youtube">▶ Canal YouTube</option>
               <option value="mensagem">💬 Mensagem</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Plano</label>
+            <label class="form-label" for="new-ad-tier">Plano</label>
             <select id="new-ad-tier" class="form-input" style="font-family:var(--font)">
               <option value="ouro">🥇 Ouro (3.14 π)</option>
               <option value="prata" selected>🥈 Prata (1.00 π)</option>
@@ -884,7 +1027,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Nome de Usuário Pi</label>
+          <label class="form-label" for="new-ad-author">Nome de Usuário Pi</label>
           <input type="text" id="new-ad-author" class="form-input" value="@hokage22b" />
         </div>
         <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
@@ -900,7 +1043,7 @@
 
   <!-- SCRIPTS DE INTEGRAÇÃO & AUTENTICAÇÃO -->
   <script src="assets/js/config.js?v=7.3"></script>
-  <script src="assets/js/modules/db.js?v=6.0"></script>
+  <script src="assets/js/modules/db.js?v=6.1"></script>
   <script>
     (function () {
       'use strict';
@@ -911,6 +1054,11 @@
       let currentSecret = '';
       let cachedAds = [];
       let cachedLeads = [];
+      let cachedReports = [];
+      let cachedPioneers = [];
+      let cachedComments = [];
+      let cachedEbooks = [];
+      let cachedDoacoes = [];
       let currentAdFilter = 'todos';
       let inactivityTimer = null;
 
@@ -1000,6 +1148,11 @@
         loadAllAds();
         loadAllCommissions();
         loadAllLeads();
+        loadAllDenuncias();
+        loadAllPioneiros();
+        loadAllComments();
+        loadAllEbooks();
+        loadAllTransactions();
       }
 
       // ─── LOGIN POR SENHA MESTRA ────────────────────────────────────
@@ -1253,7 +1406,7 @@
           const linkHtml = cleanLinkUrl ? `<a href="${cleanLinkUrl}" target="_blank" rel="noopener noreferrer" style="color:var(--amber-light);font-size:0.75rem;display:block;margin-top:4px">🔗 Link externo</a>` : '';
           
           const thumbHtml = cleanImgUrl 
-            ? `<a href="${cleanImgUrl}" target="_blank" rel="noopener noreferrer" title="Clique para ampliar"><img src="${cleanImgUrl}" style="width:48px;height:48px;border-radius:6px;object-fit:cover;border:1px solid rgba(255,255,255,0.2)" loading="lazy" /></a>` 
+            ? `<a href="${cleanImgUrl}" target="_blank" rel="noopener noreferrer" title="Clique para ampliar"><img src="${cleanImgUrl}" alt="Capa de ${escapeHtml(ad.title || 'anúncio')}" style="width:48px;height:48px;border-radius:6px;object-fit:cover;border:1px solid rgba(255,255,255,0.2)" loading="lazy" /></a>` 
             : `<div style="width:48px;height:48px;border-radius:6px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.1rem">📷</div>`;
 
           const views = Number(ad.views_count) || 0;
@@ -1331,11 +1484,18 @@
       // Alterar status com RPC seguro
       window.toggleAdStatus = async function (id, newStatus) {
         try {
-          const ok = await window.IsarDB.updateAnuncio(id, { status: newStatus }, currentSecret);
+          const updates = { status: newStatus };
+          if (newStatus === 'ativo') {
+            updates.expires_at = new Date(Date.now() + 30 * 86400000).toISOString();
+          }
+          const ok = await window.IsarDB.updateAnuncio(id, updates, currentSecret);
           if (ok) {
-            showToast(`Anúncio ${newStatus === 'ativo' ? 'ativado e publicado' : 'pausado com sucesso'}!`);
+            showToast(`Anúncio ${newStatus === 'ativo' ? 'ativado (+30d) e publicado' : 'atualizado com sucesso'}!`);
             const ad = cachedAds.find(a => a.id === id);
-            if (ad) ad.status = newStatus;
+            if (ad) {
+              ad.status = newStatus;
+              if (updates.expires_at) ad.expires_at = updates.expires_at;
+            }
             renderAdsTable();
             updateStats();
           } else {
@@ -1384,7 +1544,11 @@
 
         try {
           const ok = await window.IsarDB.deleteAnuncio(id, currentSecret);
-          
+          if (!ok) {
+            showToast('Erro: anúncio não excluído no servidor (verifique permissões/ID).', true);
+            return;
+          }
+
           // Limpa também do cache local isar_local_ads se existir
           try {
             const localAds = JSON.parse(localStorage.getItem('isar_local_ads') || '[]');
@@ -1402,8 +1566,20 @@
       };
 
       // Modal Criar Anúncio
-      window.openCreateAdModal = function () { document.getElementById('modal-create-ad').style.display = 'flex'; };
-      window.closeCreateAdModal = function () { document.getElementById('modal-create-ad').style.display = 'none'; };
+      window.openCreateAdModal = function () {
+        const m = document.getElementById('modal-create-ad');
+        if (m) {
+          m.style.display = 'flex';
+          m.setAttribute('aria-hidden', 'false');
+        }
+      };
+      window.closeCreateAdModal = function () {
+        const m = document.getElementById('modal-create-ad');
+        if (m) {
+          m.style.display = 'none';
+          m.setAttribute('aria-hidden', 'true');
+        }
+      };
 
       window.handleManualAdCreate = async function (e) {
         e.preventDefault();
@@ -1461,8 +1637,9 @@
                 <td><span style="font-family:var(--font-mono);color:var(--amber-light)">${escapeHtml(rawEmail)}</span></td>
                 <td><span style="font-size:0.75rem;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px">${escapeHtml(l.source || 'ebook')}</span></td>
                 <td style="font-size:0.75rem;color:var(--text-muted)">${dateStr}</td>
-                <td style="text-align:right">
+                <td style="text-align:right;white-space:nowrap">
                   ${isValidEmail ? `<a href="mailto:${encodeURIComponent(rawEmail)}" class="btn btn-outline btn-sm">✉️ E-mail</a>` : `<span style="font-size:0.74rem;color:var(--text-muted)">Inválido</span>`}
+                  <button type="button" class="btn btn-danger btn-sm js-admin-delete-lead" data-lead-id="${escapeHtml(String(l.id || ''))}" data-lead-email="${escapeHtml(rawEmail)}" title="Excluir lead (LGPD)">🗑️</button>
                 </td>
               </tr>
             `;
@@ -1718,6 +1895,7 @@
             if (userInp) userInp.value = '';
             if (refInp) refInp.value = '';
             loadAllCommissions();
+            loadAllEbooks();
           } else {
             showToast('Erro: ' + ((json && json.error) || 'Falha ao liberar acesso.'), true);
           }
@@ -1726,11 +1904,213 @@
         }
       };
 
-      // Atualiza cards de estatísticas
+      // ─── DENÚNCIAS DA COMUNIDADE ─────────────────────────────────
+      window.loadAllDenuncias = async function () {
+        const tbody = document.getElementById('reports-table-body');
+        if (!tbody || !window.IsarDB || !currentSecret) return;
+        try {
+          cachedReports = await window.IsarDB.getAdminDenuncias(currentSecret);
+          document.getElementById('tab-count-reports').textContent = cachedReports.filter(r => r.status === 'aberta').length;
+          if (!cachedReports.length) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--text-muted)">Nenhuma denúncia registrada.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = cachedReports.map(r => {
+            const st = String(r.status || 'aberta');
+            const stBadge = st === 'aberta'
+              ? '<span class="badge badge-pending">aberta</span>'
+              : (st === 'resolvida' ? '<span class="badge badge-ativo">resolvida</span>' : '<span class="badge badge-pausado">descartada</span>');
+            const safeId = escapeHtml(String(r.id || ''));
+            const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('pt-BR') : '—';
+            return `
+              <tr>
+                <td>${stBadge}</td>
+                <td><strong style="color:#fff">${escapeHtml(r.ad_title || r.ad_id)}</strong><div style="font-size:0.72rem;color:var(--text-muted)">${escapeHtml(r.ad_author || '')} · ${escapeHtml(r.ad_status || '')}</div></td>
+                <td><strong>${escapeHtml(r.reason || 'outro')}</strong><div style="font-size:0.76rem;color:var(--text-muted)">${escapeHtml(r.details || '')}</div></td>
+                <td style="font-family:var(--font-mono);font-size:0.78rem">${escapeHtml(r.reporter_user || '@pioneiro')}</td>
+                <td style="font-size:0.76rem;color:var(--text-muted)">${dateStr}</td>
+                <td style="text-align:right;white-space:nowrap">
+                  <button type="button" class="btn btn-danger btn-sm js-admin-resolve-report" data-report-id="${safeId}" data-report-action="suspend_ad">⛔ Suspender Anúncio</button>
+                  <button type="button" class="btn btn-outline btn-sm js-admin-resolve-report" data-report-id="${safeId}" data-report-action="dismiss">✓ Descartar</button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--red)">Erro (execute Migration 023): ${escapeHtml(err.message)}</td></tr>`;
+        }
+      };
+
+      // ─── PIONEIROS & MÉRITO HOKAGE ────────────────────────────────
+      window.loadAllPioneiros = async function () {
+        const tbody = document.getElementById('pioneers-table-body');
+        if (!tbody || !window.IsarDB || !currentSecret) return;
+        try {
+          cachedPioneers = await window.IsarDB.getAdminPioneiros(currentSecret);
+          document.getElementById('tab-count-pioneers').textContent = cachedPioneers.length;
+          renderPioneirosTable();
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--red)">Erro (execute Migration 023): ${escapeHtml(err.message)}</td></tr>`;
+        }
+      };
+
+      window.renderPioneirosTable = function () {
+        const tbody = document.getElementById('pioneers-table-body');
+        if (!tbody) return;
+        const q = (document.getElementById('admin-pioneer-search')?.value || '').trim().toLowerCase();
+        const rows = cachedPioneers.filter(p => !q || String(p.username || '').toLowerCase().includes(q) || String(p.bio || '').toLowerCase().includes(q));
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--text-muted)">Nenhum pioneiro encontrado.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = rows.slice(0, 120).map(p => {
+          const safeUid = escapeHtml(String(p.uid || ''));
+          const tier = String(p.journey_tier || 'pioneiro');
+          const walletPreview = p.wallet_address ? (escapeHtml(p.wallet_address.slice(0, 6)) + '…' + escapeHtml(p.wallet_address.slice(-4))) : '—';
+          return `
+            <tr>
+              <td><a href="pioneiro?u=${encodeURIComponent(String(p.username || '').replace(/^@+/, ''))}" target="_blank" rel="noopener noreferrer" style="color:var(--amber-light);font-weight:700;text-decoration:none">${escapeHtml(p.username || '')} ↗</a><div style="font-size:0.72rem;color:var(--text-muted)">${escapeHtml(String(p.bio || '').slice(0, 60))}</div></td>
+              <td>
+                <select class="form-input js-pioneer-tier-sel" data-uid="${safeUid}" style="padding:4px 8px;font-size:0.78rem;width:auto">
+                  <option value="pioneiro" ${tier === 'pioneiro' ? 'selected' : ''}>🌱 Pioneiro</option>
+                  <option value="construtor" ${tier === 'construtor' ? 'selected' : ''}>🧱 Construtor</option>
+                  <option value="hokage" ${tier === 'hokage' ? 'selected' : ''}>🔥 Hokage</option>
+                </select>
+                <label style="display:inline-flex;align-items:center;gap:4px;font-size:0.74rem;margin-left:6px;color:#fcd34d"><input type="checkbox" class="js-pioneer-amb-chk" data-uid="${safeUid}" ${p.is_ambassador ? 'checked' : ''} /> Emb.</label>
+              </td>
+              <td style="font-size:0.78rem">Ind: <strong>${Number(p.referral_qualified_count) || 0}</strong> · Rep: <strong>${Number(p.reputation_score) || 50}</strong></td>
+              <td style="font-family:var(--font-mono);font-size:0.74rem;color:#a1a1aa">${walletPreview}</td>
+              <td style="text-align:right">
+                <button type="button" class="btn btn-primary btn-sm js-admin-save-merit" data-uid="${safeUid}">💾 Salvar</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      };
+
+      // ─── COMENTÁRIOS DA VILA ──────────────────────────────────────
+      window.loadAllComments = async function () {
+        const tbody = document.getElementById('comments-table-body');
+        if (!tbody || !window.IsarDB || !currentSecret) return;
+        try {
+          cachedComments = await window.IsarDB.getAdminComments(currentSecret);
+          document.getElementById('tab-count-comments').textContent = cachedComments.length;
+          if (!cachedComments.length) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--text-muted)">Nenhum comentário encontrado.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = cachedComments.map(c => `
+            <tr>
+              <td style="font-family:var(--font-mono);color:var(--amber-light)">${escapeHtml(c.author_username || '')}</td>
+              <td>${escapeHtml(c.ad_title || c.ad_id)}</td>
+              <td style="max-width:340px">${escapeHtml(c.content || '')}</td>
+              <td style="font-size:0.76rem;color:var(--text-muted)">${c.created_at ? new Date(c.created_at).toLocaleDateString('pt-BR') : '—'}</td>
+              <td style="text-align:right"><button type="button" class="btn btn-danger btn-sm js-admin-delete-comment" data-comment-id="${escapeHtml(String(c.id || ''))}">🗑️</button></td>
+            </tr>
+          `).join('');
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--red)">Erro (execute Migration 023): ${escapeHtml(err.message)}</td></tr>`;
+        }
+      };
+
+      // ─── E-BOOKS & REVOGAÇÃO ──────────────────────────────────────
+      window.loadAllEbooks = async function () {
+        const tbody = document.getElementById('ebooks-table-body');
+        if (!tbody || !window.IsarDB || !currentSecret) return;
+        try {
+          cachedEbooks = await window.IsarDB.getAdminEbooks(currentSecret);
+          document.getElementById('tab-count-ebooks').textContent = cachedEbooks.length;
+          renderTransactionsTable();
+          if (!cachedEbooks.length) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">Nenhum acesso de E-book registrado ainda.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = cachedEbooks.map(e => `
+            <tr>
+              <td style="font-family:var(--font-mono);color:#fff;font-weight:700">${escapeHtml(e.username || e.user_uid || '')}</td>
+              <td>${escapeHtml(e.product_id || '')}</td>
+              <td style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-muted)">${escapeHtml(e.payment_id || 'p2p')}</td>
+              <td style="font-size:0.76rem;color:var(--text-muted)">${e.granted_at ? new Date(e.granted_at).toLocaleDateString('pt-BR') : '—'}</td>
+              <td style="text-align:right"><button type="button" class="btn btn-danger btn-sm js-admin-revoke-ebook" data-ent-id="${escapeHtml(String(e.id || ''))}" data-user="${escapeHtml(e.username || '')}">🚫 Revogar</button></td>
+            </tr>
+          `).join('');
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--red)">Erro (execute Migration 023): ${escapeHtml(err.message)}</td></tr>`;
+        }
+      };
+
+      // ─── TRANSAÇÕES PI UNIFICADAS ─────────────────────────────────
+      window.loadAllTransactions = async function () {
+        if (!window.IsarDB) return;
+        try {
+          cachedDoacoes = await window.IsarDB.getAllDoacoes();
+        } catch (_) { cachedDoacoes = []; }
+        renderTransactionsTable();
+      };
+
+      window.renderTransactionsTable = function () {
+        const tbody = document.getElementById('transactions-table-body');
+        if (!tbody) return;
+        const rows = [];
+        cachedAds.forEach(a => {
+          if (a.payment_txid && !a.is_founder_demo && (parseFloat(a.price_pi) || 0) > 0) {
+            rows.push({
+              source: '📢 Anúncio ' + String(a.plan_tier || 'pago').toUpperCase(),
+              ref: a.payment_txid,
+              user: a.pioneer_username || '@pioneiro',
+              amount: parseFloat(a.price_pi) || 0,
+              status: a.status || 'ativo',
+              date: a.created_at
+            });
+          }
+        });
+        cachedEbooks.forEach(e => {
+          const amt = String(e.product_id || '').includes('ia') ? 7.50 : 3.14;
+          rows.push({
+            source: '📘 E-book (' + (e.product_id || '') + ')',
+            ref: e.payment_id || 'p2p',
+            user: e.username || e.user_uid || '@pioneiro',
+            amount: amt,
+            status: 'liberado',
+            date: e.granted_at
+          });
+        });
+        cachedDoacoes.forEach(d => {
+          rows.push({
+            source: '☕ Apoio / Doação',
+            ref: d.txid || d.id || 'p2p',
+            user: d.username || d.donor_name || '@pioneiro',
+            amount: parseFloat(d.amount_pi || d.amount || 0) || 0,
+            status: d.status || 'confirmado',
+            date: d.created_at
+          });
+        });
+        rows.sort((a, b) => (Date.parse(b.date || '') || 0) - (Date.parse(a.date || '') || 0));
+        const cntEl = document.getElementById('tab-count-transactions');
+        if (cntEl) cntEl.textContent = rows.length;
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--text-muted)">Nenhuma transação Pi registrada ainda.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = rows.map(r => `
+          <tr>
+            <td><strong>${escapeHtml(r.source)}</strong></td>
+            <td style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-muted)">${escapeHtml(String(r.ref).slice(0, 28))}</td>
+            <td style="color:var(--amber-light);font-weight:700">${escapeHtml(r.user)}</td>
+            <td style="color:var(--green);font-weight:800">${Number(r.amount).toFixed(2)} π</td>
+            <td><span class="badge badge-ativo">${escapeHtml(r.status)}</span></td>
+            <td style="font-size:0.76rem;color:var(--text-muted)">${r.date ? new Date(r.date).toLocaleDateString('pt-BR') : '—'}</td>
+          </tr>
+        `).join('');
+      };
+
+      // Atualiza cards de estatísticas (Receita considera apenas anúncios ativos pagos)
       function updateStats() {
         const active = cachedAds.filter(a => a.status === 'ativo' || a.status === 'demonstracao' || a.is_founder_demo).length;
-        const pending = cachedAds.filter(a => a.status === 'pendente' || a.status === 'pausado').length;
-        const totalPi = cachedAds.reduce((acc, a) => acc + (parseFloat(a.price_pi) || 0), 0);
+        const pending = cachedAds.filter(a => a.status === 'pendente' || a.status === 'pausado' || a.status === 'moderacao').length;
+        const totalPi = cachedAds
+          .filter(a => a.status === 'ativo' && !a.is_founder_demo)
+          .reduce((acc, a) => acc + (parseFloat(a.price_pi) || 0), 0);
 
         document.getElementById('stat-active-ads').textContent = active;
         document.getElementById('stat-pending-ads').textContent = pending;
@@ -1773,7 +2153,72 @@
             paidBtn.getAttribute('data-referrer') || '',
             paidBtn.getAttribute('data-amount') || '0'
           );
+          return;
         }
+        const delLeadBtn = ev.target.closest('.js-admin-delete-lead');
+        if (delLeadBtn) {
+          const lid = delLeadBtn.getAttribute('data-lead-id');
+          const lemail = delLeadBtn.getAttribute('data-lead-email') || '';
+          if (lid && confirm(`Excluir permanentemente o lead ${lemail} (LGPD)?`)) {
+            window.IsarDB.deleteAdminLead(currentSecret, lid).then(ok => {
+              if (ok) { showToast('Lead excluído conforme LGPD.'); loadAllLeads(); }
+              else showToast('Não foi possível excluir lead.', true);
+            }).catch(err => showToast('Erro: ' + err.message, true));
+          }
+          return;
+        }
+        const repBtn = ev.target.closest('.js-admin-resolve-report');
+        if (repBtn) {
+          const rid = repBtn.getAttribute('data-report-id');
+          const ract = repBtn.getAttribute('data-report-action') || 'dismiss';
+          window.IsarDB.resolveAdminDenuncia(currentSecret, rid, ract).then(ok => {
+            if (ok) {
+              showToast(ract === 'suspend_ad' ? 'Anúncio suspenso e denúncia resolvida!' : 'Denúncia descartada.');
+              loadAllDenuncias();
+              loadAllAds();
+            } else showToast('Falha ao resolver denúncia.', true);
+          }).catch(err => showToast('Erro: ' + err.message, true));
+          return;
+        }
+        const saveMeritBtn = ev.target.closest('.js-admin-save-merit');
+        if (saveMeritBtn) {
+          const uid = saveMeritBtn.getAttribute('data-uid');
+          const tierSel = document.querySelector(`.js-pioneer-tier-sel[data-uid="${CSS.escape(uid)}"]`);
+          const ambChk = document.querySelector(`.js-pioneer-amb-chk[data-uid="${CSS.escape(uid)}"]`);
+          const newTier = tierSel ? tierSel.value : 'pioneiro';
+          const isAmb = ambChk ? ambChk.checked : false;
+          window.IsarDB.updateAdminPioneerMerit(currentSecret, uid, isAmb, newTier, null).then(ok => {
+            if (ok) { showToast('Mérito do pioneiro atualizado!'); loadAllPioneiros(); }
+            else showToast('Não foi possível salvar mérito.', true);
+          }).catch(err => showToast('Erro: ' + err.message, true));
+          return;
+        }
+        const delCommentBtn = ev.target.closest('.js-admin-delete-comment');
+        if (delCommentBtn) {
+          const cid = delCommentBtn.getAttribute('data-comment-id');
+          if (cid && confirm('Excluir este comentário permanentemente?')) {
+            window.IsarDB.deleteAdminComment(currentSecret, cid).then(ok => {
+              if (ok) { showToast('Comentário excluído.'); loadAllComments(); }
+              else showToast('Falha ao excluir comentário.', true);
+            }).catch(err => showToast('Erro: ' + err.message, true));
+          }
+          return;
+        }
+        const revEbookBtn = ev.target.closest('.js-admin-revoke-ebook');
+        if (revEbookBtn) {
+          const eid = revEbookBtn.getAttribute('data-ent-id');
+          const euser = revEbookBtn.getAttribute('data-user') || '';
+          if (eid && confirm(`Revogar acesso de E-book de ${euser}?`)) {
+            window.IsarDB.revokeAdminEbook(currentSecret, eid).then(ok => {
+              if (ok) { showToast('Acesso revogado.'); loadAllEbooks(); }
+              else showToast('Falha ao revogar acesso.', true);
+            }).catch(err => showToast('Erro: ' + err.message, true));
+          }
+        }
+      });
+
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape') closeCreateAdModal();
       });
 
       // Inicialização

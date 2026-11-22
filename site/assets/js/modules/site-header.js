@@ -104,20 +104,46 @@
         drawer.classList.remove('active');
         burger.setAttribute('aria-expanded', 'false');
         burger.textContent = '☰';
+        document.body.style.overflow = '';
       }
       burger.addEventListener('click', function () {
         const isOpen = drawer.classList.toggle('active');
         burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         burger.textContent = isOpen ? '✕' : '☰';
+        document.body.style.overflow = isOpen ? 'hidden' : '';
       });
       drawer.querySelectorAll('a').forEach(function (a) {
         a.addEventListener('click', closeDrawer);
+      });
+      document.addEventListener('click', function (ev) {
+        if (drawer.classList.contains('active') && !drawer.contains(ev.target) && !burger.contains(ev.target)) {
+          closeDrawer();
+        }
       });
       document.addEventListener('keydown', function (ev) {
         if (ev.key === 'Escape' && drawer.classList.contains('active')) {
           closeDrawer();
         }
       });
+    }
+  }
+
+  function getHeaderUserChipHtml() {
+    try {
+      const raw = localStorage.getItem('hokage_pi_user') || '';
+      if (!raw) return '';
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.username) return '';
+      const clean = String(parsed.username).trim().replace(/^@+/, '').toLowerCase().replace(/[^a-z0-9._-]/g, '');
+      if (!clean) return '';
+      return (
+        '<a href="pioneiro?u=' + encodeURIComponent(clean) + '" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--desktop-only" ' +
+          'style="white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(16,185,129,0.45);color:#6ee7b7" title="Meu Passaporte Pi">' +
+          '🟢 @' + clean +
+        '</a>'
+      );
+    } catch (_) {
+      return '';
     }
   }
 
@@ -152,22 +178,27 @@
       });
     });
 
+    const userChipHtml = getHeaderUserChipHtml();
+
     mount.innerHTML =
       '<header class="portal-header" id="portal-header">' +
         '<div class="portal-container">' +
           '<div class="portal-header__inner">' +
             '<div class="portal-header__brand-group">' +
-              '<a href="index.html" class="portal-brand" aria-label="HOKAGE22B Início" style="display:inline-flex;align-items:center;gap:9px">' +
+              '<a href="./" class="portal-brand" aria-label="HOKAGE22B Início" style="display:inline-flex;align-items:center;gap:9px">' +
                 '<img src="assets/img/brand/hokage22b-logo.svg" alt="" width="22" height="22" aria-hidden="true" style="width:22px;height:22px;display:block;flex-shrink:0" />' +
                 '<span>HOKAGE22B</span>' +
                 '<span class="portal-brand__dot" aria-hidden="true"></span>' +
               '</a>' +
               '<nav class="portal-nav-desktop" aria-label="Navegação Principal">' +
-                desktopItems.join('') +
+                '<ul style="display:flex;list-style:none;margin:0;padding:0;gap:inherit;align-items:center">' +
+                  desktopItems.join('') +
+                '</ul>' +
               '</nav>' +
             '</div>' +
             '<div class="portal-header__actions">' +
               '<div class="lang-mount-point"></div>' +
+              userChipHtml +
               '<a href="jornada" class="portal-btn portal-btn--primary portal-btn--sm portal-btn--desktop-only" style="white-space:nowrap;font-weight:800;text-decoration:none;background:linear-gradient(135deg,#f97316,#f59e0b);color:#09090b">' +
                 '🚀 Jornada' +
               '</a>' +
@@ -177,16 +208,6 @@
         '</div>' +
       '</header>' +
       buildDrawerHtml(current);
-
-    const main = document.querySelector('main');
-    if (main && !main.dataset.hkHeaderSpaced) {
-      main.dataset.hkHeaderSpaced = '1';
-      const cs = window.getComputedStyle(main);
-      const padTop = parseFloat(cs.paddingTop || '0');
-      if (padTop < 76) {
-        main.style.paddingTop = '92px';
-      }
-    }
 
     bindDrawerEvents();
   }

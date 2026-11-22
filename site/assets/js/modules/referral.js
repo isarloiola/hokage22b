@@ -152,7 +152,7 @@
       .hk-ref-overlay {
         position: fixed;
         inset: 0;
-        z-index: 10050;
+        z-index: 450;
         background: rgba(5, 5, 10, 0.85);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
@@ -308,19 +308,32 @@
       .hk-ref-floating-pill {
         position: fixed;
         right: 12px;
-        bottom: 88px;
-        z-index: 999990;
+        bottom: 72px;
+        z-index: 180;
         display: inline-flex;
         align-items: center;
         gap: 4px;
         background: linear-gradient(135deg, rgba(24, 16, 42, 0.96), rgba(12, 12, 20, 0.96));
         border: 1.5px solid rgba(245, 158, 11, 0.55);
         border-radius: 999px;
-        padding: 5px 8px 5px 12px;
+        padding: 4px 7px 4px 10px;
         box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 18px rgba(245, 158, 11, 0.2);
         backdrop-filter: blur(10px);
-        max-width: calc(100vw - 28px);
+        max-width: calc(100vw - 24px);
+        transition: opacity 0.2s ease, transform 0.2s ease;
         animation: hkRefFadeIn 0.2s ease-out;
+      }
+      body:has(.portal-drawer.active, .portal-modal-overlay.active, .modal-overlay.active, .pi-modal-overlay.active) .hk-ref-floating-pill {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px);
+      }
+      @media (max-width: 640px) {
+        .hk-ref-floating-pill {
+          bottom: 64px;
+          right: 10px;
+          font-size: 0.78rem;
+        }
       }
       .hk-ref-floating-pill-main {
         background: none;
@@ -612,6 +625,14 @@
     `;
 
     document.body.appendChild(overlay);
+    if (!window._hkRefEscBound) {
+      window._hkRefEscBound = true;
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && document.getElementById('hokage-ref-welcome-modal')) {
+          closeWelcomeModal();
+        }
+      });
+    }
   }
 
   captureFromUrl();

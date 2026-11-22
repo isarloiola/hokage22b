@@ -73,7 +73,10 @@ function doPost(e) {
         "E-mail",
         "Origem / Ação",
         "Usuário Pi Network",
-        "Pontuação Reputação"
+        "Pontuação Reputação",
+        "Empresa / Projeto",
+        "Categoria",
+        "Mensagem / Proposta"
       ];
       sheet.appendRow(headers);
       
@@ -93,6 +96,9 @@ function doPost(e) {
     var piUser = sanitizeSheetCell(data.pi_user || data.usuario_pi || "Visitante", 64);
     var parsedRep = Number(data.reputation != null ? data.reputation : data.pontos_reputacao);
     var reputation = isFinite(parsedRep) ? parsedRep : 0;
+    var company = data.company ? sanitizeSheetCell(data.company, 140) : "";
+    var category = data.category ? sanitizeSheetCell(data.category, 80) : "";
+    var message = data.message ? sanitizeSheetCell(data.message, 1500) : "";
 
     // Adiciona a linha com os dados
     sheet.appendRow([
@@ -101,7 +107,10 @@ function doPost(e) {
       email,
       source,
       piUser,
-      reputation
+      reputation,
+      company,
+      category,
+      message
     ]);
 
     // Retorna resposta de sucesso

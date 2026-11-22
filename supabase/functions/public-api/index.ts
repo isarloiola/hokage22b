@@ -19,8 +19,73 @@ const PUBLIC_CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-hokage-client",
 };
 
-// Cache em memória simples para cotação (protege contra rate limit da CoinGecko)
-let priceCache: { currency: string; data: Record<string, unknown>; expiresAt: number } | null = null;
+// Cache em memória por moeda para cotação (protege contra rate limit e falhas temporárias)
+const priceCache = new Map<string, { data: Record<string, unknown>; expiresAt: number }>();
+
+async function fetchPiPriceWithFallback(currency: string): Promise<Record<string, unknown> | null> {
+  try {
+    const cgRes = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=${encodeURIComponent(currency)},usd&include_24hr_change=true`,
+      { headers: { Accept: "application/json" } }
+    );
+    if (cgRes.ok) {
+      const cgJson = await cgRes.json();
+      const piData = cgJson?.["pi-network"] || {};
+      if (piData[currency] != null || piData.usd != null) {
+        return {
+          asset: "PI",
+          currency: currency.toUpperCase(),
+          price: piData[currency] ?? null,
+          price_usd: piData.usd ?? null,
+          change_24h: piData[`${currency}_24h_change`] ?? piData.usd_24h_change ?? null,
+          source: "coingecko",
+          updated_at: new Date().toISOString(),
+        };
+      }
+    }
+  } catch (_) { /* fallback below */ }
+
+  try {
+    const okxRes = await fetch("https://www.okx.com/api/v5/market/ticker?instId=PI-USDT", {
+      headers: { Accept: "application/json" },
+    });
+    if (okxRes.ok) {
+      const okxJson = await okxRes.json();
+      const tick = Array.isArray(okxJson?.data) ? okxJson.data[0] : null;
+      const usdPrice = Number(tick?.last || 0);
+      if (usdPrice > 0) {
+        const open24 = Number(tick?.open24h || 0);
+        const chg24 = open24 > 0 ? Number((((usdPrice - open24) / open24) * 100).toFixed(2)) : null;
+        let targetPrice: number | null = usdPrice;
+        if (currency !== "usd") {
+          try {
+            const fxRes = await fetch("https://open.er-api.com/v6/latest/USD", {
+              headers: { Accept: "application/json" },
+            });
+            if (fxRes.ok) {
+              const fxJson = await fxRes.json();
+              const rate = Number(fxJson?.rates?.[currency.toUpperCase()] || 0);
+              targetPrice = rate > 0 ? Number((usdPrice * rate).toFixed(4)) : null;
+            }
+          } catch (_) {
+            targetPrice = null;
+          }
+        }
+        return {
+          asset: "PI",
+          currency: currency.toUpperCase(),
+          price: targetPrice,
+          price_usd: usdPrice,
+          change_24h: chg24,
+          source: "okx",
+          updated_at: new Date().toISOString(),
+        };
+      }
+    }
+  } catch (_) { /* ignore */ }
+
+  return null;
+}
 
 function jsonOut(body: unknown, status = 200, cacheSeconds = 60): Response {
   const headers: Record<string, string> = {
@@ -87,9 +152,15 @@ function projectPassport(row: Record<string, unknown>) {
   }
   const products = rawProducts.slice(0, 20).map((item) => {
     const p = (item && typeof item === "object" ? item : {}) as Record<string, unknown>;
+    const rawPrice = p?.price_pi ?? p?.price ?? null;
     return {
       title: String(p?.title || "").slice(0, 120),
-      price_pi: p?.price_pi ?? null,
+      price: rawPrice != null ? String(rawPrice).slice(0, 40) : null,
+      price_pi: rawPrice,
+      price_fiat: p?.price_fiat ? String(p.price_fiat).slice(0, 40) : null,
+      badge: p?.badge ? String(p.badge).slice(0, 40) : null,
+      link: p?.link ? String(p.link).slice(0, 300) : null,
+      cta: p?.cta ? String(p.cta).slice(0, 40) : null,
       description: p?.description ? String(p.description).slice(0, 300) : null,
       image_url: p?.image_url ? String(p.image_url) : null,
     };
@@ -144,6 +215,8 @@ function projectVilaAd(row: Record<string, unknown>) {
     plan_tier: row.plan_tier || "bronze",
     country_code: row.country_code || "GLOBAL",
     payment_modes: row.payment_modes || "pi",
+    item_price: row.item_price || null,
+    item_currency: row.item_currency || "PI",
     link_url: row.link_url || null,
     image_url: row.image_url || null,
     author: {
@@ -215,6 +288,9 @@ const PUBLIC_PIONEER_SELECT =
   "username, bio, avatar_url, wallet_address, whatsapp_url, youtube_url, twitter_url, instagram_url, products, reputation_score, level_name, is_ambassador, referral_qualified_count, updated_at";
 
 const PUBLIC_VILA_SELECT =
+  "id, title, description, category, plan_tier, country_code, payment_modes, item_price, item_currency, link_url, image_url, pioneer_username, pioneer_name, created_at";
+
+const PUBLIC_VILA_LEGACY_SELECT =
   "id, title, description, category, plan_tier, country_code, payment_modes, link_url, image_url, pioneer_username, pioneer_name, created_at";
 
 serve(async (req: Request) => {
@@ -243,7 +319,7 @@ serve(async (req: Request) => {
           "GET /v1/tools/pi-price?currency=BRL",
           "GET /v1/stats",
         ],
-        docs_url: "https://hokage22b.com/desenvolvedores",
+        docs_url: "https://hokage22b.com/construir",
       }, 300);
     }
 
@@ -254,32 +330,26 @@ serve(async (req: Request) => {
       return ok("WALLET_VALIDATION", result, 0);
     }
 
-    // 2. Ferramenta Stateless: Cotação Pi Normalizada (com cache 60s)
+    // 2. Ferramenta Stateless: Cotação Pi Normalizada (cache 5 min por moeda + fallback OKX)
     if (route === "/tools/pi-price") {
       const currency = String(url.searchParams.get("currency") || "BRL").trim().toLowerCase().replace(/[^a-z]/g, "") || "brl";
       const now = Date.now();
-      if (priceCache && priceCache.currency === currency && now < priceCache.expiresAt) {
-        return ok("PI_PRICE", { ...priceCache.data, cached: true }, 60);
+      const cached = priceCache.get(currency);
+      if (cached && now < cached.expiresAt) {
+        return ok("PI_PRICE", { ...cached.data, cached: true }, 60);
       }
-      const cgRes = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=${encodeURIComponent(currency)},usd&include_24hr_change=true`
-      );
-      if (!cgRes.ok) {
-        return err("PRICE_UPSTREAM_UNAVAILABLE", "Fonte de cotação temporariamente indisponível.", 502);
+
+      const fresh = await fetchPiPriceWithFallback(currency);
+      if (fresh) {
+        priceCache.set(currency, { data: fresh, expiresAt: now + 5 * 60_000 });
+        return ok("PI_PRICE", { ...fresh, cached: false }, 60);
       }
-      const cgJson = await cgRes.json();
-      const piData = cgJson?.["pi-network"] || {};
-      const payload = {
-        asset: "PI",
-        currency: currency.toUpperCase(),
-        price: piData[currency] ?? null,
-        price_usd: piData.usd ?? null,
-        change_24h: piData[`${currency}_24h_change`] ?? piData.usd_24h_change ?? null,
-        source: "coingecko",
-        updated_at: new Date().toISOString(),
-      };
-      priceCache = { currency, data: payload, expiresAt: now + 60_000 };
-      return ok("PI_PRICE", { ...payload, cached: false }, 60);
+
+      if (cached) {
+        return ok("PI_PRICE", { ...cached.data, cached: true, stale: true }, 30);
+      }
+
+      return err("PRICE_UPSTREAM_UNAVAILABLE", "Fonte de cotação temporariamente indisponível.", 502);
     }
 
     // Conexão Supabase para endpoints de leitura
@@ -295,7 +365,7 @@ serve(async (req: Request) => {
       const rawU = url.searchParams.get("u");
       if (rawU !== null && rawU.trim() !== "") {
         const cleanU = rawU.trim().replace(/^@+/, "").toLowerCase();
-        if (!/^[a-z0-9_]{2,32}$/.test(cleanU)) {
+        if (!/^[a-z0-9_.-]{2,32}$/.test(cleanU)) {
           return err(
             "INVALID_USERNAME",
             "Identificador @username inválido. Use apenas letras, números e underline (2 a 32 caracteres).",
@@ -324,18 +394,19 @@ serve(async (req: Request) => {
         .from("pioneiros")
         .select(PUBLIC_PIONEER_SELECT)
         .order("reputation_score", { ascending: false })
-        .range(offset, offset + limit - 1);
+        .limit(500);
 
       if (error) throw error;
 
-      let items = dedupePassports((data || []).map(projectPassport));
+      let deduped = dedupePassports((data || []).map(projectPassport));
       if (tierFilter === "hokage" || tierFilter === "construtor" || tierFilter === "pioneiro") {
-        items = items.filter((item) => item.journey_tier === tierFilter);
+        deduped = deduped.filter((item) => item.journey_tier === tierFilter);
       }
+      const items = deduped.slice(offset, offset + limit);
 
       return ok("PASSPORT_LIST", {
         items,
-        meta: { count: items.length, limit, offset },
+        meta: { count: items.length, total: deduped.length, limit, offset },
       }, 60);
     }
 
@@ -347,7 +418,7 @@ serve(async (req: Request) => {
         .select(PUBLIC_PIONEER_SELECT)
         .or("is_ambassador.eq.true,referral_qualified_count.gte.5,username.ilike.hokage22b,username.ilike.@hokage22b")
         .order("reputation_score", { ascending: false })
-        .limit(limit * 2);
+        .limit(limit * 4);
 
       if (error) throw error;
       const leaders = dedupePassports((data || []).map(projectPassport)).slice(0, limit);
@@ -368,19 +439,26 @@ serve(async (req: Request) => {
       const payment = String(url.searchParams.get("payment") || "").trim().toLowerCase();
       const plan = String(url.searchParams.get("plan") || "").trim().toLowerCase();
 
-      let query = supabase
-        .from("anuncios")
-        .select(PUBLIC_VILA_SELECT)
-        .eq("status", "ativo")
-        .order("created_at", { ascending: false })
-        .range(offset, offset + limit - 1);
+      const buildVilaQuery = (selectCols: string) => {
+        let q = supabase
+          .from("anuncios")
+          .select(selectCols)
+          .eq("status", "ativo")
+          .order("created_at", { ascending: false })
+          .range(offset, offset + limit - 1);
+        if (country && country !== "ALL") q = q.eq("country_code", country);
+        if (category && category !== "all") q = q.eq("category", category);
+        if (payment) q = q.eq("payment_modes", payment);
+        if (plan) q = q.eq("plan_tier", plan);
+        return q;
+      };
 
-      if (country && country !== "ALL") query = query.eq("country_code", country);
-      if (category && category !== "all") query = query.eq("category", category);
-      if (payment) query = query.eq("payment_modes", payment);
-      if (plan) query = query.eq("plan_tier", plan);
-
-      const { data, error } = await query;
+      let { data, error } = await buildVilaQuery(PUBLIC_VILA_SELECT);
+      if (error && /item_price|item_currency|42703|column/i.test(String(error.message || error.code || ""))) {
+        const retry = await buildVilaQuery(PUBLIC_VILA_LEGACY_SELECT);
+        data = retry.data;
+        error = retry.error;
+      }
       if (error) throw error;
 
       const items = (data || []).map(projectVilaAd);
@@ -392,9 +470,9 @@ serve(async (req: Request) => {
 
     // 6. Estatísticas Públicas Agregadas
     if (route === "/stats") {
-      const [{ data: passRows }, { data: vilaRows }] = await Promise.all([
+      const [{ data: passRows }, { count: vilaActiveCount }] = await Promise.all([
         supabase.from("pioneiros").select("username, is_ambassador, referral_qualified_count"),
-        supabase.from("anuncios").select("id").eq("status", "ativo"),
+        supabase.from("anuncios").select("id", { count: "exact", head: true }).eq("status", "ativo"),
       ]);
 
       const uniqueUsers = new Map<string, boolean>();
@@ -408,7 +486,7 @@ serve(async (req: Request) => {
 
       return ok("ECOSYSTEM_STATS", {
         passaportes_ativos: uniqueUsers.size,
-        anuncios_vila_ativos: (vilaRows || []).length,
+        anuncios_vila_ativos: vilaActiveCount || 0,
         monte_hokage_membros: hokageCount,
         updated_at: new Date().toISOString(),
       }, 120);

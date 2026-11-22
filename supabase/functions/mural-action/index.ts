@@ -184,22 +184,27 @@ serve(async (req) => {
       if (title.length < 2 || title.length > 80) {
         return jsonResponse({ error: "O título deve ter entre 2 e 80 caracteres." }, 400);
       }
-      if (description.length < 5 || description.length > 300) {
-        return jsonResponse({ error: "A descrição deve ter entre 5 e 300 caracteres." }, 400);
+      if (description.length < 5 || description.length > 1000) {
+        return jsonResponse({ error: "A descrição deve ter entre 5 e 1000 caracteres." }, 400);
       }
 
       const linkUrl = tier === "bronze" ? null : validateHttpUrl(payload?.link_url);
-      const imageUrl = tier === "bronze" ? null : validateAdImageUrl(payload?.image_url);
-      const category = String(payload?.category || "geral").trim().slice(0, 32);
+      const imageUrl = validateAdImageUrl(payload?.image_url);
+      const rawCat = String(payload?.category || "geral").trim().toLowerCase().slice(0, 32);
+      const category = MURAL_CONFIG.categories.includes(rawCat) ? rawCat : "geral";
       const location = String(payload?.location || "Online / Global").trim().slice(0, 60) || "Online / Global";
       const rawCountry = String(payload?.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6);
       const countryCode = rawCountry || "GLOBAL";
       const rawPayMode = String(payload?.payment_modes || "pi").trim().toLowerCase();
       const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
+      const itemPrice = payload?.item_price ? String(payload.item_price).trim().slice(0, 40) : null;
+      const rawItemCurr = String(payload?.item_currency || "PI").trim().toUpperCase();
+      const itemCurrency = (["PI", "BRL", "USD", "A_COMBINAR"].includes(rawItemCurr)) ? rawItemCurr : "PI";
       // Todos os anúncios são permanentes (validade perpétua até 2099 para compatibilidade com triggers/RLS)
       const expiresAt = "2099-12-31T23:59:59.000Z";
 
       const insertRow = {
+        id: crypto.randomUUID(),
         title,
         description,
         link_url: linkUrl,
@@ -208,6 +213,8 @@ serve(async (req) => {
         location,
         country_code: countryCode,
         payment_modes: paymentModes,
+        item_price: itemPrice,
+        item_currency: itemCurrency,
         pioneer_username: piUser.username,
         pioneer_name: piUser.username.replace(/^@+/, ""),
         plan_tier: tier,
@@ -307,7 +314,7 @@ serve(async (req) => {
       });
     }
 
-    // ── 2. EDITAR ANÚNCIO (PROPRIEDADE + PRAZO 24H) ─────────────
+    // ── 2. EDITAR ANÚNCIO (PROPRIEDADE VERIFICADA) ─────────────
     if (action === "update_ad") {
       const adId = String(payload?.ad_id || "").trim();
       if (!adId) return jsonResponse({ error: "ad_id é obrigatório." }, 400);
@@ -317,13 +324,13 @@ serve(async (req) => {
       if (title.length < 2 || title.length > 80) {
         return jsonResponse({ error: "O título deve ter entre 2 e 80 caracteres." }, 400);
       }
-      if (description.length < 5 || description.length > 300) {
-        return jsonResponse({ error: "A descrição deve ter entre 5 e 300 caracteres." }, 400);
+      if (description.length < 5 || description.length > 1000) {
+        return jsonResponse({ error: "A descrição deve ter entre 5 e 1000 caracteres." }, 400);
       }
 
       const { data: ad, error: fetchErr } = await supabase
         .from("anuncios")
-        .select("id, pioneer_username, created_at, plan_tier")
+        .select("id, pioneer_username, created_at, plan_tier, status, category, location, country_code, payment_modes, item_price, item_currency")
         .eq("id", adId)
         .single();
 
@@ -333,28 +340,110 @@ serve(async (req) => {
       if (normalizeHandle(ad.pioneer_username) !== normalizeHandle(piUser.username)) {
         return jsonResponse({ error: "Sem permissão para editar este anúncio." }, 403);
       }
-
-      const createdMs = new Date(ad.created_at).getTime();
-      if (!Number.isFinite(createdMs) || (Date.now() - createdMs) > AD_EDIT_WINDOW_MS) {
-        return jsonResponse({ error: "Prazo de edição expirado (máximo 24h após a publicação)." }, 403);
+      if (ad.status === "suspenso" || ad.status === "moderacao") {
+        return jsonResponse({ error: "Anúncios suspensos pela moderação não podem ser editados." }, 403);
       }
 
-      const isBronzeTier = String(ad.plan_tier || "bronze").toLowerCase() === "bronze";
-      const safeLinkUrl = isBronzeTier ? null : validateHttpUrl(payload?.link_url);
-      const safeImageUrl = isBronzeTier ? null : validateAdImageUrl(payload?.image_url);
+      const tier = String(ad.plan_tier || "bronze").toLowerCase();
+      const allowsLink = tier === "ouro" || tier === "prata";
+      const allowsImage = tier === "ouro" || tier === "prata" || tier === "bronze";
+      const safeLinkUrl = allowsLink ? validateHttpUrl(payload?.link_url) : null;
+      const safeImageUrl = allowsImage ? validateAdImageUrl(payload?.image_url) : null;
 
-      const { error: updErr } = await supabase
+      const rawCat = String(payload?.category || ad.category || "geral").trim().toLowerCase().slice(0, 32);
+      const safeCategory = MURAL_CONFIG.categories.includes(rawCat) ? rawCat : (ad.category || "geral");
+      const safeLocation = payload?.location !== undefined
+        ? (String(payload.location || "Online / Global").trim().slice(0, 60) || "Online / Global")
+        : (ad.location || "Online / Global");
+      const safeCountry = payload?.country_code !== undefined
+        ? (String(payload.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6) || "GLOBAL")
+        : (ad.country_code || "GLOBAL");
+      const rawPay = String(payload?.payment_modes || ad.payment_modes || "pi").trim().toLowerCase();
+      const safePayModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPay)) ? rawPay : "pi";
+      const safeItemPrice = payload?.item_price !== undefined
+        ? (String(payload.item_price || "").trim().slice(0, 40) || null)
+        : (ad.item_price ?? null);
+      const rawCurr = String(payload?.item_currency || ad.item_currency || "PI").trim().toUpperCase();
+      const safeItemCurr = (["PI", "BRL", "USD", "A_COMBINAR"].includes(rawCurr)) ? rawCurr : "PI";
+
+      const { data: updatedAd, error: updErr } = await supabase
         .from("anuncios")
         .update({
           title,
           description,
           link_url: safeLinkUrl,
           image_url: safeImageUrl,
+          category: safeCategory,
+          location: safeLocation,
+          country_code: safeCountry,
+          payment_modes: safePayModes,
+          item_price: safeItemPrice,
+          item_currency: safeItemCurr,
         })
+        .eq("id", adId)
+        .select("*")
+        .single();
+
+      if (updErr) throw updErr;
+      return jsonResponse({ ok: true, ad: updatedAd });
+    }
+
+    // ── 2B. ALTERAR STATUS PELO DONO (PAUSAR / REATIVAR / VENDIDO) ───
+    if (action === "set_ad_status") {
+      const adId = String(payload?.ad_id || "").trim();
+      const nextStatus = String(payload?.status || "").trim().toLowerCase();
+      if (!adId || !["ativo", "pausado", "vendido"].includes(nextStatus)) {
+        return jsonError("INVALID_STATUS", "Status permitido: ativo, pausado ou vendido.", 400);
+      }
+
+      const { data: ad, error: fetchErr } = await supabase
+        .from("anuncios")
+        .select("id, pioneer_username, status")
+        .eq("id", adId)
+        .single();
+
+      if (fetchErr || !ad) {
+        return jsonError("NOT_FOUND", "Anúncio não encontrado.", 404);
+      }
+      if (normalizeHandle(ad.pioneer_username) !== normalizeHandle(piUser.username)) {
+        return jsonError("FORBIDDEN", "Sem permissão para alterar este anúncio.", 403);
+      }
+      if (ad.status === "suspenso" || ad.status === "moderacao") {
+        return jsonError("AD_MODERATED", "Este anúncio está sob moderação e não pode ser reativado pelo autor.", 403);
+      }
+
+      const { error: updErr } = await supabase
+        .from("anuncios")
+        .update({ status: nextStatus })
         .eq("id", adId);
 
       if (updErr) throw updErr;
-      return jsonResponse({ ok: true });
+      return jsonOk("AD_STATUS_UPDATED", { id: adId, status: nextStatus });
+    }
+
+    // ── 2C. EXCLUIR ANÚNCIO PELO DONO ─────────────────────────────
+    if (action === "delete_my_ad") {
+      const adId = String(payload?.ad_id || "").trim();
+      if (!adId) {
+        return jsonError("MISSING_AD_ID", "ad_id é obrigatório.", 400);
+      }
+
+      const { data: ad, error: fetchErr } = await supabase
+        .from("anuncios")
+        .select("id, pioneer_username")
+        .eq("id", adId)
+        .single();
+
+      if (fetchErr || !ad) {
+        return jsonError("NOT_FOUND", "Anúncio não encontrado.", 404);
+      }
+      if (normalizeHandle(ad.pioneer_username) !== normalizeHandle(piUser.username)) {
+        return jsonError("FORBIDDEN", "Sem permissão para excluir este anúncio.", 403);
+      }
+
+      const { error: delErr } = await supabase.from("anuncios").delete().eq("id", adId);
+      if (delErr) throw delErr;
+      return jsonOk("AD_DELETED", { id: adId });
     }
 
     // ── 3. RENOVAR ANÚNCIO (+30 DIAS COM PAGAMENTO VALIDADO + ANTI-REPLAY) ────
@@ -536,6 +625,7 @@ serve(async (req) => {
       const { error: insErr } = await supabase
         .from("denuncias")
         .insert([{
+          id: crypto.randomUUID(),
           ad_id: adId,
           ad_title: String(payload?.ad_title || "").trim().slice(0, 100),
           reason,
@@ -553,10 +643,16 @@ serve(async (req) => {
 
       const autoModerated = (count || 0) >= AUTO_MODERATION_REPORT_THRESHOLD;
       if (autoModerated) {
-        await supabase
+        const { error: modErr } = await supabase
           .from("anuncios")
           .update({ status: "moderacao" })
           .eq("id", adId);
+        if (modErr) {
+          await supabase
+            .from("anuncios")
+            .update({ status: "suspenso" })
+            .eq("id", adId);
+        }
       }
 
       await notifyAdmin({
@@ -628,18 +724,25 @@ serve(async (req) => {
 
       if (error) throw error;
 
-      // Sincroniza reputation_score na tabela pioneiros (total de recomendações positivas >= 4 estrelas)
+      // Sincroniza reputation_score na tabela pioneiros (base 50 + 5 por >=4★ - 10 por <=2★, limitado [0, 100])
       try {
-        const { count: positiveCount } = await supabase
+        const { data: revRows } = await supabase
           .from("pioneer_reviews")
-          .select("id", { count: "exact", head: true })
-          .ilike("target_username", targetUsername)
-          .gte("rating", 4);
+          .select("rating")
+          .ilike("target_username", targetUsername);
 
-        if (typeof positiveCount === "number") {
+        if (Array.isArray(revRows)) {
+          let pos = 0;
+          let neg = 0;
+          for (const rv of revRows) {
+            const rt = Number(rv?.rating || 0);
+            if (rt >= 4) pos += 1;
+            else if (rt > 0 && rt <= 2) neg += 1;
+          }
+          const newScore = Math.max(0, Math.min(100, 50 + pos * 5 - neg * 10));
           await supabase
             .from("pioneiros")
-            .update({ reputation_score: positiveCount })
+            .update({ reputation_score: newScore })
             .ilike("username", targetUsername);
         }
       } catch (_) {}

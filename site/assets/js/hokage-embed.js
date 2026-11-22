@@ -46,7 +46,10 @@
     var shadow = host.shadowRoot || host.attachShadow({ mode: 'open' });
     var isLight = theme === 'light';
     var cleanHandle = esc(handle.replace(/^@+/, ''));
-    var profileUrl = (passport && passport.profile_url) || ('https://hokage22b.com/pioneiro?u=' + encodeURIComponent(cleanHandle));
+    var rawProfileUrl = (passport && typeof passport.profile_url === 'string' && /^https?:\/\//i.test(passport.profile_url.trim()))
+      ? passport.profile_url.trim()
+      : ('https://hokage22b.com/pioneiro?u=' + encodeURIComponent(cleanHandle));
+    var profileUrl = rawProfileUrl;
     var tier = tierMeta(passport && passport.journey_tier);
     var bio = passport && passport.bio ? esc(String(passport.bio).slice(0, 110)) : 'Passaporte Web3 Verificado no ecossistema HOKAGE22B.';
     var wallet = passport && passport.wallet_address ? String(passport.wallet_address) : '';

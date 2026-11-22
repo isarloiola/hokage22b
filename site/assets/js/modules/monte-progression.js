@@ -344,7 +344,7 @@
     overlay.style.cssText = 'position:fixed;inset:0;z-index:10060;background:rgba(5,5,10,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:14px';
 
     const listHtml = state.titles.map(function (t) {
-      const disabledAttr = t.unlocked ? '' : 'disabled';
+      const disabledAttr = (!t.unlocked || (!t.selected && state.selectedIds.length >= 3)) ? 'disabled' : '';
       const checkedAttr = t.selected ? 'checked' : '';
       return (
         '<label style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid ' + (t.unlocked ? t.border : 'rgba(255,255,255,0.08)') + ';background:' + (t.unlocked ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.3)') + ';opacity:' + (t.unlocked ? '1' : '0.5') + ';cursor:' + (t.unlocked ? 'pointer' : 'not-allowed') + '">' +
@@ -352,28 +352,62 @@
         '<div style="font-size:0.86rem;font-weight:800;color:' + (t.unlocked ? t.color : '#71717a') + '">' + esc(t.label) + '</div>' +
         '<div style="font-size:0.72rem;color:#a1a1aa">' + (t.unlocked ? '✓ Desbloqueado' : '🔒 ' + esc(t.rule)) + '</div>' +
         '</div>' +
-        '<input type="checkbox" class="hk-title-chk" value="' + esc(t.id) + '" ' + checkedAttr + ' ' + disabledAttr + ' style="width:18px;height:18px;accent-color:#f59e0b" />' +
+        '<input type="checkbox" class="hk-title-chk" value="' + esc(t.id) + '" data-unlocked="' + (t.unlocked ? '1' : '0') + '" ' + checkedAttr + ' ' + disabledAttr + ' style="width:18px;height:18px;accent-color:#f59e0b" />' +
         '</label>'
       );
     }).join('');
 
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
     overlay.innerHTML =
       '<div style="width:100%;max-width:440px;background:#12121b;border:1.5px solid rgba(245,158,11,0.45);border-radius:20px;padding:20px;color:#fff;box-shadow:0 24px 60px rgba(0,0,0,0.8)">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
       '<strong style="font-size:1.02rem">🏷️ Meus Títulos no Passaporte</strong>' +
-      '<button type="button" id="hk-titles-close" style="background:none;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:50%;width:28px;height:28px;cursor:pointer">✕</button>' +
+      '<button type="button" id="hk-titles-close" aria-label="Fechar" style="background:none;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:50%;width:28px;height:28px;cursor:pointer">✕</button>' +
       '</div>' +
-      '<p style="font-size:0.8rem;color:#a1a1aa;margin:0 0 12px;line-height:1.4">Selecione um ou mais títulos já desbloqueados para exibir no seu Passaporte:</p>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px">' +
+      '<p style="font-size:0.8rem;color:#a1a1aa;margin:0;line-height:1.4">Escolha até 3 títulos desbloqueados:</p>' +
+      '<span id="hk-titles-counter" style="font-size:0.74rem;font-weight:800;color:#fbbf24;white-space:nowrap">' + Math.min(3, state.selectedIds.length) + '/3 selecionados</span>' +
+      '</div>' +
+      '<div id="hk-titles-feedback" style="display:none;margin-bottom:10px;padding:8px 10px;border-radius:8px;font-size:0.78rem;background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.4);color:#fde68a"></div>' +
       '<div style="display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto;margin-bottom:14px">' + listHtml + '</div>' +
       '<button type="button" id="hk-titles-save" class="portal-btn portal-btn--primary portal-btn--full" style="font-weight:800">Salvar Títulos no Passaporte</button>' +
       '</div>';
 
     document.body.appendChild(overlay);
-    overlay.addEventListener('click', function (ev) { if (ev.target === overlay) overlay.remove(); });
-    document.getElementById('hk-titles-close').addEventListener('click', function () { overlay.remove(); });
+
+    function syncCheckLimit() {
+      const chks = Array.from(overlay.querySelectorAll('.hk-title-chk'));
+      const checkedCount = chks.filter(function (c) { return c.checked; }).length;
+      const counterEl = document.getElementById('hk-titles-counter');
+      if (counterEl) counterEl.textContent = Math.min(3, checkedCount) + '/3 selecionados';
+      chks.forEach(function (c) {
+        if (c.getAttribute('data-unlocked') !== '1') {
+          c.disabled = true;
+        } else {
+          c.disabled = !c.checked && checkedCount >= 3;
+        }
+      });
+    }
+    overlay.querySelectorAll('.hk-title-chk').forEach(function (c) {
+      c.addEventListener('change', syncCheckLimit);
+    });
+    syncCheckLimit();
+
+    function closeTitlesModal() {
+      document.removeEventListener('keydown', onEsc);
+      overlay.remove();
+    }
+    function onEsc(ev) {
+      if (ev.key === 'Escape') closeTitlesModal();
+    }
+    document.addEventListener('keydown', onEsc);
+    overlay.addEventListener('click', function (ev) { if (ev.target === overlay) closeTitlesModal(); });
+    document.getElementById('hk-titles-close').addEventListener('click', closeTitlesModal);
     document.getElementById('hk-titles-save').addEventListener('click', async function () {
       const saveBtn = document.getElementById('hk-titles-save');
-      const picked = Array.from(overlay.querySelectorAll('.hk-title-chk:checked')).map(function (c) { return c.value; });
+      const fbEl = document.getElementById('hk-titles-feedback');
+      const picked = Array.from(overlay.querySelectorAll('.hk-title-chk:checked')).map(function (c) { return c.value; }).slice(0, 3);
       const finalPicked = picked.length ? picked : ['pioneiro'];
       saveSelectedTitles(profileData && profileData.username, finalPicked);
 
@@ -391,6 +425,9 @@
           saveBtn.textContent = '⏳ Salvando no Passaporte...';
         }
         try {
+          if (window.HokagePi && typeof window.HokagePi.ensureAccessToken === 'function') {
+            await window.HokagePi.ensureAccessToken();
+          }
           await window.IsarDB.savePioneerProfile(profileData.username, {
             bio: profileData.bio || '',
             avatar_url: profileData.avatar_url || '',
@@ -400,18 +437,33 @@
             twitter_url: profileData.twitter_url || '',
             instagram_url: profileData.instagram_url || '',
             products: Array.isArray(profileData.products) ? profileData.products : [],
+            selected_titles: finalPicked,
+            social_links: Array.isArray(profileData.social_links) ? profileData.social_links : [],
+            dev_api_used: Boolean(readLocalFlags().dev_api_used || profileData.dev_api_used),
             checklist_state: Object.assign({}, profileData.checklist_state || {}, {
               social_links: Array.isArray(profileData.social_links) ? profileData.social_links : [],
               selected_titles: finalPicked
             })
           });
+          if (window.HokagePi && typeof window.HokagePi.showToast === 'function') {
+            window.HokagePi.showToast('🏷️ Títulos atualizados no seu Passaporte!', 'success');
+          }
         } catch (err) {
           console.warn('Falha ao salvar títulos no Supabase:', err);
-          alert('⚠️ Salvo neste aparelho, mas para aparecer para todos é preciso estar conectado via Pi Browser.');
+          if (fbEl) {
+            fbEl.textContent = '⚠️ Salvo neste dispositivo. Conecte no Pi Browser para sincronizar na nuvem.';
+            fbEl.style.display = 'block';
+          }
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Fechar (Salvo Localmente)';
+          }
+          renderPassportTitles(containerId, profileData, isOwner);
+          return;
         }
       }
 
-      overlay.remove();
+      closeTitlesModal();
       renderPassportTitles(containerId, profileData, isOwner);
     });
   }
@@ -447,6 +499,53 @@
     }
   }
 
+  async function hydrateProgressionPanel(containerId, explicitHandle, options) {
+    renderProgressionPanel(containerId, null, options);
+    if (typeof window === 'undefined' || typeof fetch !== 'function') return null;
+
+    let handle = String(explicitHandle || '').trim().replace(/^@+/, '').toLowerCase();
+    if (!handle) {
+      try {
+        const raw = localStorage.getItem('hokage_pi_user') || sessionStorage.getItem('hokage_pi_user') || '';
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.username) handle = String(parsed.username).trim().replace(/^@+/, '').toLowerCase();
+        }
+      } catch (_) {}
+    }
+    if (!handle) return null;
+
+    try {
+      const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/passaportes?u=' + encodeURIComponent(handle));
+      const json = await res.json().catch(function () { return null; });
+      const prof = json && (json.data || json);
+      if (prof && prof.handle) {
+        const mapped = {
+          username: prof.handle,
+          wallet_address: prof.wallet_address || (prof.has_verified_wallet ? 'GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF' : ''),
+          reputation_score: prof.reputation_score || 50,
+          is_ambassador: Boolean(prof.is_ambassador),
+          products: Array.isArray(prof.products) ? prof.products : [],
+          social_links: Array.isArray(prof.social_links) ? prof.social_links : [],
+          referral_qualified_count: Number(prof.referral_qualified_count || 0),
+          dev_api_used: Boolean(prof.dev_api_used)
+        };
+        if (mapped.dev_api_used) markQuestFlag('dev_api_used');
+        if (mapped.products.length > 0) markQuestFlag('mural_posted');
+        renderProgressionPanel(containerId, mapped, options);
+        return mapped;
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('hokage:action', function (ev) {
+      const act = ev && ev.detail && ev.detail.action;
+      if (act) markQuestFlag(act);
+    });
+  }
+
   return {
     RANKS: RANKS,
     MISSIONS: MISSIONS,
@@ -457,6 +556,7 @@
     getTitlesState: getTitlesState,
     saveSelectedTitles: saveSelectedTitles,
     renderPassportTitles: renderPassportTitles,
-    renderProgressionPanel: renderProgressionPanel
+    renderProgressionPanel: renderProgressionPanel,
+    hydrateProgressionPanel: hydrateProgressionPanel
   };
 });

@@ -154,29 +154,60 @@
     }
   }
 
-  // Busca o perfil salvo do pioneiro na nuvem
-  async function getPioneerProfile(uid) {
+  // Busca o perfil salvo do pioneiro via view pública (Zero-Trust: sem SELECT direto na tabela pioneiros)
+  async function getPioneerProfile(uidOrHandle) {
     const db = getClient();
-    if (!db || !uid) return null;
+    if (!db || !uidOrHandle) return null;
 
     try {
-      const { data, error } = await db
-        .from('pioneiros')
-        .select('*')
-        .eq('uid', uid)
-        .single();
+      let lookup = String(uidOrHandle).trim();
+      if (!lookup.startsWith('@') && lookup.length > 24) {
+        try {
+          const cached = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
+          if (cached && cached.uid === lookup && cached.username) {
+            lookup = cached.username;
+          }
+        } catch (_) {}
+      }
+      const clean = lookup.replace(/^@+/, '').toLowerCase();
+      if (!clean) return null;
 
-      if (error) return null;
-      return data;
+      const { data, error } = await db
+        .from('v_passaportes_publicos')
+        .select('*')
+        .or('username.ilike.' + clean + ',username.ilike.@' + clean)
+        .limit(1);
+
+      if (error || !data || data.length === 0) return null;
+      return data[0];
     } catch (err) {
       return null;
     }
   }
 
   // Busca os anúncios ativos no mural (com filtro de validade e hierarquia comercial)
-  async function getAnuncios(category) {
+  async function getAnuncios(category, opts) {
     const db = getClient();
     if (!db) return [];
+    const options = opts && typeof opts === 'object' ? opts : {};
+    const limit = Math.min(200, Math.max(1, parseInt(options.limit, 10) || 120));
+    const offset = Math.max(0, parseInt(options.offset, 10) || 0);
+
+    function filterValidAds(rows) {
+      const now = Date.now();
+      return (rows || []).filter(function (ad) {
+        if (!ad) return false;
+        const st = String(ad.status || 'ativo').toLowerCase();
+        if (['suspenso', 'pendente', 'moderacao', 'pausado', 'vendido', 'expirado'].indexOf(st) !== -1) {
+          return false;
+        }
+        if (String(ad.plan_tier || '').toLowerCase() === 'gratis' && ad.expires_at) {
+          const expMs = new Date(ad.expires_at).getTime();
+          if (Number.isFinite(expMs) && expMs < now) return false;
+        }
+        return true;
+      });
+    }
 
     try {
       let query = db
@@ -189,7 +220,7 @@
         query = query.eq('category', category);
       }
 
-      query = query.range(0, 79);
+      query = query.range(offset, offset + limit - 1);
 
       const { data, error } = await query;
       if (error) {
@@ -198,21 +229,13 @@
           .from('anuncios')
           .select('*')
           .eq('status', 'ativo')
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .range(offset, offset + limit - 1);
         if (fallbackRes.error) throw fallbackRes.error;
-        return (fallbackRes.data || []).filter(function (ad) {
-          return Boolean(ad && ad.status !== 'suspenso' && ad.status !== 'pendente');
-        });
+        return filterValidAds(fallbackRes.data);
       }
 
-      // Todos os anúncios aprovados/ativos são permanentes (apenas suspensos ou pendentes são ocultados)
-      const validAds = (data || []).filter(function (ad) {
-        if (!ad) return false;
-        if (ad.status === 'suspenso' || ad.status === 'pendente') return false;
-        return true;
-      });
-
-      return validAds;
+      return filterValidAds(data);
     } catch (err) {
       console.warn('Supabase: Erro ao carregar anúncios:', err.message);
       return [];
@@ -352,15 +375,21 @@
 
     try {
       if (secret) {
-        const { data, error } = await db.rpc('admin_update_ad_status', {
+        const rpcParams = {
           p_secret: secret,
           p_ad_id: id,
           p_new_status: updates.status || 'ativo',
           p_new_tier: updates.plan_tier || null,
-          p_new_price: updates.price_pi ? parseFloat(updates.price_pi) : null
-        });
-        if (error) throw error;
-        return true;
+          p_new_price: updates.price_pi != null ? parseFloat(updates.price_pi) : null,
+          p_new_expires_at: updates.expires_at || null
+        };
+        let res = await db.rpc('admin_update_ad_status', rpcParams);
+        if (res.error && /admin_update_ad_status|parameter|function/i.test(String(res.error.message || ''))) {
+          delete rpcParams.p_new_expires_at;
+          res = await db.rpc('admin_update_ad_status', rpcParams);
+        }
+        if (res.error) throw res.error;
+        return res.data !== false;
       }
       const { error } = await db
         .from('anuncios')
@@ -387,7 +416,7 @@
           p_ad_id: id
         });
         if (error) throw error;
-        return true;
+        return Boolean(data);
       }
       const { error } = await db
         .from('anuncios')
@@ -433,9 +462,12 @@
 
     try {
       if (secret) {
+        const fallbackId = (window.crypto && typeof window.crypto.randomUUID === 'function')
+          ? window.crypto.randomUUID()
+          : ('ad_' + Date.now());
         const { data, error } = await db.rpc('admin_create_ad', {
           p_secret: secret,
-          p_id: adData.id,
+          p_id: adData.id || fallbackId,
           p_title: adData.title,
           p_description: adData.description,
           p_link_url: adData.link_url || null,
@@ -693,7 +725,7 @@
       list = [{
         id: 'ad_official_hokage22b_welcome',
         title: 'Bem-vindo ao HOKAGE22B: A Economia Real na Pi Network 🌐',
-        description: 'Seja muito bem-vindo, pioneiro! Este é o seu espaço descentralizado para criar Passaportes, aceitar Pi no seu negócio, conectar-se com pioneiros verificados e construir a utilidade real da moeda. Juntos rumo à Open Mainnet!',
+        description: 'Seja muito bem-vindo, pioneiro! Este é o seu espaço descentralizado para criar Passaportes, aceitar Pi no seu negócio, conectar-se com pioneiros verificados e construir a utilidade real da moeda na Pi Network!',
         link_url: 'https://www.youtube.com/@justhokage22b',
         image_url: 'assets/img/ebook-pago-negocios.jpg',
         category: 'geral',
@@ -713,12 +745,36 @@
   // Atualiza um anúncio pelo próprio anunciante (Edge Function Zero-Trust)
   async function updateMyAd(adId, username, data) {
     if (!adId || !username) return false;
-    const res = await callMuralAction('update_ad', {
+    const payload = {
       ad_id: adId,
       title: data.title || '',
       description: data.description || '',
       link_url: data.link_url || null,
       image_url: data.image_url || null
+    };
+    if (data.category) payload.category = data.category;
+    if (data.location !== undefined) payload.location = data.location;
+    if (data.country_code) payload.country_code = data.country_code;
+    if (data.payment_modes) payload.payment_modes = data.payment_modes;
+    if (data.item_price !== undefined) payload.item_price = data.item_price;
+    if (data.item_currency) payload.item_currency = data.item_currency;
+    const res = await callMuralAction('update_ad', payload);
+    return Boolean(res && res.ok);
+  }
+
+  async function setMyAdStatus(adId, status) {
+    if (!adId || !status) return false;
+    const res = await callMuralAction('set_ad_status', {
+      ad_id: adId,
+      status: status
+    });
+    return Boolean(res && res.ok);
+  }
+
+  async function deleteMyAd(adId) {
+    if (!adId) return false;
+    const res = await callMuralAction('delete_my_ad', {
+      ad_id: adId
     });
     return Boolean(res && res.ok);
   }
@@ -864,7 +920,15 @@
 
       var res = await query;
       if (res.error) throw res.error;
-      return res.data || [];
+      var raw = res.data || [];
+      var dedupMap = new Map();
+      raw.forEach(function (row) {
+        if (!row) return;
+        var key = String(row.username || '').trim().replace(/^@+/, '').toLowerCase();
+        if (!key) return;
+        if (!dedupMap.has(key)) dedupMap.set(key, row);
+      });
+      return Array.from(dedupMap.values());
     } catch (err) {
       console.warn('Erro ao obter diretório de pioneiros:', err);
       return [];
@@ -952,6 +1016,135 @@
     return res && res.review ? res.review : null;
   }
 
+  async function uploadProfileImage(file) {
+    if (!file) throw new Error('Arquivo de imagem inválido.');
+    let dataUrl = '';
+    if (typeof compressImageFile === 'function') {
+      dataUrl = await compressImageFile(file, 640, 0.84);
+    } else {
+      dataUrl = await new Promise(function (resolve, reject) {
+        const reader = new FileReader();
+        reader.onload = function () { resolve(String(reader.result || '')); };
+        reader.onerror = function () { reject(new Error('Falha ao ler imagem.')); };
+        reader.readAsDataURL(file);
+      });
+    }
+    let token = '';
+    try {
+      token = (window.HokagePi && window.HokagePi.getAccessToken) ? window.HokagePi.getAccessToken() : '';
+      if (!token) token = sessionStorage.getItem('hokage_pi_access_token') || '';
+    } catch (_) {}
+    if (!token) throw new Error('Conecte-se no Pi Browser para enviar sua foto de perfil.');
+
+    const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'upload_profile_image',
+        accessToken: token,
+        dataUrl: dataUrl
+      })
+    });
+    const json = await res.json().catch(function () { return {}; });
+    if (!res.ok || !json.ok) {
+      throw new Error((json && json.error) || 'Falha ao enviar foto de perfil.');
+    }
+    const payload = json.data || json;
+    return payload.publicUrl || payload.url || null;
+  }
+
+  // --- RPCs Administrativos Completos (Migration 023) ---
+  async function getAdminDenuncias(secret) {
+    const db = getClient();
+    if (!db || !secret) return [];
+    const { data, error } = await db.rpc('admin_get_denuncias', { p_secret: secret });
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function resolveAdminDenuncia(secret, reportId, action) {
+    const db = getClient();
+    if (!db || !secret || !reportId) return false;
+    const { data, error } = await db.rpc('admin_resolve_denuncia', {
+      p_secret: secret,
+      p_report_id: reportId,
+      p_action: action || 'dismiss'
+    });
+    if (error) throw error;
+    return Boolean(data);
+  }
+
+  async function getAdminPioneiros(secret) {
+    const db = getClient();
+    if (!db || !secret) return [];
+    const { data, error } = await db.rpc('admin_get_pioneiros', { p_secret: secret });
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function updateAdminPioneerMerit(secret, uid, isAmbassador, journeyTier, contributionArea) {
+    const db = getClient();
+    if (!db || !secret || !uid) return false;
+    const { data, error } = await db.rpc('admin_update_pioneer_merit', {
+      p_secret: secret,
+      p_uid: uid,
+      p_is_ambassador: Boolean(isAmbassador),
+      p_journey_tier: journeyTier || 'pioneiro',
+      p_contribution_area: contributionArea || null
+    });
+    if (error) throw error;
+    return Boolean(data);
+  }
+
+  async function deleteAdminLead(secret, leadId) {
+    const db = getClient();
+    if (!db || !secret || !leadId) return false;
+    const { data, error } = await db.rpc('admin_delete_lead', {
+      p_secret: secret,
+      p_lead_id: String(leadId)
+    });
+    if (error) throw error;
+    return Boolean(data);
+  }
+
+  async function getAdminEbooks(secret) {
+    const db = getClient();
+    if (!db || !secret) return [];
+    const { data, error } = await db.rpc('admin_get_ebook_entitlements', { p_secret: secret });
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function revokeAdminEbook(secret, entitlementId) {
+    const db = getClient();
+    if (!db || !secret || !entitlementId) return false;
+    const { data, error } = await db.rpc('admin_revoke_ebook_access', {
+      p_secret: secret,
+      p_entitlement_id: entitlementId
+    });
+    if (error) throw error;
+    return Boolean(data);
+  }
+
+  async function getAdminComments(secret) {
+    const db = getClient();
+    if (!db || !secret) return [];
+    const { data, error } = await db.rpc('admin_get_recent_comments', { p_secret: secret });
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function deleteAdminComment(secret, commentId) {
+    const db = getClient();
+    if (!db || !secret || !commentId) return false;
+    const { data, error } = await db.rpc('admin_delete_comment', {
+      p_secret: secret,
+      p_comment_id: commentId
+    });
+    if (error) throw error;
+    return Boolean(data);
+  }
+
   window.IsarDB = {
     getClient: getClient,
     syncPioneerProfile: syncPioneerProfile,
@@ -962,6 +1155,7 @@
     createAnuncio: createAnuncio,
     createDenuncia: createDenuncia,
     uploadAdImage: uploadAdImage,
+    uploadProfileImage: uploadProfileImage,
     compressImageFile: compressImageFile,
     incrementAdClick: incrementAdClick,
     incrementAdView: incrementAdView,
@@ -973,6 +1167,8 @@
     isValidPiPublicKey: isValidPiPublicKey,
     getMyAds: getMyAds,
     updateMyAd: updateMyAd,
+    setMyAdStatus: setMyAdStatus,
+    deleteMyAd: deleteMyAd,
     renewMyAd: renewMyAd,
     getAdComments: getAdComments,
     getAdCommentCounts: getAdCommentCounts,
@@ -1003,8 +1199,17 @@
     updateAnuncio: updateAnuncio,
     deleteAnuncio: deleteAnuncio,
     getAllLeads: getAllLeads,
+    deleteAdminLead: deleteAdminLead,
     createAdminAnuncio: createAdminAnuncio,
     getAllDoacoes: getAllDoacoes,
+    getAdminDenuncias: getAdminDenuncias,
+    resolveAdminDenuncia: resolveAdminDenuncia,
+    getAdminPioneiros: getAdminPioneiros,
+    updateAdminPioneerMerit: updateAdminPioneerMerit,
+    getAdminEbooks: getAdminEbooks,
+    revokeAdminEbook: revokeAdminEbook,
+    getAdminComments: getAdminComments,
+    deleteAdminComment: deleteAdminComment,
     isConfigured: function () {
       return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
     }

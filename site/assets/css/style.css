@@ -4,9 +4,9 @@
    ============================================================ */
 
 /* --- 1. Tokens & Base --- */
-@import url('./tokens.css');
-@import url('./base.css');
-@import url('./portal.css?v=5.1');
+@import url('./tokens.css?v=4.7');
+@import url('./base.css?v=4.7');
+@import url('./portal.css?v=5.4');
 
 /* --- 2. Components --- */
 @import url('./components/navbar.css');
@@ -22,7 +22,7 @@
 @import url('./components/donation.css');
 @import url('./components/onboarding.css');
 @import url('./components/mural.css?v=5.3');
-@import url('./components/i18n.css');
+@import url('./components/i18n.css?v=4.7');
 
 /* --- 3. Sections --- */
 @import url('./sections/hero.css');

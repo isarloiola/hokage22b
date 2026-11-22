@@ -219,7 +219,7 @@ function buildEbooksHubPayload(): BotPayload {
       inline_keyboard: [
         [{ text: "🤖 IA na Prática (293 pág.)", callback_data: "ebook_ia" }],
         [{ text: "💼 Pi para seu Negócio", callback_data: "ebook_negocio" }],
-        [{ text: "📘 Baixar Manual Gratuito", url: "https://hokage22b.com/#manual" }],
+        [{ text: "📘 Baixar Manual Gratuito", url: "https://hokage22b.com/#produtos" }],
         [{ text: "⬅️ Voltar ao Menu", callback_data: "menu" }],
       ],
     },

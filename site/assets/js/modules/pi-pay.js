@@ -181,7 +181,7 @@
   }
 
   // 5. Modal Web3 de Diagnóstico e Conexão Pi
-  function openPiConnectModal() {
+  function openPiConnectModal(options) {
     let modal = document.getElementById('modal-pi-connect-diag');
     if (!modal) {
       modal = document.createElement('div');
@@ -194,12 +194,18 @@
 
     const inPi = isPiBrowser();
     const hasSdk = Boolean(window.Pi);
+    const isSandbox = isSandboxMode();
+    const netTag = isSandbox ? '🧪 Ambiente Pi Testnet (Sandbox)' : '⚡ Ambiente Oficial Pi Mainnet';
+    const modalHeading = isSandbox ? 'Conectar Pi Wallet (Testnet)' : 'Conectar Pi Wallet (Pi Browser)';
+    const netLabel = isSandbox ? '🧪 Pi Testnet (Sandbox)' : '⚡ Pi Network (Produção)';
+    const cleanHost = window.location.host || 'hokage22b.com';
+    const piOpenUrl = 'pi://' + cleanHost + (window.location.pathname || '/') + (window.location.search || '');
 
     modal.innerHTML = `
       <div class="portal-modal" style="max-width:440px">
         <button type="button" class="portal-modal-close" onclick="document.getElementById('modal-pi-connect-diag').classList.remove('active')">✕</button>
-        <div class="section-tag section-tag--purple" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">🧪 Ambiente Oficial Pi Testnet</div>
-        <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">Conectar Pi Wallet (Testnet)</h3>
+        <div class="section-tag section-tag--purple" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">${netTag}</div>
+        <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">${modalHeading}</h3>
 
         <!-- Diagnóstico em Tempo Real -->
         <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.85rem">
@@ -212,7 +218,7 @@
           <div style="display:flex;justify-content:space-between;margin-bottom:8px">
             <span style="color:var(--text-muted)">Rede Pi Ativa:</span>
             <span style="font-weight:700;color:#38bdf8">
-              🧪 Pi Testnet (Auditoria Oficial)
+              ${netLabel}
             </span>
           </div>
           <div style="display:flex;justify-content:space-between;margin-bottom:8px">
@@ -234,6 +240,9 @@
             💡 <strong>Você está em um navegador comum:</strong><br>
             A autenticação automática por 1 clique é exclusiva do aplicativo <strong>Pi Browser</strong>. Abra o app Pi Browser no celular e acesse <strong>hokage22b.com</strong> para conectar!
           </div>
+          <a href="${piOpenUrl}" class="portal-btn portal-btn--amber portal-btn--full" style="margin-bottom:10px;text-align:center;text-decoration:none;font-weight:800;display:block">
+            🚀 Abrir Direto no Pi Browser
+          </a>
           <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="margin-bottom:12px" onclick="navigator.clipboard.writeText('https://hokage22b.com');this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link para abrir no Pi Browser',2000)">
             📋 Copiar Link para abrir no Pi Browser
           </button>
@@ -250,20 +259,17 @@
             <a href="pioneiro?u=${encodeURIComponent(formatUserHandle(authenticatedUser.username))}" class="portal-btn portal-btn--amber portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px">
               <span>🪪</span> Ir para Meu Passaporte
             </a>
-            <a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--full" style="text-align:center;text-decoration:none;font-size:0.85rem;padding:9px">
+            <a href="pioneiro?explorar=1" class="portal-btn portal-btn--outline portal-btn--full" style="text-align:center;text-decoration:none;font-size:0.85rem;padding:9px">
               🔍 Explorar Outros Passaportes
             </a>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="color:var(--text-muted);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="localStorage.removeItem('hokage_pi_user');localStorage.removeItem('isar_pi_user');location.reload()">
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="color:var(--text-muted);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="HokagePi.logout()">
               Desconectar / Trocar de Conta
             </button>
-          ` : `
+          ` : (inPi ? `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow()" style="padding:14px;font-weight:700">
               ⚡ Conectar no Pi Browser
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="HokagePi.openTestnetInfoModal()" style="font-size:0.82rem;border-color:rgba(139,92,246,0.4);color:#c4b5fd;font-weight:700;margin-top:2px">
-              ℹ️ Como funciona a Pi Testnet gratuita?
-            </button>
-          `}
+          ` : '')}
         </div>
 
         <!-- Garantia de Segurança Oficial Pi SDK -->
@@ -272,7 +278,7 @@
             <span>🔒</span> Protocolo Nativo Pi Platform SDK
           </div>
           <div style="color:var(--text-secondary);line-height:1.45">
-            O HOKAGE22B opera em conformidade com as diretrizes da Pi Core Team. Na fase de auditoria, todas as interações utilizam Testnet com assinatura biométrica na Pi Wallet.
+            O HOKAGE22B opera em conformidade com as diretrizes da Pi Core Team (${isSandboxMode() ? 'Testnet (Sandbox)' : 'Mainnet'}) com assinatura biométrica oficial na Pi Wallet.
           </div>
         </div>
       </div>
@@ -281,7 +287,7 @@
     modal.classList.add('active');
 
     // Se estiver de fato no Pi Browser e desconectado, tenta autenticar
-    if (inPi && !authenticatedUser) {
+    if (inPi && !authenticatedUser && !(options && options.noAutoAuth)) {
       setTimeout(function () {
         triggerAuthFlow();
       }, 350);
@@ -436,14 +442,36 @@
     }
   }
 
-  // 7. Ponto de Entrada para Login com Pi
-  function loginWithPi() {
+  // 7. Ponto de Entrada para Login com Pi & Logout
+  async function loginWithPi() {
+    if (isPiBrowser()) {
+      const user = await triggerAuthFlow();
+      if (!user) {
+        openPiConnectModal({ noAutoAuth: true });
+      }
+      return user;
+    }
     openPiConnectModal();
+    return authenticatedUser || null;
+  }
+
+  function logout() {
+    authenticatedUser = null;
+    isSdkSessionAuthenticated = false;
+    try {
+      localStorage.removeItem('hokage_pi_user');
+      sessionStorage.removeItem('hokage_pi_user');
+      sessionStorage.removeItem('hokage_pi_access_token');
+    } catch (_) { }
+    updateAuthUi(null);
+    showToast('Sessão Pi desconectada.', 'info');
+    setTimeout(function () {
+      window.location.reload();
+    }, 350);
   }
 
   // 8. Comunicação com a Edge Function no Supabase
   function getAuthTokenForServer() {
-    if (currentPiAccessToken) return currentPiAccessToken;
     try { return sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) { return ''; }
   }
 
@@ -587,23 +615,24 @@
         console.log('Pi Payment pronto para aprovação:', paymentId);
         showToast('Aprovando transação no servidor...', 'info');
         const approvalRes = await approvePaymentOnServer(paymentId);
-        if (approvalRes && approvalRes.error) {
+        if (!approvalRes || approvalRes.error || approvalRes.ok === false) {
           releasePaymentLock();
           console.error('Erro na aprovação do servidor:', approvalRes);
-          const msg = approvalRes.error_message || approvalRes.error || 'Falha na aprovação';
+          const msg = (approvalRes && (approvalRes.error_message || approvalRes.error)) || 'Falha de comunicação com o servidor na aprovação';
           showToast('Aviso do servidor: ' + msg, 'error');
           if (typeof options.onError === 'function') {
             options.onError(new Error('Aprovação recusada pelo servidor: ' + msg), { identifier: paymentId });
           }
         } else {
-          showToast('✓ Transação autorizada pelo servidor! Assinando na Pi Wallet (Testnet)...', 'info');
+          const netLabel = isSandboxMode() ? 'Testnet' : 'Mainnet';
+          showToast(`✓ Transação autorizada pelo servidor! Assinando na Pi Wallet (${netLabel})...`, 'info');
         }
       },
 
       onReadyForServerCompletion: async function (paymentId, txid) {
         releasePaymentLock();
         console.log('Pi Payment aprovado na blockchain com TXID:', txid);
-        showToast('✓ Pagamento confirmado na Pi Testnet!', 'success');
+        showToast(`✓ Pagamento confirmado na ${isSandboxMode() ? 'Pi Testnet' : 'Pi Mainnet'}!`, 'success');
         const result = await completePaymentOnServer(paymentId, txid, options.adPayload || null);
 
         if (result && result.security_rejected) {
@@ -665,11 +694,9 @@
           }
         }
 
-        showToast('Aviso Pi: ' + errText, 'warning');
+        showToast('Erro no pagamento via Pi: ' + errText, 'error');
         if (typeof options.onError === 'function') {
           options.onError(error, payment);
-        } else {
-          alert('Houve um erro no processamento do pagamento via Pi. ' + errText);
         }
       }
     };
@@ -996,7 +1023,7 @@
 
     const banner = document.createElement('div');
     banner.id = 'hokage-smart-pi-banner';
-    banner.style.cssText = 'position:fixed;bottom:0;left:0;width:100%;background:linear-gradient(90deg, #180d2b, #09090b);border-top:1px solid rgba(139,92,246,0.45);z-index:999998;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 -4px 25px rgba(0,0,0,0.85);font-family:system-ui,-apple-system,sans-serif;';
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;width:100%;background:linear-gradient(90deg, #180d2b, #09090b);border-top:1px solid rgba(139,92,246,0.45);z-index:250;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 -4px 25px rgba(0,0,0,0.85);font-family:system-ui,-apple-system,sans-serif;';
 
     const cleanHost = window.location.host;
     const cleanPath = window.location.pathname;
@@ -1089,7 +1116,24 @@
       const data = json && json.data ? json.data : json;
       if (res.ok && data && data.download_url) {
         showToast('✓ Compra verificada! Iniciando download...', 'success');
-        window.open(data.download_url, '_blank');
+        const box = document.getElementById('pi-owned-library-' + productId);
+        if (box) {
+          let fallback = box.querySelector('.hk-dl-direct-link');
+          if (!fallback) {
+            fallback = document.createElement('a');
+            fallback.className = 'hk-dl-direct-link';
+            fallback.target = '_blank';
+            fallback.rel = 'noopener noreferrer';
+            fallback.style.cssText = 'display:inline-block;margin-top:8px;font-size:0.8rem;color:#6ee7b7;text-decoration:underline;font-weight:700';
+            box.appendChild(fallback);
+          }
+          fallback.href = data.download_url;
+          fallback.textContent = '⬇️ Se o download não abriu automaticamente, toque aqui (' + (format || 'pdf').toUpperCase() + ')';
+        }
+        const win = window.open(data.download_url, '_blank', 'noopener,noreferrer');
+        if (!win) {
+          window.location.assign(data.download_url);
+        }
       } else {
         const msg = (json && json.error) || 'Arquivo ainda não disponível ou compra não localizada.';
         showToast(msg, 'error');
@@ -1147,6 +1191,7 @@
     initPiSdk: initPiSdk,
     isPiBrowser: isPiBrowser,
     loginWithPi: loginWithPi,
+    logout: logout,
     authenticatePioneer: loginWithPi,
     openPiConnectModal: openPiConnectModal,
     openTestnetInfoModal: openTestnetInfoModal,
@@ -1163,11 +1208,16 @@
     isPaymentInFlight: function () { return isPaymentRequestInFlight; },
     getUser: function () { return authenticatedUser; },
     getAccessToken: function () {
-      try {
-        return sessionStorage.getItem('hokage_pi_access_token') || '';
-      } catch (_) {
-        return '';
+      return getAuthTokenForServer();
+    },
+    ensureAccessToken: async function () {
+      const existing = getAuthTokenForServer();
+      if (existing) return existing;
+      if (isPiBrowser()) {
+        await triggerAuthFlow();
+        return getAuthTokenForServer();
       }
+      return '';
     },
     officialWallet: OFFICIAL_WALLET,
     initSmartPiBanner: initSmartPiBanner

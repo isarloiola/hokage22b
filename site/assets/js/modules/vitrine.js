@@ -447,6 +447,7 @@
       if (modal) {
         modal.style.display = 'flex';
         modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
       }
 
       // Registra métrica de clique
@@ -458,6 +459,7 @@
       if (modal) {
         modal.classList.remove('active');
         modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
       }
     }
 
@@ -563,6 +565,7 @@
       if (modal) {
         modal.style.display = 'flex';
         modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
       }
     }
 
@@ -571,6 +574,7 @@
       if (modal) {
         modal.classList.remove('active');
         modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
       }
     }
 
@@ -682,11 +686,20 @@
       window.location.href = 'pioneiro';
     }
 
-    // Inicia o Modo Simulador Interativo
+    const SIMULATOR_DRAFT_KEY = 'hokage_simulator_draft_v1';
+
+    // Inicia o Modo Simulador Interativo (preservando rascunho local da simulação)
     function startSimulatorMode() {
       isSimulatorMode = true;
-      currentPioneerUser = SIMULATOR_DEMO_PROFILE.username;
-      currentProfileData = JSON.parse(JSON.stringify(SIMULATOR_DEMO_PROFILE));
+      let loadedDraft = null;
+      try {
+        const raw = localStorage.getItem(SIMULATOR_DRAFT_KEY);
+        if (raw) loadedDraft = JSON.parse(raw);
+      } catch (_) {}
+      currentProfileData = (loadedDraft && typeof loadedDraft === 'object')
+        ? loadedDraft
+        : JSON.parse(JSON.stringify(SIMULATOR_DEMO_PROFILE));
+      currentPioneerUser = currentProfileData.username || SIMULATOR_DEMO_PROFILE.username;
       renderShowcaseData(currentProfileData, []);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -716,10 +729,11 @@
 
       const loggedUser = getLoggedUser();
       const explicitRef = getQueryParam('ref');
+      const isExploreFlow = getQueryParam('explorar') === '1';
       const isAutoStartFlow = getQueryParam('autostart') === '1' || getQueryParam('simulador') === '1' || getQueryParam('teste') === '1';
 
-      // Se entrou por link de convite (?ref=usuario) sem ?u= e sem autostart/simulador, abre direto a vitrine de quem convidou
-      if (!username && explicitRef && !isAutoStartFlow) {
+      // Se entrou por link de convite (?ref=usuario) sem ?u=, ?explorar=1 ou autostart, abre a vitrine de quem convidou
+      if (!username && explicitRef && !isAutoStartFlow && !isExploreFlow) {
         const cleanRefHandle = (window.HokageReferral && typeof window.HokageReferral.normalizeHandle === 'function')
           ? window.HokageReferral.normalizeHandle(explicitRef)
           : String(explicitRef).trim().replace(/^@+/, '').toLowerCase();
@@ -728,8 +742,8 @@
         }
       }
 
-      // Se não passou ?u= na URL e NÃO é um link explícito de convite (?ref=), usa a conta logada
-      if (!username && !explicitRef && loggedUser && loggedUser.username) {
+      // Se não passou ?u=, NÃO é ?ref= e NÃO é ?explorar=1, usa a conta logada
+      if (!username && !explicitRef && !isExploreFlow && loggedUser && loggedUser.username) {
         username = loggedUser.username;
       }
 
@@ -801,7 +815,12 @@
           }
         }
         loadPioneersDirectory();
-        if (getQueryParam('autostart') === '1') {
+        if (isExploreFlow) {
+          setTimeout(function () {
+            const dirSec = document.getElementById('pioneer-directory-section');
+            if (dirSec) dirSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 180);
+        } else if (getQueryParam('autostart') === '1') {
           setTimeout(function () {
             connectPiBrowserAndStart();
           }, 250);
@@ -865,31 +884,43 @@
       if (window.IsarDB && window.IsarDB.getPioneerFullProfile) {
         try {
           const prof = await window.IsarDB.getPioneerFullProfile(username);
-          currentProfileData = prof || {
-            username: username,
-            bio: 'Pioneiro Verificado na comunidade independente HOKAGE22B.',
-            wallet_address: '',
-            products: []
-          };
+          const isLoggedOwner = Boolean(loggedUser && loggedUser.username && cleanUsername(loggedUser.username) === username);
+          if (!prof && !isLoggedOwner) {
+            currentProfileData = {
+              username: username,
+              bio: 'Este endereço ainda não possui um Passaporte ativo no HOKAGE22B.',
+              wallet_address: '',
+              products: [],
+              _notFound: true
+            };
+          } else {
+            currentProfileData = prof || {
+              username: username,
+              bio: 'Pioneiro Verificado na comunidade independente HOKAGE22B.',
+              wallet_address: '',
+              products: []
+            };
+          }
 
           // Fallback de cache local caso o upload de avatar seja recente
           const cleanSlug = username.replace(/^@+/, '');
           try {
             const cachedAvatar = localStorage.getItem('hokage_pioneer_avatar_' + cleanSlug);
-            if (cachedAvatar && !currentProfileData.avatar_url) {
+            if (cachedAvatar && !currentProfileData.avatar_url && !currentProfileData._notFound) {
               currentProfileData.avatar_url = cachedAvatar;
             }
           } catch (_) {}
 
-          const ads = (window.IsarDB.getMyAds) ? await window.IsarDB.getMyAds(username) : [];
+          const ads = (window.IsarDB.getMyAds && !currentProfileData._notFound) ? await window.IsarDB.getMyAds(username) : [];
           renderShowcaseData(currentProfileData, ads);
         } catch (err) {
           console.warn('Erro ao carregar perfil do pioneiro:', err);
           renderShowcaseData({
             username: username,
-            bio: 'Pioneiro Verificado na comunidade independente HOKAGE22B.',
+            bio: 'Não foi possível verificar este Passaporte no momento.',
             wallet_address: '',
-            products: []
+            products: [],
+            _notFound: true
           }, []);
         }
       }
@@ -1132,9 +1163,28 @@
       const linksList = document.getElementById('pioneer-links-list');
       let linksHtml = '';
 
+      if (prof._notFound) {
+        linksHtml += `
+          <div style="background:rgba(245,158,11,0.09);border:1px solid rgba(245,158,11,0.38);border-radius:14px;padding:18px;text-align:left;margin-bottom:12px">
+            <strong style="color:#fbbf24;display:block;margin-bottom:6px;font-size:0.95rem">🔍 Passaporte ${escapeHtml(username)} ainda não ativado</strong>
+            <p style="font-size:0.84rem;color:#d4d4d8;margin:0 0 14px;line-height:1.5">
+              Nenhum pioneiro ativou este @usuário no HOKAGE22B até o momento. Se esta conta Pi é sua, você pode ativar seu Passaporte gratuitamente agora no Pi Browser!
+            </p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button type="button" onclick="connectPiBrowserAndStart()" class="portal-btn portal-btn--primary portal-btn--sm" style="font-weight:800">
+                ⚡ Ativar Meu Passaporte
+              </button>
+              <a href="pioneiro?explorar=1" class="portal-btn portal-btn--outline portal-btn--sm" style="text-decoration:none">
+                🌐 Explorar Passaportes Reais
+              </a>
+            </div>
+          </div>
+        `;
+      }
+
       // 1. Links em Destaque da Comunidade (Qualquer pioneiro pode ativar para ajudar a rede)
-      const showZero = (prof.showcase_zero !== false);
-      const showMural = (prof.showcase_mural !== false);
+      const showZero = (!prof._notFound && prof.showcase_zero !== false);
+      const showMural = (!prof._notFound && prof.showcase_mural !== false);
 
       if (showZero) {
         linksHtml += `
@@ -1144,7 +1194,7 @@
             </div>
             <div class="pioneer-link-content">
               <span class="pioneer-link-heading">
-                📘 Pi Network do Zero (Guia Iniciante)
+                Pi Network do Zero (Guia Iniciante)
                 <span style="font-size:0.68rem;background:rgba(245,158,11,0.25);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:2px 8px;border-radius:10px;font-weight:700">Trilha Grátis</span>
               </span>
               <span class="pioneer-link-caption">Aprenda do zero: carteira, blockchain e segurança anti-golpes</span>
@@ -1158,11 +1208,11 @@
         linksHtml += `
           <a href="mural" class="pioneer-link-btn pioneer-link-btn--featured">
             <div class="pioneer-link-icon-wrap">
-              <span style="font-size:1.35rem">📢</span>
+              <span style="font-size:1.35rem">🏘️</span>
             </div>
             <div class="pioneer-link-content">
               <span class="pioneer-link-heading">
-                🏘️ A Vila (P2P) dos Pioneiros (Mural de Anúncios)
+                A Vila · Central P2P (Classificados)
                 <span style="font-size:0.68rem;background:rgba(245,158,11,0.25);border:1px solid rgba(245,158,11,0.5);color:var(--amber-light);padding:2px 8px;border-radius:10px;font-weight:700">Classificados P2P</span>
               </span>
               <span class="pioneer-link-caption">Divulgue sua loja, canal ou serviço para a comunidade</span>
@@ -1459,16 +1509,15 @@
 
       document.getElementById('prof-input-user').value = activeUser;
 
-      const previewBtn = document.getElementById('btn-preview-simulator');
       const saveBtn = document.getElementById('btn-save-profile');
       const subTitle = document.getElementById('modal-profile-subtitle');
+      const fbEl = document.getElementById('prof-save-feedback');
+      if (fbEl) { fbEl.style.display = 'none'; fbEl.innerHTML = ''; }
 
       if (isSimulatorMode) {
-        if (previewBtn) previewBtn.style.display = 'block';
         if (saveBtn) saveBtn.textContent = '👀 Atualizar Prévia no Simulador';
         if (subTitle) subTitle.textContent = 'Modo Simulador: adicione fotos e links para testar a prévia na sua tela.';
       } else {
-        if (previewBtn) previewBtn.style.display = 'none';
         if (saveBtn) saveBtn.textContent = '💾 Salvar Oficialmente na Pi Network';
         if (subTitle) subTitle.textContent = 'Configure sua bio, foto de perfil, carteira Pi, contatos e produtos.';
       }
@@ -1516,6 +1565,7 @@
       }
 
       modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
       loadProfileAnalytics(activeUser);
 
       // Validação em tempo real do campo de carteira ao abrir
@@ -1526,7 +1576,10 @@
 
     function closeProfileEditModal() {
       const modal = document.getElementById('edit-profile-modal');
-      if (modal) modal.classList.remove('active');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+      }
     }
 
     // ==========================================
@@ -1573,27 +1626,6 @@
         avatar_url: 'assets/img/founder-profile.jpg',
         category: 'servicos',
         wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
-      },
-      {
-        username: '@loja_brasil_pi',
-        bio: 'Comércio eletrônico aceitando pagamentos diretos em Pi na Mainnet. Envio para todo o Brasil.',
-        avatar_url: '',
-        category: 'lojas',
-        wallet_address: 'GBRASILPI7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
-      },
-      {
-        username: '@design_web3',
-        bio: 'Identidade visual, logos e interfaces para projetos e negócios no ecossistema Pi.',
-        avatar_url: '',
-        category: 'servicos',
-        wallet_address: 'GDESIGNPI7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
-      },
-      {
-        username: '@canal_pioneiro',
-        bio: 'Criador de conteúdo educativo sobre nós validadores, migração Mainnet e tutoriais da Pi Network.',
-        avatar_url: '',
-        category: 'criadores',
-        wallet_address: 'GCANALPI7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
       }
     ];
 
@@ -1955,11 +1987,15 @@
         products: products
       };
 
+      try {
+        localStorage.setItem(SIMULATOR_DRAFT_KEY, JSON.stringify(currentProfileData));
+      } catch (_) {}
+
       currentPioneerUser = username;
       renderShowcaseData(currentProfileData, []);
       closeProfileEditModal();
 
-      alert('✨ Prévia atualizada com sucesso no Simulador!');
+      showVitrineToast('✨ Prévia atualizada com sucesso no Simulador!', 'success');
     }
 
     // Salvar Oficialmente na Pi Network (Exige Pi Browser para Validar Identidade KYC)
@@ -2019,27 +2055,53 @@
       }
       const socials = collectSocialFieldsFromForm();
 
-      const avatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
+      let finalAvatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
       const showcaseZero = document.getElementById('prof-check-zero') ? document.getElementById('prof-check-zero').checked : true;
       const showcaseMural = document.getElementById('prof-check-mural') ? document.getElementById('prof-check-mural').checked : true;
 
       const products = collectProductsFromForm();
 
       const btn = document.getElementById('btn-save-profile');
+      const fbEl = document.getElementById('prof-save-feedback');
+      if (fbEl) { fbEl.style.display = 'none'; fbEl.innerHTML = ''; }
       btn.disabled = true;
       btn.textContent = '⏳ Salvando no Supabase...';
 
       try {
+        if (finalAvatarUrl && finalAvatarUrl.startsWith('data:image/') && window.IsarDB && typeof window.IsarDB.uploadProfileImage === 'function') {
+          btn.textContent = '⏳ Enviando foto de perfil...';
+          try {
+            const blob = await (await fetch(finalAvatarUrl)).blob();
+            const avatarFile = new File([blob], 'avatar.jpg', { type: blob.type || 'image/jpeg' });
+            const uploadedUrl = await window.IsarDB.uploadProfileImage(avatarFile);
+            if (uploadedUrl) {
+              finalAvatarUrl = uploadedUrl;
+              const avInp = document.getElementById('prof-input-avatar');
+              if (avInp) avInp.value = finalAvatarUrl;
+            }
+          } catch (uploadErr) {
+            console.warn('Upload de avatar para Storage falhou, tentando persistência padrão:', uploadErr);
+          }
+          btn.textContent = '⏳ Salvando no Supabase...';
+        }
+
+        const existingSelectedTitles = (currentProfileData && Array.isArray(currentProfileData.selected_titles))
+          ? currentProfileData.selected_titles
+          : (currentProfileData && currentProfileData.checklist_state && Array.isArray(currentProfileData.checklist_state.selected_titles)
+            ? currentProfileData.checklist_state.selected_titles
+            : undefined);
+
         if (window.IsarDB && window.IsarDB.savePioneerProfile) {
           const savedResp = await window.IsarDB.savePioneerProfile(username, {
             bio: bio,
-            avatar_url: avatarUrl,
+            avatar_url: finalAvatarUrl,
             wallet_address: wallet,
             whatsapp_url: socials.whatsapp_url,
             youtube_url: socials.youtube_url,
             instagram_url: socials.instagram_url,
             twitter_url: socials.twitter_url,
             social_links: socials.social_links,
+            selected_titles: existingSelectedTitles,
             showcase_zero: showcaseZero,
             showcase_mural: showcaseMural,
             products: products
@@ -2048,8 +2110,8 @@
           // Salva no cache imediato do navegador para persistência instantânea
           const cleanSlug = cleanUsername(username).replace('@', '');
           try {
-            if (avatarUrl) {
-              localStorage.setItem('hokage_pioneer_avatar_' + cleanSlug, avatarUrl);
+            if (finalAvatarUrl) {
+              localStorage.setItem('hokage_pioneer_avatar_' + cleanSlug, finalAvatarUrl);
             } else {
               localStorage.removeItem('hokage_pioneer_avatar_' + cleanSlug);
             }
@@ -2058,9 +2120,9 @@
           setLoggedUser(username, null, 'pi-sdk');
           currentPioneerUser = username;
           if (currentProfileData) {
-            currentProfileData.avatar_url = avatarUrl;
+            currentProfileData.avatar_url = finalAvatarUrl;
           }
-          applyAvatarOnScreen(avatarUrl, username);
+          applyAvatarOnScreen(finalAvatarUrl, username);
           window.history.replaceState(null, '', `?u=${encodeURIComponent(cleanSlug)}`);
 
           if (savedResp && savedResp._referralResult && savedResp._referralResult.awarded) {
@@ -2075,7 +2137,19 @@
         }
       } catch (err) {
         console.error('Erro ao salvar vitrine:', err);
-        alert('Erro ao gravar dados no Supabase. Por favor, tente novamente no Pi Browser.');
+        const msg = (err && err.message) ? String(err.message) : 'Erro ao gravar dados no servidor.';
+        const isAuthErr = /401|sessão|token|expirad|autentic/i.test(msg);
+        if (fbEl) {
+          fbEl.style.display = 'block';
+          fbEl.style.background = 'rgba(239,68,68,0.14)';
+          fbEl.style.border = '1px solid rgba(239,68,68,0.45)';
+          fbEl.style.color = '#fca5a5';
+          fbEl.innerHTML = isAuthErr
+            ? `<div style="margin-bottom:8px">🔒 <strong>Sessão Pi expirada ou não autenticada:</strong> ${escapeHtml(msg)}</div>
+               <button type="button" onclick="connectPiBrowserAndStart()" class="btn btn-primary btn-sm" style="font-weight:700">⚡ Reconectar Pi Agora</button>`
+            : `⚠️ ${escapeHtml(msg)}`;
+        }
+        showVitrineToast(msg, 'error');
       } finally {
         btn.disabled = false;
         btn.textContent = '💾 Salvar Oficialmente na Pi Network';
@@ -2229,6 +2303,7 @@
 
       modal.style.display = 'flex';
       modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
     }
 
     function closeAvatarCropModal() {
@@ -2236,6 +2311,7 @@
       if (modal) {
         modal.classList.remove('active');
         modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
       }
     }
 
@@ -2554,7 +2630,16 @@
         updatePassportJourneyBar({ is_ambassador: true, referral_qualified_count: count }, targetUsername);
       }
 
-      if (!isOwner || !sectionEl) return;
+      if (!isOwner || isSimulatorMode || !sectionEl) {
+        if (sectionEl) sectionEl.style.display = 'none';
+        return;
+      }
+
+      const formatPiMetric = function (val) {
+        const num = Number(val) || 0;
+        if (num > 0 && num < 0.01) return num.toFixed(4) + ' π';
+        return num.toFixed(2) + ' π';
+      };
 
       const pendingPi = Number((affSummary && affSummary.pending_pi) || 0);
       const requestedPi = Number((affSummary && affSummary.requested_pi) || 0);
@@ -2575,8 +2660,8 @@
 
       if (countEl) countEl.textContent = String(count);
       if (creditsEl) creditsEl.textContent = String(credits);
-      if (pendingPiEl) pendingPiEl.textContent = pendingPi.toFixed(4).replace(/\.?0+$/, (m) => m.length >= 3 ? '.00' : m) + ' π';
-      if (totalPiEl) totalPiEl.textContent = totalEarnedPi.toFixed(4).replace(/\.?0+$/, (m) => m.length >= 3 ? '.00' : m) + ' π';
+      if (pendingPiEl) pendingPiEl.textContent = formatPiMetric(pendingPi);
+      if (totalPiEl) totalPiEl.textContent = formatPiMetric(totalEarnedPi);
       if (rateLabelEl) rateLabelEl.textContent = ratePct + '%';
 
       if (statusEl) {
@@ -2901,6 +2986,14 @@
         });
       }
     }
+
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key !== 'Escape') return;
+      closeAvatarCropModal();
+      closeWalletQrModal();
+      closeExternalBrowserModal();
+      closeProfileEditModal();
+    });
 
     document.addEventListener('DOMContentLoaded', loadPioneerProfile);
   
