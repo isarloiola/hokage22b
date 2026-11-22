@@ -87,7 +87,7 @@
       '    <div class="handle">@' + cleanHandle + '</div>' +
       '    <p class="bio">' + bio + '</p>' +
       '    <div class="foot">' +
-      (walletShort ? '<span class="wallet" title="Chave Pública Pi">Pi: ' + esc(walletShort) + '</span>' : '<span class="wallet">Pi KYC Verificado</span>') +
+      (walletShort ? '<span class="wallet" title="Chave Pública Pi">Pi: ' + esc(walletShort) + '</span>' : '<span class="wallet">Conta Pi Autenticada</span>') +
       '      <a class="cta" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">Abrir Passaporte ↗</a>' +
       '    </div>' +
       '  </div>' +

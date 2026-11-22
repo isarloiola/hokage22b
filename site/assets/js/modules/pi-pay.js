@@ -1012,7 +1012,7 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-        <a href="${piDeepLink}" style="background:linear-gradient(135deg, #8b5cf6, #7c3aed);color:#fff;font-size:0.78rem;font-weight:700;padding:7px 14px;border-radius:20px;text-decoration:none;border:1px solid rgba(255,255,255,0.25);white-space:nowrap;display:inline-block">
+        <a id="hk-smart-pi-deeplink" href="pi://hokage22b.com/" style="background:linear-gradient(135deg, #8b5cf6, #7c3aed);color:#fff;font-size:0.78rem;font-weight:700;padding:7px 14px;border-radius:20px;text-decoration:none;border:1px solid rgba(255,255,255,0.25);white-space:nowrap;display:inline-block">
           🚀 Abrir Pi
         </a>
         <button type="button" onclick="document.getElementById('hokage-smart-pi-banner').remove();try{sessionStorage.setItem('hokage_pi_banner_dismissed','1')}catch(_){}" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:1.1rem;padding:4px 6px;cursor:pointer" aria-label="Fechar banner">
@@ -1020,6 +1020,8 @@
         </button>
       </div>
     `;
+    const linkEl = banner.querySelector('#hk-smart-pi-deeplink');
+    if (linkEl) linkEl.setAttribute('href', piDeepLink);
 
     document.body.appendChild(banner);
   }

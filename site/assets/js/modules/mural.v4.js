@@ -54,20 +54,20 @@
   function safeUrl(url) {
     if (!url || typeof url !== 'string') return '';
     const trimmed = url.trim();
-    if (/^https?:\/\//i.test(trimmed)) {
-      return encodeURI(trimmed);
+    if (/^https?:\/\/[^\s<>"'`]+$/i.test(trimmed)) {
+      return escapeHtml(encodeURI(trimmed));
     }
     return '';
   }
 
-  function safeImageUrl(url) {
+  function safeImageUrl(url, allowBlob) {
     if (!url || typeof url !== 'string') return '';
     const trimmed = url.trim();
     if (/^data:image\/(png|jpe?g|webp|gif);base64,[a-z0-9+/=]+$/i.test(trimmed)) {
       return trimmed;
     }
-    if (/^blob:https?:\/\//i.test(trimmed)) {
-      return trimmed;
+    if (allowBlob && /^blob:https?:\/\/[^\s<>"'`]+$/i.test(trimmed)) {
+      return escapeHtml(trimmed);
     }
     return safeUrl(trimmed);
   }
@@ -153,16 +153,17 @@
 
     let linkHtml = '';
     if (tier === 'ouro' && cleanUrl) {
-      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" onclick="window.IsarMural && window.IsarMural.trackClick('${cardId}')" class="pioneer-card__link pioneer-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
+      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" data-mural-action="track-click" data-ad-id="${cardId}" class="pioneer-card__link pioneer-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
     } else if (tier === 'prata' && cleanUrl) {
-      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" onclick="window.IsarMural && window.IsarMural.trackClick('${cardId}')" class="pioneer-card__link">Acessar Anúncio →</a>`;
+      linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" data-mural-action="track-click" data-ad-id="${cardId}" class="pioneer-card__link">Acessar Anúncio →</a>`;
     } else {
-      const cleanProfileSlug = safeAuthor.replace(/^@+/, '');
-      linkHtml = `<a href="pioneiro?u=${encodeURIComponent(cleanProfileSlug)}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__link" style="font-size:0.78rem;color:var(--accent-light);text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-weight:700">👤 Ver Passaporte de ${safeAuthor} →</a>`;
+      const cleanProfileSlug = String(author || '').replace(/^@+/, '');
+      linkHtml = `<a href="pioneiro?u=${encodeURIComponent(cleanProfileSlug)}" data-mural-action="track-profile" data-ad-id="${cardId}" class="pioneer-card__link" style="font-size:0.78rem;color:var(--accent-light);text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-weight:700">👤 Ver Passaporte de ${safeAuthor} →</a>`;
     }
 
     let bannerHtml = '';
-    const rawImg = ad.image_url ? safeImageUrl(ad.image_url) : '';
+    const isPreviewCard = ad.id === 'preview_card_mock';
+    const rawImg = ad.image_url ? safeImageUrl(ad.image_url, isPreviewCard) : '';
     const ytThumb = cleanUrl ? getYouTubeThumb(cleanUrl) : '';
     const finalImg = rawImg || ytThumb || (tier === 'ouro' ? 'assets/img/ebook-pago-negocios.jpg' : '');
 
@@ -232,13 +233,14 @@
       ? '⚡💵 Pi + Ref. Local'
       : '⚡ 100% Pi';
     const safeLocation = escapeHtml((ad.location && String(ad.location).trim()) || 'Online');
+    const cleanAuthorSlug = String(author || '').replace(/^@+/, '');
 
     return `
       <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" data-payment-mode="${normalizedPayMode}" data-country="${countryCode}" id="card-${cardId}">
         ${bannerHtml}
         <div class="pioneer-card__top">
           <span class="pioneer-card__badge ${tierBadgeClass}">${tierLabel}</span>
-          <a href="pioneiro?u=${encodeURIComponent(safeAuthor.replace(/^@+/, ''))}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" class="pioneer-card__author" style="text-decoration:none" title="Ver Passaporte do pioneiro">${safeAuthor} ↗</a>
+          <a href="pioneiro?u=${encodeURIComponent(cleanAuthorSlug)}" data-mural-action="track-profile" data-ad-id="${cardId}" class="pioneer-card__author" style="text-decoration:none" title="Ver Passaporte do pioneiro">${safeAuthor} ↗</a>
         </div>
         <h3 class="pioneer-card__title">${safeTitle}</h3>
         <p class="pioneer-card__desc">${safeDesc}</p>
@@ -253,18 +255,18 @@
         <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:8px">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
             ${metricsDetailsHtml}
-            <button type="button" class="btn-like-ad ${isLiked ? 'liked' : ''}" onclick="window.IsarMural && window.IsarMural.toggleLike('${cardId}')" data-id="${cardId}" title="Apoiar este anúncio da comunidade" style="background:${isLiked ? 'rgba(244,63,94,0.25)' : 'rgba(244,63,94,0.1)'};border:1px solid ${isLiked ? '#f43f5e' : 'rgba(244,63,94,0.3)'};color:${isLiked ? '#fff' : '#fb7185'};padding:2px 8px;border-radius:6px;cursor:pointer;font-size:0.74rem;display:inline-flex;align-items:center;gap:4px;font-weight:${isLiked ? '700' : '500'};transition:all 0.2s ease">
+            <button type="button" class="btn-like-ad ${isLiked ? 'liked' : ''}" data-mural-action="like" data-ad-id="${cardId}" data-id="${cardId}" title="Apoiar este anúncio da comunidade" style="background:${isLiked ? 'rgba(244,63,94,0.25)' : 'rgba(244,63,94,0.1)'};border:1px solid ${isLiked ? '#f43f5e' : 'rgba(244,63,94,0.3)'};color:${isLiked ? '#fff' : '#fb7185'};padding:2px 8px;border-radius:6px;cursor:pointer;font-size:0.74rem;display:inline-flex;align-items:center;gap:4px;font-weight:${isLiked ? '700' : '500'};transition:all 0.2s ease">
               <span>❤️</span> <strong class="ad-likes-num" data-id="${cardId}">${likes}</strong>
             </button>
-            <button type="button" class="btn-comment-ad" onclick="window.IsarMural && window.IsarMural.toggleComments('${cardId}')" data-id="${cardId}" title="Ver ou publicar comentários" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);color:#c4b5fd;padding:2px 8px;border-radius:6px;cursor:pointer;font-size:0.74rem;display:inline-flex;align-items:center;gap:4px;font-weight:500;transition:all 0.2s ease">
+            <button type="button" class="btn-comment-ad" data-mural-action="comments" data-ad-id="${cardId}" data-id="${cardId}" title="Ver ou publicar comentários" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);color:#c4b5fd;padding:2px 8px;border-radius:6px;cursor:pointer;font-size:0.74rem;display:inline-flex;align-items:center;gap:4px;font-weight:500;transition:all 0.2s ease">
               <span>💬</span> <strong class="ad-comments-num" data-id="${cardId}">0</strong>
             </button>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
-            <button type="button" class="btn-report-ad" onclick="window.IsarMural && window.IsarMural.openReportModal('${cardId}', '${safeTitle.replace(/'/g, "\\'")}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
+            <button type="button" class="btn-report-ad" data-mural-action="report" data-ad-id="${cardId}" data-ad-title="${safeTitle}" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.72rem;display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:4px" title="Denunciar conteúdo impróprio ou fraude">
               🚩 Denunciar
             </button>
-            <a href="pioneiro?u=${encodeURIComponent(safeAuthor.replace(/^@+/, ''))}" onclick="window.IsarMural && window.IsarMural.trackProfileVisit('${cardId}')" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
+            <a href="pioneiro?u=${encodeURIComponent(cleanAuthorSlug)}" data-mural-action="track-profile" data-ad-id="${cardId}" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver mini-página do anunciante">Perfil ↗</a>
           </div>
         </div>
         <div class="ad-comments-drawer" id="comments-drawer-${cardId}" style="display:none"></div>
@@ -1618,7 +1620,7 @@
     } catch (err) {
       const msg = (err && err.message) || 'Não foi possível resgatar o crédito de indicação.';
       if (typeof showSubmitFeedback === 'function') {
-        showSubmitFeedback('warning', `<div style="font-weight:700;color:#fca5a5">${msg}</div>`, '');
+        showSubmitFeedback('warning', `<div style="font-weight:700;color:#fca5a5">${escapeHtml(msg)}</div>`, '');
       }
       updateReferralButtonVisibility();
     } finally {
@@ -2115,7 +2117,7 @@
         }
 
         const publicUrl = await window.IsarDB.uploadAdImage(file, function (msg) {
-          if (statusEl) statusEl.innerHTML = `⏳ <span>${msg}</span>`;
+          if (statusEl) statusEl.innerHTML = `⏳ <span>${escapeHtml(msg)}</span>`;
         });
 
         // 3. Sucesso: atualiza o input de imagem com a URL permanente do Supabase Storage
@@ -2130,8 +2132,11 @@
       } catch (err) {
         console.warn('Upload de imagem falhou:', err);
         if (statusEl) {
+          const isAuthErr = err && /autentic|pi browser/i.test(String(err.message || ''));
           statusEl.className = 'ad-upload-status error';
-          statusEl.innerHTML = '⚠️ <span>Não foi possível salvar no Storage. A foto temporária foi mantida na prévia.</span>';
+          statusEl.innerHTML = isAuthErr
+            ? '⚠️ <span>Conecte sua conta no <strong>Pi Browser</strong> para salvar a foto no servidor.</span>'
+            : '⚠️ <span>Não foi possível salvar no Storage. A foto temporária foi mantida na prévia.</span>';
         }
       }
     });
@@ -2312,11 +2317,11 @@
         const daysLeft = ad.days_left !== undefined ? ad.days_left : 30;
         const editStatus = getAdEditStatus(ad);
         const editButtonHtml = editStatus.editable
-          ? `<button type="button" class="btn btn-outline btn-sm" onclick="window.IsarMural.openEditModal('${escapeHtml(ad.id)}')" style="font-size:0.78rem;padding:6px 10px">✏️ Editar (${editStatus.hoursLeft}h)</button>`
+          ? `<button type="button" class="btn btn-outline btn-sm" data-mural-action="edit-ad" data-ad-id="${escapeHtml(ad.id)}" style="font-size:0.78rem;padding:6px 10px">✏️ Editar (${editStatus.hoursLeft}h)</button>`
           : `<button type="button" class="btn btn-outline btn-sm" disabled title="Prazo máximo de edição de 24h expirado" style="font-size:0.75rem;padding:6px 10px;opacity:0.45;cursor:not-allowed">🔒 Edição 24h</button>`;
 
         const upgradeButtonHtml = (ad.plan_tier === 'bronze' || ad.plan_tier === 'gratis')
-          ? `<button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural.upgradeBronzeAd('${escapeHtml(ad.id)}')" style="font-size:0.76rem;padding:6px 11px;font-weight:800;background:linear-gradient(135deg,#d97706,#f59e0b);border:none;color:#140e0a">🚀 Boost de Alcance</button>`
+          ? `<button type="button" class="btn btn-primary btn-sm" data-mural-action="upgrade-ad" data-ad-id="${escapeHtml(ad.id)}" style="font-size:0.76rem;padding:6px 11px;font-weight:800;background:linear-gradient(135deg,#d97706,#f59e0b);border:none;color:#140e0a">🚀 Boost de Alcance</button>`
           : '';
 
         return `
@@ -2738,7 +2743,7 @@
     let formHtml = '';
     if (authUser) {
       formHtml = `
-        <form class="ad-comment-form" onsubmit="event.preventDefault(); window.IsarMural && window.IsarMural.submitComment('${escapeHtml(adId)}');">
+        <form class="ad-comment-form" data-ad-id="${escapeHtml(adId)}">
           <input type="text" id="comment-input-${escapeHtml(adId)}" class="ad-comment-input" maxlength="280" placeholder="Comentar como ${escapeHtml(authUser.username)}..." required />
           <button type="submit" class="btn btn-primary btn-sm ad-comment-submit">Enviar</button>
         </form>
@@ -2747,7 +2752,7 @@
       formHtml = `
         <div class="ad-comment-auth-note">
           <span>Conecte sua conta Pi para comentar com segurança:</span>
-          <button type="button" class="btn btn-primary btn-sm" onclick="window.HokagePi && window.HokagePi.loginWithPi().then(function(){ window.IsarMural && window.IsarMural.toggleComments('${escapeHtml(adId)}', true); })">
+          <button type="button" class="btn btn-primary btn-sm" data-mural-action="login-comment" data-ad-id="${escapeHtml(adId)}">
             ⚡ Conectar Pi
           </button>
         </div>
@@ -2878,12 +2883,63 @@
   }
 
   let isInitialized = false;
+  let delegationBound = false;
+
+  function bindMuralEventDelegation() {
+    if (delegationBound || typeof document === 'undefined') return;
+    delegationBound = true;
+
+    document.addEventListener('click', function (ev) {
+      const target = ev.target && ev.target.closest ? ev.target.closest('[data-mural-action]') : null;
+      if (!target) return;
+      const action = target.getAttribute('data-mural-action');
+      const adId = target.getAttribute('data-ad-id') || '';
+      if (!adId && action !== 'login-comment') return;
+
+      if (action === 'track-click') {
+        trackClick(adId);
+      } else if (action === 'track-profile') {
+        trackProfileVisit(adId);
+      } else if (action === 'like') {
+        ev.preventDefault();
+        toggleLike(adId);
+      } else if (action === 'comments') {
+        ev.preventDefault();
+        toggleComments(adId);
+      } else if (action === 'report') {
+        ev.preventDefault();
+        openReportModal(adId, target.getAttribute('data-ad-title') || '');
+      } else if (action === 'edit-ad') {
+        ev.preventDefault();
+        openEditModal(adId);
+      } else if (action === 'upgrade-ad') {
+        ev.preventDefault();
+        upgradeBronzeAd(adId);
+      } else if (action === 'login-comment') {
+        ev.preventDefault();
+        if (window.HokagePi && window.HokagePi.loginWithPi) {
+          window.HokagePi.loginWithPi().then(function () {
+            toggleComments(adId, true);
+          });
+        }
+      }
+    });
+
+    document.addEventListener('submit', function (ev) {
+      const form = ev.target && ev.target.closest ? ev.target.closest('form.ad-comment-form[data-ad-id]') : null;
+      if (!form) return;
+      ev.preventDefault();
+      const adId = form.getAttribute('data-ad-id') || '';
+      if (adId) submitComment(adId);
+    });
+  }
 
   window.IsarMural = {
     init: function () {
       if (isInitialized) return;
       isInitialized = true;
 
+      bindMuralEventDelegation();
       initFilters();
       loadSavedLocalAds();
       syncRemoteAds();

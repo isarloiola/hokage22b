@@ -11,6 +11,7 @@ export interface AdminNotificationPayload {
   lines: string[];
   linkUrl?: string;
   linkLabel?: string;
+  skipEmail?: boolean;
 }
 
 function escapeHtml(raw: unknown): string {
@@ -25,6 +26,15 @@ function stripHtmlTags(raw: string): string {
   return raw.replace(/<[^>]*>/g, "");
 }
 
+function sanitizeAdminLinkUrl(raw?: string): string | null {
+  if (!raw || typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (/^https:\/\/(www\.)?hokage22b\.com(\/[^\s<>"'`]*)?$/i.test(trimmed)) {
+    return trimmed;
+  }
+  return null;
+}
+
 export async function notifyAdmin(
   payload: AdminNotificationPayload
 ): Promise<{ telegram: boolean; email: boolean }> {
@@ -32,6 +42,7 @@ export async function notifyAdmin(
   const prefix = payload.priority === "high" ? "🔴" : "🔔";
   const safeTag = escapeHtml(payload.tag);
   const safeTitle = escapeHtml(payload.title);
+  const safeLinkUrl = sanitizeAdminLinkUrl(payload.linkUrl);
 
   // 1. Telegram Bot API (TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID)
   const tgToken = (Deno.env.get("TELEGRAM_BOT_TOKEN") || "").trim();
@@ -47,9 +58,9 @@ export async function notifyAdmin(
       if (bodyLines.length > 0) {
         text += `\n${bodyLines.join("\n")}`;
       }
-      if (payload.linkUrl) {
+      if (safeLinkUrl) {
         const label = escapeHtml(payload.linkLabel || "Abrir no Painel");
-        text += `\n\n🔗 <a href="${escapeHtml(payload.linkUrl)}">${label}</a>`;
+        text += `\n\n🔗 <a href="${escapeHtml(safeLinkUrl)}">${label}</a>`;
       }
 
       const tgRes = await fetch(
@@ -80,7 +91,7 @@ export async function notifyAdmin(
   const resendKey = (Deno.env.get("RESEND_API_KEY") || "").trim();
   const adminEmail = (Deno.env.get("ADMIN_NOTIFY_EMAIL") || "").trim();
 
-  if (resendKey && adminEmail) {
+  if (!payload.skipEmail && resendKey && adminEmail) {
     try {
       const fromEmail =
         (Deno.env.get("RESEND_FROM_EMAIL") || "").trim() ||
@@ -91,8 +102,8 @@ export async function notifyAdmin(
         .map((l) => `<p style="margin:6px 0;color:#e5e7eb;font-size:14px">${escapeHtml(l)}</p>`)
         .join("");
 
-      const linkHtml = payload.linkUrl
-        ? `<p style="margin-top:16px"><a href="${escapeHtml(payload.linkUrl)}" style="background:#f59e0b;color:#000;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block">${escapeHtml(payload.linkLabel || "Abrir Painel")}</a></p>`
+      const linkHtml = safeLinkUrl
+        ? `<p style="margin-top:16px"><a href="${escapeHtml(safeLinkUrl)}" style="background:#f59e0b;color:#000;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block">${escapeHtml(payload.linkLabel || "Abrir Painel")}</a></p>`
         : "";
 
       const mailHtml = `

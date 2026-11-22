@@ -152,7 +152,7 @@
         if (localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user')) {
           parsed.passport = true;
         }
-      } catch (_) {}
+      } catch (_) { }
       return parsed && typeof parsed === 'object' ? parsed : {};
     } catch (_) {
       return {};
@@ -166,7 +166,7 @@
       current[flagKey] = true;
       current.updated_at = Date.now();
       localStorage.setItem(QUEST_STORAGE_KEY, JSON.stringify(current));
-    } catch (_) {}
+    } catch (_) { }
   }
 
   function esc(str) {
@@ -188,8 +188,8 @@
 
     const badgesHtml = prog.badges.length
       ? prog.badges.map(function (b) {
-          return '<span style="font-size:0.72rem;padding:3px 9px;border-radius:999px;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:#ddd6fe;font-weight:700">' + esc(b) + '</span>';
-        }).join('')
+        return '<span style="font-size:0.72rem;padding:3px 9px;border-radius:999px;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:#ddd6fe;font-weight:700">' + esc(b) + '</span>';
+      }).join('')
       : '<span style="font-size:0.74rem;color:#a1a1aa">Complete sua primeira missão abaixo para desbloquear seu primeiro selo.</span>';
 
     const missionsHtml = compact ? '' : (
@@ -197,20 +197,20 @@
       prog.missions.map(function (m) {
         return (
           '<div style="background:rgba(9,9,11,0.75);border:1px solid ' + (m.done ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.09)') + ';border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;justify-content:space-between;gap:10px">' +
-            '<div>' +
-              '<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px">' +
-                '<span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.04em;color:#fbbf24;font-weight:800">' + esc(m.track) + '</span>' +
-                '<span style="font-size:0.72rem;font-weight:800;color:' + (m.done ? '#34d399' : '#a1a1aa') + '">' + (m.done ? '✓ Concluída' : '○ Pendente') + '</span>' +
-              '</div>' +
-              '<div style="font-size:0.88rem;font-weight:800;color:#fff;margin-bottom:3px">' + esc(m.title) + '</div>' +
-              '<div style="font-size:0.76rem;color:#a1a1aa;line-height:1.4">' + esc(m.desc) + '</div>' +
-            '</div>' +
-            '<a href="' + esc(m.href) + '" style="display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:8px;font-size:0.76rem;font-weight:700;text-decoration:none;' +
-              (m.done
-                ? 'background:rgba(16,185,129,0.12);color:#6ee7b7;border:1px solid rgba(16,185,129,0.3)'
-                : 'background:rgba(249,115,22,0.14);color:#fb923c;border:1px solid rgba(249,115,22,0.38)') + '">' +
-              (m.done ? 'Revisar →' : esc(m.cta) + ' →') +
-            '</a>' +
+          '<div>' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px">' +
+          '<span style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.04em;color:#fbbf24;font-weight:800">' + esc(m.track) + '</span>' +
+          '<span style="font-size:0.72rem;font-weight:800;color:' + (m.done ? '#34d399' : '#a1a1aa') + '">' + (m.done ? '✓ Concluída' : '○ Pendente') + '</span>' +
+          '</div>' +
+          '<div style="font-size:0.88rem;font-weight:800;color:#fff;margin-bottom:3px">' + esc(m.title) + '</div>' +
+          '<div style="font-size:0.76rem;color:#a1a1aa;line-height:1.4">' + esc(m.desc) + '</div>' +
+          '</div>' +
+          '<a href="' + esc(m.href) + '" style="display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:8px;font-size:0.76rem;font-weight:700;text-decoration:none;' +
+          (m.done
+            ? 'background:rgba(16,185,129,0.12);color:#6ee7b7;border:1px solid rgba(16,185,129,0.3)'
+            : 'background:rgba(249,115,22,0.14);color:#fb923c;border:1px solid rgba(249,115,22,0.38)') + '">' +
+          (m.done ? 'Revisar →' : esc(m.cta) + ' →') +
+          '</a>' +
           '</div>'
         );
       }).join('') +
@@ -223,21 +223,21 @@
 
     el.innerHTML =
       '<div style="background:linear-gradient(155deg,rgba(249,115,22,0.09),rgba(20,20,25,0.95));border:1px solid rgba(249,115,22,0.35);border-radius:16px;padding:18px 20px">' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px">' +
-          '<div>' +
-            '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.05em;color:#fb923c;font-weight:800">Sua Evolução no Ecossistema</div>' +
-            '<div style="font-size:1.12rem;font-weight:900;color:#fff;margin-top:2px">' + esc(prog.rank.icon) + ' Patente Atual: <span style="color:' + prog.rank.color + '">' + esc(prog.rank.title) + '</span></div>' +
-          '</div>' +
-          '<div style="text-align:right">' +
-            '<div style="font-size:1.15rem;font-weight:900;color:#fbbf24">' + prog.completedCount + '/' + prog.totalCount + ' missões (' + prog.scorePercent + '%)</div>' +
-            '<div style="font-size:0.74rem;color:#a1a1aa">' + esc(nextText) + '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div style="height:8px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-bottom:12px">' +
-          '<div style="height:100%;width:' + prog.scorePercent + '%;background:linear-gradient(90deg,#8b5cf6,#f97316,#fbbf24);border-radius:999px;transition:width 0.4s ease"></div>' +
-        '</div>' +
-        '<div style="display:flex;gap:6px;flex-wrap:wrap">' + badgesHtml + '</div>' +
-        missionsHtml +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px">' +
+      '<div>' +
+      '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.05em;color:#fb923c;font-weight:800">Sua Evolução no Ecossistema</div>' +
+      '<div style="font-size:1.12rem;font-weight:900;color:#fff;margin-top:2px">' + esc(prog.rank.icon) + ' Patente Atual: <span style="color:' + prog.rank.color + '">' + esc(prog.rank.title) + '</span></div>' +
+      '</div>' +
+      '<div style="text-align:right">' +
+      '<div style="font-size:1.15rem;font-weight:900;color:#fbbf24">' + prog.completedCount + '/' + prog.totalCount + ' missões (' + prog.scorePercent + '%)</div>' +
+      '<div style="font-size:0.74rem;color:#a1a1aa">' + esc(nextText) + '</div>' +
+      '</div>' +
+      '</div>' +
+      '<div style="height:8px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-bottom:12px">' +
+      '<div style="height:100%;width:' + prog.scorePercent + '%;background:linear-gradient(90deg,#8b5cf6,#f97316,#fbbf24);border-radius:999px;transition:width 0.4s ease"></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap">' + badgesHtml + '</div>' +
+      missionsHtml +
       '</div>';
   }
 
@@ -248,7 +248,7 @@
     { id: 'construtor', label: '🧱 Construtor', bg: 'rgba(139,92,246,0.18)', border: 'rgba(139,92,246,0.48)', color: '#ddd6fe', rule: 'Validar carteira G... ou cadastrar produto' },
     { id: 'desenvolvedor', label: '⚡ Desenvolvedor', bg: 'rgba(56,189,248,0.16)', border: 'rgba(56,189,248,0.45)', color: '#bae6fd', rule: 'Usar /construir (API/Embed) ou vincular GitHub' },
     { id: 'hokage', label: '🔥 Hokage', bg: 'rgba(249,115,22,0.18)', border: 'rgba(249,115,22,0.5)', color: '#fb923c', rule: 'Mérito máximo no Monte Hokage' },
-    { id: 'pi_kyc', label: '🛡️ Pi KYC Verified', bg: 'rgba(16,185,129,0.16)', border: 'rgba(16,185,129,0.45)', color: '#34d399', rule: 'Conectar via Pi Browser oficial' },
+    { id: 'pi_kyc', label: '🛡️ Pioneiro Autenticado', bg: 'rgba(16,185,129,0.16)', border: 'rgba(16,185,129,0.45)', color: '#34d399', rule: 'Conectar via Pi Browser oficial' },
     { id: 'comerciante', label: '🛍️ Comerciante P2P', bg: 'rgba(245,158,11,0.16)', border: 'rgba(245,158,11,0.45)', color: '#fde68a', rule: 'Ter produto ou anúncio na Vila' },
     { id: 'embaixador', label: '🏅 Embaixador', bg: 'rgba(234,179,8,0.18)', border: 'rgba(234,179,8,0.5)', color: '#fef08a', rule: 'Trazer pioneiros pelo link oficial' }
   ];
@@ -293,7 +293,7 @@
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) selectedIds = parsed;
         }
-      } catch (_) {}
+      } catch (_) { }
     }
 
     if (!selectedIds) {
@@ -330,7 +330,7 @@
     try {
       const clean = Array.isArray(selectedIds) && selectedIds.length ? selectedIds : ['pioneiro'];
       localStorage.setItem(TITLES_STORAGE_PREFIX + userKey, JSON.stringify(clean));
-    } catch (_) {}
+    } catch (_) { }
   }
 
   function openTitlesSelectorModal(containerId, profileData, isOwner) {
@@ -348,24 +348,24 @@
       const checkedAttr = t.selected ? 'checked' : '';
       return (
         '<label style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid ' + (t.unlocked ? t.border : 'rgba(255,255,255,0.08)') + ';background:' + (t.unlocked ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.3)') + ';opacity:' + (t.unlocked ? '1' : '0.5') + ';cursor:' + (t.unlocked ? 'pointer' : 'not-allowed') + '">' +
-          '<div style="text-align:left">' +
-            '<div style="font-size:0.86rem;font-weight:800;color:' + (t.unlocked ? t.color : '#71717a') + '">' + esc(t.label) + '</div>' +
-            '<div style="font-size:0.72rem;color:#a1a1aa">' + (t.unlocked ? '✓ Desbloqueado' : '🔒 ' + esc(t.rule)) + '</div>' +
-          '</div>' +
-          '<input type="checkbox" class="hk-title-chk" value="' + esc(t.id) + '" ' + checkedAttr + ' ' + disabledAttr + ' style="width:18px;height:18px;accent-color:#f59e0b" />' +
+        '<div style="text-align:left">' +
+        '<div style="font-size:0.86rem;font-weight:800;color:' + (t.unlocked ? t.color : '#71717a') + '">' + esc(t.label) + '</div>' +
+        '<div style="font-size:0.72rem;color:#a1a1aa">' + (t.unlocked ? '✓ Desbloqueado' : '🔒 ' + esc(t.rule)) + '</div>' +
+        '</div>' +
+        '<input type="checkbox" class="hk-title-chk" value="' + esc(t.id) + '" ' + checkedAttr + ' ' + disabledAttr + ' style="width:18px;height:18px;accent-color:#f59e0b" />' +
         '</label>'
       );
     }).join('');
 
     overlay.innerHTML =
       '<div style="width:100%;max-width:440px;background:#12121b;border:1.5px solid rgba(245,158,11,0.45);border-radius:20px;padding:20px;color:#fff;box-shadow:0 24px 60px rgba(0,0,0,0.8)">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
-          '<strong style="font-size:1.02rem">🏷️ Meus Títulos no Passaporte</strong>' +
-          '<button type="button" id="hk-titles-close" style="background:none;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:50%;width:28px;height:28px;cursor:pointer">✕</button>' +
-        '</div>' +
-        '<p style="font-size:0.8rem;color:#a1a1aa;margin:0 0 12px;line-height:1.4">Selecione um ou mais títulos já desbloqueados para exibir no seu Passaporte:</p>' +
-        '<div style="display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto;margin-bottom:14px">' + listHtml + '</div>' +
-        '<button type="button" id="hk-titles-save" class="portal-btn portal-btn--primary portal-btn--full" style="font-weight:800">Salvar Títulos no Passaporte</button>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+      '<strong style="font-size:1.02rem">🏷️ Meus Títulos no Passaporte</strong>' +
+      '<button type="button" id="hk-titles-close" style="background:none;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:50%;width:28px;height:28px;cursor:pointer">✕</button>' +
+      '</div>' +
+      '<p style="font-size:0.8rem;color:#a1a1aa;margin:0 0 12px;line-height:1.4">Selecione um ou mais títulos já desbloqueados para exibir no seu Passaporte:</p>' +
+      '<div style="display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto;margin-bottom:14px">' + listHtml + '</div>' +
+      '<button type="button" id="hk-titles-save" class="portal-btn portal-btn--primary portal-btn--full" style="font-weight:800">Salvar Títulos no Passaporte</button>' +
       '</div>';
 
     document.body.appendChild(overlay);
@@ -434,7 +434,7 @@
 
     el.innerHTML =
       '<div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px">' +
-        pillsHtml + editBtnHtml +
+      pillsHtml + editBtnHtml +
       '</div>';
 
     if (isOwner) {

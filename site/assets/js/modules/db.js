@@ -18,17 +18,17 @@
       : '';
 
     if (!accessToken) {
-      try { accessToken = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+      try { accessToken = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) { }
     }
 
     if (!accessToken && window.Pi && typeof window.Pi.authenticate === 'function') {
       try {
-        const auth = await window.Pi.authenticate(['username'], function () {});
+        const auth = await window.Pi.authenticate(['username'], function () { });
         if (auth && auth.accessToken) {
           accessToken = auth.accessToken;
-          try { sessionStorage.setItem('hokage_pi_access_token', accessToken); } catch (_) {}
+          try { sessionStorage.setItem('hokage_pi_access_token', accessToken); } catch (_) { }
         }
-      } catch (_) {}
+      } catch (_) { }
     }
 
     if (!accessToken) {
@@ -123,8 +123,8 @@
             source: payload.source,
             pi_username: payload.pi_username
           })
-        }).catch(function () {});
-      } catch (_) {}
+        }).catch(function () { });
+      } catch (_) { }
 
       return data;
     } catch (err) {
@@ -133,7 +133,7 @@
     }
   }
 
-  // Busca o ranking dos melhores pioneiros
+  // Busca o ranking dos melhores pioneiros (via view pública sem colunas sensíveis)
   async function getLeaderboard(limit) {
     const db = getClient();
     if (!db) return [];
@@ -141,7 +141,7 @@
 
     try {
       const { data, error } = await db
-        .from('pioneiros')
+        .from('v_passaportes_publicos')
         .select('username, reputation_score, level_name')
         .order('reputation_score', { ascending: false })
         .limit(limit);
@@ -516,36 +516,27 @@
     });
   }
 
-  // Faz o upload direto para o Supabase Storage (Bucket 'mural-images')
+  // Faz o upload autenticado via Edge Function mural-action para o Supabase Storage (Bucket 'mural-images')
   async function uploadAdImage(file, onProgress) {
-    var db = getClient();
-    if (!db) throw new Error('Serviço de banco de dados indisponível');
     if (!file) throw new Error('Nenhum arquivo selecionado');
 
     if (onProgress) onProgress('Otimizando imagem...');
     var compressedBlob = await compressImageFile(file, 1000, 1000, 0.82);
 
-    var cleanFileName = 'ad_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8) + '.jpg';
+    var dataUrl = await new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('Falha ao ler imagem otimizada.')); };
+      reader.onload = function (ev) { resolve(String(ev && ev.target && ev.target.result || '')); };
+      reader.readAsDataURL(compressedBlob);
+    });
 
-    if (onProgress) onProgress('Enviando para o servidor...');
-    var res = await db.storage
-      .from('mural-images')
-      .upload(cleanFileName, compressedBlob, {
-        contentType: 'image/jpeg',
-        cacheControl: '31536000',
-        upsert: false
-      });
-
-    if (res.error) {
-      console.warn('Erro no upload da imagem:', res.error);
-      throw res.error;
+    if (onProgress) onProgress('Enviando com segurança para o servidor...');
+    var res = await callMuralAction('upload_ad_image', { dataUrl: dataUrl });
+    var uploadedUrl = res && (res.publicUrl || (res.data && res.data.publicUrl));
+    if (!uploadedUrl) {
+      throw new Error('Servidor não retornou a URL da imagem.');
     }
-
-    var urlRes = db.storage
-      .from('mural-images')
-      .getPublicUrl(cleanFileName);
-
-    return urlRes.data.publicUrl;
+    return uploadedUrl;
   }
 
   // Incrementa contador atômico de cliques do anúncio
@@ -589,7 +580,7 @@
     try {
       var res = await db.rpc('increment_ad_views_batch', { p_ad_ids: validIds });
       if (!res.error) return res.data;
-    } catch (_) {}
+    } catch (_) { }
 
     // Fallback caso a RPC batch ainda não tenha sido aplicada no banco
     for (var i = 0; i < validIds.length; i++) {
@@ -645,35 +636,56 @@
 
   // --- MOTOR SAAS: GESTÃO DO ANUNCIANTE E VITRINE ---
 
-  // Busca os anúncios publicados pelo próprio pioneiro
+  // Busca os anúncios publicados pelo próprio pioneiro (autenticado via mural-action; fallback público para visitantes)
   async function getMyAds(username) {
     var db = getClient();
     if (!username) return [];
 
-    var cleanUser = username.replace('@', '').toLowerCase();
+    var cleanUser = String(username).replace(/@+/g, '').trim().toLowerCase();
+    var escapedUser = cleanUser.replace(/[\\%_]/g, '\\$&');
     var list = [];
 
-    if (db) {
-      try {
-        var res = await db.rpc('pioneer_get_my_ads', { p_username: username });
-        if (!res.error && Array.isArray(res.data) && res.data.length > 0) {
-          list = res.data;
-        }
-      } catch (err) {}
-
-      if (list.length === 0) {
-        try {
-          var qRes = await db
-            .from('anuncios')
-            .select('*')
-            .ilike('pioneer_username', '%' + cleanUser + '%')
-            .eq('status', 'ativo')
-            .order('created_at', { ascending: false });
-          if (qRes.data && Array.isArray(qRes.data) && qRes.data.length > 0) {
-            list = qRes.data;
-          }
-        } catch (_) {}
+    // Só chama mural-action get_my_ads se houver sessão Pi autenticada do próprio usuário (não pede login ao visitar terceiros)
+    var hasToken = '';
+    var loggedHandle = '';
+    try {
+      if (window.HokagePi && typeof window.HokagePi.getAccessToken === 'function') {
+        hasToken = window.HokagePi.getAccessToken() || '';
       }
+      if (!hasToken) {
+        hasToken = sessionStorage.getItem('hokage_pi_access_token') || '';
+      }
+      var rawUser = localStorage.getItem('hokage_pi_user') || sessionStorage.getItem('hokage_pi_user') || '';
+      if (rawUser) {
+        var parsedUser = JSON.parse(rawUser);
+        if (parsedUser && parsedUser.username) {
+          loggedHandle = String(parsedUser.username).replace(/@+/g, '').trim().toLowerCase();
+        }
+      }
+    } catch (_) { }
+
+    if (hasToken && loggedHandle && loggedHandle === cleanUser) {
+      try {
+        var edgeRes = await callMuralAction('get_my_ads', {});
+        var edgeAds = (edgeRes && (edgeRes.ads || (edgeRes.data && edgeRes.data.ads))) || [];
+        if (Array.isArray(edgeAds) && edgeAds.length > 0) {
+          list = edgeAds;
+        }
+      } catch (_) { }
+    }
+
+    if (list.length === 0 && db) {
+      try {
+        var qRes = await db
+          .from('anuncios')
+          .select('*')
+          .ilike('pioneer_username', '@' + escapedUser)
+          .eq('status', 'ativo')
+          .order('created_at', { ascending: false });
+        if (qRes.data && Array.isArray(qRes.data) && qRes.data.length > 0) {
+          list = qRes.data;
+        }
+      } catch (_) { }
     }
 
     // Se for o @hokage22b e não houver anúncio gravado no Supabase, fornece a mensagem oficial de Boas-Vindas
@@ -740,7 +752,7 @@
       if (!token) {
         try {
           token = sessionStorage.getItem('hokage_pi_access_token') || '';
-        } catch (_) {}
+        } catch (_) { }
       }
       if (!token) {
         throw new Error('Sessão Pi Network não autenticada. Conecte-se no Pi Browser para salvar seu Passaporte.');
@@ -779,31 +791,43 @@
     }
   }
 
-  // Busca perfil completo do pioneiro
+  // Busca perfil público do pioneiro via view segura v_passaportes_publicos
   async function getPioneerFullProfile(username) {
     var db = getClient();
     if (!db || !username) return null;
 
     try {
       var clean = String(username).replace(/@+/g, '').trim().toLowerCase();
+      var escaped = clean.replace(/[\\%_]/g, '\\$&');
       var res = await db
-        .from('pioneiros')
+        .from('v_passaportes_publicos')
         .select('*')
-        .ilike('username', '@' + clean)
+        .ilike('username', '@' + escaped)
         .order('updated_at', { ascending: false })
         .limit(1);
 
       var data = (res.data && res.data.length > 0) ? res.data[0] : null;
-      if (data && data.checklist_state) {
-        if (data.checklist_state.showcase_zero !== undefined) {
-          data.showcase_zero = data.checklist_state.showcase_zero;
-        }
-        if (data.checklist_state.showcase_mural !== undefined) {
-          data.showcase_mural = data.checklist_state.showcase_mural;
-        }
-        data.social_links = Array.isArray(data.checklist_state.social_links) ? data.checklist_state.social_links : [];
-        if (Array.isArray(data.checklist_state.selected_titles)) {
-          data.selected_titles = data.checklist_state.selected_titles;
+      if (data) {
+        if (data.checklist_state) {
+          if (data.checklist_state.showcase_zero !== undefined) {
+            data.showcase_zero = data.checklist_state.showcase_zero;
+          }
+          if (data.checklist_state.showcase_mural !== undefined) {
+            data.showcase_mural = data.checklist_state.showcase_mural;
+          }
+          data.social_links = Array.isArray(data.checklist_state.social_links) ? data.checklist_state.social_links : [];
+          if (Array.isArray(data.checklist_state.selected_titles)) {
+            data.selected_titles = data.checklist_state.selected_titles;
+          }
+        } else {
+          data.social_links = Array.isArray(data.social_links) ? data.social_links : [];
+          data.selected_titles = Array.isArray(data.selected_titles) ? data.selected_titles : [];
+          data.checklist_state = {
+            showcase_zero: data.showcase_zero,
+            showcase_mural: data.showcase_mural,
+            social_links: data.social_links,
+            selected_titles: data.selected_titles
+          };
         }
       }
       return data;
@@ -813,7 +837,7 @@
     }
   }
 
-  // Busca lista de pioneiros para o Diretório Global Web3
+  // Busca lista de pioneiros para o Diretório Global Web3 (via view pública sem colunas privadas)
   async function getPioneersDirectory(options) {
     var db = getClient();
     if (!db) return [];
@@ -822,14 +846,20 @@
 
     try {
       var query = db
-        .from('pioneiros')
-        .select('username, bio, avatar_url, wallet_address, whatsapp_url, youtube_url, instagram_url, twitter_url, products, reputation_score, is_ambassador, referral_qualified_count, created_at, updated_at')
+        .from('v_passaportes_publicos')
+        .select('*')
         .order('updated_at', { ascending: false })
         .limit(limit);
 
       if (options.search) {
-        var cleanTerm = String(options.search).replace(/@+/g, '').trim();
-        query = query.or('username.ilike.%' + cleanTerm + '%,bio.ilike.%' + cleanTerm + '%');
+        var cleanTerm = String(options.search)
+          .replace(/@+/g, '')
+          .replace(/[,()'"\\*%]+/g, ' ')
+          .trim()
+          .slice(0, 60);
+        if (cleanTerm) {
+          query = query.or('username.ilike.%' + cleanTerm + '%,bio.ilike.%' + cleanTerm + '%');
+        }
       }
 
       var res = await query;

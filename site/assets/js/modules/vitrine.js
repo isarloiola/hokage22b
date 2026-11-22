@@ -180,8 +180,14 @@
     function sanitizeUrl(url) {
       if (!url) return '';
       const clean = String(url).trim();
-      if (/^(https?:\/\/|mailto:|tel:|\/|\?|#)/i.test(clean)) {
-        return clean;
+      if (!clean || /[\s<>"'`]/.test(clean) || /^\/\//.test(clean)) return '';
+      if (/^(https?:\/\/|mailto:|tel:|\/(?!\/)|\?|#)/i.test(clean)) {
+        try {
+          const parsed = new URL(clean, window.location.origin);
+          if (['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol)) {
+            return clean;
+          }
+        } catch (_) {}
       }
       return '';
     }
@@ -323,6 +329,7 @@
       const amtInp = document.getElementById('pos-input-amount');
       const memoInp = document.getElementById('pos-input-memo');
       const cleanUser = cleanUsername(currentPioneerUser);
+      const safeCleanUser = escapeHtml(cleanUser);
       const isOwner = isOwnerOfCurrentPage();
       const inPi = isPiBrowser();
 
@@ -365,7 +372,7 @@
 
       } else {
         // VISITANTE (PIONEIRO OU CLIENTE EXTERNO)
-        if (modalTitle) modalTitle.innerHTML = `<span>⚡</span> Pagar ${cleanUser} com Pi`;
+        if (modalTitle) modalTitle.innerHTML = `<span>⚡</span> Pagar ${safeCleanUser} com Pi`;
         if (ownerControls) ownerControls.style.display = 'none';
 
         if (presetAmount) {
@@ -386,7 +393,7 @@
         if (inPi) {
           // CENÁRIO 2: OUTRO PIONEIRO LOGADO DENTRO DO PI BROWSER
           if (browserTip) {
-            browserTip.innerHTML = `📱 <strong>No Pi Browser:</strong> Você pode transferir diretamente pela sua <code>wallet.pi</code> com biometria ou escanear o QR code da carteira de ${cleanUser}.`;
+            browserTip.innerHTML = `📱 <strong>No Pi Browser:</strong> Você pode transferir diretamente pela sua <code>wallet.pi</code> com biometria ou escanear o QR code da carteira de ${safeCleanUser}.`;
           }
 
           let actionsHtml = `
@@ -394,14 +401,14 @@
               <span>🚀</span> Abrir wallet.pi para Transferir ↗
             </a>
             <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="copyWalletKey()" style="font-weight:600;padding:10px">
-              📋 Copiar Chave Pública de ${cleanUser}
+              📋 Copiar Chave Pública de ${safeCleanUser}
             </button>
           `;
 
           if (hasWhatsApp) {
             actionsHtml += `
               <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="sendPaymentProofOnWhatsApp()" style="border-color:rgba(37,211,102,0.5);color:#25d366;font-weight:700;padding:10px">
-                💬 Avisar Pagamento para ${cleanUser} no WhatsApp ↗
+                💬 Avisar Pagamento para ${safeCleanUser} no WhatsApp ↗
               </button>
             `;
           }
@@ -416,7 +423,7 @@
 
           let actionsHtml = `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="copyWalletKey()" style="font-weight:700;padding:11px">
-              📋 Copiar Chave Pública de ${cleanUser}
+              📋 Copiar Chave Pública de ${safeCleanUser}
             </button>
             <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="copyShowcasePiBrowserLink()" id="btn-copy-pibrowser-link" style="padding:10px;font-weight:600">
               🔗 Copiar Link para Abrir no Pi Browser
@@ -426,7 +433,7 @@
           if (hasWhatsApp) {
             actionsHtml += `
               <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="sendPaymentProofOnWhatsApp()" style="border-color:rgba(37,211,102,0.5);color:#25d366;font-weight:700;padding:10px">
-                💬 Falar com ${cleanUser} no WhatsApp ↗
+                💬 Falar com ${safeCleanUser} no WhatsApp ↗
               </button>
             `;
           }
@@ -491,21 +498,22 @@
       if (memoVal) link += `&memo=${encodeURIComponent(memoVal)}`;
 
       const msg = `Olá! Segue o link do meu Passaporte no HOKAGE22B para pagamento direto em Pi Network (${amountVal ? amountVal + ' π' : 'P2P'}):\n${link}\n\nDestinatário: ${cleanUser}`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
     }
 
     function sendPaymentProofOnWhatsApp() {
       const cleanUser = cleanUsername(currentPioneerUser);
-      const waUrl = currentProfileData && currentProfileData.whatsapp_url ? currentProfileData.whatsapp_url.trim() : '';
+      const rawWaUrl = currentProfileData && currentProfileData.whatsapp_url ? currentProfileData.whatsapp_url.trim() : '';
+      const waUrl = sanitizeUrl(rawWaUrl);
 
-      if (!waUrl) {
-        alert('Este pioneiro ainda não cadastrou um link de contato no WhatsApp.');
+      if (!waUrl || !/^https?:\/\//i.test(waUrl)) {
+        alert('Este pioneiro ainda não cadastrou um link HTTPS válido de contato no WhatsApp.');
         return;
       }
 
       // Se for link de grupo comunitário (ex: chat.whatsapp.com)
       if (waUrl.includes('chat.whatsapp.com')) {
-        window.open(waUrl, '_blank');
+        window.open(waUrl, '_blank', 'noopener,noreferrer');
         return;
       }
 
@@ -513,9 +521,9 @@
       const msg = `Olá ${cleanUser}! Acessei seu Passaporte no HOKAGE22B e efetuei uma transferência em Pi Network para a sua carteira. Segue o comprovante:`;
       if (waUrl.includes('wa.me/')) {
         const separator = waUrl.includes('?') ? '&' : '?';
-        window.open(`${waUrl}${separator}text=${encodeURIComponent(msg)}`, '_blank');
+        window.open(`${waUrl}${separator}text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
       } else {
-        window.open(waUrl, '_blank');
+        window.open(waUrl, '_blank', 'noopener,noreferrer');
       }
     }
 
@@ -1029,7 +1037,7 @@
           if (cleanLogged) {
             topbarActions.innerHTML = `
               <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="font-size:0.74rem;padding:5px 11px;font-weight:700;text-decoration:none">
-                🪪 Meu Passaporte (@${cleanLogged})
+                🪪 Meu Passaporte (@${escapeHtml(cleanLogged)})
               </a>
             `;
           } else {
@@ -1251,11 +1259,14 @@
             cat: 'produto'
           };
 
+          const safeAttrImg = escapeHtml(safeImg);
+          const safeAttrLink = escapeHtml(safeLink);
+
           return `
             <div class="product-mini-card" id="vitrine-product-${idx}" style="display:flex;flex-direction:column;gap:12px;align-items:stretch;width:100%;box-sizing:border-box">
               <div class="product-card-top" style="display:flex;align-items:center;gap:14px;width:100%;min-width:0">
-                ${safeImg 
-                  ? `<img src="${safeImg}" alt="${safeTitle}" class="product-thumb" />` 
+                ${safeAttrImg 
+                  ? `<img src="${safeAttrImg}" alt="${safeTitle}" class="product-thumb" />` 
                   : `<div class="product-thumb-fallback">🛍️</div>`}
                 <div class="product-info" style="flex:1;min-width:0">
                   <strong class="product-title" style="display:block;font-size:0.95rem !important;line-height:1.35 !important;margin-bottom:4px !important;word-break:normal !important;overflow-wrap:break-word !important;white-space:normal !important">${safeTitle}</strong>
@@ -1267,7 +1278,7 @@
                 </div>
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;width:100%">
-                ${safeLink && safeLink !== '#' ? `<a href="${safeLink}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm product-action-btn" style="flex:1;min-width:120px">${safeCta}</a>` : ''}
+                ${safeAttrLink && safeAttrLink !== '#' ? `<a href="${safeAttrLink}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm product-action-btn" style="flex:1;min-width:120px">${safeCta}</a>` : ''}
                 ${isOwner ? `<button type="button" onclick="window.promoteVitrineProduct(${idx})" class="btn btn-outline btn-sm" style="flex:1;min-width:130px;border-color:rgba(245,158,11,0.5);color:var(--amber-light);text-align:center;font-weight:700">📢 Impulsionar no Mural</button>` : ''}
               </div>
             </div>
@@ -1294,9 +1305,9 @@
         adsList.innerHTML = ads.map(ad => {
           const safeAdTitle = escapeHtml(ad.title || '');
           const safeAdDesc = escapeHtml(ad.description || '');
-          const safeAdLink = sanitizeUrl(ad.link_url);
+          const safeAdLink = escapeHtml(sanitizeUrl(ad.link_url));
           const safeAdTier = escapeHtml(ad.plan_tier ? ad.plan_tier.toUpperCase() : 'DESTAQUE');
-          const safeAdImg = sanitizeImageUrl(ad.image_url);
+          const safeAdImg = escapeHtml(sanitizeImageUrl(ad.image_url));
 
           return `
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;text-align:left">
@@ -1634,7 +1645,8 @@
         const uName = cleanUsername(p.username);
         const uSlug = uName.replace(/^@+/, '');
         const bio = p.bio || 'Pioneiro oficial na comunidade descentralizada Pi Network.';
-        const avatar = sanitizeImageUrl(p.avatar_url || '');
+        const avatar = escapeHtml(sanitizeImageUrl(p.avatar_url || ''));
+        const safeInitial = escapeHtml(uSlug.charAt(0).toUpperCase() || 'P');
         const hasWallet = Boolean(p.wallet_address);
         const prodCount = Array.isArray(p.products) ? p.products.length : 0;
         const isAmb = Boolean(p.is_ambassador || Number(p.referral_qualified_count || 0) >= 5 || uSlug === 'hokage22b');
@@ -1643,12 +1655,12 @@
           <div class="dir-card">
             <div class="dir-card-main">
               <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;background:#1a0533;border:2px solid rgba(139,92,246,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                ${avatar ? `<img src="${avatar}" alt="${escapeHtml(uName)}" style="width:100%;height:100%;object-fit:cover" />` : `<span style="font-size:1.15rem;font-weight:800;color:#fff">${uSlug.charAt(0).toUpperCase()}</span>`}
+                ${avatar ? `<img src="${avatar}" alt="${escapeHtml(uName)}" style="width:100%;height:100%;object-fit:cover" />` : `<span style="font-size:1.15rem;font-weight:800;color:#fff">${safeInitial}</span>`}
               </div>
               <div style="min-width:0;flex:1">
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
                   <strong style="color:#fff;font-size:0.9rem;word-break:break-word" class="notranslate">${escapeHtml(uName)}</strong>
-                  <span style="font-size:0.65rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:1px 6px;border-radius:10px;font-weight:700">✓ KYC</span>
+                  <span style="font-size:0.65rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:1px 6px;border-radius:10px;font-weight:700" title="Conta autenticada via Pi Browser">✓ Pi Verificado</span>
                   ${isAmb ? `<span style="font-size:0.65rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.5);color:#fcd34d;padding:1px 6px;border-radius:10px;font-weight:700">🏅 Embaixador</span>` : ''}
                   ${hasWallet ? `<span style="font-size:0.65rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:1px 6px;border-radius:10px;font-weight:700">⚡ Pi</span>` : ''}
                   ${prodCount > 0 ? `<span style="font-size:0.65rem;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:1px 6px;border-radius:10px;font-weight:700">🛍️ ${prodCount}</span>` : ''}
@@ -2523,11 +2535,12 @@
       let affSummary = null;
       if (!isSimulatorMode) {
         try {
+          const affPromise = (isOwner && window.HokageReferral.fetchAffiliateSummary)
+            ? window.HokageReferral.fetchAffiliateSummary(targetUsername)
+            : Promise.resolve(null);
           [stats, affSummary] = await Promise.all([
             window.HokageReferral.fetchStats(targetUsername),
-            window.HokageReferral.fetchAffiliateSummary
-              ? window.HokageReferral.fetchAffiliateSummary(targetUsername)
-              : Promise.resolve(null)
+            affPromise
           ]);
         } catch (_) {}
       }
@@ -2804,7 +2817,7 @@
       const piUser = getLoggedUser() || ((window.HokagePi && window.HokagePi.getUser) ? window.HokagePi.getUser() : null);
       if (isPi && piUser && piUser.username) {
         formBox.innerHTML = `
-          <form onsubmit="handleReviewSubmit(event, '${escapeHtml(targetUsername)}')" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.22);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+          <form id="pioneer-review-form" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.22);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
               <span style="font-size:0.78rem;color:#34d399;font-weight:700">✓ Avaliar como @${escapeHtml(String(piUser.username).replace(/^@+/, ''))}</span>
               <select id="review-rating-select" style="background:#09090b;border:1px solid rgba(255,255,255,0.2);color:#fcd34d;border-radius:6px;padding:4px 8px;font-size:0.8rem;font-weight:700">
@@ -2819,15 +2832,27 @@
             <button type="submit" class="portal-btn portal-btn--sm" style="align-self:flex-end;background:#10b981;color:#052e16;font-weight:700;padding:7px 14px">Enviar Avaliação</button>
           </form>
         `;
+        const reviewFormEl = document.getElementById('pioneer-review-form');
+        if (reviewFormEl) {
+          reviewFormEl.addEventListener('submit', function (ev) {
+            handleReviewSubmit(ev, targetUsername);
+          });
+        }
       } else if (isPi) {
         formBox.innerHTML = `
           <div style="font-size:0.78rem;color:var(--text-secondary);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
             <span>🛡️ Conecte sua conta no <strong>Pi Browser</strong> para avaliar este Passaporte:</span>
-            <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="connectPiForReview('${escapeHtml(targetUsername)}')" style="padding:6px 12px;font-size:0.76rem;font-weight:800">
+            <button type="button" id="btn-connect-pi-review" class="portal-btn portal-btn--primary portal-btn--sm" style="padding:6px 12px;font-size:0.76rem;font-weight:800">
               ⚡ Conectar Pi
             </button>
           </div>
         `;
+        const reviewConnectBtn = document.getElementById('btn-connect-pi-review');
+        if (reviewConnectBtn) {
+          reviewConnectBtn.addEventListener('click', function () {
+            connectPiForReview(targetUsername);
+          });
+        }
       } else {
         formBox.innerHTML = `<div style="font-size:0.76rem;color:var(--text-muted);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px">🔒 Avaliações verificadas disponíveis exclusivamente para usuários conectados no <strong>Pi Browser</strong>.</div>`;
       }

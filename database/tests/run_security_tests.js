@@ -23,14 +23,14 @@ async function runTests() {
 
   const results = [];
 
-  // TESTE 1 (Positivo): Leitura pública da vitrine do fundador
+  // TESTE 1 (Positivo): Leitura pública da vitrine do fundador via View segura
   try {
-    const res = await fetch(`${sbUrl}/rest/v1/pioneiros?username=eq.@hokage22b&select=username,wallet_address,reputation_score&limit=1`, { headers });
+    const res = await fetch(`${sbUrl}/rest/v1/v_passaportes_publicos?username=eq.@hokage22b&select=username,wallet_address,reputation_score&limit=1`, { headers });
     const data = await res.json();
     const ok = res.status === 200 && Array.isArray(data) && data.length > 0;
     results.push({
       id: 'TESTE_01_POSITIVO',
-      descricao: 'Leitura pública de vitrines via anon key (Linktree Web3 acessível)',
+      descricao: 'Leitura pública de vitrines via view segura v_passaportes_publicos',
       resultado: ok ? 'PASSOU (Aprovado)' : 'FALHOU',
       httpCode: res.status,
       detalhe: ok ? `Vitrine pública encontrada: ${data[0].username}` : JSON.stringify(data)
@@ -143,37 +143,33 @@ async function runTests() {
     results.push({ id: 'TESTE_06_NEGATIVO', descricao: 'INSERT de anúncio ativo', resultado: 'ERRO', detalhe: e.message });
   }
 
-  // TESTE 7 (Positivo): Envio legítimo de anúncio como PENDENTE
+  // TESTE 7 (Negativo - Migration 020): Bloqueio TOTAL de INSERT direto anon em anuncios
   try {
-    const legitimateAdId = 'ad_pendente_test_' + Date.now();
+    const blockedAdId = 'ad_anon_blocked_test_' + Date.now();
     const res = await fetch(`${sbUrl}/rest/v1/anuncios`, {
       method: 'POST',
-      headers: {
-        apikey: sbKey,
-        Authorization: 'Bearer ' + sbKey,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal'
-      },
+      headers,
       body: JSON.stringify({
-        id: legitimateAdId,
-        title: 'Anúncio Legítimo Aguardando Moderação',
-        description: 'Entrando na fila de moderação/pagamento',
+        id: blockedAdId,
+        title: 'Tentativa INSERT direto via anon',
+        description: 'Deve ser bloqueado pela RLS/Migration 020',
         status: 'pendente',
         plan_tier: 'prata',
         price_pi: 1.0
       })
     });
-    const ok = res.status === 201;
+    const data = await res.json().catch(() => null);
+    const blocked = res.status === 401 || res.status === 403 || res.status === 400 || (data && (data.code === '42501' || data.code === 'P0001'));
 
     results.push({
-      id: 'TESTE_07_POSITIVO',
-      descricao: 'Envio legítimo de anúncio na fila com status = pendente',
-      resultado: ok ? 'PASSOU (Aprovado)' : 'FALHOU',
+      id: 'TESTE_07_NEGATIVO',
+      descricao: 'Bloqueio de INSERT direto em anuncios via anon key (Migration 020)',
+      resultado: blocked ? 'PASSOU (Bloqueado com Sucesso)' : 'FALHOU (Brecha aberta)',
       httpCode: res.status,
-      detalhe: ok ? 'Anúncio gravado com sucesso (HTTP 201 Created)' : 'Falhou com status HTTP: ' + res.status
+      detalhe: data && data.message ? data.message : JSON.stringify(data)
     });
   } catch (e) {
-    results.push({ id: 'TESTE_07_POSITIVO', descricao: 'Envio de anúncio pendente', resultado: 'ERRO', detalhe: e.message });
+    results.push({ id: 'TESTE_07_NEGATIVO', descricao: 'Bloqueio de INSERT em anuncios', resultado: 'ERRO', detalhe: e.message });
   }
 
   // TESTE 8 (Negativo): Tentativa de alterar anúncio para ativo via PATCH anon
@@ -234,6 +230,118 @@ async function runTests() {
     });
   } catch (e) {
     results.push({ id: 'TESTE_10_NEGATIVO', descricao: 'Escrita em transacoes_pi', resultado: 'ERRO', detalhe: e.message });
+  }
+
+  // TESTE 11 (Negativo - Edge Function): pi-payment approve sem accessToken
+  try {
+    const res = await fetch(`${sbUrl}/functions/v1/pi-payment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'approve', paymentId: 'test_pid_1234' })
+    });
+    const data = await res.json().catch(() => null);
+    const ok = res.status === 401;
+    results.push({
+      id: 'TESTE_11_EDGE_APPROVE_AUTH',
+      descricao: 'Edge Function pi-payment approve exige accessToken Pi válido',
+      resultado: ok ? 'PASSOU (Bloqueado com 401)' : 'FALHOU',
+      httpCode: res.status,
+      detalhe: JSON.stringify(data)
+    });
+  } catch (e) {
+    results.push({ id: 'TESTE_11_EDGE_APPROVE_AUTH', descricao: 'pi-payment approve auth', resultado: 'ERRO', detalhe: e.message });
+  }
+
+  // TESTE 12 (Negativo - Edge Function): pi-payment complete sem accessToken
+  try {
+    const res = await fetch(`${sbUrl}/functions/v1/pi-payment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'complete', paymentId: 'test_pid_1234', txid: 'test_txid_1234' })
+    });
+    const data = await res.json().catch(() => null);
+    const ok = res.status === 401;
+    results.push({
+      id: 'TESTE_12_EDGE_COMPLETE_AUTH',
+      descricao: 'Edge Function pi-payment complete exige accessToken Pi válido',
+      resultado: ok ? 'PASSOU (Bloqueado com 401)' : 'FALHOU',
+      httpCode: res.status,
+      detalhe: JSON.stringify(data)
+    });
+  } catch (e) {
+    results.push({ id: 'TESTE_12_EDGE_COMPLETE_AUTH', descricao: 'pi-payment complete auth', resultado: 'ERRO', detalhe: e.message });
+  }
+
+  // TESTE 13 (Negativo - Edge Function): pi-payment affiliate_summary sem accessToken
+  try {
+    const res = await fetch(`${sbUrl}/functions/v1/pi-payment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'affiliate_summary', username: '@hokage22b' })
+    });
+    const data = await res.json().catch(() => null);
+    const ok = res.status === 401;
+    results.push({
+      id: 'TESTE_13_EDGE_AFFILIATE_AUTH',
+      descricao: 'Edge Function pi-payment affiliate_summary bloqueia consulta sem autenticação',
+      resultado: ok ? 'PASSOU (Bloqueado com 401)' : 'FALHOU',
+      httpCode: res.status,
+      detalhe: JSON.stringify(data)
+    });
+  } catch (e) {
+    results.push({ id: 'TESTE_13_EDGE_AFFILIATE_AUTH', descricao: 'affiliate_summary auth', resultado: 'ERRO', detalhe: e.message });
+  }
+
+  // TESTE 14 (Negativo - Edge Function): telegram-bot ?setup=1 sem segredo
+  try {
+    const res = await fetch(`${sbUrl}/functions/v1/telegram-bot?setup=1`, { method: 'GET' });
+    const data = await res.json().catch(() => null);
+    const ok = res.status === 401 || res.status === 500;
+    results.push({
+      id: 'TESTE_14_EDGE_TG_SETUP',
+      descricao: 'Endpoint telegram-bot?setup=1 bloqueado sem segredo administrativo',
+      resultado: ok ? 'PASSOU (Bloqueado com Sucesso)' : 'FALHOU',
+      httpCode: res.status,
+      detalhe: JSON.stringify(data)
+    });
+  } catch (e) {
+    results.push({ id: 'TESTE_14_EDGE_TG_SETUP', descricao: 'telegram-bot setup', resultado: 'ERRO', detalhe: e.message });
+  }
+
+  // TESTE 15 (Negativo - Edge Function): telegram-bot track_event rejeita Origin externa
+  try {
+    const res = await fetch(`${sbUrl}/functions/v1/telegram-bot`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Origin': 'https://evil.example' },
+      body: JSON.stringify({ action: 'track_event', event: 'security_probe' })
+    });
+    const data = await res.json().catch(() => null);
+    const ok = res.status === 403;
+    results.push({
+      id: 'TESTE_15_EDGE_TG_ORIGIN',
+      descricao: 'Endpoint telegram-bot track_event rejeita Origin não autorizada',
+      resultado: ok ? 'PASSOU (Bloqueado com 403)' : 'FALHOU',
+      httpCode: res.status,
+      detalhe: JSON.stringify(data)
+    });
+  } catch (e) {
+    results.push({ id: 'TESTE_15_EDGE_TG_ORIGIN', descricao: 'telegram-bot origin', resultado: 'ERRO', detalhe: e.message });
+  }
+
+  // TESTE 16 (Pós-Migration 021): Verifica bloqueio de SELECT direto em public.pioneiros via anon
+  try {
+    const res = await fetch(`${sbUrl}/rest/v1/pioneiros?select=uid,referral_credits&limit=1`, { headers });
+    const data = await res.json().catch(() => null);
+    const blocked = res.status === 401 || res.status === 403 || (Array.isArray(data) && data.length === 0) || (data && data.code === '42501');
+    results.push({
+      id: 'TESTE_16_MIGRATION_021_PIONEIROS',
+      descricao: 'Tabela base public.pioneiros bloqueia exposição direta de uid/referral_credits (Migration 021)',
+      resultado: blocked ? 'PASSOU (Bloqueado com Sucesso)' : 'AGUARDANDO EXECUÇÃO DA MIGRATION 021 NO SQL EDITOR',
+      httpCode: res.status,
+      detalhe: blocked ? 'Tabela base protegida com sucesso' : 'Execute 021_phase1_security_hardening.sql no Supabase SQL Editor'
+    });
+  } catch (e) {
+    results.push({ id: 'TESTE_16_MIGRATION_021_PIONEIROS', descricao: 'pioneiros direct SELECT', resultado: 'ERRO', detalhe: e.message });
   }
 
   console.log(JSON.stringify(results, null, 2));

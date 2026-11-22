@@ -7,6 +7,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import {
+  ALLOWED_ORIGINS,
   getCorsHeaders,
   HttpPayloadError,
   jsonError,
@@ -16,6 +17,10 @@ import {
 } from "../_shared/http.ts";
 import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
 import { notifyAdmin } from "../_shared/notify.ts";
+
+const SAFE_PAYMENT_ID_RE = /^[A-Za-z0-9_.:-]{4,128}$/;
+const EMAIL_FORMAT_RE = /^[^@\s"<>'`]+@[^@\s"<>'`]+\.[^@\s"<>'`]+$/;
+const NOTIFIED_LEADS_CACHE = new Map<string, number>();
 
 const EBOOK_BUCKET = "ebooks-privados";
 
@@ -46,17 +51,30 @@ const EBOOK_VAULT_FILES: Record<string, Record<string, { path: string; downloadN
   },
 };
 
+function sanitizeHttpUrl(raw: unknown): string | null {
+  if (!raw || typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\/[^\s<>"'`]+$/i.test(trimmed)) {
+    return trimmed.slice(0, 500);
+  }
+  return null;
+}
+
 function sanitizeAdImageUrl(raw: unknown): string | null {
   if (!raw || typeof raw !== "string") return null;
   const trimmed = raw.trim();
   if (!trimmed) return null;
-  if (trimmed.startsWith("data:image/")) {
+  if (/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(trimmed)) {
     return trimmed.length <= 350000 ? trimmed : null;
   }
-  return trimmed.slice(0, 500);
+  if (/^https:\/\/[^\s<>"'`]+$/i.test(trimmed)) {
+    return trimmed.slice(0, 500);
+  }
+  return null;
 }
 
-async function getOwnedEbooksForUser(supabase: any, username: string): Promise<string[]> {
+async function getOwnedEbooksForUser(supabase: any, username: string, uid?: string | null): Promise<string[]> {
   const clean = normalizeHandle(username);
   if (!clean) return [];
 
@@ -65,18 +83,62 @@ async function getOwnedEbooksForUser(supabase: any, username: string): Promise<s
     return ["ia-na-pratica", "pi-para-seu-negocio"];
   }
 
-  const { data: rows } = await supabase
-    .from("transacoes_pi")
-    .select("payment_id, amount, status, purpose, metadata")
-    .eq("status", "completed")
-    .eq("purpose", "ebook");
-
   const owned = new Set<string>();
-  if (Array.isArray(rows)) {
-    for (const row of rows) {
-      const meta = (row && typeof row.metadata === "object" && row.metadata) ? row.metadata : {};
-      const buyer = normalizeHandle(String(meta.pioneer_username || meta.buyer_username || ""));
-      if (buyer && buyer === clean) {
+
+  // 1. Tabela indexada dedicada ebook_entitlements (vinculada a user_uid / username)
+  const queries: Promise<any>[] = [
+    supabase.from("ebook_entitlements").select("product_id").ilike("username", "@" + clean),
+  ];
+  if (uid) {
+    queries.push(supabase.from("ebook_entitlements").select("product_id").eq("user_uid", uid));
+  }
+
+  const results = await Promise.all(queries);
+  const tableMissing = results.some((r) =>
+    r?.error && (r.error.code === "42P01" || String(r.error.message || "").includes("ebook_entitlements"))
+  );
+
+  if (!tableMissing) {
+    for (const res of results) {
+      if (Array.isArray(res?.data)) {
+        for (const row of res.data) {
+          const prodId = String(row?.product_id || "").toLowerCase();
+          if (prodId === "ia-na-pratica" || prodId === "pi-para-seu-negocio") {
+            owned.add(prodId);
+          }
+        }
+      }
+    }
+    if (owned.size > 0) return Array.from(owned);
+  }
+
+  // 2. Fallback filtrado no PostgreSQL para compras anteriores em transacoes_pi
+  const txQueries: Promise<any>[] = [
+    supabase
+      .from("transacoes_pi")
+      .select("metadata")
+      .eq("status", "completed")
+      .eq("purpose", "ebook")
+      .eq("metadata->>pioneer_username", "@" + clean)
+      .limit(50),
+  ];
+  if (uid) {
+    txQueries.push(
+      supabase
+        .from("transacoes_pi")
+        .select("metadata")
+        .eq("status", "completed")
+        .eq("purpose", "ebook")
+        .eq("metadata->>buyer_uid", uid)
+        .limit(50)
+    );
+  }
+
+  const txResults = await Promise.all(txQueries);
+  for (const res of txResults) {
+    if (Array.isArray(res?.data)) {
+      for (const row of res.data) {
+        const meta = (row && typeof row.metadata === "object" && row.metadata) ? row.metadata : {};
         const prodId = String(meta.productId || meta.product_id || meta.product || "pi-para-seu-negocio").toLowerCase();
         if (prodId === "ia-na-pratica" || prodId === "pi-para-seu-negocio") {
           owned.add(prodId);
@@ -262,7 +324,7 @@ function maskHandle(handle: string): string {
 }
 
 serve(async (req) => {
-  const corsHeaders = getCorsHeaders(req, false);
+  const corsHeaders = getCorsHeaders(req, true);
 
   // Trata preflight CORS
   if (req.method === "OPTIONS") {
@@ -298,15 +360,53 @@ serve(async (req) => {
       return jsonOk("PAYMENT_CATALOG", { catalog: MURAL_CONFIG }, corsHeaders, 200);
     }
 
-    // Notificação de novo Lead / Lista de Espera / Proposta Comercial
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Notificação de novo Lead / Lista de Espera / Proposta Comercial (anti-spam estrito)
     if (action === "notify_lead") {
+      const reqOrigin = (req.headers.get("origin") || "").trim();
+      const allowLocal = Deno.env.get("ALLOW_LOCALHOST_CORS") === "true" &&
+        /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(reqOrigin);
+      if (!ALLOWED_ORIGINS.has(reqOrigin) && !allowLocal) {
+        return jsonError("FORBIDDEN_ORIGIN", "Origem não autorizada.", corsHeaders, 403);
+      }
+
       const leadName = String(body?.name || "Pioneiro").trim().slice(0, 80);
       const leadEmail = String(body?.email || "").trim().slice(0, 120);
       const leadSource = String(body?.source || "site").trim().slice(0, 60);
       const leadPiUser = String(body?.pi_username || "").trim().slice(0, 60);
-      if (!leadEmail || !leadEmail.includes("@")) {
+      if (!leadEmail || !EMAIL_FORMAT_RE.test(leadEmail)) {
         return jsonError("INVALID_LEAD", "E-mail inválido.", corsHeaders, 400);
       }
+
+      const cacheKey = leadEmail.toLowerCase();
+      const nowMs = Date.now();
+      const prevNotifiedAt = NOTIFIED_LEADS_CACHE.get(cacheKey);
+      if (prevNotifiedAt && (nowMs - prevNotifiedAt) < 10 * 60 * 1000) {
+        return jsonOk("LEAD_NOTIFIED", { deduplicated: true }, corsHeaders, 200);
+      }
+
+      const fiveMinAgo = new Date(nowMs - 5 * 60 * 1000).toISOString();
+      const { data: recentLead } = await supabase
+        .from("leads")
+        .select("id")
+        .eq("email", leadEmail)
+        .gte("created_at", fiveMinAgo)
+        .limit(1);
+
+      if (!recentLead || recentLead.length === 0) {
+        return jsonError("LEAD_NOT_FOUND", "Lead não registrado recentemente.", corsHeaders, 400);
+      }
+
+      NOTIFIED_LEADS_CACHE.set(cacheKey, nowMs);
+      if (NOTIFIED_LEADS_CACHE.size > 500) {
+        for (const [k, ts] of NOTIFIED_LEADS_CACHE.entries()) {
+          if (nowMs - ts > 10 * 60 * 1000) NOTIFIED_LEADS_CACHE.delete(k);
+        }
+      }
+
       await notifyAdmin({
         priority: "normal",
         tag: "NOVO LEAD / CONTATO",
@@ -323,27 +423,43 @@ serve(async (req) => {
       return jsonOk("LEAD_NOTIFIED", {}, corsHeaders, 200);
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
     // ============================================================
     // PAINEL DE AFILIADOS & COMISSÕES EM PI (20% PADRÃO / 25% EMBAIXADOR)
     // ============================================================
     if (action === "affiliate_summary") {
-      let cleanUser = normalizeHandle(String(username || targetUsername || ""));
-      let isVerifiedOwner = false;
+      let cleanUser = "";
+      let isAdminCaller = false;
+      if (adminSecret && String(adminSecret).trim().length >= 8) {
+        isAdminCaller = await verifyAdminOrFounder(supabase, undefined, adminSecret);
+      }
 
+      let piUser: { uid: string; username: string } | null = null;
       if (accessToken && String(accessToken).trim()) {
         try {
-          const piUser = await verifyPiAccessToken(String(accessToken));
-          const tokenHandle = normalizeHandle(piUser.username);
-          if (!cleanUser) cleanUser = tokenHandle;
-          if (tokenHandle && tokenHandle === cleanUser) {
-            isVerifiedOwner = true;
-          }
+          piUser = await verifyPiAccessToken(String(accessToken));
         } catch (_) {}
       }
+
+      if (!piUser && !isAdminCaller) {
+        return jsonError(
+          "UNAUTHORIZED",
+          "Conecte sua conta oficial no Pi Browser para consultar comissões e carteira.",
+          corsHeaders,
+          401
+        );
+      }
+
+      if (piUser && normalizeHandle(piUser.username) === "hokage22b") {
+        isAdminCaller = true;
+      }
+
+      if (isAdminCaller) {
+        cleanUser = normalizeHandle(String(username || targetUsername || piUser?.username || ""));
+      } else if (piUser) {
+        cleanUser = normalizeHandle(piUser.username);
+      }
+
+      const isVerifiedOwner = true;
 
       if (!cleanUser) {
         return jsonError("MISSING_USERNAME", "Informe o @username para consultar as comissões.", corsHeaders, 400);
@@ -362,7 +478,9 @@ serve(async (req) => {
         .from("transacoes_pi")
         .select("payment_id, txid, to_address, amount, status, metadata, created_at")
         .eq("purpose", "affiliate_commission")
-        .order("created_at", { ascending: false });
+        .eq("metadata->>referrer_username", "@" + cleanUser)
+        .order("created_at", { ascending: false })
+        .limit(100);
 
       let pendingPi = 0;
       let requestedPi = 0;
@@ -659,7 +777,7 @@ serve(async (req) => {
     // ============================================================
     if (action === "my_library") {
       const piUser = await verifyPiAccessToken(String(accessToken || ""));
-      const ownedProducts = await getOwnedEbooksForUser(supabase, piUser.username);
+      const ownedProducts = await getOwnedEbooksForUser(supabase, piUser.username, piUser.uid);
       return jsonOk(
         "LIBRARY_STATUS",
         {
@@ -681,7 +799,7 @@ serve(async (req) => {
         return jsonError("EBOOK_FORMAT_NOT_FOUND", "Produto ou formato de arquivo inválido.", corsHeaders, 404);
       }
 
-      const ownedProducts = await getOwnedEbooksForUser(supabase, piUser.username);
+      const ownedProducts = await getOwnedEbooksForUser(supabase, piUser.username, piUser.uid);
       if (!ownedProducts.includes(cleanProd)) {
         return jsonError(
           "EBOOK_NOT_OWNED",
@@ -694,7 +812,7 @@ serve(async (req) => {
       const targetFile = productFiles[cleanFormat];
       const { data: signedData, error: signErr } = await supabase.storage
         .from(EBOOK_BUCKET)
-        .createSignedUrl(targetFile.path, 3600, { download: targetFile.downloadName });
+        .createSignedUrl(targetFile.path, 120, { download: targetFile.downloadName });
 
       if (signErr || !signedData || !signedData.signedUrl) {
         return jsonError(
@@ -713,7 +831,7 @@ serve(async (req) => {
           format: cleanFormat,
           download_url: signedData.signedUrl,
           file_name: targetFile.downloadName,
-          expires_in_seconds: 3600,
+          expires_in_seconds: 120,
         },
         corsHeaders,
         200
@@ -738,7 +856,7 @@ serve(async (req) => {
       const grantPaymentId = `p2p_grant_${cleanProd}_${cleanTarget}`;
       const grantTxid = String(txid || `p2p_mainnet_${Date.now()}`);
 
-      await supabase.from("transacoes_pi").upsert({
+      const { error: grantTxErr } = await supabase.from("transacoes_pi").upsert({
         payment_id: grantPaymentId,
         txid: grantTxid,
         amount: catalogItem.price_pi,
@@ -753,6 +871,28 @@ serve(async (req) => {
         },
         created_at: new Date().toISOString(),
       }, { onConflict: "payment_id" });
+
+      if (grantTxErr) {
+        return jsonError("DB_ERROR", "Não foi possível registrar a transação de liberação no banco.", corsHeaders, 500);
+      }
+
+      const { data: buyerProf } = await supabase
+        .from("pioneiros")
+        .select("uid")
+        .ilike("username", "@" + cleanTarget)
+        .maybeSingle();
+
+      const { error: grantEntErr } = await supabase.from("ebook_entitlements").upsert({
+        user_uid: buyerProf?.uid || null,
+        username: "@" + cleanTarget,
+        product_id: cleanProd,
+        payment_id: grantPaymentId,
+        granted_at: new Date().toISOString(),
+      }, { onConflict: "username,product_id" });
+
+      if (grantEntErr && grantEntErr.code !== "42P01") {
+        console.warn("[Ebook Entitlement Warning]", grantEntErr.message);
+      }
 
       const affiliateComm = await processAffiliateCommission(supabase, {
         paymentId: grantPaymentId,
@@ -884,13 +1024,13 @@ serve(async (req) => {
       );
     }
 
-    if (!paymentId || typeof paymentId !== "string") {
-      return jsonError("MISSING_PAYMENT_ID", "paymentId é obrigatório.", corsHeaders, 400);
+    if (!paymentId || typeof paymentId !== "string" || !SAFE_PAYMENT_ID_RE.test(paymentId)) {
+      return jsonError("MISSING_PAYMENT_ID", "paymentId inválido ou ausente.", corsHeaders, 400);
     }
 
     const piApiBase = "https://api.minepi.com/v2";
 
-    // 1. APROVAÇÃO DO PAGAMENTO (onReadyForServerApproval) — exige token Pi e valida dono
+    // 1. APROVAÇÃO DO PAGAMENTO (onReadyForServerApproval) — exige token Pi e valida dono + valor/rede
     if (action === "approve") {
       const piUser = await verifyPiAccessToken(String(accessToken || ""));
       if (!piUser || !piUser.uid) {
@@ -907,6 +1047,26 @@ serve(async (req) => {
       }
       if (Deno.env.get("PI_REJECT_TESTNET") === "true" && paymentInfo.network !== "Pi Network") {
         return jsonError("TESTNET_REJECTED", "Pagamentos Testnet não são aceitos em produção.", corsHeaders, 400);
+      }
+
+      const preMeta = (paymentInfo.metadata && typeof paymentInfo.metadata === "object") ? paymentInfo.metadata : {};
+      const preAmount = Number(paymentInfo.amount) || 0;
+      if (preMeta.type === "ebook") {
+        const prodKey = String(preMeta.productId || preMeta.product_id || preMeta.product || "pi-para-seu-negocio").toLowerCase();
+        const catItem = prodKey === "ia-na-pratica"
+          ? MURAL_CONFIG.products["ia-na-pratica"]
+          : MURAL_CONFIG.products["pi-para-seu-negocio"];
+        if (preAmount + 0.0001 < catItem.price_pi) {
+          return jsonError("PAYMENT_AMOUNT_MISMATCH", "Montante incompatível com o catálogo oficial.", corsHeaders, 400);
+        }
+      } else if (preMeta.adId && (preMeta.tier || preMeta.upgrade)) {
+        const t = String(preMeta.upgrade || preMeta.tier).toLowerCase();
+        const minPlan = t === "ouro"
+          ? MURAL_CONFIG.plans.ouro.price_pi
+          : (t === "prata" ? MURAL_CONFIG.plans.prata.price_pi : MURAL_CONFIG.plans.bronze.price_pi);
+        if (preAmount + 0.0001 < minPlan) {
+          return jsonError("PAYMENT_AMOUNT_MISMATCH", "Montante incompatível com o plano do Mural.", corsHeaders, 400);
+        }
       }
 
       const response = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}/approve`, {
@@ -934,10 +1094,10 @@ serve(async (req) => {
 
     // 2. CONCLUSÃO DO PAGAMENTO (onReadyForServerCompletion) — autenticado e idempotente
     if (action === "complete") {
-      if (!txid || typeof txid !== "string") {
+      if (!txid || typeof txid !== "string" || !SAFE_PAYMENT_ID_RE.test(txid)) {
         return jsonError(
           "MISSING_TXID",
-          "txid da transação blockchain é obrigatório para conclusão.",
+          "txid da transação blockchain inválido ou ausente.",
           corsHeaders,
           400
         );
@@ -948,15 +1108,23 @@ serve(async (req) => {
         return jsonError("PI_AUTH_REQUIRED", "Autenticação Pi Browser obrigatória para concluir pagamento.", corsHeaders, 401);
       }
 
-      // Idempotência estrita antes de qualquer efeito colateral (impede replay de comissões/doações)
-      const { data: alreadyRecorded } = await supabase
-        .from("transacoes_pi")
-        .select("payment_id, status")
-        .or(`payment_id.eq.${paymentId},txid.eq.${txid}`)
-        .eq("status", "completed")
-        .limit(1);
+      // Idempotência estrita via consultas parametrizadas antes de qualquer efeito colateral
+      const [{ data: recordedByPid }, { data: recordedByTx }] = await Promise.all([
+        supabase
+          .from("transacoes_pi")
+          .select("payment_id, status")
+          .eq("payment_id", paymentId)
+          .eq("status", "completed")
+          .limit(1),
+        supabase
+          .from("transacoes_pi")
+          .select("payment_id, status")
+          .eq("txid", txid)
+          .eq("status", "completed")
+          .limit(1),
+      ]);
 
-      if (alreadyRecorded && alreadyRecorded.length > 0) {
+      if ((recordedByPid && recordedByPid.length > 0) || (recordedByTx && recordedByTx.length > 0)) {
         return jsonOk("PAYMENT_ALREADY_COMPLETED", { idempotent: true, payment_id: paymentId }, corsHeaders, 200);
       }
 
@@ -999,16 +1167,25 @@ serve(async (req) => {
       // Processamento contábil e ativação de serviços no Supabase
       if ((response.ok || isAlreadyCompleted) && data) {
         const paidAmount = Number(data.amount) || 0;
-        const metadata = data.metadata || {};
+        const metadata = (data.metadata && typeof data.metadata === "object") ? { ...data.metadata } : {};
         const verifiedHandle = normalizeHandle(piUser.username);
+        if (!verifiedHandle) {
+          return jsonError("INVALID_USERNAME", "Usuário Pi inválido.", corsHeaders, 400);
+        }
+        metadata.pioneer_username = "@" + verifiedHandle;
+        metadata.buyer_uid = piUser.uid;
 
         // A. Anti-Tampering: Validação estrita de montante mínimo por Tier Comercial (Ouro=3.14, Prata=1.00, Bronze=0.314)
         if (metadata.adId) {
           const { data: ad } = await supabase
             .from("anuncios")
-            .select("id, price_pi, plan_tier, status")
+            .select("id, pioneer_username, price_pi, plan_tier, status")
             .eq("id", metadata.adId)
             .maybeSingle();
+
+          if (ad && ad.pioneer_username && normalizeHandle(ad.pioneer_username) !== verifiedHandle) {
+            return jsonError("FORBIDDEN", "Você não tem permissão para alterar o anúncio de outro usuário.", corsHeaders, 403);
+          }
 
           const rawTier = String(
             (ad && ad.plan_tier) ||
@@ -1051,11 +1228,11 @@ serve(async (req) => {
               const rawCountry = String(adPayload.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6) || "GLOBAL";
               const rawPayMode = String(adPayload.payment_modes || "pi").trim().toLowerCase();
               const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
-              await supabase.from("anuncios").upsert({
+              const { error: adInsertErr } = await supabase.from("anuncios").insert({
                 id: String(metadata.adId),
                 title: String(adPayload.title || "").slice(0, 120),
                 description: String(adPayload.description || "").slice(0, 600),
-                link_url: cleanTier !== "bronze" && adPayload.link_url ? String(adPayload.link_url).slice(0, 500) : null,
+                link_url: cleanTier !== "bronze" ? sanitizeHttpUrl(adPayload.link_url) : null,
                 image_url: sanitizeAdImageUrl(adPayload.image_url),
                 category: String(adPayload.category || "geral").slice(0, 40),
                 location: String(adPayload.location || "Online / Global").slice(0, 60) || "Online / Global",
@@ -1070,10 +1247,13 @@ serve(async (req) => {
                 pi_txid: txid,
                 pi_payment_id: paymentId,
                 expires_at: expiresAt,
-              }, { onConflict: "id" });
+              });
+              if (adInsertErr && adInsertErr.code !== "23505") {
+                return jsonError("DB_ERROR", "Falha ao registrar anúncio pago.", corsHeaders, 500);
+              }
             } else if (ad) {
-              // Ativa o anúncio existente com verificação de montante aprovada
-              await supabase
+              // Ativa o anúncio existente com verificação de montante e propriedade aprovadas
+              const { error: adUpdErr } = await supabase
                 .from("anuncios")
                 .update({
                   status: "ativo",
@@ -1083,6 +1263,9 @@ serve(async (req) => {
                   expires_at: expiresAt,
                 })
                 .eq("id", metadata.adId);
+              if (adUpdErr) {
+                return jsonError("DB_ERROR", "Falha ao ativar anúncio pago.", corsHeaders, 500);
+              }
             }
           }
         } else if (metadata.type === "ebook") {
@@ -1106,44 +1289,53 @@ serve(async (req) => {
 
           metadata.productId = catalogItem.id;
 
-          await supabase
+          const { error: entErr } = await supabase.from("ebook_entitlements").upsert({
+            user_uid: piUser.uid,
+            username: "@" + verifiedHandle,
+            product_id: catalogItem.id,
+            payment_id: paymentId,
+            granted_at: new Date().toISOString(),
+          }, { onConflict: "username,product_id" });
+          if (entErr && entErr.code !== "42P01") {
+            console.warn("[Ebook Entitlement Warning]", entErr.message);
+          }
+
+          const { error: donErr } = await supabase
             .from("doacoes")
             .insert([{
-              donor_identifier: metadata.pioneer_username || "Pioneiro Pi",
+              donor_identifier: "@" + verifiedHandle,
               currency: "PI",
               amount: paidAmount,
               status: "recebido"
             }]);
+          if (donErr) {
+            console.warn("[Doacoes Warning]", donErr.message);
+          }
         }
 
         // C. Ledger Imutável de Transações (Idempotente)
         const txPurpose = metadata.type === "ebook" ? "ebook" : (metadata.adId ? "anuncio_mural" : "pagamento_geral");
-        try {
-          await supabase
-            .from("transacoes_pi")
-            .upsert({
-              payment_id: paymentId,
-              txid: txid || (data.transaction && data.transaction.txid) || null,
-              from_address: data.from_address || null,
-              to_address: data.to_address || null,
-              amount: paidAmount,
-              status: "completed",
-              purpose: txPurpose,
-              metadata: metadata,
-              created_at: new Date().toISOString()
-            }, { onConflict: "payment_id" });
-        } catch (ledgerErr) {
-          console.warn("[Ledger Warning] Erro ao registrar na tabela transacoes_pi:", ledgerErr);
+        const { error: ledgerErr } = await supabase
+          .from("transacoes_pi")
+          .upsert({
+            payment_id: paymentId,
+            txid: txid || (data.transaction && data.transaction.txid) || null,
+            from_address: data.from_address || null,
+            to_address: data.to_address || null,
+            amount: paidAmount,
+            status: "completed",
+            purpose: txPurpose,
+            metadata: metadata,
+            created_at: new Date().toISOString()
+          }, { onConflict: "payment_id" });
+        if (ledgerErr) {
+          console.warn("[Ledger Warning] Erro ao registrar na tabela transacoes_pi:", ledgerErr.message);
         }
 
         // D. Motor de Comissão de Afiliados (20% Padrão / 25% Embaixador para Anúncios no Mural e E-books)
         let generatedComm: Record<string, unknown> | null = null;
         if (txPurpose === "anuncio_mural" || txPurpose === "ebook") {
-          const buyerUser = String(
-            (adPayload && adPayload.pioneer_username) ||
-            metadata.pioneer_username ||
-            ""
-          );
+          const buyerUser = "@" + verifiedHandle;
           const fallbackRef = String(
             refCode ||
             metadata.ref_code ||
@@ -1159,7 +1351,7 @@ serve(async (req) => {
             txid: txid || (data.transaction && data.transaction.txid) || null,
             paidAmount: paidAmount,
             buyerUsername: buyerUser,
-            buyerUid: data.user_uid ? String(data.user_uid) : null,
+            buyerUid: piUser.uid,
             buyerWallet: data.from_address ? String(data.from_address) : null,
             purpose: txPurpose,
             description: descLabel,
@@ -1167,11 +1359,7 @@ serve(async (req) => {
           });
         }
 
-        const buyerHandle = String(
-          (adPayload && adPayload.pioneer_username) ||
-          metadata.pioneer_username ||
-          "@pioneiro"
-        );
+        const buyerHandle = "@" + verifiedHandle;
         await notifyAdmin({
           priority: "high",
           tag: "PAGAMENTO PI",

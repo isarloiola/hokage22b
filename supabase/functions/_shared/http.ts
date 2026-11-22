@@ -32,13 +32,26 @@ export function getCorsHeaders(req: Request, restrictOrigin = false): Record<str
     };
   }
   const origin = req.headers.get("origin") || "";
-  const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+  const allowLocalhost = Deno.env.get("ALLOW_LOCALHOST_CORS") === "true";
+  const isLocal = allowLocalhost && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
   const allowOrigin = (ALLOWED_ORIGINS.has(origin) || isLocal) ? origin : "https://hokage22b.com";
   return {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Vary": "Origin",
   };
+}
+
+export function timingSafeEqualStr(a: string, b: string): boolean {
+  const enc = new TextEncoder();
+  const bytesA = enc.encode(String(a || ""));
+  const bytesB = enc.encode(String(b || ""));
+  const maxLen = Math.max(bytesA.length, bytesB.length);
+  let diff = bytesA.length ^ bytesB.length;
+  for (let i = 0; i < maxLen; i++) {
+    diff |= (bytesA[i] || 0) ^ (bytesB[i] || 0);
+  }
+  return diff === 0;
 }
 
 export function jsonResponse(body: unknown, corsHeaders: Record<string, string>, status = 200): Response {

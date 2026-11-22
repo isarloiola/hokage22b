@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HOKAGE22B — Console de Administração Web3 &amp; Gestão</title>
   <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://sdk.minepi.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https://yhzoehwkuxteihsnagcj.supabase.co https://api.minepi.com; object-src 'none'; base-uri 'self';" />
 
   <!-- Clean URLs (Remove .html da barra de endereços) -->
   <script>
@@ -591,7 +593,7 @@
       <div style="text-align:left;margin-bottom:16px">
         <label style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;cursor:pointer">
           <input type="checkbox" id="chk-remember-device" style="accent-color:var(--amber)" checked />
-          <span>Manter este dispositivo autorizado</span>
+          <span>Manter sessão desbloqueada apenas nesta aba (sessionStorage)</span>
         </label>
       </div>
 
@@ -887,7 +889,7 @@
 
   <!-- SCRIPTS DE INTEGRAÇÃO & AUTENTICAÇÃO -->
   <script src="assets/js/config.js?v=7.2"></script>
-  <script src="assets/js/modules/db.js?v=5.7"></script>
+  <script src="assets/js/modules/db.js?v=6.0"></script>
   <script>
     (function () {
       'use strict';
@@ -954,20 +956,20 @@
         }
       }
 
-      // Verifica se já existe sessão ou chave salva no dispositivo
+      // Verifica se já existe sessão ativa nesta aba (não persiste chave mestra em localStorage)
+      try { localStorage.removeItem(LOCAL_STORAGE_KEY); } catch (_) {}
+
       async function checkAuth() {
         const sessionKey = sessionStorage.getItem(SESSION_AUTH_KEY);
-        const deviceKey = localStorage.getItem(LOCAL_STORAGE_KEY);
-        const keyToTry = sessionKey || deviceKey;
 
-        if (keyToTry) {
-          const isValid = await validateKey(keyToTry);
+        if (sessionKey) {
+          const isValid = await validateKey(sessionKey);
           if (isValid) {
-            currentSecret = keyToTry;
-            sessionStorage.setItem(SESSION_AUTH_KEY, keyToTry);
-            showDashboard(sessionKey ? '@hokage22b (Sessão)' : '@hokage22b (Dispositivo Autorizado)');
+            currentSecret = sessionKey;
+            showDashboard('@hokage22b (Sessão)');
             return;
           }
+          sessionStorage.removeItem(SESSION_AUTH_KEY);
         }
         showLogin();
       }
@@ -994,7 +996,8 @@
         e.preventDefault();
         const btn = document.getElementById('btn-pass-login');
         const pass = document.getElementById('admin-pass').value.trim();
-        const remember = document.getElementById('chk-remember-device').checked;
+        const rememberEl = document.getElementById('chk-remember-device');
+        const keepInTabSession = rememberEl ? rememberEl.checked : true;
         if (!pass) return;
 
         btn.disabled = true;
@@ -1004,10 +1007,12 @@
           const isValid = await validateKey(pass);
           if (isValid) {
             currentSecret = pass;
-            sessionStorage.setItem(SESSION_AUTH_KEY, pass);
-            if (remember) {
-              localStorage.setItem(LOCAL_STORAGE_KEY, pass);
+            if (keepInTabSession) {
+              sessionStorage.setItem(SESSION_AUTH_KEY, pass);
+            } else {
+              sessionStorage.removeItem(SESSION_AUTH_KEY);
             }
+            try { localStorage.removeItem(LOCAL_STORAGE_KEY); } catch (_) {}
             showToast('Chave validada com sucesso! Acesso liberado.');
             showDashboard('hokage22b (Cofre Validado)');
           } else {
@@ -1068,21 +1073,19 @@
           diag.style.color = 'var(--green)';
           diag.innerHTML = `✓ Usuário <strong>@${escapeHtml(auth.user.username)}</strong> verificado pela Pi Network!`;
 
-          // Verifica se este dispositivo já possui a chave mestra salva
-          const savedKey = localStorage.getItem(LOCAL_STORAGE_KEY);
+          // Verifica sessão temporária na aba; nunca grava chave mestra em localStorage
+          const savedKey = sessionStorage.getItem(SESSION_AUTH_KEY);
           if (savedKey && await validateKey(savedKey)) {
             currentSecret = savedKey;
-            sessionStorage.setItem(SESSION_AUTH_KEY, savedKey);
             showToast('Bem-vindo, @hokage22b! Acesso Web3 liberado.');
             showDashboard('@hokage22b (Pi Web3)');
           } else {
-            // Solicita a chave mestra para autorizar o celular pela primeira vez
-            const inputKey = prompt('Olá @hokage22b!\nPara autorizar permanentemente este aparelho no banco de dados, insira a Chave Mestra do seu arquivo confidencial de cofre:');
+            const inputKey = prompt('Olá @hokage22b!\nPara desbloquear esta sessão segura (somente nesta aba), insira a Chave Mestra do seu arquivo confidencial de cofre:');
             if (inputKey && await validateKey(inputKey.trim())) {
               currentSecret = inputKey.trim();
               sessionStorage.setItem(SESSION_AUTH_KEY, currentSecret);
-              localStorage.setItem(LOCAL_STORAGE_KEY, currentSecret);
-              showToast('Dispositivo autorizado com sucesso!');
+              try { localStorage.removeItem(LOCAL_STORAGE_KEY); } catch (_) {}
+              showToast('Sessão administrativa liberada com sucesso!');
               showDashboard('@hokage22b (Pi Web3)');
             } else {
               diag.style.color = 'var(--red)';
@@ -1109,8 +1112,9 @@
       };
 
       window.clearSavedDeviceKey = function () {
-        if (confirm('Deseja desautorizar este aparelho? Você precisará digitar a chave mestra novamente no próximo acesso.')) {
-          localStorage.removeItem(LOCAL_STORAGE_KEY);
+        if (confirm('Deseja encerrar a sessão e limpar qualquer resquício de chave local deste aparelho?')) {
+          try { localStorage.removeItem(LOCAL_STORAGE_KEY); } catch (_) {}
+          sessionStorage.removeItem(SESSION_AUTH_KEY);
           showToast('Chave removida deste aparelho.');
           logoutAdmin();
         }

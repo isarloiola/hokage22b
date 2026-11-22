@@ -2,8 +2,50 @@
 // HOKAGE22B — Official Telegram Ecosystem, Sales & Telemetry Bot
 // Gratuito via Supabase Edge Functions (Deno) + Telegram Bot API
 // ============================================================
-import { getCorsHeaders, MURAL_CONFIG } from "../_shared/http.ts";
+import {
+  ALLOWED_ORIGINS,
+  getCorsHeaders,
+  HttpPayloadError,
+  MURAL_CONFIG,
+  parseJsonBody,
+  timingSafeEqualStr,
+} from "../_shared/http.ts";
 import { notifyAdmin } from "../_shared/notify.ts";
+
+const TRACK_EVENT_IP_WINDOW_MS = 60 * 1000;
+const TRACK_EVENT_MAX_PER_IP = 8;
+const TRACK_EVENT_MAX_PER_HOUR = 60;
+const ipRateMap = new Map<string, { count: number; resetAt: number }>();
+let hourRateBucket = { key: 0, count: 0 };
+
+function checkTrackEventRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const currentHour = Math.floor(now / (60 * 60 * 1000));
+  if (hourRateBucket.key !== currentHour) {
+    hourRateBucket = { key: currentHour, count: 0 };
+  }
+  if (hourRateBucket.count >= TRACK_EVENT_MAX_PER_HOUR) {
+    return false;
+  }
+
+  const safeIp = ip || "unknown";
+  const rec = ipRateMap.get(safeIp);
+  if (!rec || now > rec.resetAt) {
+    ipRateMap.set(safeIp, { count: 1, resetAt: now + TRACK_EVENT_IP_WINDOW_MS });
+  } else if (rec.count >= TRACK_EVENT_MAX_PER_IP) {
+    return false;
+  } else {
+    rec.count += 1;
+  }
+
+  hourRateBucket.count += 1;
+  if (ipRateMap.size > 500) {
+    for (const [k, v] of ipRateMap.entries()) {
+      if (now > v.resetAt) ipRateMap.delete(k);
+    }
+  }
+  return true;
+}
 
 interface TelegramUpdate {
   message?: {
@@ -339,7 +381,7 @@ function routeTextCommand(text: string, firstName?: string): BotPayload {
 }
 
 Deno.serve(async (req) => {
-  const corsHeaders = getCorsHeaders(req, false);
+  const corsHeaders = getCorsHeaders(req, true);
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -347,6 +389,26 @@ Deno.serve(async (req) => {
   const url = new URL(req.url);
   if (req.method === "GET") {
     if (url.searchParams.get("setup") === "1") {
+      const setupSecret = (
+        Deno.env.get("TELEGRAM_SETUP_SECRET") ||
+        Deno.env.get("TELEGRAM_WEBHOOK_SECRET") ||
+        ""
+      ).trim();
+      if (!setupSecret) {
+        return new Response(JSON.stringify({ ok: false, error: "Segredo de setup não configurado." }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      const authHeader = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
+      const providedSecret = (req.headers.get("x-setup-secret") || authHeader).trim();
+      if (!providedSecret || !timingSafeEqualStr(providedSecret, setupSecret)) {
+        return new Response(JSON.stringify({ ok: false, error: "Unauthorized" }), {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
       const botToken = (Deno.env.get("TELEGRAM_PUBLIC_BOT_TOKEN") || Deno.env.get("TELEGRAM_BOT_TOKEN") || "").trim();
       if (!botToken) {
         return new Response(JSON.stringify({ ok: false, error: "TELEGRAM_PUBLIC_BOT_TOKEN não encontrado nos Secrets." }), {
@@ -393,7 +455,7 @@ Deno.serve(async (req) => {
     return new Response("Method not allowed", { status: 405, headers: corsHeaders });
   }
 
-  const rawBody = await req.json().catch(() => null) as (TelegramUpdate & {
+  let rawBody: (TelegramUpdate & {
     action?: string;
     event?: string;
     page?: string;
@@ -405,10 +467,34 @@ Deno.serve(async (req) => {
     trail?: string;
     source?: string;
     durationSec?: number;
-  }) | null;
+  }) | null = null;
+  try {
+    rawBody = await parseJsonBody(req, 64 * 1024);
+  } catch (err) {
+    if (err instanceof HttpPayloadError) {
+      return new Response(JSON.stringify({ ok: false, code: err.code, error: err.message }), {
+        status: err.status,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
 
   // Telemetria profissional de visitas, trilha de navegação e cliques reais para o Telegram do admin
   if (rawBody && rawBody.action === "track_event") {
+    const reqOrigin = (req.headers.get("origin") || "").trim();
+    const allowLocal = Deno.env.get("ALLOW_LOCALHOST_CORS") === "true" &&
+      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(reqOrigin);
+    if (!ALLOWED_ORIGINS.has(reqOrigin) && !allowLocal) {
+      return new Response(JSON.stringify({ ok: false, error: "Forbidden origin" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const ua = (req.headers.get("user-agent") || "").toLowerCase();
     if (/bot|crawler|spider|headless|curl|wget|python-requests|lighthouse|pagespeed|uptime/i.test(ua)) {
       return new Response(JSON.stringify({ ok: true, skipped: "bot" }), {
@@ -416,8 +502,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    const clientIp = (req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for") || "").split(",")[0].trim();
+    if (!checkTrackEventRateLimit(clientIp)) {
+      return new Response(JSON.stringify({ ok: true, throttled: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const eventName = String(rawBody.event || "interacao").trim().slice(0, 60);
-    const pagePath = String(rawBody.page || "/").trim().slice(0, 120);
+    const pagePath = (String(rawBody.page || "/").split("?")[0].trim().slice(0, 120)) || "/";
     const detail = String(rawBody.detail || "").trim().slice(0, 220);
     const ref = String(rawBody.ref || "").trim().slice(0, 40);
     const sessionId = String(rawBody.sessionId || "").trim().slice(0, 12);
@@ -450,6 +543,7 @@ Deno.serve(async (req) => {
       tag: "ATIVIDADE",
       title: eventName,
       lines,
+      skipEmail: true,
     });
 
     return new Response(JSON.stringify({ ok: true }), {
@@ -466,11 +560,15 @@ Deno.serve(async (req) => {
   }
 
   const expectedSecret = (Deno.env.get("TELEGRAM_WEBHOOK_SECRET") || "").trim();
-  if (expectedSecret) {
-    const gotSecret = req.headers.get("x-telegram-bot-api-secret-token") || "";
-    if (gotSecret !== expectedSecret) {
-      return new Response("Unauthorized", { status: 401 });
-    }
+  if (!expectedSecret) {
+    return new Response(JSON.stringify({ ok: false, error: "TELEGRAM_WEBHOOK_SECRET não configurado" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  const gotSecret = (req.headers.get("x-telegram-bot-api-secret-token") || "").trim();
+  if (!gotSecret || !timingSafeEqualStr(gotSecret, expectedSecret)) {
+    return new Response("Unauthorized", { status: 401 });
   }
 
   const update = rawBody;

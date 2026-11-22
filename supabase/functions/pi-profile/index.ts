@@ -12,11 +12,56 @@ import {
   jsonOk,
   parseJsonBody,
 } from "../_shared/http.ts";
-import { verifyPiAccessToken } from "../_shared/pi-auth.ts";
+import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
 import { notifyAdmin } from "../_shared/notify.ts";
 
+function sanitizeProfileHttpUrl(raw: unknown): string | null {
+  if (!raw || typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\/[^\s<>"'`]+$/i.test(trimmed)) {
+    return trimmed.slice(0, 300);
+  }
+  return null;
+}
+
+function sanitizeProfileImageUrl(raw: unknown): string | null {
+  if (!raw || typeof raw !== "string") return null;
+  const a = raw.trim();
+  if (!a) return null;
+  if (
+    /^https?:\/\/[^\s<>"'`]+$/i.test(a) ||
+    /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(a) ||
+    /^assets\/img\/[a-zA-Z0-9_\-\.]+\.(jpg|jpeg|png|webp|svg)$/i.test(a)
+  ) {
+    return a.slice(0, 360000);
+  }
+  return null;
+}
+
+function sanitizeProducts(rawProducts: unknown): Record<string, unknown>[] {
+  if (!Array.isArray(rawProducts)) return [];
+  const clean: Record<string, unknown>[] = [];
+  for (const item of rawProducts.slice(0, 20)) {
+    if (!item || typeof item !== "object") continue;
+    const p = item as Record<string, unknown>;
+    const rawLink = typeof p.link === "string" ? p.link.trim() : "";
+    const safeLink = rawLink === "#" ? "#" : (sanitizeProfileHttpUrl(rawLink) || "");
+    clean.push({
+      title: String(p.title || "").trim().slice(0, 120),
+      price: String(p.price || "").trim().slice(0, 40),
+      price_fiat: p.price_fiat ? String(p.price_fiat).trim().slice(0, 40) : "",
+      badge: p.badge ? String(p.badge).trim().slice(0, 40) : "",
+      link: safeLink,
+      image_url: sanitizeProfileImageUrl(p.image_url) || "",
+      cta: p.cta ? String(p.cta).trim().slice(0, 40) : "",
+    });
+  }
+  return clean;
+}
+
 serve(async (req) => {
-  const corsHeaders = getCorsHeaders(req, false);
+  const corsHeaders = getCorsHeaders(req, true);
 
   // Trata requisições preflight OPTIONS (CORS)
   if (req.method === "OPTIONS") {
@@ -58,23 +103,82 @@ serve(async (req) => {
       }
     }
 
-    let cleanAvatar: string | null = null;
-    if (safeData.avatar_url) {
-      const a = String(safeData.avatar_url).trim();
-      if (
-        /^https?:\/\/[^\s<>"'`]+$/i.test(a) ||
-        /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(a) ||
-        /^assets\/img\/[a-zA-Z0-9_\-\.]+\.(jpg|jpeg|png|webp|svg)$/i.test(a)
-      ) {
-        cleanAvatar = a;
-      }
-    }
+    const cleanHandle = normalizeHandle(verifiedUsername);
+    const cleanAvatar = sanitizeProfileImageUrl(safeData.avatar_url);
+    const cleanProducts = sanitizeProducts(safeData.products);
 
-    const checklistState = (safeData.checklist_state && typeof safeData.checklist_state === "object")
-      ? { ...safeData.checklist_state }
+    // Consulta estado real no servidor para validar títulos meritocráticos
+    const { data: existingByUser } = await supabase
+      .from("pioneiros")
+      .select("uid, is_ambassador, referral_qualified_count")
+      .ilike("username", verifiedUsername)
+      .maybeSingle();
+
+    const { data: existingByUid } = await supabase
+      .from("pioneiros")
+      .select("uid, is_ambassador, referral_qualified_count")
+      .eq("uid", verifiedUid)
+      .maybeSingle();
+
+    const existingFlags = existingByUid || existingByUser || null;
+    const isBrandNewPioneer = !existingByUser && !existingByUid;
+
+    const { data: activeAds } = await supabase
+      .from("anuncios")
+      .select("id")
+      .ilike("pioneer_username", "@" + cleanHandle)
+      .eq("status", "ativo")
+      .limit(1);
+    const hasActiveAd = Boolean(activeAds && activeAds.length > 0);
+
+    const rawChecklist = (safeData.checklist_state && typeof safeData.checklist_state === "object" && !Array.isArray(safeData.checklist_state))
+      ? (safeData.checklist_state as Record<string, unknown>)
       : {};
+    const checklistState: Record<string, unknown> = { ...rawChecklist };
     if (safeData.showcase_zero !== undefined) checklistState.showcase_zero = Boolean(safeData.showcase_zero);
     if (safeData.showcase_mural !== undefined) checklistState.showcase_mural = Boolean(safeData.showcase_mural);
+
+    if (Array.isArray(rawChecklist.social_links)) {
+      const sanitizedLinks: Array<{ network: string; url: string }> = [];
+      for (const entry of rawChecklist.social_links.slice(0, 12)) {
+        if (!entry || typeof entry !== "object") continue;
+        const eObj = entry as Record<string, unknown>;
+        const safeSocialUrl = sanitizeProfileHttpUrl(eObj.url);
+        if (!safeSocialUrl) continue;
+        const rawNet = String(eObj.network || "auto").toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 24) || "auto";
+        sanitizedLinks.push({ network: rawNet, url: safeSocialUrl });
+      }
+      checklistState.social_links = sanitizedLinks;
+    }
+
+    // Validação server-side de títulos exibidos no perfil (A-01)
+    const isHokageServer =
+      Boolean(existingFlags?.is_ambassador) ||
+      Number(existingFlags?.referral_qualified_count || 0) >= 5 ||
+      cleanHandle === "hokage22b";
+    const isAmbassadorServer =
+      Boolean(existingFlags?.is_ambassador) ||
+      Number(existingFlags?.referral_qualified_count || 0) > 0;
+    const hasGithubSocial = Array.isArray(checklistState.social_links) &&
+      (checklistState.social_links as Array<{ network: string }>).some((s) => s.network === "github");
+    const unlockedServerTitles = new Set<string>(["pioneiro", "pi_kyc"]);
+    if (Boolean(cleanWallet) || cleanProducts.length > 0 || isHokageServer) unlockedServerTitles.add("construtor");
+    if (hasGithubSocial || Boolean(rawChecklist.dev_api_used) || cleanHandle === "hokage22b") unlockedServerTitles.add("desenvolvedor");
+    if (isHokageServer) unlockedServerTitles.add("hokage");
+    if (cleanProducts.length > 0 || hasActiveAd) unlockedServerTitles.add("comerciante");
+    if (isAmbassadorServer) unlockedServerTitles.add("embaixador");
+
+    if (Array.isArray(rawChecklist.selected_titles)) {
+      const filteredTitles: string[] = [];
+      for (const tid of rawChecklist.selected_titles) {
+        const cleanTid = String(tid || "").trim().toLowerCase();
+        if (unlockedServerTitles.has(cleanTid) && !filteredTitles.includes(cleanTid)) {
+          filteredTitles.push(cleanTid);
+          if (filteredTitles.length >= 3) break;
+        }
+      }
+      checklistState.selected_titles = filteredTitles.length > 0 ? filteredTitles : ["pioneiro"];
+    }
 
     const updatePayload = {
       uid: verifiedUid,
@@ -82,30 +186,16 @@ serve(async (req) => {
       bio: safeData.bio ? String(safeData.bio).slice(0, 500) : null,
       avatar_url: cleanAvatar,
       wallet_address: cleanWallet,
-      whatsapp_url: safeData.whatsapp_url ? String(safeData.whatsapp_url).slice(0, 300) : null,
-      youtube_url: safeData.youtube_url ? String(safeData.youtube_url).slice(0, 300) : null,
-      twitter_url: safeData.twitter_url ? String(safeData.twitter_url).slice(0, 300) : null,
-      instagram_url: safeData.instagram_url ? String(safeData.instagram_url).slice(0, 300) : null,
+      whatsapp_url: sanitizeProfileHttpUrl(safeData.whatsapp_url),
+      youtube_url: sanitizeProfileHttpUrl(safeData.youtube_url),
+      twitter_url: sanitizeProfileHttpUrl(safeData.twitter_url),
+      instagram_url: sanitizeProfileHttpUrl(safeData.instagram_url),
       checklist_state: checklistState,
-      products: Array.isArray(safeData.products) ? safeData.products.slice(0, 20) : [],
+      products: cleanProducts,
       updated_at: new Date().toISOString(),
     };
 
     // 4. GRAVAÇÃO SEGURA NO SUPABASE (Com migração automática caso exista registro prévio user_<username>)
-    const { data: existingByUser } = await supabase
-      .from("pioneiros")
-      .select("uid")
-      .ilike("username", verifiedUsername)
-      .maybeSingle();
-
-    const { data: existingByUid } = await supabase
-      .from("pioneiros")
-      .select("uid")
-      .eq("uid", verifiedUid)
-      .maybeSingle();
-
-    const isBrandNewPioneer = !existingByUser && !existingByUid;
-
     if (existingByUser && existingByUser.uid && existingByUser.uid !== verifiedUid) {
       await supabase
         .from("pioneiros")

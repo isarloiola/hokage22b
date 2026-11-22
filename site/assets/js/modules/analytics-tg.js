@@ -178,7 +178,7 @@
       const trailStr = (extra && extra.trailStr) ? extra.trailStr : getCurrentTrailString();
       const durationSec = (extra && typeof extra.durationSec === 'number') ? extra.durationSec : 0;
       const source = getSourceLabel();
-      const page = (window.location.pathname || '/') + (window.location.search || '');
+      const page = window.location.pathname || '/';
 
       const richParts = [
         '[' + sid + ' · ' + device + (piUser ? ' · @' + piUser : '') + ']',
@@ -217,11 +217,10 @@
 
   function trackPageVisit() {
     const path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
-    const search = window.location.search || '';
     const info = updateTrailAndDuration();
     const isEntry = info.trail.length <= 1;
     const title = isEntry ? '🟢 Nova Sessão no Site' : ('🧭 Navegou → ' + getPageLabel());
-    sendEvent(title, getSourceLabel(), 'visit_' + path + search, {
+    sendEvent(title, getSourceLabel(), 'visit_' + path, {
       trailStr: info.trail.join(' → '),
       durationSec: info.durationSec
     });

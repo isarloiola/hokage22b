@@ -28,30 +28,14 @@ const TIER_PRICES: Record<string, number> = {
 const AD_EDIT_WINDOW_MS = 24 * 60 * 60 * 1000;
 const COMMENT_COOLDOWN_MS = 15 * 1000;
 const AUTO_MODERATION_REPORT_THRESHOLD = 5;
-
-let currentCorsHeaders: Record<string, string> = {
-  "Access-Control-Allow-Origin": "https://hokage22b.com",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
-function jsonResponse(body: unknown, status = 200) {
-  return sharedJsonResponse(body, currentCorsHeaders, status);
-}
-
-function jsonOk(code: string, data: Record<string, unknown> = {}, status = 200) {
-  return sharedJsonOk(code, data, currentCorsHeaders, status);
-}
-
-function jsonError(code: string, message: string, status = 400) {
-  return sharedJsonError(code, message, currentCorsHeaders, status);
-}
+const SAFE_PAYMENT_ID_RE = /^[A-Za-z0-9_.:-]{4,128}$/;
 
 function validateHttpUrl(raw: unknown): string | null {
   if (!raw || typeof raw !== "string") return null;
   const trimmed = raw.trim();
   if (!trimmed) return null;
-  if (!/^https?:\/\//i.test(trimmed)) {
-    throw new Error("URL inválida. Utilize http:// ou https://.");
+  if (!/^https?:\/\/[^\s<>"'`]+$/i.test(trimmed)) {
+    throw new Error("URL inválida. Utilize http:// ou https:// sem caracteres inválidos.");
   }
   return trimmed.slice(0, 500);
 }
@@ -60,13 +44,43 @@ function validateAdImageUrl(raw: unknown): string | null {
   if (!raw || typeof raw !== "string") return null;
   const trimmed = raw.trim();
   if (!trimmed) return null;
-  if (trimmed.startsWith("data:image/")) {
+  if (/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(trimmed)) {
     return trimmed.length <= 350000 ? trimmed : null;
   }
-  if (/^https?:\/\//i.test(trimmed)) {
+  if (/^https?:\/\/[^\s<>"'`]+$/i.test(trimmed)) {
     return trimmed.slice(0, 500);
   }
   return null;
+}
+
+function decodeValidatedImageDataUrl(raw: unknown): { bytes: Uint8Array; ext: string; mime: string } {
+  if (!raw || typeof raw !== "string") {
+    throw new Error("Imagem Base64 inválida.");
+  }
+  const trimmed = raw.trim();
+  const match = trimmed.match(/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/i);
+  if (!match || trimmed.length > 700000) {
+    throw new Error("Formato de imagem não permitido. Use JPEG, PNG ou WebP (máx. 450KB).");
+  }
+  const binaryStr = atob(match[2]);
+  if (binaryStr.length < 16 || binaryStr.length > 460 * 1024) {
+    throw new Error("Tamanho da imagem fora do limite permitido (máx. 450KB).");
+  }
+  const bytes = new Uint8Array(binaryStr.length);
+  for (let i = 0; i < binaryStr.length; i++) {
+    bytes[i] = binaryStr.charCodeAt(i);
+  }
+  // Validação de magic bytes reais
+  const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  const isPng = bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
+  const isWebp =
+    bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 &&
+    bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50;
+
+  if (isJpeg) return { bytes, ext: "jpg", mime: "image/jpeg" };
+  if (isPng) return { bytes, ext: "png", mime: "image/png" };
+  if (isWebp) return { bytes, ext: "webp", mime: "image/webp" };
+  throw new Error("Assinatura binária da imagem inválida.");
 }
 
 async function verifyPiPayment(paymentId: string, expectedMinAmount: number, expectedUid: string) {
@@ -87,6 +101,9 @@ async function verifyPiPayment(paymentId: string, expectedMinAmount: number, exp
   if (String(payment.user_uid || "") !== expectedUid) {
     throw new Error("O pagamento informado pertence a outro usuário Pi.");
   }
+  if (Deno.env.get("PI_REJECT_TESTNET") === "true" && payment.network && payment.network !== "Pi Network") {
+    throw new Error("Pagamentos Testnet não são aceitos em produção.");
+  }
   if (!payment.status?.developer_completed || !payment.status?.transaction_verified) {
     throw new Error("Pagamento ainda não concluído ou não verificado na blockchain Pi.");
   }
@@ -103,10 +120,15 @@ async function verifyPiPayment(paymentId: string, expectedMinAmount: number, exp
 }
 
 serve(async (req) => {
-  currentCorsHeaders = getCorsHeaders(req, true);
+  const corsHeaders = getCorsHeaders(req, true);
+  const jsonResponse = (body: unknown, status = 200) => sharedJsonResponse(body, corsHeaders, status);
+  const jsonOk = (code: string, data: Record<string, unknown> = {}, status = 200) =>
+    sharedJsonOk(code, data, corsHeaders, status);
+  const jsonError = (code: string, message: string, status = 400) =>
+    sharedJsonError(code, message, corsHeaders, status);
 
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: currentCorsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   if (req.method !== "POST") {
@@ -335,17 +357,20 @@ serve(async (req) => {
       return jsonResponse({ ok: true });
     }
 
-    // ── 3. RENOVAR ANÚNCIO (+30 DIAS COM PAGAMENTO VALIDADO) ────
+    // ── 3. RENOVAR ANÚNCIO (+30 DIAS COM PAGAMENTO VALIDADO + ANTI-REPLAY) ────
     if (action === "renew_ad") {
       const adId = String(payload?.ad_id || "").trim();
       const paymentId = String(payload?.paymentId || "").trim();
       if (!adId || !paymentId) {
         return jsonResponse({ error: "ad_id e paymentId são obrigatórios." }, 400);
       }
+      if (!SAFE_PAYMENT_ID_RE.test(paymentId)) {
+        return jsonError("INVALID_PAYMENT_ID", "Identificador paymentId inválido.", 400);
+      }
 
       const { data: ad, error: fetchErr } = await supabase
         .from("anuncios")
-        .select("id, pioneer_username, plan_tier, expires_at")
+        .select("id, pioneer_username, plan_tier, status, expires_at")
         .eq("id", adId)
         .single();
 
@@ -355,9 +380,64 @@ serve(async (req) => {
       if (normalizeHandle(ad.pioneer_username) !== normalizeHandle(piUser.username)) {
         return jsonResponse({ error: "Sem permissão para renovar este anúncio." }, 403);
       }
+      const adStatus = String(ad.status || "").toLowerCase();
+      if (adStatus === "moderacao" || adStatus === "banido" || adStatus === "bloqueado" || adStatus === "suspenso") {
+        return jsonError(
+          "AD_MODERATED",
+          "Este anúncio está suspenso ou em moderação e não pode ser reativado automaticamente.",
+          403
+        );
+      }
 
       const tier = (ad.plan_tier === "ouro" || ad.plan_tier === "prata") ? ad.plan_tier : "bronze";
       const verifiedPay = await verifyPiPayment(paymentId, TIER_PRICES[tier], piUser.uid);
+
+      // Proteção estrita contra replay attack (paymentId ou txid já utilizado em qualquer anúncio/transação)
+      const [
+        { data: usedLedgerPid },
+        { data: usedLedgerTx },
+        { data: usedAdPaymentTx },
+        { data: usedAdPiTx },
+        { data: usedAdPid },
+      ] = await Promise.all([
+        supabase.from("transacoes_pi").select("payment_id").eq("payment_id", paymentId).limit(1),
+        supabase.from("transacoes_pi").select("payment_id").eq("txid", verifiedPay.txid).limit(1),
+        supabase.from("anuncios").select("id").eq("payment_txid", verifiedPay.txid).limit(1),
+        supabase.from("anuncios").select("id").eq("pi_txid", verifiedPay.txid).limit(1),
+        supabase.from("anuncios").select("id").eq("pi_payment_id", paymentId).limit(1),
+      ]);
+
+      if (
+        (usedLedgerPid && usedLedgerPid.length > 0) ||
+        (usedLedgerTx && usedLedgerTx.length > 0) ||
+        (usedAdPaymentTx && usedAdPaymentTx.length > 0) ||
+        (usedAdPiTx && usedAdPiTx.length > 0) ||
+        (usedAdPid && usedAdPid.length > 0)
+      ) {
+        return jsonError("PAYMENT_ALREADY_USED", "Este pagamento (paymentId/TXID) já foi utilizado anteriormente.", 409);
+      }
+
+      // Consome o pagamento no ledger antes de atualizar o anúncio
+      const { error: ledgerErr } = await supabase.from("transacoes_pi").insert([{
+        payment_id: paymentId,
+        txid: verifiedPay.txid,
+        amount: verifiedPay.amount,
+        status: "completed",
+        purpose: "renovacao_mural",
+        metadata: {
+          adId,
+          tier,
+          pioneer_username: piUser.username,
+          buyer_uid: piUser.uid,
+        },
+        created_at: new Date().toISOString(),
+      }]);
+      if (ledgerErr) {
+        if (ledgerErr.code === "23505") {
+          return jsonError("PAYMENT_ALREADY_USED", "Este pagamento já foi registrado.", 409);
+        }
+        throw ledgerErr;
+      }
 
       const baseMs = Math.max(Date.now(), ad.expires_at ? new Date(ad.expires_at).getTime() : Date.now());
       const newExpiresAt = new Date(baseMs + 30 * 24 * 60 * 60 * 1000).toISOString();
@@ -368,6 +448,8 @@ serve(async (req) => {
           expires_at: newExpiresAt,
           status: "ativo",
           payment_txid: verifiedPay.txid,
+          pi_txid: verifiedPay.txid,
+          pi_payment_id: paymentId,
         })
         .eq("id", adId);
 
@@ -577,6 +659,58 @@ serve(async (req) => {
       });
 
       return jsonResponse({ ok: true, review: data });
+    }
+
+    // ── 7. UPLOAD AUTENTICADO DE IMAGEM PARA MURAL-IMAGES ───────
+    if (action === "upload_ad_image") {
+      const { bytes, ext, mime } = decodeValidatedImageDataUrl(payload?.dataUrl);
+      const cleanHandle = normalizeHandle(piUser.username) || "pioneiro";
+      const filePath = `${cleanHandle}/ad_${Date.now()}_${crypto.randomUUID().slice(0, 8)}.${ext}`;
+
+      const { error: upErr } = await supabase.storage
+        .from("mural-images")
+        .upload(filePath, bytes, {
+          contentType: mime,
+          cacheControl: "31536000",
+          upsert: false,
+        });
+
+      if (upErr) {
+        throw new Error(upErr.message || "Falha ao enviar imagem para o Storage.");
+      }
+
+      const { data: pubData } = supabase.storage
+        .from("mural-images")
+        .getPublicUrl(filePath);
+
+      return jsonOk("IMAGE_UPLOADED", { publicUrl: pubData.publicUrl });
+    }
+
+    // ── 8. LISTAR MEUS ANÚNCIOS (AUTENTICADO, SUBSTITUI RPC ANON) ──
+    if (action === "get_my_ads") {
+      const cleanHandle = normalizeHandle(piUser.username);
+      if (!cleanHandle) {
+        return jsonError("INVALID_USERNAME", "Usuário Pi inválido.", 400);
+      }
+      const escapedHandle = cleanHandle.replace(/[\\%_]/g, "\\$&");
+      const { data: adsData, error: adsErr } = await supabase
+        .from("anuncios")
+        .select("*")
+        .ilike("pioneer_username", "@" + escapedHandle)
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      if (adsErr) throw adsErr;
+
+      const enriched = (adsData || []).map((ad: any) => {
+        const expMs = ad.expires_at
+          ? new Date(ad.expires_at).getTime()
+          : (new Date(ad.created_at).getTime() + 30 * 24 * 60 * 60 * 1000);
+        const daysLeft = Math.max(0, Math.floor((expMs - Date.now()) / (24 * 60 * 60 * 1000)));
+        return { ...ad, days_left: daysLeft };
+      });
+
+      return jsonOk("MY_ADS", { ads: enriched });
     }
 
     return jsonError("UNKNOWN_ACTION", "Ação desconhecida.", 400);
