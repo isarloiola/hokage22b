@@ -901,12 +901,12 @@
       let currentAdFilter = 'todos';
       let inactivityTimer = null;
 
-      // Toast feedback helper
+      // Toast feedback helper (textContent evita XSS)
       function showToast(msg, isError) {
         const t = document.getElementById('admin-toast');
         if (!t) return;
         t.style.borderColor = isError ? 'var(--red)' : 'var(--amber)';
-        t.innerHTML = (isError ? '⚠️ ' : '✓ ') + msg;
+        t.textContent = (isError ? '⚠️ ' : '✓ ') + String(msg || '');
         t.style.display = 'flex';
         setTimeout(() => { t.style.display = 'none'; }, 4000);
       }
@@ -1290,7 +1290,7 @@
                 <button type="button" class="btn btn-outline btn-sm" onclick="extendAdDuration('${safeId}')" title="Renovar por +30 dias">
                   +30d
                 </button>
-                <button type="button" class="btn btn-danger btn-sm" onclick="deleteAdPrompt('${safeId}', '${escapeHtml(ad.title || '').replace(/'/g, '&#39;')}')" title="Excluir Definitivamente">
+                <button type="button" class="btn btn-danger btn-sm js-admin-delete-ad" data-ad-id="${safeId}" data-ad-title="${escapeHtml(ad.title || '')}" title="Excluir Definitivamente">
                   🗑️
                 </button>
               </td>
@@ -1431,14 +1431,16 @@
 
           tbody.innerHTML = cachedLeads.map(l => {
             const dateStr = l.created_at ? new Date(l.created_at).toLocaleDateString('pt-BR') : '—';
+            const rawEmail = String(l.email || '').trim();
+            const isValidEmail = /^[^\s"'<>`]+@[^\s"'<>`]+\.[^\s"'<>`]+$/.test(rawEmail);
             return `
               <tr>
                 <td><strong style="color:#fff">${escapeHtml(l.name || 'Pioneiro')}</strong></td>
-                <td><span style="font-family:var(--font-mono);color:var(--amber-light)">${escapeHtml(l.email || '')}</span></td>
+                <td><span style="font-family:var(--font-mono);color:var(--amber-light)">${escapeHtml(rawEmail)}</span></td>
                 <td><span style="font-size:0.75rem;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px">${escapeHtml(l.source || 'ebook')}</span></td>
                 <td style="font-size:0.75rem;color:var(--text-muted)">${dateStr}</td>
                 <td style="text-align:right">
-                  <a href="mailto:${l.email}" class="btn btn-outline btn-sm">✉️ E-mail</a>
+                  ${isValidEmail ? `<a href="mailto:${encodeURIComponent(rawEmail)}" class="btn btn-outline btn-sm">✉️ E-mail</a>` : `<span style="font-size:0.74rem;color:var(--text-muted)">Inválido</span>`}
                 </td>
               </tr>
             `;
@@ -1555,7 +1557,7 @@
                   ${wallet ? `
                     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
                       <code style="font-size:0.75rem;color:var(--amber-light)" title="${escapeHtml(wallet)}">${escapeHtml(shortWallet)}</code>
-                      <button type="button" class="btn btn-outline btn-sm" style="padding:3px 7px;font-size:0.7rem" onclick="navigator.clipboard.writeText('${escapeHtml(wallet)}');showToast('Carteira copiada!')">📋</button>
+                      <button type="button" class="btn btn-outline btn-sm js-admin-copy-wallet" data-wallet="${escapeHtml(wallet)}" style="padding:3px 7px;font-size:0.7rem">📋</button>
                       <a href="${qrUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" style="padding:3px 7px;font-size:0.7rem" title="Abrir QR Code POS com valor preenchido">⚡ QR</a>
                     </div>
                   ` : `<span style="font-size:0.75rem;color:var(--text-muted)">Sem carteira no Passaporte</span>`}
@@ -1565,7 +1567,7 @@
                   ${isPaid ? `
                     <span style="font-size:0.74rem;color:#34d399;font-family:var(--font-mono)" title="${escapeHtml(c.paid_txid || '')}">✓ Liquidado</span>
                   ` : `
-                    <button type="button" class="btn btn-success btn-sm" onclick="markCommissionPaid('${safeId}', '${escapeHtml(c.referrer_username || '')}', '${amtFixed}')">
+                    <button type="button" class="btn btn-success btn-sm js-admin-mark-paid" data-comm-id="${safeId}" data-referrer="${escapeHtml(c.referrer_username || '')}" data-amount="${amtFixed}">
                       ✓ Marcar Pago
                     </button>
                   `}
@@ -1713,6 +1715,31 @@
           .replace(/"/g, '&quot;')
           .replace(/'/g, '&#39;');
       }
+
+      // Delegação segura de eventos (evita XSS por interpolação em onclick)
+      document.addEventListener('click', function (ev) {
+        const delBtn = ev.target.closest('.js-admin-delete-ad');
+        if (delBtn) {
+          deleteAdPrompt(delBtn.getAttribute('data-ad-id'), delBtn.getAttribute('data-ad-title') || '');
+          return;
+        }
+        const copyBtn = ev.target.closest('.js-admin-copy-wallet');
+        if (copyBtn) {
+          const w = copyBtn.getAttribute('data-wallet') || '';
+          if (w && navigator.clipboard) {
+            navigator.clipboard.writeText(w).then(() => showToast('Carteira copiada!'));
+          }
+          return;
+        }
+        const paidBtn = ev.target.closest('.js-admin-mark-paid');
+        if (paidBtn) {
+          markCommissionPaid(
+            paidBtn.getAttribute('data-comm-id'),
+            paidBtn.getAttribute('data-referrer') || '',
+            paidBtn.getAttribute('data-amount') || '0'
+          );
+        }
+      });
 
       // Inicialização
       checkAuth();

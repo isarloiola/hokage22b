@@ -790,23 +790,6 @@ serve(async (req) => {
       );
     }
 
-    const PI_SERVER_API_KEY = Deno.env.get("PI_SERVER_API_KEY") || Deno.env.get("PI_API_KEY");
-    if (!PI_SERVER_API_KEY) {
-      return jsonError(
-        "SERVER_CONFIG_ERROR",
-        "PI_SERVER_API_KEY não configurada no Supabase Secrets.",
-        corsHeaders,
-        500
-      );
-    }
-
-    if (!paymentId || typeof paymentId !== "string") {
-      return jsonError("MISSING_PAYMENT_ID", "paymentId é obrigatório.", corsHeaders, 400);
-    }
-
-    const piApiBase = "https://api.minepi.com/v2";
-
-    // 1. APROVAÇÃO DO PAGAMENTO (onReadyForServerApproval)
     if (action === "publish_free_ad") {
       const piUser = await verifyPiAccessToken(String(accessToken || ""));
       if (!piUser || !piUser.username) {
@@ -823,8 +806,8 @@ serve(async (req) => {
         return jsonError("INVALID_USERNAME", "Usuário Pi inválido.", corsHeaders, 400);
       }
 
-      const payloadObj = (rawBody && typeof rawBody.adPayload === "object" && rawBody.adPayload)
-        ? (rawBody.adPayload as Record<string, unknown>)
+      const payloadObj = (body && typeof body.adPayload === "object" && body.adPayload)
+        ? (body.adPayload as Record<string, unknown>)
         : {};
       const title = String(payloadObj.title || "").trim().slice(0, 120);
       const description = String(payloadObj.description || "").trim().slice(0, 600);
@@ -832,33 +815,32 @@ serve(async (req) => {
         return jsonError("INVALID_AD", "Informe título e descrição válidos para publicar na Vila.", corsHeaders, 400);
       }
 
-      // Trava anti-spam: máximo 1 publicação gratuita ativa a cada 7 dias por conta Pi
+      // Trava anti-spam: máximo 1 publicação gratuita nos últimos 7 dias (independente de status)
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
       const { data: recentFree } = await supabase
         .from("anuncios")
         .select("id, created_at")
         .eq("pioneer_username", "@" + cleanHandle)
         .eq("plan_tier", "gratis")
-        .eq("status", "ativo")
         .gte("created_at", sevenDaysAgo)
         .limit(1);
 
       if (recentFree && recentFree.length > 0) {
         return jsonError(
           "FREE_QUOTA_REACHED",
-          "Você já possui uma publicação gratuita ativa esta semana. Para publicar outra agora ou ganhar destaque, escolha Bronze (0.314 π) ou um Boost.",
+          "Você já utilizou sua publicação gratuita desta semana. Para publicar outra agora ou ganhar destaque, escolha Bronze (0.314 π) ou um Boost.",
           corsHeaders,
           429
         );
       }
 
-      const adId = String(payloadObj.id || `free_${cleanHandle}_${Date.now()}`).slice(0, 80);
+      const adId = `free_${cleanHandle}_${crypto.randomUUID()}`;
       const rawCountry = String(payloadObj.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6) || "GLOBAL";
       const rawPayMode = String(payloadObj.payment_modes || "pi").trim().toLowerCase();
       const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
-      const { error: insertErr } = await supabase.from("anuncios").upsert({
+      const { error: insertErr } = await supabase.from("anuncios").insert({
         id: adId,
         title,
         description,
@@ -874,7 +856,7 @@ serve(async (req) => {
         price_pi: 0,
         status: "ativo",
         expires_at: expiresAt,
-      }, { onConflict: "id" });
+      });
 
       if (insertErr) {
         return jsonError("DB_ERROR", "Não foi possível salvar sua publicação gratuita.", corsHeaders, 500);
@@ -892,7 +874,41 @@ serve(async (req) => {
       return jsonOk("FREE_AD_PUBLISHED", { id: adId, plan_tier: "gratis", price_pi: 0 }, corsHeaders, 200);
     }
 
+    const PI_SERVER_API_KEY = Deno.env.get("PI_SERVER_API_KEY") || Deno.env.get("PI_API_KEY");
+    if (!PI_SERVER_API_KEY) {
+      return jsonError(
+        "SERVER_CONFIG_ERROR",
+        "PI_SERVER_API_KEY não configurada no Supabase Secrets.",
+        corsHeaders,
+        500
+      );
+    }
+
+    if (!paymentId || typeof paymentId !== "string") {
+      return jsonError("MISSING_PAYMENT_ID", "paymentId é obrigatório.", corsHeaders, 400);
+    }
+
+    const piApiBase = "https://api.minepi.com/v2";
+
+    // 1. APROVAÇÃO DO PAGAMENTO (onReadyForServerApproval) — exige token Pi e valida dono
     if (action === "approve") {
+      const piUser = await verifyPiAccessToken(String(accessToken || ""));
+      if (!piUser || !piUser.uid) {
+        return jsonError("PI_AUTH_REQUIRED", "Autenticação Pi Browser obrigatória para aprovar pagamento.", corsHeaders, 401);
+      }
+
+      const infoRes = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}`, {
+        method: "GET",
+        headers: { "Authorization": `Key ${PI_SERVER_API_KEY}` },
+      });
+      const paymentInfo = await infoRes.json().catch(() => ({}));
+      if (!infoRes.ok || !paymentInfo || paymentInfo.user_uid !== piUser.uid) {
+        return jsonError("FORBIDDEN", "Pagamento não pertence à conta Pi autenticada.", corsHeaders, 403);
+      }
+      if (Deno.env.get("PI_REJECT_TESTNET") === "true" && paymentInfo.network !== "Pi Network") {
+        return jsonError("TESTNET_REJECTED", "Pagamentos Testnet não são aceitos em produção.", corsHeaders, 400);
+      }
+
       const response = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}/approve`, {
         method: "POST",
         headers: {
@@ -916,7 +932,7 @@ serve(async (req) => {
       return jsonOk("PAYMENT_APPROVED", { ...(typeof data === "object" && data ? data : {}) }, corsHeaders, 200);
     }
 
-    // 2. CONCLUSÃO DO PAGAMENTO (onReadyForServerCompletion)
+    // 2. CONCLUSÃO DO PAGAMENTO (onReadyForServerCompletion) — autenticado e idempotente
     if (action === "complete") {
       if (!txid || typeof txid !== "string") {
         return jsonError(
@@ -927,7 +943,24 @@ serve(async (req) => {
         );
       }
 
-      // Conclui oficialmente o pagamento na Pi Core Team Platform API IMEDIATAMENTE
+      const piUser = await verifyPiAccessToken(String(accessToken || ""));
+      if (!piUser || !piUser.uid || !piUser.username) {
+        return jsonError("PI_AUTH_REQUIRED", "Autenticação Pi Browser obrigatória para concluir pagamento.", corsHeaders, 401);
+      }
+
+      // Idempotência estrita antes de qualquer efeito colateral (impede replay de comissões/doações)
+      const { data: alreadyRecorded } = await supabase
+        .from("transacoes_pi")
+        .select("payment_id, status")
+        .or(`payment_id.eq.${paymentId},txid.eq.${txid}`)
+        .eq("status", "completed")
+        .limit(1);
+
+      if (alreadyRecorded && alreadyRecorded.length > 0) {
+        return jsonOk("PAYMENT_ALREADY_COMPLETED", { idempotent: true, payment_id: paymentId }, corsHeaders, 200);
+      }
+
+      // Conclui oficialmente o pagamento na Pi Core Team Platform API
       const response = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}/complete`, {
         method: "POST",
         headers: {
@@ -939,7 +972,7 @@ serve(async (req) => {
 
       let data = await response.json().catch(() => ({}));
 
-      // Idempotência: se a Pi Network informar que o pagamento já foi completado anteriormente, busca os dados do pagamento
+      // Idempotência na Pi API: busca os dados do pagamento
       const isAlreadyCompleted = !response.ok && (
         (data?.error && String(data.error).includes("already_completed")) ||
         (data?.error_message && String(data.error_message).toLowerCase().includes("already"))
@@ -954,10 +987,20 @@ serve(async (req) => {
         }
       }
 
+      if ((response.ok || isAlreadyCompleted) && data) {
+        if (data.user_uid && data.user_uid !== piUser.uid) {
+          return jsonError("FORBIDDEN", "Pagamento não pertence à conta Pi autenticada.", corsHeaders, 403);
+        }
+        if (Deno.env.get("PI_REJECT_TESTNET") === "true" && data.network && data.network !== "Pi Network") {
+          return jsonError("TESTNET_REJECTED", "Pagamentos Testnet não são aceitos em produção.", corsHeaders, 400);
+        }
+      }
+
       // Processamento contábil e ativação de serviços no Supabase
       if ((response.ok || isAlreadyCompleted) && data) {
         const paidAmount = Number(data.amount) || 0;
         const metadata = data.metadata || {};
+        const verifiedHandle = normalizeHandle(piUser.username);
 
         // A. Anti-Tampering: Validação estrita de montante mínimo por Tier Comercial (Ouro=3.14, Prata=1.00, Bronze=0.314)
         if (metadata.adId) {
@@ -1018,8 +1061,8 @@ serve(async (req) => {
                 location: String(adPayload.location || "Online / Global").slice(0, 60) || "Online / Global",
                 country_code: rawCountry,
                 payment_modes: paymentModes,
-                pioneer_username: String(adPayload.pioneer_username || metadata.pioneer_username || "@pioneiro").slice(0, 60),
-                pioneer_name: String(adPayload.pioneer_name || metadata.pioneer_username || "pioneiro").replace(/^@+/, "").slice(0, 60),
+                pioneer_username: "@" + verifiedHandle,
+                pioneer_name: verifiedHandle,
                 plan_tier: cleanTier,
                 price_pi: paidAmount,
                 status: "ativo",
@@ -1158,6 +1201,22 @@ serve(async (req) => {
 
     // 3. CANCELAMENTO DO PAGAMENTO (onCancel ou limpeza de pendência com idempotência)
     if (action === "cancel") {
+      const piUser = await verifyPiAccessToken(String(accessToken || ""));
+      if (!piUser || !piUser.uid) {
+        return jsonError("PI_AUTH_REQUIRED", "Autenticação Pi Browser obrigatória para cancelar pagamento.", corsHeaders, 401);
+      }
+
+      const infoRes = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}`, {
+        method: "GET",
+        headers: { "Authorization": `Key ${PI_SERVER_API_KEY}` },
+      });
+      if (infoRes.ok) {
+        const paymentInfo = await infoRes.json().catch(() => ({}));
+        if (paymentInfo && paymentInfo.user_uid && paymentInfo.user_uid !== piUser.uid) {
+          return jsonError("FORBIDDEN", "Você não tem permissão para cancelar pagamento de outro usuário.", corsHeaders, 403);
+        }
+      }
+
       const response = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}/cancel`, {
         method: "POST",
         headers: {

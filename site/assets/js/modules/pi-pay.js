@@ -442,12 +442,21 @@
   }
 
   // 8. Comunicação com a Edge Function no Supabase
+  function getAuthTokenForServer() {
+    if (currentPiAccessToken) return currentPiAccessToken;
+    try { return sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) { return ''; }
+  }
+
   async function approvePaymentOnServer(paymentId) {
     try {
       const res = await fetch(SUPABASE_FUNCTIONS_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'approve', paymentId: paymentId })
+        body: JSON.stringify({
+          action: 'approve',
+          paymentId: paymentId,
+          accessToken: getAuthTokenForServer()
+        })
       });
       return await res.json();
     } catch (err) {
@@ -461,7 +470,12 @@
       const pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')
         ? window.HokageReferral.getPendingRef()
         : null;
-      const payload = { action: 'complete', paymentId: paymentId, txid: txid };
+      const payload = {
+        action: 'complete',
+        paymentId: paymentId,
+        txid: txid,
+        accessToken: getAuthTokenForServer()
+      };
       if (adPayload && typeof adPayload === 'object') {
         payload.adPayload = adPayload;
       }
@@ -485,7 +499,11 @@
       const res = await fetch(SUPABASE_FUNCTIONS_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'cancel', paymentId: paymentId })
+        body: JSON.stringify({
+          action: 'cancel',
+          paymentId: paymentId,
+          accessToken: getAuthTokenForServer()
+        })
       });
       return await res.json();
     } catch (err) {
