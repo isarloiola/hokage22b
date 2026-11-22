@@ -136,9 +136,68 @@
         overflow: visible !important;
       }
     }
+    /* === A VILA · TEMA MADEIRA ESCURA & NINJA TECH === */
+    body.vila-theme {
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(217, 119, 6, 0.022) 0px,
+          rgba(217, 119, 6, 0.022) 2px,
+          transparent 2px,
+          transparent 64px
+        ),
+        radial-gradient(circle at 18% 0%, rgba(180, 83, 9, 0.16) 0%, transparent 45%),
+        radial-gradient(circle at 85% 18%, rgba(245, 158, 11, 0.1) 0%, transparent 40%),
+        linear-gradient(180deg, #140e0a 0%, #1a120d 55%, #110c09 100%) !important;
+      color: #f5efe6;
+    }
+    body.vila-theme .navbar {
+      background: rgba(20, 14, 10, 0.92) !important;
+      border-bottom: 1px solid rgba(217, 119, 6, 0.28) !important;
+      backdrop-filter: blur(14px);
+    }
+    body.vila-theme .pioneer-card,
+    body.vila-theme .ad-card,
+    body.vila-theme .pi-modal,
+    body.vila-theme #vila-pillar-banner {
+      background: linear-gradient(160deg, rgba(35, 25, 18, 0.96), rgba(22, 16, 12, 0.98)) !important;
+      border-color: rgba(217, 119, 6, 0.28) !important;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(251, 191, 36, 0.1) !important;
+    }
+    body.vila-theme .pioneer-card--ouro {
+      background: linear-gradient(155deg, rgba(52, 33, 18, 0.96), rgba(24, 16, 11, 0.98)) !important;
+      border-color: rgba(245, 158, 11, 0.55) !important;
+    }
+    body.vila-theme .mural-filter-btn {
+      background: rgba(34, 24, 17, 0.9) !important;
+      border: 1px solid rgba(217, 119, 6, 0.28) !important;
+      color: #e7dccf !important;
+    }
+    body.vila-theme .mural-filter-btn:hover {
+      border-color: rgba(245, 158, 11, 0.6) !important;
+      color: #fff !important;
+    }
+    body.vila-theme .mural-filter-btn.active {
+      background: linear-gradient(135deg, #d97706, #f59e0b) !important;
+      border-color: #fbbf24 !important;
+      color: #140e0a !important;
+      font-weight: 800 !important;
+      box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35) !important;
+    }
+    body.vila-theme .mural-search-input,
+    body.vila-theme #vila-community-search {
+      background: #0f0a07 !important;
+      border-color: rgba(217, 119, 6, 0.32) !important;
+      color: #fef3c7 !important;
+    }
+    body.vila-theme .mural-search-input:focus,
+    body.vila-theme #vila-community-search:focus {
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18) !important;
+    }
   </style>
 </head>
-<body>
+<body class="vila-theme">
   <!-- Div Particles em Background Fixo (sem empurrar layout) -->
   <div id="particles-bg" class="particles-bg" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden"></div>
 
@@ -185,17 +244,18 @@
     <div class="container" style="max-width:1100px;margin:0 auto;padding-top:4px">
       
       <!-- Topo Institucional da Vila -->
-      <div style="border-bottom:1px solid rgba(245,158,11,0.35);padding-bottom:16px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
-        <div style="max-width:680px">
+      <div style="position:relative;overflow:hidden;border-bottom:1px solid rgba(217,119,6,0.42);padding:16px 18px;margin-bottom:18px;border-radius:18px;background:linear-gradient(155deg,rgba(42,28,18,0.88),rgba(21,15,11,0.95));border:1px solid rgba(217,119,6,0.3);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+        <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true" style="position:absolute;right:-18px;top:-22px;width:180px;height:180px;opacity:0.075;pointer-events:none;z-index:0" />
+        <div style="max-width:680px;position:relative;z-index:1">
           <span style="display:inline-block;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--amber-light);font-weight:800;margin-bottom:4px">HOKAGE22B · A VILA · Onde oportunidades encontram pessoas</span>
           <h1 style="font-size:clamp(2rem, 4.5vw, 2.7rem);font-weight:900;color:#fff;margin:0;font-family:var(--font-head);letter-spacing:-0.02em;line-height:1.12">
             A Vila
           </h1>
-          <p style="color:var(--gray-light);font-size:0.96rem;margin:6px 0 0;line-height:1.45">
+          <p style="color:#e7dccf;font-size:0.96rem;margin:6px 0 0;line-height:1.45">
             Uma vila construída por pioneiros, para pioneiros. Negócios, oportunidades de trabalho, mural comunitário e conexões no ecossistema Pi Network.
           </p>
         </div>
-        <div class="gazeta-top-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <div class="gazeta-top-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:relative;z-index:1">
           <button type="button" class="btn btn-outline" onclick="window.IsarMural && window.IsarMural.openMyAdsModal()" style="white-space:nowrap;padding:11px 16px;font-weight:700;border-color:rgba(245,158,11,0.5);color:var(--amber-light)">
             📊 Meus Anúncios &amp; Métricas
           </button>
@@ -636,76 +696,74 @@
         </div>
       </section>
 
-      <!-- Tabela de Valores / Transparência e Benefícios dos Planos -->
-      <div style="margin-top:64px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:32px">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:12px">
-          <div>
-            <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.08em">Exposição &amp; Visibilidade na Vila</span>
-            <h3 style="color:#fff;font-size:1.4rem;margin:4px 0 8px">📋 Como Funciona a Publicação e Destaques na Vila</h3>
-          </div>
-          <span style="font-size:0.8rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--amber-light);padding:4px 12px;border-radius:12px;font-weight:700">
-            Pagamento Real via Pi Network
-          </span>
-        </div>
-        <p style="color:var(--gray-light);font-size:0.92rem;line-height:1.6;margin-bottom:24px">
-          Explorar a Vila, acessar o Passaporte e receber bônus iniciais por convite são gratuitos. Os planos em Pi abaixo destinam-se à <strong>visibilidade comercial, destaque de vagas e divulgação patrocinada</strong> para negócios e profissionais, mantendo o ecossistema livre de spam.
-        </p>
-
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px">
-          <!-- PLANO OURO -->
-          <div style="background:linear-gradient(145deg, rgba(245,158,11,0.12) 0%, rgba(20,24,33,0.95) 100%);border:2px solid rgba(245,158,11,0.45);border-radius:var(--radius-md);padding:22px;position:relative;display:flex;flex-direction:column;justify-content:space-between">
-            <span style="position:absolute;top:12px;right:14px;background:var(--amber);color:#000;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:10px;text-transform:uppercase">Mais Popular</span>
+        <!-- Tabela de Publicação Normal & Boosts de Alcance -->
+        <div style="margin-top:64px;background:linear-gradient(160deg,rgba(35,25,18,0.96),rgba(22,16,12,0.98));border:1px solid rgba(217,119,6,0.3);border-radius:var(--radius-lg);padding:32px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:12px">
             <div>
-              <span style="font-weight:800;color:var(--amber-light);font-size:1rem;display:flex;align-items:center;gap:6px">🥇 Destaque Ouro (VIP)</span>
-              <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">3.14 π <span style="font-size:0.85rem;color:var(--amber-light);font-weight:700">(Publicação Permanente)</span></div>
-              <ul style="font-size:0.85rem;color:var(--gray-light);margin:14px 0;padding-left:18px;line-height:1.6">
-                <li><strong style="color:#fff">Seção Destaques:</strong> Topo absoluto com prioridade comercial máxima.</li>
-                <li><strong style="color:#fff">Rotação VIP Equilibrada:</strong> Visibilidade justa alternada entre anunciantes ativos.</li>
-                <li><strong style="color:#fff">Card Duplo:</strong> 2 colunas de largura, dobro do tamanho visual!</li>
-                <li><strong style="color:#fff">Link Clicável:</strong> Botão de ação âmbar para canal, loja ou WhatsApp.</li>
-                <li>Borda dourada luminosa com efeito VIP e selo patrocinado.</li>
-              </ul>
+              <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.08em">Exposição &amp; Boosts na Vila</span>
+              <h3 style="color:#fff;font-size:1.4rem;margin:4px 0 8px">⚡ Publicação Normal &amp; Boosts de Alcance</h3>
             </div>
-            <button type="button" class="btn btn-primary" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('ouro'), window.IsarMural.openModal())">
-              Escolher Destaque Ouro (Permanente)
-            </button>
+            <span style="font-size:0.8rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--amber-light);padding:4px 12px;border-radius:12px;font-weight:700">
+              Pagamento Real via Pi Network
+            </span>
           </div>
+          <p style="color:#e7dccf;font-size:0.92rem;line-height:1.6;margin-bottom:24px">
+            Toda publicação entra na Vila pela categoria escolhida (Mercado, Trabalho ou Mural). Se quiser ampliar o alcance da sua oferta, vaga ou negócio, você pode aplicar um <strong>Boost em Pi</strong> na criação ou depois em <em>Meus Anúncios</em>.
+          </p>
 
-          <!-- PLANO PRATA -->
-          <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(148,163,184,0.35);border-radius:var(--radius-md);padding:22px;display:flex;flex-direction:column;justify-content:space-between">
-            <div>
-              <span style="font-weight:800;color:#e2e8f0;font-size:1rem;display:flex;align-items:center;gap:6px">🥈 Destaque Prata</span>
-              <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">1.00 π <span style="font-size:0.85rem;color:var(--accent-light);font-weight:700">(Publicação Permanente)</span></div>
-              <ul style="font-size:0.85rem;color:var(--gray-light);margin:14px 0;padding-left:18px;line-height:1.6">
-                <li><strong style="color:#fff">Seção Destaques:</strong> Segunda prioridade, posicionado logo abaixo do Ouro.</li>
-                <li><strong style="color:#fff">Rotação Equilibrada:</strong> Exposição balanceada entre os destaques ativos.</li>
-                <li><strong style="color:#fff">Card Médio Individual:</strong> 1 coluna padrão bem formatada com link.</li>
-                <li>Filtragem por categoria (YouTube, Produtos, Serviços).</li>
-                <li>Borda prateada metálica elegante com selo patrocinado.</li>
-              </ul>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px">
+            <!-- PUBLICAÇÃO NORMAL -->
+            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(217,119,6,0.28);border-radius:var(--radius-md);padding:22px;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <span style="font-weight:800;color:#fde68a;font-size:1rem;display:flex;align-items:center;gap:6px">📜 Publicação Normal</span>
+                <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">0.314 π <span style="font-size:0.85rem;color:#34d399;font-weight:700">(Grátis com Bônus de Convite)</span></div>
+                <ul style="font-size:0.85rem;color:#e7dccf;margin:14px 0;padding-left:18px;line-height:1.6">
+                  <li><strong style="color:#fff">Entrada Padrão na Vila:</strong> aparece nas buscas por área e categoria.</li>
+                  <li><strong style="color:#fff">Anti-Spam Real:</strong> garante publicações autênticas de pioneiros.</li>
+                  <li>Exibe seu <code>@usuário</code> oficial e link para seu Passaporte.</li>
+                  <li>Pode receber <strong>Boost de Alcance</strong> depois a qualquer momento.</li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('bronze'), window.IsarMural.openModal())">
+                Publicar Normalmente
+              </button>
             </div>
-            <button type="button" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('prata'), window.IsarMural.openModal())">
-              Escolher Destaque Prata (Permanente)
-            </button>
-          </div>
 
-          <!-- PLANO BRONZE -->
-          <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);padding:22px;display:flex;flex-direction:column;justify-content:space-between">
-            <div>
-              <span style="font-weight:800;color:var(--gray-light);font-size:1rem;display:flex;align-items:center;gap:6px">🥉 Classificado Bronze</span>
-              <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">0.314 π <span style="font-size:0.85rem;color:var(--gray-light);font-weight:700">(Publicação Permanente)</span></div>
-              <ul style="font-size:0.85rem;color:var(--gray-light);margin:14px 0;padding-left:18px;line-height:1.6">
-                <li><strong style="color:#fff">Mural da Comunidade:</strong> Feed comunitário com ordenação cronológica.</li>
-                <li><strong style="color:#fff">Presença Acessível:</strong> Publicações recentes no topo do feed comunitário.</li>
-                <li>Exibe seu @usuário oficial ou nome verificado na Pi Network.</li>
-                <li><span style="color:var(--amber-light);font-weight:600">Sem link externo</span> (anti-spam garantido para recados fraternos).</li>
-              </ul>
+            <!-- BOOST DESTAQUE -->
+            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(217,119,6,0.45);border-radius:var(--radius-md);padding:22px;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <span style="font-weight:800;color:#e2e8f0;font-size:1rem;display:flex;align-items:center;gap:6px">⚡ Boost Destaque</span>
+                <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">1.00 π <span style="font-size:0.85rem;color:var(--accent-light);font-weight:700">(Alcance Ampliado)</span></div>
+                <ul style="font-size:0.85rem;color:#e7dccf;margin:14px 0;padding-left:18px;line-height:1.6">
+                  <li><strong style="color:#fff">Vitrine de Destaques:</strong> sobe para a área de maior visibilidade.</li>
+                  <li><strong style="color:#fff">Botão de Ação Direto:</strong> direciona para seu Passaporte, loja ou WhatsApp.</li>
+                  <li><strong style="color:#fff">Rotação Equilibrada:</strong> exposição justa entre os destaques ativos.</li>
+                  <li>Ideal para produtos, serviços e divulgação de projetos.</li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('prata'), window.IsarMural.openModal())">
+                Publicar com Boost Destaque
+              </button>
             </div>
-            <button type="button" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('bronze'), window.IsarMural.openModal())">
-              Escolher Classificado Bronze (Permanente)
-            </button>
+
+            <!-- BOOST VIP TOPO -->
+            <div style="background:linear-gradient(145deg, rgba(245,158,11,0.14) 0%, rgba(28,20,14,0.96) 100%);border:2px solid rgba(245,158,11,0.55);border-radius:var(--radius-md);padding:22px;position:relative;display:flex;flex-direction:column;justify-content:space-between">
+              <span style="position:absolute;top:12px;right:14px;background:var(--amber);color:#000;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:10px;text-transform:uppercase">Alcance Máximo</span>
+              <div>
+                <span style="font-weight:800;color:var(--amber-light);font-size:1rem;display:flex;align-items:center;gap:6px">🚀 Boost VIP Topo</span>
+                <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">3.14 π <span style="font-size:0.85rem;color:var(--amber-light);font-weight:700">(Topo Patrocinado)</span></div>
+                <ul style="font-size:0.85rem;color:#e7dccf;margin:14px 0;padding-left:18px;line-height:1.6">
+                  <li><strong style="color:#fff">Topo Absoluto:</strong> prioridade máxima na Vila com card expandido.</li>
+                  <li><strong style="color:#fff">Destaque para Negócios &amp; Vagas:</strong> dobro de área visual no grid.</li>
+                  <li><strong style="color:#fff">Link Direto + Foto Oficial:</strong> botão âmbar em evidência.</li>
+                  <li>Moldura dourada exclusiva com selo VIP.</li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-primary" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('ouro'), window.IsarMural.openModal())">
+                Publicar com Boost VIP
+              </button>
+            </div>
           </div>
-        </div>
 
         <div style="margin-top:24px;text-align:center;font-size:0.85rem;color:var(--gray-light)">
           Dúvidas sobre o mural ou parcerias institucionais? Fale conosco: <a href="mailto:contato@hokage22b.com" style="color:var(--amber-light);font-weight:700">contato@hokage22b.com</a>
@@ -742,25 +800,25 @@
       </div>
 
       <form id="ad-create-form" onsubmit="event.preventDefault(); return false;">
-        <!-- Escolha do Nível / Posição -->
+        <!-- Formato da Publicação: Normal (Padrão) + Boosts Opcionais de Alcance -->
         <label style="font-size:0.85rem;color:var(--gray-light);display:block;margin-top:14px;font-weight:700">
-          Escolha a Posição / Destaque:
+          Formato de Publicação &amp; Boost de Alcance (Opcional):
         </label>
         <div class="ad-tier-selector">
-          <div class="ad-tier-option" data-tier="ouro" onclick="window.IsarMural && window.IsarMural.selectTier('ouro')">
-            <span class="ad-tier-name">🥇 Ouro</span>
-            <span class="ad-tier-cost">3.14 π</span>
-            <span class="ad-tier-desc">Topo &amp; Destaque</span>
-          </div>
-          <div class="ad-tier-option selected" data-tier="prata" onclick="window.IsarMural && window.IsarMural.selectTier('prata')">
-            <span class="ad-tier-name">🥈 Prata</span>
-            <span class="ad-tier-cost">1.0 π</span>
-            <span class="ad-tier-desc">Card Médio</span>
-          </div>
-          <div class="ad-tier-option" data-tier="bronze" onclick="window.IsarMural && window.IsarMural.selectTier('bronze')">
-            <span class="ad-tier-name">🥉 Bronze</span>
+          <div class="ad-tier-option selected" data-tier="bronze" onclick="window.IsarMural && window.IsarMural.selectTier('bronze')">
+            <span class="ad-tier-name">📜 Normal</span>
             <span class="ad-tier-cost">0.314 π</span>
-            <span class="ad-tier-desc">Classificado</span>
+            <span class="ad-tier-desc">Padrão / Bônus</span>
+          </div>
+          <div class="ad-tier-option" data-tier="prata" onclick="window.IsarMural && window.IsarMural.selectTier('prata')">
+            <span class="ad-tier-name">⚡ Boost Destaque</span>
+            <span class="ad-tier-cost">1.0 π</span>
+            <span class="ad-tier-desc">Vitrine + Link</span>
+          </div>
+          <div class="ad-tier-option" data-tier="ouro" onclick="window.IsarMural && window.IsarMural.selectTier('ouro')">
+            <span class="ad-tier-name">🚀 Boost VIP</span>
+            <span class="ad-tier-cost">3.14 π</span>
+            <span class="ad-tier-desc">Topo Máximo</span>
           </div>
         </div>
 
@@ -1085,7 +1143,7 @@
   <script src="assets/js/modules/analytics-tg.js?v=2.0"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.4"></script>
-  <script src="assets/js/modules/mural.v4.js?v=8.5"></script>
+  <script src="assets/js/modules/mural.v4.js?v=8.6"></script>
   <script src="assets/js/modules/mural-chatbot.js?v=1.0"></script>
   <script>
     function syncMuralOffset() {

@@ -84,7 +84,7 @@
 
   let currentCategory = 'todos';
   let currentPillar = 'inicio';
-  let selectedTier = 'prata';
+  let selectedTier = 'bronze';
   let availableReferralCredits = 0;
 
   const tierPrices = {
@@ -125,15 +125,15 @@
       overlayLabel = '👑 OURO FUNDADOR · EXEMPLAR DEMONSTRATIVO';
       priceHtml = '<span class="pioneer-card__price-tag" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.35);color:var(--amber-light)" title="Exemplar institucional">Exemplar Oficial</span>';
     } else if (tier === 'ouro') {
-      tierLabel = '👑 Patrocinado · Destaque Ouro';
-      overlayLabel = '👑 PATROCINADO · DESTAQUE VIP';
+      tierLabel = '🚀 Boost VIP · Topo';
+      overlayLabel = '🚀 BOOST VIP · TOPO';
       priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '3.14 π'}</span>`;
     } else if (tier === 'prata') {
-      tierLabel = '🥈 Patrocinado · Destaque Prata';
-      overlayLabel = '🥈 PATROCINADO · DESTAQUE';
+      tierLabel = '⚡ Boost · Destaque';
+      overlayLabel = '⚡ BOOST · DESTAQUE';
       priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '1.00 π'}</span>`;
     } else {
-      tierLabel = '🥉 Comunitário · Bronze';
+      tierLabel = '📜 Publicação na Vila';
       overlayLabel = '';
       priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '0.314 π'}</span>`;
     }
@@ -1611,12 +1611,12 @@
   }
 
   function selectTier(tier) {
-    selectedTier = tier || 'prata';
+    selectedTier = tier || 'bronze';
     document.querySelectorAll('.ad-tier-option').forEach(function (opt) {
       opt.classList.toggle('selected', opt.getAttribute('data-tier') === selectedTier);
     });
 
-    const info = tierPrices[selectedTier] || tierPrices.prata;
+    const info = tierPrices[selectedTier] || tierPrices.bronze;
     const infoEl = document.getElementById('ad-selected-payment-info');
     if (infoEl) {
       infoEl.textContent = `Taxa da publicação: ${info.pi} π (Ambiente Pi Testnet / Sandbox)`;
@@ -2233,7 +2233,7 @@
           : `<button type="button" class="btn btn-outline btn-sm" disabled title="Prazo máximo de edição de 24h expirado" style="font-size:0.75rem;padding:6px 10px;opacity:0.45;cursor:not-allowed">🔒 Edição 24h</button>`;
 
         const upgradeButtonHtml = (ad.plan_tier === 'bronze')
-          ? `<button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural.upgradeBronzeAd('${escapeHtml(ad.id)}')" style="font-size:0.76rem;padding:6px 11px;font-weight:800;background:linear-gradient(135deg,#8b5cf6,#f59e0b);border:none">🚀 Impulsionar (Prata/Ouro)</button>`
+          ? `<button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural.upgradeBronzeAd('${escapeHtml(ad.id)}')" style="font-size:0.76rem;padding:6px 11px;font-weight:800;background:linear-gradient(135deg,#d97706,#f59e0b);border:none;color:#140e0a">🚀 Boost de Alcance</button>`
           : '';
 
         return `
