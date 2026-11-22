@@ -418,6 +418,55 @@
   }
 
   let communityLoadedOnce = false;
+  let cachedCommunityProfiles = [];
+
+  function renderCommunityProfiles(profiles) {
+    const grid = document.getElementById('vila-community-profiles-grid');
+    if (!grid) return;
+    if (!profiles || !profiles.length) {
+      grid.innerHTML = '<div style="color:var(--text-muted);font-size:0.86rem;padding:12px 0">Nenhum pioneiro encontrado com esse filtro.</div>';
+      return;
+    }
+    grid.innerHTML = profiles.map(function (p) {
+      const handle = String(p.username || '').replace(/^@+/, '');
+      const bio = escapeHtml((p.bio || 'Pioneiro ativo no ecossistema HOKAGE22B.').slice(0, 110));
+      const avatar = safeImageUrl(p.avatar_url || '');
+      const kycBadge = p.kyc_verified === true
+        ? '<span style="font-size:0.68rem;background:rgba(16,185,129,0.16);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:2px 8px;border-radius:999px;font-weight:700">🛡️ KYC Verificado</span>'
+        : '<span style="font-size:0.68rem;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:#c4b5fd;padding:2px 8px;border-radius:999px;font-weight:700">🪪 Passaporte Web3</span>';
+      const avatarHtml = avatar
+        ? '<img src="' + escapeHtml(avatar) + '" alt="@' + escapeHtml(handle) + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.2);flex-shrink:0" />'
+        : '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#f59e0b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0">π</div>';
+
+      return (
+        '<article style="background:#141419;border:1px solid rgba(255,255,255,0.09);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px">' +
+          '<div style="display:flex;align-items:center;gap:12px">' +
+            avatarHtml +
+            '<div style="min-width:0">' +
+              '<div class="notranslate" translate="no" style="font-weight:800;color:#fff;font-size:0.98rem;overflow:hidden;text-overflow:ellipsis">@' + escapeHtml(handle) + '</div>' +
+              '<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:4px">' + kycBadge + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<p style="margin:0;font-size:0.82rem;color:#a1a1aa;line-height:1.45">' + bio + '</p>' +
+          '<a href="pioneiro?u=' + encodeURIComponent(handle) + '" class="btn btn-outline btn-sm" style="text-decoration:none;text-align:center;font-weight:700">👀 Ver Passaporte →</a>' +
+        '</article>'
+      );
+    }).join('');
+  }
+
+  function filterCommunity(query) {
+    const q = String(query || '').trim().toLowerCase();
+    if (!q) {
+      renderCommunityProfiles(cachedCommunityProfiles);
+      return;
+    }
+    const filtered = cachedCommunityProfiles.filter(function (p) {
+      const hay = (String(p.username || '') + ' ' + String(p.bio || '')).toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+    renderCommunityProfiles(filtered);
+  }
+
   async function loadCommunityDirectory() {
     const grid = document.getElementById('vila-community-profiles-grid');
     if (!grid || communityLoadedOnce) return;
@@ -426,37 +475,14 @@
       return;
     }
     try {
-      const profiles = await window.HokageDb.listPioneerProfiles(12);
+      const profiles = await window.HokageDb.listPioneerProfiles(24);
       communityLoadedOnce = true;
-      if (!profiles || !profiles.length) {
+      cachedCommunityProfiles = Array.isArray(profiles) ? profiles : [];
+      if (!cachedCommunityProfiles.length) {
         grid.innerHTML = '<div style="color:var(--text-muted);font-size:0.86rem">Nenhum perfil público encontrado ainda.</div>';
         return;
       }
-      grid.innerHTML = profiles.map(function (p) {
-        const handle = String(p.username || '').replace(/^@+/, '');
-        const bio = escapeHtml((p.bio || 'Pioneiro ativo no ecossistema HOKAGE22B.').slice(0, 110));
-        const avatar = safeImageUrl(p.avatar_url || '');
-        const kycBadge = p.kyc_verified === true
-          ? '<span style="font-size:0.68rem;background:rgba(16,185,129,0.16);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:2px 8px;border-radius:999px;font-weight:700">🛡️ KYC Verificado</span>'
-          : '<span style="font-size:0.68rem;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:#c4b5fd;padding:2px 8px;border-radius:999px;font-weight:700">🪪 Passaporte Web3</span>';
-        const avatarHtml = avatar
-          ? '<img src="' + escapeHtml(avatar) + '" alt="@' + escapeHtml(handle) + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.2);flex-shrink:0" />'
-          : '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#f59e0b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0">π</div>';
-
-        return (
-          '<article style="background:#141419;border:1px solid rgba(255,255,255,0.09);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px">' +
-            '<div style="display:flex;align-items:center;gap:12px">' +
-              avatarHtml +
-              '<div style="min-width:0">' +
-                '<div class="notranslate" translate="no" style="font-weight:800;color:#fff;font-size:0.98rem;overflow:hidden;text-overflow:ellipsis">@' + escapeHtml(handle) + '</div>' +
-                '<div style="margin-top:4px">' + kycBadge + '</div>' +
-              '</div>' +
-            '</div>' +
-            '<p style="margin:0;font-size:0.82rem;color:#a1a1aa;line-height:1.45">' + bio + '</p>' +
-            '<a href="pioneiro?u=' + encodeURIComponent(handle) + '" class="btn btn-outline btn-sm" style="text-decoration:none;text-align:center;font-weight:700">👀 Ver Passaporte →</a>' +
-          '</article>'
-        );
-      }).join('');
+      renderCommunityProfiles(cachedCommunityProfiles);
     } catch (_) {
       grid.innerHTML = '<div style="color:var(--text-muted);font-size:0.86rem">Não foi possível carregar os perfis agora.</div>';
     }
@@ -2905,6 +2931,7 @@
     },
     filterCategory: filterCategory,
     setPillar: setPillar,
+    filterCommunity: filterCommunity,
     filterPaymentMode: filterPaymentMode,
     filterCountry: filterCountry,
     filterTier: filterTier,

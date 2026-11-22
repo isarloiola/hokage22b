@@ -258,7 +258,7 @@
 
       <!-- Espaço Comunidade Integrado (Perfis Reais de Pioneiros) -->
       <section id="vila-community-hub" style="display:none;margin-bottom:32px">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(59,130,246,0.28)">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(59,130,246,0.28)">
           <div>
             <h2 style="font-size:1.3rem;font-weight:800;color:#fff;margin:0">🤝 Comunidade da Vila</h2>
             <p style="font-size:0.84rem;color:var(--text-muted);margin:4px 0 0">
@@ -268,6 +268,12 @@
           <a href="pioneiro" class="btn btn-primary btn-sm" style="text-decoration:none;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);color:#09090b;border:none">
             🪪 Criar / Abrir Meu Passaporte →
           </a>
+        </div>
+        <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.25);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:0.8rem;color:#d1fae5;line-height:1.45">
+          🛡️ <strong>Identidade &amp; Acesso:</strong> Visitantes podem explorar perfis livremente. Para publicar, comentar ou interagir na Vila, é necessário autenticar sua conta Pi Network. O selo <strong>KYC Verificado</strong> é exibido apenas quando confirmado.
+        </div>
+        <div style="margin-bottom:16px">
+          <input type="search" id="vila-community-search" oninput="window.IsarMural && window.IsarMural.filterCommunity(this.value)" placeholder="🔍 Buscar pioneiro por @usuário, habilidade ou bio..." aria-label="Buscar pioneiros na comunidade" style="width:100%;padding:10px 14px;border-radius:12px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#fff;font-size:0.86rem;box-sizing:border-box" />
         </div>
         <div id="vila-community-profiles-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
           <div style="color:var(--text-muted);font-size:0.86rem;padding:16px 0">Carregando pioneiros da comunidade...</div>
@@ -634,15 +640,15 @@
       <div style="margin-top:64px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:32px">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:12px">
           <div>
-            <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.08em">Tabela Oficial de Planos</span>
-            <h3 style="color:#fff;font-size:1.4rem;margin:4px 0 8px">📋 Como Funciona a Publicação na Vila · Central P2P</h3>
+            <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.08em">Exposição &amp; Visibilidade na Vila</span>
+            <h3 style="color:#fff;font-size:1.4rem;margin:4px 0 8px">📋 Como Funciona a Publicação e Destaques na Vila</h3>
           </div>
           <span style="font-size:0.8rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--amber-light);padding:4px 12px;border-radius:12px;font-weight:700">
-            Validação Imediata na Pi Network
+            Pagamento Real via Pi Network
           </span>
         </div>
         <p style="color:var(--gray-light);font-size:0.92rem;line-height:1.6;margin-bottom:24px">
-          Para evitar spam e manter apenas anúncios reais e sérios no mural, a publicação é feita mediante uma micro-taxa simbólica única na moeda Pi Network. A arrecadação mantém os nós e a infraestrutura descentralizada da comunidade.
+          Explorar a Vila, acessar o Passaporte e receber bônus iniciais por convite são gratuitos. Os planos em Pi abaixo destinam-se à <strong>visibilidade comercial, destaque de vagas e divulgação patrocinada</strong> para negócios e profissionais, mantendo o ecossistema livre de spam.
         </p>
 
         <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px">
@@ -1079,7 +1085,7 @@
   <script src="assets/js/modules/analytics-tg.js?v=2.0"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.4"></script>
-  <script src="assets/js/modules/mural.v4.js?v=8.4"></script>
+  <script src="assets/js/modules/mural.v4.js?v=8.5"></script>
   <script src="assets/js/modules/mural-chatbot.js?v=1.0"></script>
   <script>
     function syncMuralOffset() {
