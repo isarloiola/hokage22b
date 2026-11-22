@@ -126,13 +126,20 @@
   font-weight: 800;
 }
 
-/* ─── Grid de Classificados Estilo Jornal ──────────────────── */
+/* ─── Grid de Classificados Estilo Jornal (4 colunas dense no desktop) ── */
 .mural-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: 16px;
   margin-bottom: 36px;
   min-height: 200px;
+}
+
+@media (max-width: 1080px) and (min-width: 769px) {
+  .mural-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* Loading state */
