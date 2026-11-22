@@ -807,6 +807,91 @@ serve(async (req) => {
     const piApiBase = "https://api.minepi.com/v2";
 
     // 1. APROVAÇÃO DO PAGAMENTO (onReadyForServerApproval)
+    if (action === "publish_free_ad") {
+      const piUser = await verifyPiAccessToken(String(accessToken || ""));
+      if (!piUser || !piUser.username) {
+        return jsonError(
+          "PI_AUTH_REQUIRED",
+          "Conecte sua conta oficial no Pi Browser para publicar gratuitamente na Vila.",
+          corsHeaders,
+          401
+        );
+      }
+
+      const cleanHandle = normalizeHandle(piUser.username);
+      if (!cleanHandle) {
+        return jsonError("INVALID_USERNAME", "Usuário Pi inválido.", corsHeaders, 400);
+      }
+
+      const payloadObj = (rawBody && typeof rawBody.adPayload === "object" && rawBody.adPayload)
+        ? (rawBody.adPayload as Record<string, unknown>)
+        : {};
+      const title = String(payloadObj.title || "").trim().slice(0, 120);
+      const description = String(payloadObj.description || "").trim().slice(0, 600);
+      if (title.length < 3 || description.length < 5) {
+        return jsonError("INVALID_AD", "Informe título e descrição válidos para publicar na Vila.", corsHeaders, 400);
+      }
+
+      // Trava anti-spam: máximo 1 publicação gratuita ativa a cada 7 dias por conta Pi
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const { data: recentFree } = await supabase
+        .from("anuncios")
+        .select("id, created_at")
+        .eq("pioneer_username", "@" + cleanHandle)
+        .eq("plan_tier", "gratis")
+        .eq("status", "ativo")
+        .gte("created_at", sevenDaysAgo)
+        .limit(1);
+
+      if (recentFree && recentFree.length > 0) {
+        return jsonError(
+          "FREE_QUOTA_REACHED",
+          "Você já possui uma publicação gratuita ativa esta semana. Para publicar outra agora ou ganhar destaque, escolha Bronze (0.314 π) ou um Boost.",
+          corsHeaders,
+          429
+        );
+      }
+
+      const adId = String(payloadObj.id || `free_${cleanHandle}_${Date.now()}`).slice(0, 80);
+      const rawCountry = String(payloadObj.country_code || "GLOBAL").trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6) || "GLOBAL";
+      const rawPayMode = String(payloadObj.payment_modes || "pi").trim().toLowerCase();
+      const paymentModes = (["pi", "pi_fiat", "fiat", "pi_reais", "reais"].includes(rawPayMode)) ? rawPayMode : "pi";
+      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+      const { error: insertErr } = await supabase.from("anuncios").upsert({
+        id: adId,
+        title,
+        description,
+        link_url: null,
+        image_url: null,
+        category: String(payloadObj.category || "geral").slice(0, 40),
+        location: String(payloadObj.location || "Online / Global").slice(0, 60) || "Online / Global",
+        country_code: rawCountry,
+        payment_modes: paymentModes,
+        pioneer_username: "@" + cleanHandle,
+        pioneer_name: cleanHandle,
+        plan_tier: "gratis",
+        price_pi: 0,
+        status: "ativo",
+        expires_at: expiresAt,
+      }, { onConflict: "id" });
+
+      if (insertErr) {
+        return jsonError("DB_ERROR", "Não foi possível salvar sua publicação gratuita.", corsHeaders, 500);
+      }
+
+      await notifyAdmin({
+        priority: "normal",
+        tag: "VILA · GRÁTIS",
+        title: `Nova publicação gratuita de @${cleanHandle}`,
+        lines: [`Título: ${title}`, `Categoria: ${String(payloadObj.category || "geral")}`],
+        linkUrl: "https://hokage22b.com/mural",
+        linkLabel: "Abrir A Vila",
+      });
+
+      return jsonOk("FREE_AD_PUBLISHED", { id: adId, plan_tier: "gratis", price_pi: 0 }, corsHeaders, 200);
+    }
+
     if (action === "approve") {
       const response = await fetch(`${piApiBase}/payments/${encodeURIComponent(paymentId)}/approve`, {
         method: "POST",

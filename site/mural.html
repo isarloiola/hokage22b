@@ -39,7 +39,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
   <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
   <meta name="theme-color" content="#09090b" />
-  <link rel="stylesheet" href="assets/css/style.css?v=5.2" />
+  <link rel="stylesheet" href="assets/css/style.css?v=5.3" />
   <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.5" />
   <!-- Pi Network SDK Oficial v2.0 (Produção no Pi Browser / Sandbox automático) -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -380,10 +380,11 @@
         <!-- Filtros Avançados: Nível, País, Região, Idioma, Pagamento, Ordenação & Chatbot -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin-top:10px;padding:12px;border-radius:14px;background:rgba(15,23,42,0.55);border:1px solid rgba(255,255,255,0.08)">
           <select id="mural-tier-filter" onchange="window.IsarMural && window.IsarMural.filterTier(this.value)" aria-label="Filtrar por alcance na Vila" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fde68a;font-size:0.8rem;font-weight:700">
-            <option value="todos">🏅 Todos os Alcances</option>
-            <option value="ouro">🚀 Boost VIP (3.14 π)</option>
-            <option value="prata">⚡ Boost Destaque (1.0 π)</option>
-            <option value="bronze">📜 Normal (0.314 π)</option>
+            <option value="todos">🏅 Todos os Níveis</option>
+            <option value="ouro">🥇 Ouro · Boost VIP (3.14 π)</option>
+            <option value="prata">🥈 Prata · Boost Destaque (1.0 π)</option>
+            <option value="bronze">🥉 Bronze · Compromisso (0.314 π)</option>
+            <option value="gratis">🌱 Grátis · Comunidade (0 π)</option>
           </select>
 
           <select id="mural-country-filter" onchange="window.IsarMural && window.IsarMural.filterCountry(this.value)" aria-label="Filtrar por país ou alcance global" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(139,92,246,0.38);color:#c4b5fd;font-size:0.8rem;font-weight:700">
@@ -450,9 +451,10 @@
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:6px;font-size:0.74rem;color:var(--text-muted);flex-wrap:wrap">
-            <span style="background:rgba(245,158,11,0.12);color:var(--amber-light);padding:4px 9px;border-radius:6px;border:1px solid rgba(245,158,11,0.3);font-weight:600">🚀 Boost VIP</span>
-            <span style="background:rgba(148,163,184,0.1);color:#e2e8f0;padding:4px 9px;border-radius:6px;border:1px solid rgba(148,163,184,0.25);font-weight:600">⚡ Boost Destaque</span>
-            <span style="background:rgba(255,255,255,0.04);color:#e7dccf;padding:4px 9px;border-radius:6px;border:1px solid rgba(217,119,6,0.25);font-weight:600">📜 Normal</span>
+            <span style="background:rgba(245,158,11,0.12);color:var(--amber-light);padding:4px 9px;border-radius:6px;border:1px solid rgba(245,158,11,0.3);font-weight:600">🥇 Ouro VIP</span>
+            <span style="background:rgba(148,163,184,0.1);color:#e2e8f0;padding:4px 9px;border-radius:6px;border:1px solid rgba(148,163,184,0.25);font-weight:600">🥈 Prata</span>
+            <span style="background:rgba(255,255,255,0.04);color:#e7dccf;padding:4px 9px;border-radius:6px;border:1px solid rgba(217,119,6,0.25);font-weight:600">🥉 Bronze</span>
+            <span style="background:rgba(16,185,129,0.1);color:#34d399;padding:4px 9px;border-radius:6px;border:1px solid rgba(16,185,129,0.28);font-weight:600">🌱 Grátis</span>
           </div>
         </div>
 
@@ -688,21 +690,38 @@
             Quem entra gratuitamente ou com bônus começa no nível <strong>Bronze</strong>. Já quem investe Pi real para destacar sua oferta (<strong>Prata</strong> ou <strong>Ouro</strong>) demonstra compromisso real com a comunidade — reduzindo spam, elevando a confiança do comprador e ganhando posições privilegiadas no grid.
           </p>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px">
-            <!-- PUBLICAÇÃO NORMAL -->
-            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(217,119,6,0.28);border-radius:var(--radius-md);padding:22px;display:flex;flex-direction:column;justify-content:space-between">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));gap:16px">
+            <!-- COMUNIDADE GRÁTIS -->
+            <div style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.3);border-radius:var(--radius-md);padding:20px;display:flex;flex-direction:column;justify-content:space-between">
               <div>
-                <span style="font-weight:800;color:#fde68a;font-size:1rem;display:flex;align-items:center;gap:6px">📜 Publicação Normal</span>
-                <div style="font-size:1.8rem;font-weight:900;color:#fff;margin:8px 0 4px">0.314 π <span style="font-size:0.85rem;color:#34d399;font-weight:700">(Grátis com Bônus de Convite)</span></div>
-                <ul style="font-size:0.85rem;color:#e7dccf;margin:14px 0;padding-left:18px;line-height:1.6">
-                  <li><strong style="color:#fff">Entrada Padrão na Vila:</strong> aparece nas buscas por área e categoria.</li>
-                  <li><strong style="color:#fff">Anti-Spam Real:</strong> garante publicações autênticas de pioneiros.</li>
+                <span style="font-weight:800;color:#34d399;font-size:1rem;display:flex;align-items:center;gap:6px">🌱 Comunidade · Grátis</span>
+                <div style="font-size:1.7rem;font-weight:900;color:#fff;margin:8px 0 4px">0 π <span style="font-size:0.82rem;color:#34d399;font-weight:700">(1 ativa / 7 dias)</span></div>
+                <ul style="font-size:0.84rem;color:#e7dccf;margin:14px 0;padding-left:18px;line-height:1.55">
+                  <li><strong style="color:#fff">Entrada Aberta:</strong> ideal para avisos, vagas simples e primeiras ofertas.</li>
+                  <li><strong style="color:#fff">Autenticação Pi Browser:</strong> impede bots e contas falsas.</li>
+                  <li>Link interno direto para o seu <strong>Passaporte</strong> (sem link externo).</li>
+                  <li>Base do feed — pode receber Boost para Prata ou Ouro depois.</li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.85rem;border-color:rgba(16,185,129,0.45);color:#34d399" onclick="window.IsarMural && (window.IsarMural.selectTier('gratis'), window.IsarMural.openModal())">
+                Publicar Grátis (0 π)
+              </button>
+            </div>
+
+            <!-- BRONZE -->
+            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(217,119,6,0.28);border-radius:var(--radius-md);padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <span style="font-weight:800;color:#fde68a;font-size:1rem;display:flex;align-items:center;gap:6px">🥉 Bronze · Compromisso</span>
+                <div style="font-size:1.7rem;font-weight:900;color:#fff;margin:8px 0 4px">0.314 π <span style="font-size:0.82rem;color:#fde68a;font-weight:700">(Ou Bônus Convite)</span></div>
+                <ul style="font-size:0.84rem;color:#e7dccf;margin:14px 0;padding-left:18px;line-height:1.55">
+                  <li><strong style="color:#fff">Acima das Gratuitas:</strong> sinaliza compromisso real em Pi.</li>
+                  <li><strong style="color:#fff">Sem Limite Semanal:</strong> publique quantas ofertas precisar.</li>
                   <li>Exibe seu <code>@usuário</code> oficial e link para seu Passaporte.</li>
                   <li>Pode receber <strong>Boost de Alcance</strong> depois a qualquer momento.</li>
                 </ul>
               </div>
               <button type="button" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.85rem" onclick="window.IsarMural && (window.IsarMural.selectTier('bronze'), window.IsarMural.openModal())">
-                Publicar Normalmente
+                Publicar Bronze (0.314 π)
               </button>
             </div>
 
@@ -777,25 +796,30 @@
       </div>
 
       <form id="ad-create-form" onsubmit="event.preventDefault(); return false;">
-        <!-- Formato da Publicação: Normal (Padrão) + Boosts Opcionais de Alcance -->
+        <!-- Formato da Publicação: Grátis (Comunidade) -> Bronze -> Boosts de Alcance -->
         <label style="font-size:0.85rem;color:var(--gray-light);display:block;margin-top:14px;font-weight:700">
-          Formato de Publicação &amp; Boost de Alcance (Opcional):
+          Nível de Confiança &amp; Alcance:
         </label>
-        <div class="ad-tier-selector">
-          <div class="ad-tier-option selected" data-tier="bronze" onclick="window.IsarMural && window.IsarMural.selectTier('bronze')">
-            <span class="ad-tier-name">📜 Normal</span>
+        <div class="ad-tier-selector" style="grid-template-columns:repeat(auto-fit,minmax(105px,1fr))">
+          <div class="ad-tier-option selected" data-tier="gratis" onclick="window.IsarMural && window.IsarMural.selectTier('gratis')">
+            <span class="ad-tier-name">🌱 Grátis</span>
+            <span class="ad-tier-cost">0 π</span>
+            <span class="ad-tier-desc">1 / 7 dias</span>
+          </div>
+          <div class="ad-tier-option" data-tier="bronze" onclick="window.IsarMural && window.IsarMural.selectTier('bronze')">
+            <span class="ad-tier-name">🥉 Bronze</span>
             <span class="ad-tier-cost">0.314 π</span>
-            <span class="ad-tier-desc">Padrão / Bônus</span>
+            <span class="ad-tier-desc">Compromisso</span>
           </div>
           <div class="ad-tier-option" data-tier="prata" onclick="window.IsarMural && window.IsarMural.selectTier('prata')">
-            <span class="ad-tier-name">⚡ Boost Destaque</span>
+            <span class="ad-tier-name">🥈 Prata</span>
             <span class="ad-tier-cost">1.0 π</span>
-            <span class="ad-tier-desc">Vitrine + Link</span>
+            <span class="ad-tier-desc">Boost + Link</span>
           </div>
           <div class="ad-tier-option" data-tier="ouro" onclick="window.IsarMural && window.IsarMural.selectTier('ouro')">
-            <span class="ad-tier-name">🚀 Boost VIP</span>
+            <span class="ad-tier-name">🥇 Ouro</span>
             <span class="ad-tier-cost">3.14 π</span>
-            <span class="ad-tier-desc">Topo Máximo</span>
+            <span class="ad-tier-desc">Topo VIP</span>
           </div>
         </div>
 
@@ -1120,7 +1144,7 @@
   <script src="assets/js/modules/analytics-tg.js?v=2.0"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.4"></script>
-  <script src="assets/js/modules/mural.v4.js?v=8.7"></script>
+  <script src="assets/js/modules/mural.v4.js?v=8.8"></script>
   <script src="assets/js/modules/mural-chatbot.js?v=1.0"></script>
   <script>
     function syncMuralOffset() {
