@@ -406,13 +406,13 @@
     if (!pillar || pillar === 'inicio' || pillar === 'comunidade') return true;
     const cat = String(cardCat || 'geral').toLowerCase();
     if (pillar === 'mercado') {
-      return ['produto', 'servico', 'tecnologia', 'educacao', 'alimentacao', 'geral', 'fisico', 'digital', 'negocio', 'comercial'].indexOf(cat) !== -1;
+      return ['produto', 'digital', 'servico', 'tecnologia', 'educacao', 'alimentacao', 'geral', 'fisico', 'negocio', 'comercial'].indexOf(cat) !== -1;
     }
     if (pillar === 'mural') {
-      return ['mensagem', 'youtube', 'aviso', 'evento', 'procura', 'projeto', 'noticia'].indexOf(cat) !== -1;
+      return ['aviso', 'procura', 'youtube', 'mensagem', 'evento', 'projeto', 'noticia'].indexOf(cat) !== -1;
     }
     if (pillar === 'trabalho') {
-      return ['trabalho', 'vaga', 'freelancer', 'servico'].indexOf(cat) !== -1;
+      return ['vaga', 'freelancer', 'trabalho', 'servico'].indexOf(cat) !== -1;
     }
     return true;
   }
@@ -468,6 +468,31 @@
     document.querySelectorAll('#vila-pillar-nav [data-pillar]').forEach(function (btn) {
       btn.classList.toggle('active', btn.getAttribute('data-pillar') === currentPillar);
     });
+
+    // Filtra as pílulas de categoria visíveis de acordo com a área ativa
+    let activeCatStillVisible = false;
+    document.querySelectorAll('.mural-filters-bar .mural-filter-btn').forEach(function (btn) {
+      const allowed = (btn.getAttribute('data-pillars') || 'inicio,mercado,mural,trabalho').split(',');
+      const show = allowed.indexOf(currentPillar) !== -1;
+      btn.style.display = show ? 'inline-flex' : 'none';
+      if (show && btn.getAttribute('data-category') === currentCategory) {
+        activeCatStillVisible = true;
+      }
+    });
+    if (!activeCatStillVisible) {
+      currentCategory = 'todos';
+      document.querySelectorAll('.mural-filters-bar .mural-filter-btn').forEach(function (btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-category') === 'todos');
+      });
+    }
+
+    // Pré-seleciona uma categoria coerente ao abrir publicação dentro de uma área
+    const catSel = document.getElementById('ad-input-cat');
+    if (catSel) {
+      if (currentPillar === 'trabalho') catSel.value = 'vaga';
+      else if (currentPillar === 'mural') catSel.value = 'aviso';
+      else if (currentPillar === 'mercado') catSel.value = 'produto';
+    }
 
     const overviewEl = document.getElementById('vila-overview-pillars');
     const bannerEl = document.getElementById('vila-pillar-banner');

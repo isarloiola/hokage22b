@@ -296,14 +296,19 @@
         </div>
 
         <div class="mural-filters-bar" role="tablist" aria-label="Filtro de categorias de anúncios" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-          <button class="mural-filter-btn active" data-category="todos" type="button">📰 Todos</button>
-          <button class="mural-filter-btn" data-category="youtube" type="button">▶ YouTube</button>
-          <button class="mural-filter-btn" data-category="produto" type="button">🛍️ Produtos &amp; Lojas</button>
-          <button class="mural-filter-btn" data-category="servico" type="button">🛠️ Serviços</button>
-          <button class="mural-filter-btn" data-category="tecnologia" type="button">💻 Tech &amp; Apps</button>
-          <button class="mural-filter-btn" data-category="educacao" type="button">🎓 Educação</button>
-          <button class="mural-filter-btn" data-category="alimentacao" type="button">🍔 Alimentação</button>
-          <button class="mural-filter-btn" data-category="mensagem" type="button">💬 Recados</button>
+          <button class="mural-filter-btn active" data-category="todos" data-pillars="inicio,mercado,mural,trabalho" type="button">📰 Todos</button>
+          <button class="mural-filter-btn" data-category="produto" data-pillars="inicio,mercado" type="button">🛍️ Produtos &amp; Lojas</button>
+          <button class="mural-filter-btn" data-category="digital" data-pillars="inicio,mercado" type="button">📦 Digitais</button>
+          <button class="mural-filter-btn" data-category="servico" data-pillars="inicio,mercado,trabalho" type="button">🛠️ Serviços</button>
+          <button class="mural-filter-btn" data-category="tecnologia" data-pillars="inicio,mercado" type="button">💻 Tech &amp; Apps</button>
+          <button class="mural-filter-btn" data-category="educacao" data-pillars="inicio,mercado" type="button">🎓 Educação</button>
+          <button class="mural-filter-btn" data-category="alimentacao" data-pillars="inicio,mercado" type="button">🍔 Alimentação</button>
+          <button class="mural-filter-btn" data-category="vaga" data-pillars="inicio,trabalho" type="button">💼 Vagas</button>
+          <button class="mural-filter-btn" data-category="freelancer" data-pillars="inicio,trabalho" type="button">🧑‍💻 Freelancer</button>
+          <button class="mural-filter-btn" data-category="aviso" data-pillars="inicio,mural" type="button">📢 Avisos &amp; Eventos</button>
+          <button class="mural-filter-btn" data-category="procura" data-pillars="inicio,mural" type="button">🔎 Procura-se</button>
+          <button class="mural-filter-btn" data-category="youtube" data-pillars="inicio,mural" type="button">▶ YouTube &amp; Projetos</button>
+          <button class="mural-filter-btn" data-category="mensagem" data-pillars="inicio,mural" type="button">💬 Recados</button>
         </div>
 
         <!-- Filtros Avançados: Nível, País, Região, Idioma, Pagamento, Ordenação & Chatbot -->
@@ -765,13 +770,24 @@
         <div class="form-group" style="margin-bottom:14px">
           <label for="ad-input-cat" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Categoria *</label>
           <select id="ad-input-cat" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff">
-            <option value="youtube">▶ Canal de YouTube / Conteúdo</option>
-            <option value="produto">🛍️ Produto / Comércio Local</option>
-            <option value="servico">🛠️ Serviço Profissional</option>
-            <option value="tecnologia">💻 Tecnologia / Apps &amp; Bots</option>
-            <option value="educacao">🎓 Educação / Cursos &amp; Mentorias</option>
-            <option value="alimentacao">🍔 Alimentação / Gastronomia</option>
-            <option value="mensagem">💬 Recado / Mensagem da Comunidade</option>
+            <optgroup label="🛒 Mercado">
+              <option value="produto">🛍️ Produto Físico / Loja</option>
+              <option value="digital">📦 Produto Digital / Infoproduto</option>
+              <option value="servico">🛠️ Serviço / Negócio Local</option>
+              <option value="tecnologia">💻 Tecnologia / Apps &amp; Bots</option>
+              <option value="educacao">🎓 Educação / Cursos &amp; Mentorias</option>
+              <option value="alimentacao">🍔 Alimentação / Gastronomia</option>
+            </optgroup>
+            <optgroup label="💼 Trabalho &amp; Oportunidades">
+              <option value="vaga">💼 Vaga / Oportunidade Profissional</option>
+              <option value="freelancer">🧑‍💻 Freelancer / Colaboração</option>
+            </optgroup>
+            <optgroup label="📌 Mural da Comunidade">
+              <option value="aviso">📢 Aviso / Comunicado / Evento</option>
+              <option value="procura">🔎 Procura-se / Demanda</option>
+              <option value="youtube">▶ Canal / Projeto / Conteúdo</option>
+              <option value="mensagem">💬 Recado / Notícia da Comunidade</option>
+            </optgroup>
           </select>
         </div>
 
@@ -1063,7 +1079,7 @@
   <script src="assets/js/modules/analytics-tg.js?v=2.0"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.4"></script>
-  <script src="assets/js/modules/mural.v4.js?v=8.3"></script>
+  <script src="assets/js/modules/mural.v4.js?v=8.4"></script>
   <script src="assets/js/modules/mural-chatbot.js?v=1.0"></script>
   <script>
     function syncMuralOffset() {
