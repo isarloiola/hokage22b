@@ -171,7 +171,34 @@
     if (el) el.remove();
   }
 
+  const DRAFT_STORAGE_KEY = 'hokage_mural_ad_draft_v1';
+
+  function saveBotDraft() {
+    try {
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+    } catch (_) {}
+  }
+
+  function loadBotDraft() {
+    try {
+      const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (saved && typeof saved === 'object') {
+        if (saved.title) draft.title = String(saved.title);
+        if (saved.category) draft.category = String(saved.category);
+        if (saved.country) draft.country = String(saved.country);
+        if (saved.lang) draft.lang = String(saved.lang);
+        if (saved.location) draft.location = String(saved.location);
+        if (saved.desc) draft.desc = String(saved.desc);
+        if (saved.link) draft.link = String(saved.link);
+        if (saved.tier) draft.tier = String(saved.tier);
+      }
+    } catch (_) {}
+  }
+
   function finishAndTransferToOfficialModal() {
+    saveBotDraft();
     closeBot();
 
     if (window.IsarMural && typeof window.IsarMural.openModal === 'function') {
@@ -321,6 +348,7 @@
   }
 
   function openChatbot() {
+    loadBotDraft();
     injectStyles();
     closeBot();
     currentStep = 0;

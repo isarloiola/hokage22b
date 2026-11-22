@@ -496,14 +496,20 @@
       }
 
       grid.innerHTML = items.slice(0, 4).map(function (ad) {
-        const tier = ['ouro', 'prata', 'bronze', 'gratis'].includes(ad.tier) ? ad.tier : 'bronze';
-        const authorRaw = String(ad.author || '@pioneiro').replace(/^@+/, '');
+        const rawTier = String(ad.plan_tier || ad.tier || ad.plan || 'bronze').toLowerCase();
+        const tier = ['ouro', 'prata', 'bronze', 'gratis'].includes(rawTier) ? rawTier : 'bronze';
+        const rawAuthorObj = (ad.author && typeof ad.author === 'object')
+          ? (ad.author.handle || ad.author.username || '@pioneiro')
+          : (ad.author || ad.author_username || '@pioneiro');
+        const authorRaw = String(rawAuthorObj).replace(/^@+/, '') || 'pioneiro';
         const badgeLabel = tier === 'ouro' ? '👑 Destaque Ouro VIP'
           : tier === 'prata' ? '🥈 Destaque Prata'
           : tier === 'gratis' ? '🌱 Comunidade' : '🥉 Classificado Bronze';
         const itemPriceText = (ad.item_price && Number(ad.item_price) > 0)
           ? esc(ad.item_price + ' ' + (ad.item_currency || 'PI'))
-          : (tier === 'gratis' ? 'Grátis' : (tier === 'ouro' ? '3.14 π' : tier === 'prata' ? '1.00 π' : '0.314 π'));
+          : (tier === 'gratis' || Number(ad.price_pi) === 0 ? 'Grátis'
+            : (ad.price_pi && Number(ad.price_pi) > 0 ? esc(Number(ad.price_pi) + ' π')
+              : (tier === 'ouro' ? '3.14 π' : tier === 'prata' ? '1.00 π' : '0.314 π')));
         const targetHref = 'mural?ad=' + encodeURIComponent(ad.id || '');
         const safeImg = (ad.image_url && /^https?:\/\//i.test(ad.image_url)) ? esc(ad.image_url) : '';
         const bannerHtml = safeImg

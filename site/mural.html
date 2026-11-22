@@ -211,6 +211,11 @@
       border-color: #f59e0b !important;
       box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18) !important;
     }
+    @media (max-width: 640px) {
+      #vila-overview-pillars {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body class="vila-theme">
@@ -247,11 +252,11 @@
   </nav>
   <div id="hk-site-drawer-root"></div>
 
-  <!-- Banner Informativo Oficial Pi Testnet -->
-  <div class="testnet-alert-banner" id="testnet-alert-banner" style="margin-top:68px;background:linear-gradient(90deg, rgba(99,102,241,0.2) 0%, rgba(139,92,246,0.25) 50%, rgba(245,158,11,0.2) 100%);border-bottom:1px solid rgba(139,92,246,0.35);padding:10px 16px;color:#e0e7ff;font-size:0.88rem;display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;flex-wrap:wrap;position:relative;z-index:90;">
-    <span>🧪 <strong>Ambiente Oficial Pi Testnet:</strong> O HOKAGE22B está em processo de auditoria pela Pi Core Team para listagem oficial na Mainnet. Use seus <strong>Test-Pi gratuitos</strong> para publicar sem gastar suas moedas reais!</span>
-    <button type="button" class="btn btn-outline btn-sm" onclick="window.HokagePi && window.HokagePi.openTestnetInfoModal()" style="border-color:rgba(196,181,253,0.5);color:#fff;font-size:0.78rem;padding:4px 12px;border-radius:20px;font-weight:700;cursor:pointer;background:rgba(139,92,246,0.2)">
-      ℹ️ Como funciona o Testnet?
+  <!-- Faixa de Conversão e Boas-Vindas da Vila -->
+  <div class="testnet-alert-banner" id="testnet-alert-banner" style="margin-top:68px;background:linear-gradient(90deg, rgba(16,185,129,0.16) 0%, rgba(217,119,6,0.22) 50%, rgba(139,92,246,0.18) 100%);border-bottom:1px solid rgba(245,158,11,0.35);padding:9px 16px;color:#fef3c7;font-size:0.84rem;display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;flex-wrap:wrap;position:relative;z-index:90;">
+    <span>🌱 <strong>A Vila · Central P2P:</strong> Publique seu 1º anúncio <strong>Grátis (0 π)</strong> ou destaque seu negócio para pioneiros verificados da Pi Network.</span>
+    <button type="button" class="btn btn-outline btn-sm" onclick="window.HokagePi && window.HokagePi.openTestnetInfoModal()" style="border-color:rgba(251,191,36,0.45);color:#fff;font-size:0.75rem;padding:3px 11px;border-radius:20px;font-weight:700;cursor:pointer;background:rgba(245,158,11,0.15)">
+      ℹ️ Como funciona?
     </button>
   </div>
 
@@ -393,8 +398,13 @@
           <button class="mural-filter-btn" data-category="mensagem" data-pillars="inicio,mural" type="button">💬 Recados</button>
         </div>
 
-        <!-- Filtros Avançados: Nível, País, Região, Idioma, Pagamento, Ordenação & Chatbot -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin-top:10px;padding:12px;border-radius:14px;background:rgba(15,23,42,0.55);border:1px solid rgba(255,255,255,0.08)">
+        <!-- Filtros Avançados Colapsáveis (Mantém o Feed de Anúncios na 1ª Dobra Mobile) -->
+        <details id="mural-adv-filters-details" style="margin-top:10px;border-radius:14px;background:rgba(15,23,42,0.55);border:1px solid rgba(255,255,255,0.08);padding:10px 12px">
+          <summary style="cursor:pointer;font-size:0.82rem;font-weight:700;color:#fbbf24;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <span>⚙️ Filtros Avançados (País, Cidade, Idioma, Nível e Ordenação)</span>
+            <span style="font-size:0.75rem;color:var(--text-muted)">Abrir / Fechar ▾</span>
+          </summary>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin-top:10px">
           <select id="mural-tier-filter" onchange="window.IsarMural && window.IsarMural.filterTier(this.value)" aria-label="Filtrar por alcance na Vila" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fde68a;font-size:0.8rem;font-weight:700">
             <option value="todos">🏅 Todos os Níveis</option>
             <option value="ouro">🥇 Ouro · Boost VIP (3.14 π)</option>
@@ -439,7 +449,8 @@
             <option value="recentes">🕒 Mais Recentes</option>
             <option value="curtidos">❤️ Mais Curtidos</option>
           </select>
-        </div>
+          </div>
+        </details>
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -1021,7 +1032,7 @@
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.8"></script>
   <script src="assets/js/modules/mural.v4.js?v=9.1"></script>
-  <script src="assets/js/modules/mural-chatbot.js?v=1.1"></script>
+  <script src="assets/js/modules/mural-chatbot.js?v=1.2"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');

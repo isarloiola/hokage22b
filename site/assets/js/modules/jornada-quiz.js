@@ -114,7 +114,7 @@
           badge: 'Recomendado para Produtividade',
           title: '🤖 IA na Prática: O Seu Assistente Pessoal',
           desc: 'Guia prático com 293 páginas e 50 prompts prontos para aplicar IA no trabalho, estudos, segurança e negócios.',
-          href: 'index.html#produto-ia-na-pratica',
+          href: './#produto-ia-na-pratica',
           cta: 'Conhecer IA na Prática →'
         },
         secondary: crypto === 'pi_user'
