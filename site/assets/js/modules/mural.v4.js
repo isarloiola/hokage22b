@@ -1712,10 +1712,10 @@
     const imgInput = document.getElementById('ad-input-image');
     const imgGroup = document.getElementById('ad-image-group');
     if (imgInput && imgGroup) {
-      if (selectedTier === 'bronze') {
+      if (selectedTier === 'gratis') {
         imgInput.disabled = true;
         imgInput.value = '';
-        imgInput.placeholder = '🚫 Banners visuais exclusivos para Prata e Ouro';
+        imgInput.placeholder = '🚫 Foto disponível a partir do Bronze (0.314 π)';
         imgGroup.style.opacity = '0.5';
       } else {
         imgInput.disabled = false;
@@ -1785,7 +1785,7 @@
 
     const rawImg = imgInput ? imgInput.value.trim() : '';
     let validatedImg = '';
-    if (selectedTier !== 'bronze' && selectedTier !== 'gratis' && rawImg) {
+    if (selectedTier !== 'gratis' && rawImg) {
       validatedImg = normalizeUrl(rawImg);
       if (imgInput) imgInput.value = validatedImg;
     }
@@ -2396,7 +2396,9 @@
       return;
     }
 
-    const isBronzeAd = String(ad.plan_tier || 'bronze').toLowerCase() === 'bronze';
+    const adTierLower = String(ad.plan_tier || 'bronze').toLowerCase();
+    const isNoLinkTier = (adTierLower === 'bronze' || adTierLower === 'gratis');
+    const isNoImgTier = (adTierLower === 'gratis');
     const linkInp = document.getElementById('edit-ad-input-link');
     const imgInp = document.getElementById('edit-ad-input-image');
 
@@ -2404,22 +2406,22 @@
     document.getElementById('edit-ad-input-title').value = ad.title || '';
     document.getElementById('edit-ad-input-desc').value = ad.description || '';
     if (linkInp) {
-      linkInp.value = isBronzeAd ? '' : (ad.link_url || '');
-      linkInp.disabled = isBronzeAd;
-      linkInp.placeholder = isBronzeAd ? '🔒 Exclusivo nos planos Prata e Ouro (use 🚀 Impulsionar)' : 'https://...';
-      linkInp.style.opacity = isBronzeAd ? '0.5' : '1';
+      linkInp.value = isNoLinkTier ? '' : (ad.link_url || '');
+      linkInp.disabled = isNoLinkTier;
+      linkInp.placeholder = isNoLinkTier ? '🔒 Exclusivo nos planos Prata e Ouro (use 🚀 Boost)' : 'https://...';
+      linkInp.style.opacity = isNoLinkTier ? '0.5' : '1';
     }
     if (imgInp) {
-      imgInp.value = isBronzeAd ? '' : (ad.image_url || '');
-      imgInp.disabled = isBronzeAd;
-      imgInp.placeholder = isBronzeAd ? '🔒 Banner exclusivo nos planos Prata e Ouro' : 'https://...';
-      imgInp.style.opacity = isBronzeAd ? '0.5' : '1';
+      imgInp.value = isNoImgTier ? '' : (ad.image_url || '');
+      imgInp.disabled = isNoImgTier;
+      imgInp.placeholder = isNoImgTier ? '🔒 Foto disponível a partir do Bronze (0.314 π)' : 'https://...';
+      imgInp.style.opacity = isNoImgTier ? '0.5' : '1';
     }
 
     const deadlineHint = document.getElementById('edit-ad-deadline-hint');
     if (deadlineHint) {
-      deadlineHint.textContent = isBronzeAd
-        ? `⏱️ Janela de edição ativa (${editStatus.hoursLeft}h restantes). Nota: Link externo e foto são exclusivos dos planos Prata/Ouro.`
+      deadlineHint.textContent = isNoLinkTier
+        ? `⏱️ Janela de edição ativa (${editStatus.hoursLeft}h restantes).`
         : `⏱️ Janela de edição ativa: restam aproximadamente ${editStatus.hoursLeft}h (máx. 24h após publicação).`;
     }
 
@@ -2454,11 +2456,13 @@
       return;
     }
 
-    const isBronzeAd = String(ad.plan_tier || 'bronze').toLowerCase() === 'bronze';
+    const adTierLower = String(ad.plan_tier || 'bronze').toLowerCase();
+    const isNoLinkTier = (adTierLower === 'bronze' || adTierLower === 'gratis');
+    const isNoImgTier = (adTierLower === 'gratis');
     const title = document.getElementById('edit-ad-input-title').value.trim();
     const desc = document.getElementById('edit-ad-input-desc').value.trim();
-    const rawLink = isBronzeAd ? '' : document.getElementById('edit-ad-input-link').value.trim();
-    const rawImg = isBronzeAd ? '' : document.getElementById('edit-ad-input-image').value.trim();
+    const rawLink = isNoLinkTier ? '' : document.getElementById('edit-ad-input-link').value.trim();
+    const rawImg = isNoImgTier ? '' : document.getElementById('edit-ad-input-image').value.trim();
 
     if (title.length < 2 || desc.length < 5) {
       alert('Preencha um título (mín. 2 caracteres) e descrição (mín. 5 caracteres).');

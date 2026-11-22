@@ -1013,7 +1013,7 @@ serve(async (req) => {
                 title: String(adPayload.title || "").slice(0, 120),
                 description: String(adPayload.description || "").slice(0, 600),
                 link_url: cleanTier !== "bronze" && adPayload.link_url ? String(adPayload.link_url).slice(0, 500) : null,
-                image_url: cleanTier !== "bronze" ? sanitizeAdImageUrl(adPayload.image_url) : null,
+                image_url: sanitizeAdImageUrl(adPayload.image_url),
                 category: String(adPayload.category || "geral").slice(0, 40),
                 location: String(adPayload.location || "Online / Global").slice(0, 60) || "Online / Global",
                 country_code: rawCountry,
