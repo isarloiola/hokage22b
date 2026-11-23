@@ -1,8 +1,9 @@
 /**
  * ============================================================
- * HOKAGE22B.COM — Module: Web2 Auth (Supabase Email Magic Link)
+ * HOKAGE22B.COM — Module: Web2 Auth (Google Identity + Magic Link)
  * Autenticação complementar para navegadores convencionais
- * mantendo o Pi Browser 100% Pi-Native (Mainnet Compliance).
+ * operando diretamente em hokage22b.com (sem tela supabase.co)
+ * e mantendo o Pi Browser 100% Pi-Native (Mainnet Compliance).
  * ============================================================
  */
 (function () {
@@ -11,12 +12,18 @@
   const SUPABASE_URL = window.ISAR_SUPABASE_URL || 'https://yhzoehwkuxteihsnagcj.supabase.co';
   const SUPABASE_ANON_KEY = window.ISAR_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inloem9laHdrdXh0ZWloc25hZ2NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNzg2OTgsImV4cCI6MjEwODg1NDY5OH0.0ym3I-8oyG3ot_J6ofoVl7pu1m7WyIORLiStQynHG5c';
   const PI_PROFILE_URL = SUPABASE_URL + '/functions/v1/pi-profile';
+  const GOOGLE_CLIENT_ID = '598505051203-pc7mc0j900sb4r3n5t8m9b58ba81mav3.apps.googleusercontent.com';
 
   let sbClient = null;
   let currentWeb2Token = '';
   let currentWeb2Session = null;
   let currentWeb2Profile = null;
   let listenerBound = false;
+
+  let gsiLoadPromise = null;
+  let currentGoogleRawNonce = '';
+  let activeGoogleOnSuccess = null;
+  let activeGoogleOnError = null;
 
   function isPiBrowserEnv() {
     if (window.HokagePi && typeof window.HokagePi.isPiBrowser === 'function') {
@@ -47,6 +54,157 @@
     return sbClient;
   }
 
+  async function generateNoncePair() {
+    const rawBytes = new Uint8Array(16);
+    crypto.getRandomValues(rawBytes);
+    const rawNonce = Array.from(rawBytes, function (b) {
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(rawNonce));
+    const hashedNonce = Array.from(new Uint8Array(digest), function (b) {
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+    return { rawNonce: rawNonce, hashedNonce: hashedNonce };
+  }
+
+  function loadGoogleGsi() {
+    if (isPiBrowserEnv()) {
+      return Promise.reject(new Error('Google login não carregado no Pi Browser.'));
+    }
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      return Promise.resolve(window.google);
+    }
+    if (gsiLoadPromise) return gsiLoadPromise;
+
+    gsiLoadPromise = new Promise(function (resolve, reject) {
+      const existing = document.querySelector('script[src^="https://accounts.google.com/gsi/client"]');
+      const timer = setTimeout(function () {
+        gsiLoadPromise = null;
+        reject(new Error('Tempo esgotado ao carregar login do Google.'));
+      }, 8000);
+
+      function finishOk() {
+        clearTimeout(timer);
+        if (window.google && window.google.accounts && window.google.accounts.id) {
+          resolve(window.google);
+        } else {
+          gsiLoadPromise = null;
+          reject(new Error('SDK do Google não inicializou corretamente.'));
+        }
+      }
+
+      if (existing) {
+        if (window.google && window.google.accounts && window.google.accounts.id) {
+          finishOk();
+          return;
+        }
+        existing.addEventListener('load', finishOk, { once: true });
+        existing.addEventListener('error', function () {
+          clearTimeout(timer);
+          gsiLoadPromise = null;
+          reject(new Error('Falha ao carregar SDK do Google.'));
+        }, { once: true });
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = finishOk;
+      script.onerror = function () {
+        clearTimeout(timer);
+        gsiLoadPromise = null;
+        reject(new Error('Falha ao carregar login do Google. Verifique bloqueadores ou use e-mail abaixo.'));
+      };
+      document.head.appendChild(script);
+    });
+
+    return gsiLoadPromise;
+  }
+
+  async function handleGoogleCredentialResponse(response) {
+    try {
+      if (!response || !response.credential) {
+        throw new Error('Credencial do Google não recebida.');
+      }
+      const sb = getSupabase();
+      if (!sb || !sb.auth) {
+        throw new Error('Serviço de autenticação indisponível no momento.');
+      }
+      const nonceToSend = currentGoogleRawNonce;
+      const { data, error } = await sb.auth.signInWithIdToken({
+        provider: 'google',
+        token: response.credential,
+        nonce: nonceToSend
+      });
+      if (error) {
+        throw new Error(error.message || 'Falha ao autenticar conta Google.');
+      }
+      if (data && data.session) {
+        await syncSessionToApp(data.session);
+      }
+      if (typeof activeGoogleOnSuccess === 'function') {
+        activeGoogleOnSuccess(data, currentWeb2Profile);
+      }
+      const isPioneiroPage = /\/pioneiro(\.html)?$/i.test(window.location.pathname || '');
+      if (!isPioneiroPage && (!currentWeb2Profile || !currentWeb2Profile.username)) {
+        window.location.assign('pioneiro?setup=web2');
+      }
+    } catch (err) {
+      console.warn('HokageWeb2Auth: erro no signInWithIdToken:', err);
+      if (typeof activeGoogleOnError === 'function') {
+        activeGoogleOnError(err);
+      }
+    }
+  }
+
+  async function ensureGsiInitialized(onSuccess, onError) {
+    if (isPiBrowserEnv()) {
+      throw new Error('Google login desabilitado no Pi Browser.');
+    }
+    if (typeof onSuccess === 'function') activeGoogleOnSuccess = onSuccess;
+    if (typeof onError === 'function') activeGoogleOnError = onError;
+
+    const googleObj = await loadGoogleGsi();
+    const pair = await generateNoncePair();
+    currentGoogleRawNonce = pair.rawNonce;
+
+    googleObj.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      nonce: pair.hashedNonce,
+      ux_mode: 'popup',
+      callback: handleGoogleCredentialResponse
+    });
+    return googleObj;
+  }
+
+  async function renderGoogleButton(containerEl, opts) {
+    if (isPiBrowserEnv() || !containerEl) return false;
+    const options = opts && typeof opts === 'object' ? opts : {};
+    try {
+      const googleObj = await ensureGsiInitialized(options.onSuccess, options.onError);
+      const rawWidth = containerEl.clientWidth || 320;
+      const width = Math.min(360, Math.max(240, rawWidth));
+      containerEl.innerHTML = '';
+      googleObj.accounts.id.renderButton(containerEl, {
+        theme: 'outline',
+        size: 'large',
+        type: 'standard',
+        text: 'continue_with',
+        shape: 'rectangular',
+        width: width,
+        locale: 'pt-BR'
+      });
+      return true;
+    } catch (err) {
+      if (typeof options.onError === 'function') {
+        options.onError(err);
+      }
+      return false;
+    }
+  }
+
   async function sendMagicLink(email, redirectUrl) {
     const cleanEmail = String(email || '').trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
@@ -70,20 +228,14 @@
     return { ok: true, email: cleanEmail };
   }
 
-  async function signInWithGoogle(redirectUrl) {
-    const sb = getSupabase();
-    if (!sb || !sb.auth) {
-      throw new Error('Serviço de autenticação indisponível no momento.');
+  async function signInWithGoogle(redirectUrl, opts) {
+    if (isPiBrowserEnv()) {
+      throw new Error('Use a conexão nativa do Pi Browser.');
     }
-    const targetRedirect = redirectUrl || (window.location.origin + '/pioneiro');
-    const { data, error } = await sb.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: targetRedirect }
-    });
-    if (error) {
-      throw new Error('Login com Google em ativação — use seu e-mail abaixo para entrar agora!');
-    }
-    return data;
+    const options = opts && typeof opts === 'object' ? opts : {};
+    const googleObj = await ensureGsiInitialized(options.onSuccess, options.onError);
+    googleObj.accounts.id.prompt();
+    return { ok: true };
   }
 
   async function getSession() {
@@ -179,6 +331,11 @@
     currentWeb2Token = '';
     currentWeb2Session = null;
     currentWeb2Profile = null;
+    try {
+      if (!isPiBrowserEnv() && window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.disableAutoSelect();
+      }
+    } catch (_) {}
     try {
       localStorage.removeItem('hokage_pi_user');
       localStorage.removeItem('isar_pi_user');
@@ -289,9 +446,11 @@
   }
 
   window.HokageWeb2Auth = {
+    googleClientId: GOOGLE_CLIENT_ID,
     getSupabase: getSupabase,
     sendMagicLink: sendMagicLink,
     signInWithGoogle: signInWithGoogle,
+    renderGoogleButton: renderGoogleButton,
     getSession: getSession,
     getAccessToken: getAccessToken,
     fetchMyProfile: fetchMyProfile,

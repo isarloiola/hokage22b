@@ -593,6 +593,23 @@ function isPiBrowser() {
     function openExternalBrowserModal() {
       const modal = document.getElementById('external-browser-modal');
       if (modal) {
+        const extGoogleSlot = document.getElementById('ext-modal-google-slot');
+        if (!isPiBrowser() && extGoogleSlot && window.HokageWeb2Auth && typeof window.HokageWeb2Auth.renderGoogleButton === 'function') {
+          window.HokageWeb2Auth.renderGoogleButton(extGoogleSlot, {
+            onSuccess: function () {
+              closeExternalBrowserModal();
+              showVitrineToast('✓ Conectado com Google!', 'success');
+            },
+            onError: function (err) {
+              const fbEl = document.getElementById('ext-modal-web2-feedback');
+              if (fbEl) {
+                fbEl.style.display = 'block';
+                fbEl.style.color = '#fde68a';
+                fbEl.textContent = 'ℹ️ ' + ((err && err.message) || 'Use seu e-mail abaixo caso prefira.');
+              }
+            }
+          });
+        }
         const extGoogleBtn = document.getElementById('ext-modal-google-btn');
         if (extGoogleBtn && !extGoogleBtn.dataset.bound) {
           extGoogleBtn.dataset.bound = '1';
@@ -650,7 +667,7 @@ function isPiBrowser() {
         const extEmail = document.getElementById('ext-modal-web2-email');
         if (extEmail) {
           setTimeout(function () {
-            try { extEmail.focus(); } catch (_) {}
+            try { extEmail.focus(); } catch (_) { }
           }, 120);
         }
       }
@@ -849,6 +866,22 @@ function syncOnboardingAuthBoxes() {
   if (web2Box) {
     const isAlreadySignedIn = Boolean(logged && (logged.username || logged.authType === 'web2'));
     web2Box.style.display = (!inPi && !isAlreadySignedIn) ? 'block' : 'none';
+    const web2GoogleSlot = document.getElementById('web2-onboarding-google-slot');
+    if (!inPi && !isAlreadySignedIn && web2GoogleSlot && window.HokageWeb2Auth && typeof window.HokageWeb2Auth.renderGoogleButton === 'function') {
+      window.HokageWeb2Auth.renderGoogleButton(web2GoogleSlot, {
+        onSuccess: function () {
+          showVitrineToast('✓ Conectado com Google!', 'success');
+        },
+        onError: function (err) {
+          const fbEl = document.getElementById('web2-onboarding-feedback');
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fde68a';
+            fbEl.textContent = 'ℹ️ ' + ((err && err.message) || 'Use seu e-mail abaixo caso prefira.');
+          }
+        }
+      });
+    }
   }
 
   const web2GoogleBtn = document.getElementById('web2-onboarding-google-btn');
@@ -928,26 +961,26 @@ async function loadPioneerProfile() {
     }
   }
 
-      const loggedUser = getLoggedUser();
-      const explicitRef = getQueryParam('ref');
-      const isExploreFlow = getQueryParam('explorar') === '1';
-      const isCreateFlow = getQueryParam('criar') === '1' || getQueryParam('entrar') === '1';
-      const isAutoStartFlow = getQueryParam('autostart') === '1' || getQueryParam('simulador') === '1' || getQueryParam('teste') === '1';
+  const loggedUser = getLoggedUser();
+  const explicitRef = getQueryParam('ref');
+  const isExploreFlow = getQueryParam('explorar') === '1';
+  const isCreateFlow = getQueryParam('criar') === '1' || getQueryParam('entrar') === '1';
+  const isAutoStartFlow = getQueryParam('autostart') === '1' || getQueryParam('simulador') === '1' || getQueryParam('teste') === '1';
 
-      // Se entrou por link de convite (?ref=usuario) sem ?u=, ?explorar=1, ?criar=1 ou autostart, abre a vitrine de quem convidou
-      if (!username && explicitRef && !isAutoStartFlow && !isExploreFlow && !isCreateFlow) {
-        const cleanRefHandle = (window.HokageReferral && typeof window.HokageReferral.normalizeHandle === 'function')
-          ? window.HokageReferral.normalizeHandle(explicitRef)
-          : String(explicitRef).trim().replace(/^@+/, '').toLowerCase();
-        if (cleanRefHandle) {
-          username = '@' + cleanRefHandle;
-        }
-      }
+  // Se entrou por link de convite (?ref=usuario) sem ?u=, ?explorar=1, ?criar=1 ou autostart, abre a vitrine de quem convidou
+  if (!username && explicitRef && !isAutoStartFlow && !isExploreFlow && !isCreateFlow) {
+    const cleanRefHandle = (window.HokageReferral && typeof window.HokageReferral.normalizeHandle === 'function')
+      ? window.HokageReferral.normalizeHandle(explicitRef)
+      : String(explicitRef).trim().replace(/^@+/, '').toLowerCase();
+    if (cleanRefHandle) {
+      username = '@' + cleanRefHandle;
+    }
+  }
 
-      // Se não passou ?u=, NÃO é ?ref=, NÃO é ?explorar=1 e NÃO é ?criar=1, usa a conta logada
-      if (!username && !explicitRef && !isExploreFlow && !isCreateFlow && loggedUser && loggedUser.username) {
-        username = loggedUser.username;
-      }
+  // Se não passou ?u=, NÃO é ?ref=, NÃO é ?explorar=1 e NÃO é ?criar=1, usa a conta logada
+  if (!username && !explicitRef && !isExploreFlow && !isCreateFlow && loggedUser && loggedUser.username) {
+    username = loggedUser.username;
+  }
 
   // Se NÃO tem parâmetro de perfil (?u=): tela de onboarding / boas-vindas
   if (!username) {
@@ -1281,20 +1314,20 @@ function renderShowcaseData(prof, ads) {
     }
   }
 
-      const username = cleanUsername(prof.username || currentPioneerUser || '@pioneiro');
-      const footerCreateLink = document.getElementById('pioneer-footer-create-link');
-      if (footerCreateLink) {
-        const ownerRefSlug = username.replace(/^@+/, '');
-        if (!isOwner && ownerRefSlug) {
-          footerCreateLink.href = `pioneiro?ref=${encodeURIComponent(ownerRefSlug)}&criar=1`;
-          footerCreateLink.textContent = `🎁 Crie seu Passaporte grátis pelo convite de ${username} e ganhe 1 Anúncio Bronze (0.314 π) ↗`;
-        } else {
-          footerCreateLink.href = 'pioneiro?criar=1';
-          footerCreateLink.textContent = '🚀 Crie seu Passaporte grátis com seu @usuário Pi ou E-mail ↗';
-        }
-      }
-      document.getElementById('pioneer-handle').textContent = username;
-      document.title = `${username} — Passaporte Oficial na Pi Network | HOKAGE22B`;
+  const username = cleanUsername(prof.username || currentPioneerUser || '@pioneiro');
+  const footerCreateLink = document.getElementById('pioneer-footer-create-link');
+  if (footerCreateLink) {
+    const ownerRefSlug = username.replace(/^@+/, '');
+    if (!isOwner && ownerRefSlug) {
+      footerCreateLink.href = `pioneiro?ref=${encodeURIComponent(ownerRefSlug)}&criar=1`;
+      footerCreateLink.textContent = `🎁 Crie seu Passaporte grátis pelo convite de ${username} e ganhe 1 Anúncio Bronze (0.314 π) ↗`;
+    } else {
+      footerCreateLink.href = 'pioneiro?criar=1';
+      footerCreateLink.textContent = '🚀 Crie seu Passaporte grátis com seu @usuário Pi ou E-mail ↗';
+    }
+  }
+  document.getElementById('pioneer-handle').textContent = username;
+  document.title = `${username} — Passaporte Oficial na Pi Network | HOKAGE22B`;
 
   const statusBar = document.getElementById('pioneer-account-status-bar');
   if (statusBar) {

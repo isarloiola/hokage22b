@@ -238,10 +238,12 @@
             <p style="font-size:0.78rem;color:var(--text-secondary);margin:0 0 10px;line-height:1.45">
               Entre com 1 clique pelo Google ou receba um link sem senha no seu e-mail. Você pode vincular sua conta Pi depois para ganhar o selo <strong>✓ Pi Verificado</strong>!
             </p>
-            <button type="button" id="diag-web2-google-btn" class="portal-btn portal-btn--outline portal-btn--full" style="margin-bottom:10px;background:#fff;color:#111827;border-color:#e5e7eb;font-weight:800;justify-content:center;gap:8px;padding:10px 12px">
-              <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f3f4f6;color:#2563eb;font-weight:900;font-size:0.8rem">G</span>
-              <span>Continuar com Google</span>
-            </button>
+            <div id="diag-web2-google-slot" style="margin-bottom:10px;display:flex;justify-content:center;min-height:42px">
+              <button type="button" id="diag-web2-google-btn" class="portal-btn portal-btn--outline portal-btn--full" style="background:#fff;color:#111827;border-color:#e5e7eb;font-weight:800;justify-content:center;gap:8px;padding:10px 12px">
+                <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f3f4f6;color:#2563eb;font-weight:900;font-size:0.8rem">G</span>
+                <span>Continuar com Google</span>
+              </button>
+            </div>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:0.72rem;color:var(--text-muted)">
               <span style="flex:1;height:1px;background:rgba(255,255,255,0.12)"></span>
               <span>ou entre por e-mail</span>
@@ -368,6 +370,24 @@
     `;
 
     modal.classList.add('active');
+
+    const googleSlot = document.getElementById('diag-web2-google-slot');
+    if (googleSlot && window.HokageWeb2Auth && typeof window.HokageWeb2Auth.renderGoogleButton === 'function') {
+      window.HokageWeb2Auth.renderGoogleButton(googleSlot, {
+        onSuccess: function () {
+          modal.classList.remove('active');
+          showToast('✓ Conectado com Google! Bem-vindo ao HOKAGE22B.', 'success');
+        },
+        onError: function (err) {
+          const fbEl = document.getElementById('diag-web2-feedback');
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fde68a';
+            fbEl.textContent = 'ℹ️ ' + ((err && err.message) || 'Use seu e-mail abaixo caso prefira.');
+          }
+        }
+      });
+    }
 
     const googleBtn = document.getElementById('diag-web2-google-btn');
     if (googleBtn) {
