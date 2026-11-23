@@ -143,6 +143,7 @@
               <li><a href="zero" style="color:var(--amber-light);font-weight:700">Pi do Zero</a></li>
               <li><a href="um" style="color:var(--amber-light);font-weight:700">Passo 1</a></li>
               <li><a href="pioneiro" style="color:var(--accent-light);font-weight:700">Passaporte</a></li>
+              <li><a href="explorar" style="color:#34d399;font-weight:700">Explorar</a></li>
               <li><a href="mural" style="color:var(--amber-light);font-weight:700">A Vila (P2P)</a></li>
               <li><a href="monte" style="color:#fb923c;font-weight:700">Monte</a></li>
               <li><a href="ferramentas" style="color:#6ee7b7;font-weight:700">Ferramentas</a></li>
@@ -207,6 +208,7 @@
           style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">
           Ecossistema</div>
         <a href="pioneiro" style="color:var(--accent-light);font-weight:700">🪪 Passaporte</a>
+        <a href="explorar" style="color:#34d399;font-weight:700">🌐 Explorar Pioneiros</a>
         <a href="mural" style="color:var(--amber-light);font-weight:700">🏘️ A Vila (P2P)</a>
         <a href="vender" style="font-weight:700">🏷️ Como Vender</a>
         <a href="monte" style="color:#fb923c;font-weight:700">🏔️ Monte Hokage</a>
@@ -588,10 +590,14 @@
         </div>
 
         <!-- CTA Rápido do Bloco -->
-        <div style="text-align:center;margin-top:32px">
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:32px">
           <a href="pioneiro" class="portal-btn portal-btn--primary"
             style="padding:12px 28px;font-size:0.95rem;font-weight:700">
             ⚡ Criar Meu Passaporte Verificado Grátis →
+          </a>
+          <a href="explorar" class="portal-btn portal-btn--outline"
+            style="padding:12px 24px;font-size:0.95rem;font-weight:700;border-color:rgba(16,185,129,0.45);color:#34d399">
+            🌐 Explorar Negócios &amp; Pioneiros →
           </a>
         </div>
 
@@ -1427,6 +1433,62 @@
     </section>
 
     <!-- ============================================================
+         4.5A. EXPLORAR NEGÓCIOS & PIONEIROS (DIRETÓRIO AO VIVO)
+    ============================================================ -->
+    <section class="portal-section" id="explorar-passaportes" aria-labelledby="explore-passports-title"
+      style="background:linear-gradient(180deg, rgba(16,185,129,0.04) 0%, rgba(9,9,11,0.6) 100%)">
+      <div class="portal-container">
+        <div class="section-heading-wrap"
+          style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
+          <div>
+            <div class="section-tag" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.35);color:#34d399">
+              🌐 Diretório Mainnet Verificado
+            </div>
+            <h2 class="section-title" id="explore-passports-title">🌐 Explorar Negócios &amp; Pioneiros</h2>
+            <p class="section-desc">
+              Descubra humanos reais verificados aceitando Pi na Mainnet, consulte carteiras P2P e acesse lojas, serviços e criadores.
+            </p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="explorar" class="portal-btn portal-btn--primary portal-btn--sm">
+              Abrir Diretório Completo →
+            </a>
+            <a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm">
+              🪪 Ativar Meu Passaporte
+            </a>
+          </div>
+        </div>
+
+        <form id="home-pioneer-search-form" action="pioneiro" method="get"
+          style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:rgba(20,20,28,0.85);border:1px solid rgba(139,92,246,0.3);border-radius:16px;padding:12px">
+          <input type="hidden" name="explorar" value="1" />
+          <input type="search" id="home-pioneer-search-input" name="q" maxlength="60"
+            class="newsletter-input" aria-label="Buscar negócios, serviços ou @usuário no diretório"
+            placeholder="🔍 Buscar @usuário, produto, serviço, loja ou nicho..."
+            style="flex:1;min-width:220px" />
+          <button type="submit" class="portal-btn portal-btn--amber portal-btn--sm" style="white-space:nowrap">
+            Buscar no Diretório →
+          </button>
+        </form>
+
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+          <a href="pioneiro?explorar=1" class="portal-btn portal-btn--outline portal-btn--sm" style="font-size:0.76rem;padding:6px 12px;border-radius:999px">Todos</a>
+          <a href="pioneiro?explorar=1&amp;cat=embaixadores" class="portal-btn portal-btn--outline portal-btn--sm" style="font-size:0.76rem;padding:6px 12px;border-radius:999px;border-color:rgba(249,115,22,0.4);color:#fb923c">🔥 Monte Hokage</a>
+          <a href="pioneiro?explorar=1&amp;cat=lojas" class="portal-btn portal-btn--outline portal-btn--sm" style="font-size:0.76rem;padding:6px 12px;border-radius:999px">🛍️ Lojas &amp; Produtos</a>
+          <a href="pioneiro?explorar=1&amp;cat=servicos" class="portal-btn portal-btn--outline portal-btn--sm" style="font-size:0.76rem;padding:6px 12px;border-radius:999px">💼 Serviços &amp; Tech</a>
+          <a href="pioneiro?explorar=1&amp;cat=criadores" class="portal-btn portal-btn--outline portal-btn--sm" style="font-size:0.76rem;padding:6px 12px;border-radius:999px">🎨 Criadores de Conteúdo</a>
+        </div>
+
+        <div id="home-pioneers-live-grid" aria-live="polite"
+          style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px;margin-top:20px">
+          <div style="grid-column:1/-1;text-align:center;padding:24px 16px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);font-size:0.88rem">
+            ⏳ Carregando pioneiros verificados da rede...
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
          4.5B. A VILA · CENTRAL P2P — NEGÓCIOS E CLASSIFICADOS WEB3
     ============================================================ -->
     <section class="portal-section" id="mural" aria-labelledby="mural-section-title"
@@ -2126,7 +2188,7 @@
   <script src="assets/js/config.js?v=7.3"></script>
   <script src="assets/js/modules/db.js?v=6.1"></script>
   <script src="assets/js/modules/pi-pay.js?v=7.8"></script>
-  <script src="assets/js/modules/portal.js?v=3.4"></script>
+  <script src="assets/js/modules/portal.js?v=3.5"></script>
   <script src="assets/js/modules/pi-ticker.js?v=1.1"></script>
   <script src="assets/js/modules/referral.js?v=2.7"></script>
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>

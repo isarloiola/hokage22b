@@ -25,6 +25,7 @@
       heading: 'Ecossistema',
       items: [
         { href: 'pioneiro', match: ['pioneiro'], label: '🪪 Passaporte', desktopLabel: 'Passaporte', color: 'var(--accent-light)' },
+        { href: 'explorar', match: ['explorar', 'diretorio'], label: '🌐 Explorar Pioneiros', desktopLabel: 'Explorar', color: '#34d399' },
         { href: 'mural', match: ['mural'], label: '🏘️ A Vila (P2P)', desktopLabel: 'A Vila (P2P)', color: 'var(--amber-light)' },
         { href: 'vender', match: ['vender'], label: '🏷️ Como Vender', desktopLabel: null },
         { href: 'monte', match: ['monte'], label: '🏔️ Monte Hokage', desktopLabel: 'Monte', color: '#fb923c' }

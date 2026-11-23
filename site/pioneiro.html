@@ -875,43 +875,6 @@
             </div>
           </div>
         </div>
-
-        <!-- ========================================== -->
-        <!-- DIRETÓRIO GLOBAL DE PIONEIROS & NEGÓCIOS (HACKATHON GRADE) -->
-        <!-- ========================================== -->
-        <div id="pioneer-directory-section" style="text-align:left;border-top:1px solid rgba(255,255,255,0.08);padding-top:22px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-            <div>
-              <h2 style="font-size:1.25rem;font-weight:800;color:#fff;margin:0">🌐 Explorar Negócios &amp; Pioneiros</h2>
-              <span style="font-size:0.75rem;color:var(--text-muted)">Descubra humanos reais verificados aceitando Pi na Mainnet</span>
-            </div>
-            <span style="font-size:0.72rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:3px 10px;border-radius:12px;font-weight:700">
-              Diretório Mainnet
-            </span>
-          </div>
-
-          <!-- Filtros de Busca em Tempo Real -->
-          <div style="margin-bottom:12px">
-            <input type="text" id="dir-search-input" aria-label="Buscar pioneiro ou negócio no diretório" placeholder="🔍 Buscar por nome, serviço, produto, nicho..." oninput="filterDirectoryDebounced()" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.6);border:1px solid rgba(139,92,246,0.35);border-radius:10px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
-          </div>
-
-          <!-- Category Pills -->
-          <div style="display:flex;flex-wrap:wrap;gap:8px;padding-bottom:4px;margin-bottom:14px">
-            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill active" onclick="filterDirectoryCategory('todos', this)" style="flex-shrink:0;background:var(--accent);color:#fff;font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap;font-weight:700">Todos</button>
-            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('embaixadores', this)" style="flex-shrink:0;background:rgba(249,115,22,0.14);color:#fb923c;border:1px solid rgba(249,115,22,0.35);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap;font-weight:700">🔥 Monte Hokage</button>
-            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('lojas', this)" style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">🛍️ Lojas &amp; Produtos</button>
-            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('servicos', this)" style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">💼 Serviços &amp; Tech</button>
-            <button type="button" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('criadores', this)" style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">🎨 Criadores de Conteúdo</button>
-          </div>
-
-          <!-- Grid de Pioneiros -->
-          <div id="pioneer-directory-grid" style="display:flex;flex-direction:column;gap:10px">
-            <!-- Injetado dinamicamente via JS -->
-            <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem">
-              ⏳ Carregando pioneiros da rede...
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- ========================================== -->
@@ -1112,6 +1075,58 @@
         </div>
 
       </div>
+
+      <!-- ========================================== -->
+      <!-- DIRETÓRIO GLOBAL DE PIONEIROS & NEGÓCIOS (SEMPRE ACESSÍVEL) -->
+      <!-- ========================================== -->
+      <section id="pioneer-directory-section" aria-label="Diretório de Pioneiros e Negócios" style="text-align:left;background:linear-gradient(155deg,rgba(20,20,28,0.95),rgba(11,11,18,0.98));border:1px solid rgba(139,92,246,0.28);border-radius:22px;padding:24px 20px;margin-top:22px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div>
+            <h2 style="font-size:1.25rem;font-weight:800;color:#fff;margin:0">🌐 Explorar Negócios &amp; Pioneiros</h2>
+            <span style="font-size:0.78rem;color:var(--text-muted)">Descubra humanos reais verificados aceitando Pi na Mainnet</span>
+          </div>
+          <span id="dir-live-count-badge" style="font-size:0.72rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:3px 10px;border-radius:12px;font-weight:700">
+            Diretório Mainnet
+          </span>
+        </div>
+
+        <!-- Filtros de Busca em Tempo Real -->
+        <div style="margin-bottom:12px">
+          <input type="text" id="dir-search-input" aria-label="Buscar pioneiro ou negócio no diretório" placeholder="🔍 Buscar por nome, serviço, produto, nicho..." oninput="filterDirectoryDebounced()" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.6);border:1px solid rgba(139,92,246,0.35);border-radius:10px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
+        </div>
+
+        <!-- Category Pills -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;padding-bottom:4px;margin-bottom:14px">
+          <button type="button" data-cat="todos" class="portal-btn portal-btn--sm dir-cat-pill active" onclick="filterDirectoryCategory('todos', this)" style="flex-shrink:0;background:var(--accent);color:#fff;font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap;font-weight:700">Todos</button>
+          <button type="button" data-cat="embaixadores" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('embaixadores', this)" style="flex-shrink:0;background:rgba(249,115,22,0.14);color:#fb923c;border:1px solid rgba(249,115,22,0.35);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap;font-weight:700">🔥 Monte Hokage</button>
+          <button type="button" data-cat="lojas" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('lojas', this)" style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">🛍️ Lojas &amp; Produtos</button>
+          <button type="button" data-cat="servicos" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('servicos', this)" style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">💼 Serviços &amp; Tech</button>
+          <button type="button" data-cat="criadores" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('criadores', this)" style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">🎨 Criadores de Conteúdo</button>
+        </div>
+
+        <!-- Grid de Pioneiros -->
+        <div id="pioneer-directory-grid" style="display:flex;flex-direction:column;gap:10px">
+          <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem">
+            ⏳ Carregando pioneiros da rede...
+          </div>
+        </div>
+
+        <!-- Card de Conversão no Final do Diretório -->
+        <div style="margin-top:18px;padding:16px;border-radius:16px;background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(139,92,246,0.12));border:1px dashed rgba(16,185,129,0.45);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div style="max-width:380px">
+            <strong style="color:#fff;font-size:0.9rem;display:block;margin-bottom:3px">+ Quer aparecer aqui quando alguém buscar negócios em Pi?</strong>
+            <span style="font-size:0.78rem;color:var(--text-secondary);line-height:1.4;display:block">Ative seu Passaporte gratuito em 1 minuto no Pi Browser ou experimente antes no simulador.</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" onclick="connectPiBrowserAndStart()" class="portal-btn portal-btn--primary portal-btn--sm" style="font-weight:800">
+              ⚡ Ativar Meu Passaporte Grátis →
+            </button>
+            <button type="button" onclick="startSimulatorMode()" class="portal-btn portal-btn--outline portal-btn--sm">
+              🧪 Simulador
+            </button>
+          </div>
+        </div>
+      </section>
 
       <!-- Rodapé do Passaporte Oficial -->
       <div id="pioneer-footer" style="text-align:center;color:var(--text-muted);font-size:0.82rem;margin-top:24px;display:none">
@@ -1464,12 +1479,12 @@
   <script src="assets/js/modules/referral.js?v=2.7"></script>
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
-  <script src="assets/js/modules/site-header.js?v=1.2"></script>
+  <script src="assets/js/modules/site-header.js?v=1.3"></script>
   <script src="assets/js/modules/i18n.js?v=4.7"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
   <script src="assets/js/modules/db.js?v=6.1"></script>
 
-  <script src="assets/js/modules/vitrine.js?v=3.6"></script>
+  <script src="assets/js/modules/vitrine.js?v=3.7"></script>
   <script src="assets/js/modules/monte-progression.js?v=1.4"></script>
 </body>
 </html>

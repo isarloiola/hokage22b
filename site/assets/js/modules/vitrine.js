@@ -722,7 +722,7 @@
           username = lastSeg;
         } else if (pathSegments.length === 2 && pathSegments[0].toLowerCase() === 'pioneiro') {
           username = '@' + lastSeg;
-        } else if (pathSegments.length === 1 && !['zero', 'mural', 'pioneiro', 'legal', 'index', 'construir', 'hackathon', 'obrigado', 'admin', 'alem-do-clique'].includes(pathSegments[0].toLowerCase()) && !pathSegments[0].includes('.')) {
+        } else if (pathSegments.length === 1 && !['zero', 'um', 'vender', 'mural', 'pioneiro', 'explorar', 'diretorio', 'ferramentas', 'monte', 'jornada', 'legal', 'index', 'construir', 'hackathon', 'obrigado', 'admin', 'alem-do-clique', 'desenvolvedores'].includes(pathSegments[0].toLowerCase()) && !pathSegments[0].includes('.')) {
           username = '@' + pathSegments[0];
         }
       }
@@ -819,6 +819,10 @@
           setTimeout(function () {
             const dirSec = document.getElementById('pioneer-directory-section');
             if (dirSec) dirSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const searchInp = document.getElementById('dir-search-input');
+            if (searchInp && !getQueryParam('q')) {
+              try { searchInp.focus({ preventScroll: true }); } catch (_) {}
+            }
           }, 180);
         } else if (getQueryParam('autostart') === '1') {
           setTimeout(function () {
@@ -827,6 +831,8 @@
         }
         return;
       }
+
+      loadPioneersDirectory();
 
       username = cleanUsername(username);
       currentPioneerUser = username;
@@ -1650,7 +1656,25 @@
         }
 
         cachedDirectoryPioneers = pioneers;
-        renderDirectoryGrid(pioneers);
+        const countBadge = document.getElementById('dir-live-count-badge');
+        if (countBadge) {
+          countBadge.textContent = pioneers.length + (pioneers.length === 1 ? ' Passaporte Verificado' : ' Passaportes Verificados');
+        }
+
+        const urlQuery = (getQueryParam('q') || '').trim();
+        const urlCat = (getQueryParam('cat') || '').trim().toLowerCase();
+        const searchInp = document.getElementById('dir-search-input');
+        if (searchInp && urlQuery) {
+          searchInp.value = urlQuery;
+        }
+        if (urlCat && ['todos', 'embaixadores', 'lojas', 'servicos', 'criadores'].includes(urlCat)) {
+          const pillEl = document.querySelector('.dir-cat-pill[data-cat="' + urlCat + '"]');
+          filterDirectoryCategory(urlCat, pillEl);
+        } else if (urlQuery) {
+          applyDirectoryFilters();
+        } else {
+          renderDirectoryGrid(pioneers);
+        }
       } catch (err) {
         console.warn('Erro ao carregar diretório:', err);
         cachedDirectoryPioneers = CURATED_DEFAULT_PIONEERS;

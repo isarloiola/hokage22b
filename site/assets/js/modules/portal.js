@@ -540,6 +540,72 @@
     }
   }
 
+  // ─── 8B. Prévia Ao Vivo de Passaportes & Diretório na Home ─
+  async function initHomePioneersPreview() {
+    const grid = document.getElementById('home-pioneers-live-grid');
+    if (!grid) return;
+
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    try {
+      const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/passaportes?limit=6');
+      const json = await res.json().catch(function () { return {}; });
+      const items = (json && json.data && Array.isArray(json.data.items))
+        ? json.data.items
+        : (Array.isArray(json.items) ? json.items : []);
+
+      const cardsHtml = items.slice(0, 5).map(function (p) {
+        const cleanHandle = String(p.username || p.handle || 'pioneiro').replace(/^@+/, '');
+        const initial = esc(cleanHandle.charAt(0).toUpperCase() || 'P');
+        const safeAvatar = (p.avatar_url && /^https?:\/\//i.test(p.avatar_url)) ? esc(p.avatar_url) : '';
+        const bio = esc(String(p.bio || 'Pioneiro verificado no ecossistema HOKAGE22B aceitando Pi na Mainnet.').slice(0, 110));
+        const hasWallet = Boolean(p.wallet_address);
+        const tier = String(p.journey_tier || '').toLowerCase();
+        const avatarHtml = safeAvatar
+          ? '<img src="' + safeAvatar + '" alt="@' + esc(cleanHandle) + '" style="width:100%;height:100%;object-fit:cover" loading="lazy" />'
+          : '<span style="font-size:1.1rem;font-weight:800;color:#fff">' + initial + '</span>';
+
+        return (
+          '<article style="background:rgba(20,20,28,0.88);border:1px solid rgba(139,92,246,0.28);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px">' +
+            '<div style="display:flex;align-items:center;gap:12px;min-width:0">' +
+              '<div style="width:48px;height:48px;border-radius:50%;overflow:hidden;background:#1a0533;border:2px solid rgba(139,92,246,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0">' + avatarHtml + '</div>' +
+              '<div style="min-width:0;flex:1">' +
+                '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
+                  '<strong class="notranslate" translate="no" style="color:#fff;font-size:0.95rem">@' + esc(cleanHandle) + '</strong>' +
+                  '<span style="font-size:0.65rem;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.38);color:#34d399;padding:1px 7px;border-radius:999px;font-weight:700">✓ Pi Verificado</span>' +
+                  (tier === 'hokage' ? '<span style="font-size:0.65rem;background:rgba(249,115,22,0.16);border:1px solid rgba(249,115,22,0.45);color:#fb923c;padding:1px 7px;border-radius:999px;font-weight:700">🔥 Hokage</span>' : '') +
+                  (hasWallet ? '<span style="font-size:0.65rem;background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.4);color:#fbbf24;padding:1px 7px;border-radius:999px;font-weight:700">⚡ Pi</span>' : '') +
+                '</div>' +
+                '<p style="font-size:0.8rem;color:var(--text-secondary);margin:4px 0 0;line-height:1.4">' + bio + '</p>' +
+              '</div>' +
+            '</div>' +
+            '<a href="pioneiro?u=' + encodeURIComponent(cleanHandle) + '" class="portal-btn portal-btn--outline portal-btn--sm" style="justify-content:center;text-decoration:none">Ver Passaporte ↗</a>' +
+          '</article>'
+        );
+      }).join('');
+
+      const ctaCardHtml =
+        '<article style="background:linear-gradient(155deg,rgba(16,185,129,0.12),rgba(139,92,246,0.14));border:1px dashed rgba(16,185,129,0.48);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px">' +
+          '<div>' +
+            '<strong style="color:#34d399;font-size:0.95rem;display:block;margin-bottom:4px">+ Seu negócio aceita Pi na Mainnet?</strong>' +
+            '<p style="font-size:0.8rem;color:var(--text-secondary);margin:0;line-height:1.45">Apareça nas buscas de pioneiros verificados, receba direto na Pi Wallet sem taxas e ganhe seu link curto.</p>' +
+          '</div>' +
+          '<a href="pioneiro" class="portal-btn portal-btn--primary portal-btn--sm" style="justify-content:center;text-decoration:none">⚡ Ativar Meu Passaporte Grátis →</a>' +
+        '</article>';
+
+      grid.innerHTML = (cardsHtml || '') + ctaCardHtml;
+    } catch (_) {
+      grid.innerHTML =
+        '<div style="grid-column:1/-1;text-align:center;padding:24px 16px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1)">' +
+          '<p style="color:var(--text-secondary);margin:0 0 12px;font-size:0.9rem">Consulte todos os pioneiros verificados e negócios que aceitam Pi no diretório oficial.</p>' +
+          '<a href="explorar" class="portal-btn portal-btn--primary portal-btn--sm">🌐 Abrir Diretório de Passaportes →</a>' +
+        '</div>';
+    }
+  }
+
   // ─── 9. Inicialização ──────────────────────────────────────
   function init() {
     initMobileDrawer();
@@ -549,6 +615,7 @@
     initCommunityWaitlist();
     initManualLeadUnlock();
     initHomeVilaLivePreview();
+    initHomePioneersPreview();
   }
 
   window.HokagePortal = {

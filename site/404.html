@@ -16,12 +16,16 @@
       var first = segments[0] || '';
       var second = segments[1] || '';
 
-      // Mapa declarativo de aliases legados (sem arquivos HTML duplicados)
+      // Mapa declarativo de aliases legados e rotas curtas (sem arquivos HTML duplicados)
       var REDIRECT_MAP = {
         'alem-do-clique': '/um.html',
         'alem-do-clique.html': '/um.html',
         'desenvolvedores': '/construir.html',
-        'desenvolvedores.html': '/construir.html'
+        'desenvolvedores.html': '/construir.html',
+        'explorar': '/pioneiro.html?explorar=1',
+        'explorar.html': '/pioneiro.html?explorar=1',
+        'diretorio': '/pioneiro.html?explorar=1',
+        'diretorio.html': '/pioneiro.html?explorar=1'
       };
       if (segments.length === 1 && REDIRECT_MAP[first.toLowerCase()]) {
         window.location.replace(REDIRECT_MAP[first.toLowerCase()] + window.location.search + window.location.hash);
