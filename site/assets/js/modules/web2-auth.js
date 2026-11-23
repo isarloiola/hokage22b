@@ -330,6 +330,130 @@
     return prof;
   }
 
+  async function confirmAndLinkEmail(email, codeOrUrl, piAccessToken) {
+    const cleanEmail = String(email || '').trim().toLowerCase();
+    const raw = String(codeOrUrl || '').trim();
+    if (!raw) {
+      throw new Error('Cole o link recebido no e-mail ou digite o código de 6 dígitos.');
+    }
+    const sb = getSupabase();
+    if (!sb || !sb.auth) {
+      throw new Error('Serviço de autenticação indisponível no momento.');
+    }
+
+    let sess = null;
+    if (/^\d{6,8}$/.test(raw)) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+        throw new Error('Informe um e-mail válido para validar o código.');
+      }
+      const { data, error } = await sb.auth.verifyOtp({
+        email: cleanEmail,
+        token: raw,
+        type: 'email'
+      });
+      if (error) {
+        throw new Error(error.message || 'Código inválido ou expirado.');
+      }
+      sess = data && data.session ? data.session : null;
+    } else {
+      let accessToken = '';
+      let refreshToken = '';
+      let tokenHash = '';
+      let otpType = 'magiclink';
+      try {
+        const hashIdx = raw.indexOf('#');
+        const queryIdx = raw.indexOf('?');
+        if (hashIdx !== -1) {
+          const hp = new URLSearchParams(raw.slice(hashIdx + 1));
+          accessToken = hp.get('access_token') || '';
+          refreshToken = hp.get('refresh_token') || '';
+        }
+        if (queryIdx !== -1) {
+          const endIdx = hashIdx > queryIdx ? hashIdx : raw.length;
+          const qp = new URLSearchParams(raw.slice(queryIdx + 1, endIdx));
+          if (!tokenHash) tokenHash = qp.get('token_hash') || qp.get('token') || '';
+          if (qp.get('type')) otpType = qp.get('type');
+        }
+      } catch (_) {}
+
+      if (accessToken && refreshToken) {
+        const { data, error } = await sb.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
+        if (error) {
+          throw new Error(error.message || 'Link expirado ou inválido.');
+        }
+        sess = data && data.session ? data.session : null;
+      } else if (tokenHash) {
+        let verifyRes = await sb.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: otpType || 'magiclink'
+        });
+        if (verifyRes.error && otpType !== 'email') {
+          verifyRes = await sb.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: 'email'
+          });
+        }
+        if (verifyRes.error) {
+          throw new Error(verifyRes.error.message || 'Link expirado ou já utilizado.');
+        }
+        sess = verifyRes.data && verifyRes.data.session ? verifyRes.data.session : null;
+      } else {
+        throw new Error('Não reconhecemos um código de 6 dígitos ou link válido. Envie um novo link e tente novamente.');
+      }
+    }
+
+    if (!sess) {
+      const { data: sessionData } = await sb.auth.getSession();
+      sess = sessionData && sessionData.session ? sessionData.session : null;
+    }
+    if (!sess || !sess.access_token) {
+      throw new Error('Sessão de e-mail não confirmada. Envie um novo link e tente novamente.');
+    }
+
+    currentWeb2Session = sess;
+    currentWeb2Token = sess.access_token;
+    const confirmedEmail = (sess.user && sess.user.email)
+      ? String(sess.user.email).toLowerCase()
+      : cleanEmail;
+    try {
+      if (confirmedEmail) localStorage.setItem('hokage_web2_session_email', confirmedEmail);
+    } catch (_) {}
+
+    let piTok = piAccessToken || '';
+    if (!piTok && window.HokagePi) {
+      if (typeof window.HokagePi.ensureAccessToken === 'function') {
+        piTok = await window.HokagePi.ensureAccessToken();
+      } else if (typeof window.HokagePi.getAccessToken === 'function') {
+        piTok = window.HokagePi.getAccessToken();
+      }
+    }
+    if (!piTok) {
+      try { piTok = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
+    }
+
+    const linkedProf = await linkPiAccount(piTok);
+    try {
+      const existingRaw = localStorage.getItem('hokage_pi_user');
+      const existingObj = existingRaw ? JSON.parse(existingRaw) : {};
+      const mergedUser = Object.assign({}, existingObj, {
+        username: (linkedProf && linkedProf.username) || existingObj.username || '',
+        uid: (linkedProf && linkedProf.uid) || existingObj.uid || '',
+        authType: 'hybrid',
+        is_pi_verified: true,
+        email: confirmedEmail || existingObj.email || ''
+      });
+      localStorage.setItem('hokage_pi_user', JSON.stringify(mergedUser));
+      localStorage.setItem('isar_pi_user', JSON.stringify(mergedUser));
+      if (window.HokagePi && typeof window.HokagePi.updateAuthUi === 'function') {
+        window.HokagePi.updateAuthUi(mergedUser);
+      }
+    } catch (_) {}
+    return linkedProf;
+  }
+
   async function signOut() {
     currentWeb2Token = '';
     currentWeb2Session = null;
@@ -458,6 +582,7 @@
     getAccessToken: getAccessToken,
     fetchMyProfile: fetchMyProfile,
     linkPiAccount: linkPiAccount,
+    confirmAndLinkEmail: confirmAndLinkEmail,
     signOut: signOut,
     getCachedProfile: function () { return currentWeb2Profile; },
     init: init

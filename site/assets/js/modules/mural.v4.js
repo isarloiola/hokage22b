@@ -19,6 +19,201 @@
 
   const AD_EDIT_WINDOW_HOURS = 24;
 
+  const CURRENCY_LABELS = {
+    PI: 'π',
+    BRL: 'R$',
+    USD: 'US$',
+    EUR: '€'
+  };
+
+  function formatSingleCurrency(val, curr) {
+    const num = parseFloat(String(val || '').replace(',', '.'));
+    if (!Number.isFinite(num) || num <= 0) return '';
+    const c = String(curr || 'PI').toUpperCase();
+    if (c === 'PI') {
+      return Number(num.toFixed(4)).toString() + ' π';
+    }
+    if (c === 'BRL') {
+      return 'R$ ' + num.toFixed(2).replace('.', ',');
+    }
+    const sym = CURRENCY_LABELS[c] || c;
+    return sym + ' ' + num.toFixed(2);
+  }
+
+  function composePricingPayload(mode, piRaw, fiatRaw, fiatCurr) {
+    const safeMode = (mode === 'pi_fiat' || mode === 'fiat') ? mode : 'pi';
+    const curr = ['BRL', 'USD', 'EUR'].indexOf(String(fiatCurr || '').toUpperCase()) !== -1
+      ? String(fiatCurr).toUpperCase()
+      : 'BRL';
+    const piNum = parseFloat(String(piRaw || '').replace(',', '.'));
+    const fiatNum = parseFloat(String(fiatRaw || '').replace(',', '.'));
+    const hasPi = Number.isFinite(piNum) && piNum > 0;
+    const hasFiat = Number.isFinite(fiatNum) && fiatNum > 0;
+
+    if (safeMode === 'pi') {
+      return {
+        payment_modes: 'pi',
+        item_price: hasPi ? Number(piNum.toFixed(4)).toString() : null,
+        item_currency: 'PI'
+      };
+    }
+    if (safeMode === 'fiat') {
+      return {
+        payment_modes: 'fiat',
+        item_price: hasFiat ? fiatNum.toFixed(2) : null,
+        item_currency: curr
+      };
+    }
+    if (hasPi && hasFiat) {
+      return {
+        payment_modes: 'pi_fiat',
+        item_price: (Number(piNum.toFixed(4)).toString() + ' π + ' + formatSingleCurrency(fiatNum, curr)).slice(0, 40),
+        item_currency: curr
+      };
+    }
+    if (hasPi) {
+      return {
+        payment_modes: 'pi_fiat',
+        item_price: Number(piNum.toFixed(4)).toString() + ' π',
+        item_currency: 'PI'
+      };
+    }
+    if (hasFiat) {
+      return {
+        payment_modes: 'pi_fiat',
+        item_price: fiatNum.toFixed(2),
+        item_currency: curr
+      };
+    }
+    return {
+      payment_modes: 'pi_fiat',
+      item_price: null,
+      item_currency: curr
+    };
+  }
+
+  function syncPaymentModeUi(prefix) {
+    const modeEl = document.getElementById(prefix + '-input-payment-modes');
+    const hiddenPriceEl = document.getElementById(prefix + '-input-item-price');
+    const hiddenCurrEl = document.getElementById(prefix + '-input-item-currency');
+    const piWrap = document.getElementById(prefix + '-price-pi-wrap');
+    const fiatWrap = document.getElementById(prefix + '-price-fiat-wrap');
+    const piInp = document.getElementById(prefix + '-input-price-pi');
+    const fiatInp = document.getElementById(prefix + '-input-price-fiat');
+    const fiatCurrEl = document.getElementById(prefix + '-input-fiat-currency');
+
+    if (!modeEl) return null;
+    const mode = (modeEl.value === 'pi_fiat' || modeEl.value === 'fiat') ? modeEl.value : 'pi';
+
+    if (piWrap) {
+      piWrap.style.display = (mode === 'pi' || mode === 'pi_fiat') ? 'block' : 'none';
+    }
+    if (fiatWrap) {
+      fiatWrap.style.display = (mode === 'pi_fiat' || mode === 'fiat') ? 'grid' : 'none';
+    }
+
+    const checkboxes = document.querySelectorAll('input[data-' + prefix + '-pay-mode]');
+    checkboxes.forEach(function (cb) {
+      const m = cb.getAttribute('data-' + prefix + '-pay-mode');
+      const isActive = m === mode;
+      cb.checked = isActive;
+      const card = cb.closest('.j-pay-check-card') || cb.parentElement;
+      if (card) {
+        card.style.borderColor = isActive ? '#f59e0b' : 'rgba(255,255,255,0.14)';
+        card.style.background = isActive ? 'rgba(245,158,11,0.14)' : 'rgba(0,0,0,0.38)';
+      }
+    });
+
+    const composed = composePricingPayload(
+      mode,
+      piInp ? piInp.value : '',
+      fiatInp ? fiatInp.value : '',
+      fiatCurrEl ? fiatCurrEl.value : 'BRL'
+    );
+
+    if (hiddenPriceEl) hiddenPriceEl.value = composed.item_price || '';
+    if (hiddenCurrEl) hiddenCurrEl.value = composed.item_currency || 'PI';
+    return composed;
+  }
+
+  function hydratePaymentModeUi(prefix, rawMode, rawItemPrice, rawItemCurrency) {
+    const modeEl = document.getElementById(prefix + '-input-payment-modes');
+    const piInp = document.getElementById(prefix + '-input-price-pi');
+    const fiatInp = document.getElementById(prefix + '-input-price-fiat');
+    const fiatCurrEl = document.getElementById(prefix + '-input-fiat-currency');
+    if (!modeEl) return;
+
+    let mode = 'pi';
+    const normMode = String(rawMode || 'pi').trim().toLowerCase();
+    if (normMode === 'pi_fiat' || normMode === 'pi_reais') mode = 'pi_fiat';
+    else if (normMode === 'fiat' || normMode === 'reais') mode = 'fiat';
+    modeEl.value = mode;
+
+    const currUpper = String(rawItemCurrency || '').trim().toUpperCase();
+    if (fiatCurrEl && (currUpper === 'BRL' || currUpper === 'USD' || currUpper === 'EUR')) {
+      fiatCurrEl.value = currUpper;
+    }
+
+    let piVal = '';
+    let fiatVal = '';
+    const priceStr = rawItemPrice != null ? String(rawItemPrice).trim() : '';
+
+    if (priceStr) {
+      if (priceStr.indexOf('+') !== -1) {
+        const parts = priceStr.split('+');
+        const mPi = parts[0] ? parts[0].match(/([0-9]+(?:[.,][0-9]+)?)/) : null;
+        const mFiat = parts[1] ? parts[1].match(/([0-9]+(?:[.,][0-9]+)?)/) : null;
+        if (mPi) piVal = mPi[1].replace(',', '.');
+        if (mFiat) fiatVal = mFiat[1].replace(',', '.');
+        if (parts[1]) {
+          if (parts[1].indexOf('US$') !== -1 && fiatCurrEl) fiatCurrEl.value = 'USD';
+          else if (parts[1].indexOf('€') !== -1 && fiatCurrEl) fiatCurrEl.value = 'EUR';
+          else if (parts[1].indexOf('R$') !== -1 && fiatCurrEl) fiatCurrEl.value = 'BRL';
+        }
+      } else if (priceStr.indexOf('π') !== -1 || currUpper === 'PI' || mode === 'pi') {
+        const m = priceStr.match(/([0-9]+(?:[.,][0-9]+)?)/);
+        if (m) piVal = m[1].replace(',', '.');
+      } else {
+        const m = priceStr.match(/([0-9]+(?:[.,][0-9]+)?)/);
+        if (m) fiatVal = m[1].replace(',', '.');
+      }
+    }
+
+    if (piInp) piInp.value = piVal;
+    if (fiatInp) fiatInp.value = fiatVal;
+    syncPaymentModeUi(prefix);
+  }
+
+  function bindPaymentModeGroup(prefix, onChangeCb) {
+    const checkboxes = document.querySelectorAll('input[data-' + prefix + '-pay-mode]');
+    const modeEl = document.getElementById(prefix + '-input-payment-modes');
+    checkboxes.forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        if (!modeEl) return;
+        modeEl.value = cb.getAttribute('data-' + prefix + '-pay-mode') || 'pi';
+        syncPaymentModeUi(prefix);
+        if (typeof onChangeCb === 'function') onChangeCb();
+      });
+    });
+    ['-input-price-pi', '-input-price-fiat'].forEach(function (suffix) {
+      const inp = document.getElementById(prefix + suffix);
+      if (inp) {
+        inp.addEventListener('input', function () {
+          syncPaymentModeUi(prefix);
+          if (typeof onChangeCb === 'function') onChangeCb();
+        });
+      }
+    });
+    const currSel = document.getElementById(prefix + '-input-fiat-currency');
+    if (currSel) {
+      currSel.addEventListener('change', function () {
+        syncPaymentModeUi(prefix);
+        if (typeof onChangeCb === 'function') onChangeCb();
+      });
+    }
+    syncPaymentModeUi(prefix);
+  }
+
   function normalizeHandle(handle) {
     return String(handle || '').trim().replace(/^@+/, '').toLowerCase();
   }
@@ -174,15 +369,22 @@
       priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '0.314 π'}</span>`;
     }
 
-    const rawItemPrice = parseFloat(ad.item_price);
     let itemPricePillHtml = '';
-    if (Number.isFinite(rawItemPrice) && rawItemPrice > 0) {
-      const curr = String(ad.item_currency || 'PI').toUpperCase();
-      const formattedVal = curr === 'PI'
-        ? (rawItemPrice.toString() + ' π')
-        : (curr === 'BRL' ? ('R$ ' + rawItemPrice.toFixed(2).replace('.', ',')) : (curr + ' ' + rawItemPrice.toFixed(2)));
-      itemPricePillHtml = `<span style="background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#6ee7b7;padding:2px 8px;border-radius:999px;font-weight:800">🏷️ ${escapeHtml(formattedVal)}</span>`;
-      priceHtml = `<span class="pioneer-card__price-tag" title="Preço informado da oferta">${escapeHtml(formattedVal)}</span>`;
+    const rawPriceStr = ad.item_price != null ? String(ad.item_price).trim() : '';
+    if (rawPriceStr) {
+      let formattedVal = '';
+      if (rawPriceStr.indexOf('π') !== -1 || rawPriceStr.indexOf('+') !== -1) {
+        formattedVal = rawPriceStr;
+      } else {
+        const rawItemPrice = parseFloat(rawPriceStr.replace(',', '.'));
+        if (Number.isFinite(rawItemPrice) && rawItemPrice > 0) {
+          formattedVal = formatSingleCurrency(rawItemPrice, ad.item_currency || 'PI');
+        }
+      }
+      if (formattedVal) {
+        itemPricePillHtml = `<span style="background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#6ee7b7;padding:2px 8px;border-radius:999px;font-weight:800">🏷️ ${escapeHtml(formattedVal)}</span>`;
+        priceHtml = `<span class="pioneer-card__price-tag" title="Preço informado da oferta">${escapeHtml(formattedVal)}</span>`;
+      }
     }
 
     const author = ad.pioneer_username || ad.pioneer_name || '@pioneiro';
@@ -269,13 +471,15 @@
     const countryLabel = COUNTRY_MAP[countryCode];
 
     let normalizedPayMode = 'pi';
-    if (ad.payment_modes === 'pi_fiat' || ad.payment_modes === 'pi_reais' || ad.payment_modes === 'fiat' || ad.payment_modes === 'reais') {
+    if (ad.payment_modes === 'pi_fiat' || ad.payment_modes === 'pi_reais') {
       normalizedPayMode = 'pi_fiat';
+    } else if (ad.payment_modes === 'fiat' || ad.payment_modes === 'reais') {
+      normalizedPayMode = 'fiat';
     }
 
     const payModeLabel = normalizedPayMode === 'pi_fiat'
-      ? '⚡💵 Pi + Ref. Local'
-      : '⚡ 100% Pi';
+      ? '⚡💵 Pi + Moeda'
+      : (normalizedPayMode === 'fiat' ? '💵 Somente Moeda' : '⚡ Somente Pi');
     const safeLocation = escapeHtml((ad.location && String(ad.location).trim()) || 'Online');
     const cleanAuthorSlug = String(author || '').replace(/^@+/, '');
 
@@ -1134,6 +1338,7 @@
     const locInput   = document.getElementById('ad-input-location');
     const ctryInput  = document.getElementById('ad-input-country');
     const payInput   = document.getElementById('ad-input-payment-modes');
+    const syncedPricing = syncPaymentModeUi('ad');
 
     const title = (titleInput && titleInput.value.trim()) || 'Seu Título Aqui (Ex: Canal Tech / Loja Pi)';
     const desc = (descInput && descInput.value.trim()) || 'Aqui aparecerá a mensagem que todos os pioneiros vão ler no mural. Mostre seu projeto e atraia a comunidade!';
@@ -1141,8 +1346,8 @@
     const cat = (catInput && catInput.value) || 'youtube';
     const link = (linkInput && !linkInput.disabled && linkInput.value.trim()) || (selectedTier !== 'bronze' && selectedTier !== 'gratis' ? 'https://hokage22b.com' : '');
     const img = (imgInput && imgInput.value.trim()) || '';
-    const itemPrice = priceInput && priceInput.value ? parseFloat(priceInput.value) : null;
-    const itemCurrency = (currInput && currInput.value) || 'PI';
+    const itemPriceStr = (syncedPricing && syncedPricing.item_price) || (priceInput && priceInput.value ? priceInput.value.trim() : '');
+    const itemCurrency = (syncedPricing && syncedPricing.item_currency) || (currInput && currInput.value) || 'PI';
 
     const previewAd = {
       id: 'preview_card_mock',
@@ -1155,8 +1360,8 @@
       image_url: img,
       location: (locInput && locInput.value.trim()) || 'Online',
       country_code: (ctryInput && ctryInput.value) || 'GLOBAL',
-      payment_modes: (payInput && payInput.value) || 'pi',
-      item_price: Number.isFinite(itemPrice) && itemPrice > 0 ? itemPrice : null,
+      payment_modes: (syncedPricing && syncedPricing.payment_modes) || (payInput && payInput.value) || 'pi',
+      item_price: itemPriceStr || null,
       item_currency: itemCurrency,
       price_pi: tierPrices[selectedTier] ? tierPrices[selectedTier].pi : 1.0
     };
@@ -1301,6 +1506,7 @@
 
   function saveDraft() {
     try {
+      syncPaymentModeUi('ad');
       const titleEl = document.getElementById('ad-input-title');
       const descEl  = document.getElementById('ad-input-desc');
       const catEl   = document.getElementById('ad-input-cat');
@@ -1309,6 +1515,9 @@
       const userEl  = document.getElementById('ad-input-user');
       const priceEl = document.getElementById('ad-input-item-price');
       const currEl  = document.getElementById('ad-input-item-currency');
+      const pricePiEl   = document.getElementById('ad-input-price-pi');
+      const priceFiatEl = document.getElementById('ad-input-price-fiat');
+      const fiatCurrEl  = document.getElementById('ad-input-fiat-currency');
       const locEl   = document.getElementById('ad-input-location');
       const ctryEl  = document.getElementById('ad-input-country');
       const payEl   = document.getElementById('ad-input-payment-modes');
@@ -1322,6 +1531,9 @@
         user: (userEl && userEl.value) || '',
         itemPrice: (priceEl && priceEl.value) || '',
         itemCurrency: (currEl && currEl.value) || 'PI',
+        pricePi: (pricePiEl && pricePiEl.value) || '',
+        priceFiat: (priceFiatEl && priceFiatEl.value) || '',
+        fiatCurr: (fiatCurrEl && fiatCurrEl.value) || 'BRL',
         location: (locEl && locEl.value) || '',
         country: (ctryEl && ctryEl.value) || 'GLOBAL',
         paymentModes: (payEl && payEl.value) || 'pi',
@@ -1329,7 +1541,7 @@
         timestamp: Date.now()
       };
 
-      if (draft.title || draft.desc || draft.link || draft.img || draft.itemPrice) {
+      if (draft.title || draft.desc || draft.link || draft.img || draft.itemPrice || draft.pricePi || draft.priceFiat) {
         localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
       }
     } catch (_) {}
@@ -1348,8 +1560,9 @@
       const linkEl  = document.getElementById('ad-input-link');
       const imgEl   = document.getElementById('ad-input-image');
       const userEl  = document.getElementById('ad-input-user');
-      const priceEl = document.getElementById('ad-input-item-price');
-      const currEl  = document.getElementById('ad-input-item-currency');
+      const pricePiEl   = document.getElementById('ad-input-price-pi');
+      const priceFiatEl = document.getElementById('ad-input-price-fiat');
+      const fiatCurrEl  = document.getElementById('ad-input-fiat-currency');
       const locEl   = document.getElementById('ad-input-location');
       const ctryEl  = document.getElementById('ad-input-country');
       const payEl   = document.getElementById('ad-input-payment-modes');
@@ -1371,20 +1584,20 @@
       if (draft.cat && catEl) {
         catEl.value = draft.cat;
       }
-      if (draft.itemPrice && priceEl) {
-        priceEl.value = draft.itemPrice;
-      }
-      if (draft.itemCurrency && currEl) {
-        currEl.value = draft.itemCurrency;
-      }
       if (draft.location && locEl) {
         locEl.value = draft.location;
       }
       if (draft.country && ctryEl) {
         ctryEl.value = draft.country;
       }
-      if (draft.paymentModes && payEl) {
-        payEl.value = draft.paymentModes;
+      if (draft.pricePi !== undefined || draft.priceFiat !== undefined) {
+        if (payEl) payEl.value = draft.paymentModes || 'pi';
+        if (pricePiEl && draft.pricePi) { pricePiEl.value = draft.pricePi; restored = true; }
+        if (priceFiatEl && draft.priceFiat) { priceFiatEl.value = draft.priceFiat; restored = true; }
+        if (fiatCurrEl && draft.fiatCurr) fiatCurrEl.value = draft.fiatCurr;
+        syncPaymentModeUi('ad');
+      } else {
+        hydratePaymentModeUi('ad', draft.paymentModes || 'pi', draft.itemPrice || '', draft.itemCurrency || 'PI');
       }
       if (draft.link && linkEl && !linkEl.disabled) {
         linkEl.value = draft.link;
@@ -1423,6 +1636,10 @@
     const linkEl   = document.getElementById('ad-input-link');
     const imgEl    = document.getElementById('ad-input-image');
     const priceEl  = document.getElementById('ad-input-item-price');
+    const pricePiEl   = document.getElementById('ad-input-price-pi');
+    const priceFiatEl = document.getElementById('ad-input-price-fiat');
+    const fiatCurrEl  = document.getElementById('ad-input-fiat-currency');
+    const payEl    = document.getElementById('ad-input-payment-modes');
     const locEl    = document.getElementById('ad-input-location');
     const banner   = document.getElementById('ad-draft-banner');
     const feedback = document.getElementById('ad-submit-feedback');
@@ -1432,6 +1649,10 @@
     if (linkEl) linkEl.value = '';
     if (imgEl) imgEl.value = '';
     if (priceEl) priceEl.value = '';
+    if (pricePiEl) pricePiEl.value = '';
+    if (priceFiatEl) priceFiatEl.value = '';
+    if (fiatCurrEl) fiatCurrEl.value = 'BRL';
+    if (payEl) payEl.value = 'pi';
     if (locEl) locEl.value = '';
     if (banner) banner.style.display = 'none';
     if (feedback) {
@@ -1441,6 +1662,7 @@
 
     pendingAdSubmission = null;
     selectTier('prata');
+    syncPaymentModeUi('ad');
     updateLivePreview();
   }
 
@@ -1502,10 +1724,11 @@
     const locInput   = document.getElementById('ad-input-location');
     const ctryInput  = document.getElementById('ad-input-country');
     const payInput   = document.getElementById('ad-input-payment-modes');
+    const syncedPricing = syncPaymentModeUi('ad');
 
     const title = (titleInput && titleInput.value.trim()) || 'Exemplar Oficial Hokage22b';
     const desc  = (descInput && descInput.value.trim()) || 'Demonstração institucional da Vila · Central P2P.';
-    const parsedPrice = priceInput && priceInput.value ? parseFloat(priceInput.value) : null;
+    const demoPriceStr = (syncedPricing && syncedPricing.item_price) || (priceInput && priceInput.value ? priceInput.value.trim() : '');
 
     const demoAd = {
       id: 'founder_demo_' + Date.now(),
@@ -1516,9 +1739,9 @@
       category: catInput ? catInput.value : 'geral',
       location: (locInput && locInput.value.trim()) || 'Online',
       country_code: (ctryInput && ctryInput.value) || 'GLOBAL',
-      payment_modes: (payInput && payInput.value) || 'pi',
-      item_price: Number.isFinite(parsedPrice) && parsedPrice > 0 ? parsedPrice : null,
-      item_currency: (currInput && currInput.value) || 'PI',
+      payment_modes: (syncedPricing && syncedPricing.payment_modes) || (payInput && payInput.value) || 'pi',
+      item_price: demoPriceStr || null,
+      item_currency: (syncedPricing && syncedPricing.item_currency) || (currInput && currInput.value) || 'PI',
       pioneer_username: '@hokage22b',
       pioneer_name: 'Hokage22b',
       plan_tier: selectedTier || 'ouro',
@@ -1680,6 +1903,7 @@
     } catch (_) {}
 
     restoreDraft();
+    syncPaymentModeUi('ad');
     updateLivePreview();
     refreshReferralCreditUi();
   }
@@ -1753,16 +1977,17 @@
       }
       const priceEl = document.getElementById('ad-input-item-price');
       const currEl  = document.getElementById('ad-input-item-currency');
-      const parsedItemPrice = priceEl && priceEl.value ? parseFloat(priceEl.value) : null;
+      const syncedPricing = syncPaymentModeUi('ad');
+      const redeemPriceStr = (syncedPricing && syncedPricing.item_price) || (priceEl && priceEl.value ? priceEl.value.trim() : '');
       const res = await window.IsarDB.redeemReferralAd({
         title: title,
         description: description,
         category: catEl ? catEl.value : 'geral',
         location: locEl ? locEl.value.trim() : 'Online',
         country_code: ctryEl ? ctryEl.value : 'GLOBAL',
-        payment_modes: payEl ? payEl.value : 'pi',
-        item_price: Number.isFinite(parsedItemPrice) && parsedItemPrice > 0 ? parsedItemPrice : null,
-        item_currency: (currEl && currEl.value) || 'PI'
+        payment_modes: (syncedPricing && syncedPricing.payment_modes) || (payEl ? payEl.value : 'pi'),
+        item_price: redeemPriceStr || null,
+        item_currency: (syncedPricing && syncedPricing.item_currency) || (currEl && currEl.value) || 'PI'
       });
 
       availableReferralCredits = Number((res && res.remaining_credits) || 0);
@@ -1973,7 +2198,8 @@
     const payModeInput = document.getElementById('ad-input-payment-modes');
     const priceInput = document.getElementById('ad-input-item-price');
     const currInput = document.getElementById('ad-input-item-currency');
-    const parsedItemPrice = priceInput && priceInput.value ? parseFloat(priceInput.value) : null;
+    const syncedPricing = syncPaymentModeUi('ad');
+    const submitPriceStr = (syncedPricing && syncedPricing.item_price) || (priceInput && priceInput.value ? priceInput.value.trim() : '');
 
     const newAd = {
       id: adId,
@@ -1984,9 +2210,9 @@
       category: catInput ? catInput.value : 'geral',
       country_code: (countryInput && countryInput.value) ? countryInput.value : 'GLOBAL',
       location: (locInput && locInput.value.trim()) ? locInput.value.trim().slice(0, 60) : 'Online',
-      payment_modes: (payModeInput && payModeInput.value) ? payModeInput.value : 'pi',
-      item_price: Number.isFinite(parsedItemPrice) && parsedItemPrice > 0 ? parsedItemPrice : null,
-      item_currency: (currInput && currInput.value) ? currInput.value : 'PI',
+      payment_modes: (syncedPricing && syncedPricing.payment_modes) || (payModeInput && payModeInput.value ? payModeInput.value : 'pi'),
+      item_price: submitPriceStr || null,
+      item_currency: (syncedPricing && syncedPricing.item_currency) || (currInput && currInput.value ? currInput.value : 'PI'),
       pioneer_username: username,
       pioneer_name: username.replace('@', ''),
       plan_tier: selectedTier,
@@ -2643,8 +2869,6 @@
     const linkInp = document.getElementById('edit-ad-input-link');
     const imgInp = document.getElementById('edit-ad-input-image');
     const catInp = document.getElementById('edit-ad-input-cat');
-    const priceInp = document.getElementById('edit-ad-input-item-price');
-    const currInp = document.getElementById('edit-ad-input-item-currency');
     const ctryInp = document.getElementById('edit-ad-input-country');
     const locInp = document.getElementById('edit-ad-input-location');
 
@@ -2652,8 +2876,7 @@
     document.getElementById('edit-ad-input-title').value = ad.title || '';
     document.getElementById('edit-ad-input-desc').value = ad.description || '';
     if (catInp && ad.category) catInp.value = ad.category;
-    if (priceInp) priceInp.value = ad.item_price != null ? String(ad.item_price) : '';
-    if (currInp && ad.item_currency) currInp.value = String(ad.item_currency).toUpperCase();
+    hydratePaymentModeUi('edit-ad', ad.payment_modes || 'pi', ad.item_price, ad.item_currency || 'PI');
     if (ctryInp && ad.country_code) ctryInp.value = String(ad.country_code).toUpperCase();
     if (locInp) locInp.value = ad.location || '';
 
@@ -2733,15 +2956,16 @@
       return;
     }
 
-    const parsedEditPrice = priceInp && priceInp.value ? parseFloat(priceInp.value) : null;
+    const syncedEditPricing = syncPaymentModeUi('edit-ad');
 
     try {
       const ok = await window.IsarDB.updateMyAd(id, authUser.username, {
         title: title.slice(0, 60),
         description: desc.slice(0, 1000),
         category: catInp ? catInp.value : ad.category,
-        item_price: Number.isFinite(parsedEditPrice) && parsedEditPrice > 0 ? parsedEditPrice : null,
-        item_currency: currInp ? currInp.value : 'PI',
+        payment_modes: (syncedEditPricing && syncedEditPricing.payment_modes) || 'pi',
+        item_price: (syncedEditPricing && syncedEditPricing.item_price) || null,
+        item_currency: (syncedEditPricing && syncedEditPricing.item_currency) || (currInp ? currInp.value : 'PI'),
         country_code: ctryInp ? ctryInp.value : 'GLOBAL',
         location: locInp ? locInp.value.trim().slice(0, 60) : 'Online',
         link_url: cleanLink,
@@ -3296,6 +3520,12 @@
           });
         }
       });
+
+      bindPaymentModeGroup('ad', function () {
+        updateLivePreview();
+        saveDraft();
+      });
+      bindPaymentModeGroup('edit-ad');
 
       document.addEventListener('keydown', function (ev) {
         if (ev.key !== 'Escape') return;

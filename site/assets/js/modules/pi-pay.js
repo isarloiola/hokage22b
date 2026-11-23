@@ -343,6 +343,39 @@
               <a href="pioneiro?u=${encodeURIComponent(formatUserHandle(authenticatedUser.username))}" class="portal-btn portal-btn--amber portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px">
                 <span>🪪</span> Ir para Meu Passaporte
               </a>
+              ${(authenticatedUser.email || authenticatedUser.authType === 'hybrid') ? `
+                <div style="text-align:center;font-size:0.8rem;color:#6ee7b7;padding:8px 12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius-sm)">
+                  ✓ E-mail vinculado${authenticatedUser.email ? (': <strong>' + escapeHtml(authenticatedUser.email) + '</strong>') : ' (conta híbrida ativa)'}
+                </div>
+              ` : `
+                <button type="button" id="diag-toggle-link-email-btn" class="portal-btn portal-btn--outline portal-btn--full" style="border-color:rgba(56,189,248,0.45);color:#7dd3fc;font-weight:700;font-size:0.86rem;padding:10px 12px">
+                  ✉️ Adicionar / Vincular E-mail (acesso fora do Pi Browser)
+                </button>
+                <div id="diag-link-email-box" style="display:none;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);border-radius:var(--radius-sm);padding:12px">
+                  <div style="font-size:0.8rem;font-weight:700;color:#bae6fd;margin-bottom:4px">
+                    Vincular e-mail à sua conta Pi (@${escapeHtml(formatUserHandle(authenticatedUser.username))})
+                  </div>
+                  <p style="font-size:0.75rem;color:var(--text-secondary);margin:0 0 8px;line-height:1.4">
+                    Assim você também consegue entrar no Chrome/Safari usando seu e-mail sem precisar abrir o Pi Browser.
+                  </p>
+                  <form id="diag-link-email-form" style="display:flex;gap:6px;flex-wrap:wrap">
+                    <input type="email" id="diag-link-email-input" required placeholder="seu@email.com" style="flex:1;min-width:155px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.22);background:rgba(0,0,0,0.55);color:#fff;font-size:0.84rem;box-sizing:border-box" />
+                    <button type="submit" id="diag-link-email-submit" class="portal-btn portal-btn--primary portal-btn--sm" style="white-space:nowrap;font-weight:700">
+                      Enviar link de confirmação
+                    </button>
+                  </form>
+                  <div id="diag-link-step2" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.12)">
+                    <p style="font-size:0.75rem;color:#fde68a;margin:0 0 6px;line-height:1.4">
+                      ✉️ <strong>Link enviado!</strong> Abra seu e-mail, <strong>copie o link do botão</strong> (ou o código de 6 dígitos) e cole aqui embaixo para concluir no Pi Browser:
+                    </p>
+                    <input type="text" id="diag-link-confirm-input" placeholder="Cole o link do e-mail ou código de 6 dígitos" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.22);background:rgba(0,0,0,0.55);color:#fff;font-size:0.82rem;box-sizing:border-box;margin-bottom:8px" />
+                    <button type="button" id="diag-link-confirm-btn" class="portal-btn portal-btn--primary portal-btn--full portal-btn--sm" style="font-weight:800">
+                      ✓ Confirmar e Vincular à minha conta Pi
+                    </button>
+                  </div>
+                  <div id="diag-link-email-feedback" style="display:none;margin-top:8px;font-size:0.77rem;line-height:1.4"></div>
+                </div>
+              `}
               <a href="pioneiro?explorar=1" class="portal-btn portal-btn--outline portal-btn--full" style="text-align:center;text-decoration:none;font-size:0.85rem;padding:9px">
                 🔍 Explorar Outros Passaportes
               </a>
@@ -463,6 +496,124 @@
       });
     }
 
+    const toggleLinkEmailBtn = document.getElementById('diag-toggle-link-email-btn');
+    const linkEmailBox = document.getElementById('diag-link-email-box');
+    if (toggleLinkEmailBtn && linkEmailBox) {
+      toggleLinkEmailBtn.addEventListener('click', function () {
+        const show = linkEmailBox.style.display === 'none';
+        linkEmailBox.style.display = show ? 'block' : 'none';
+        if (show) {
+          const inp = document.getElementById('diag-link-email-input');
+          if (inp) inp.focus();
+        }
+      });
+    }
+
+    const linkEmailForm = document.getElementById('diag-link-email-form');
+    if (linkEmailForm) {
+      linkEmailForm.addEventListener('submit', async function (ev) {
+        ev.preventDefault();
+        const emailInp = document.getElementById('diag-link-email-input');
+        const submitBtn = document.getElementById('diag-link-email-submit');
+        const step2 = document.getElementById('diag-link-step2');
+        const fbEl = document.getElementById('diag-link-email-feedback');
+        const emailVal = emailInp ? emailInp.value.trim() : '';
+
+        if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.sendMagicLink !== 'function') {
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fca5a5';
+            fbEl.textContent = 'Serviço de e-mail indisponível no momento.';
+          }
+          return;
+        }
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Enviando...';
+        }
+        if (fbEl) fbEl.style.display = 'none';
+        try {
+          const handleSlug = authenticatedUser && authenticatedUser.username ? formatUserHandle(authenticatedUser.username) : '';
+          const redirectTarget = handleSlug
+            ? (window.location.origin + '/pioneiro?u=' + encodeURIComponent(handleSlug))
+            : (window.location.origin + '/pioneiro');
+          await window.HokageWeb2Auth.sendMagicLink(emailVal, redirectTarget);
+          if (step2) step2.style.display = 'block';
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#6ee7b7';
+            fbEl.textContent = '✓ Enviado para ' + emailVal + '. Confira sua caixa de entrada ou spam.';
+          }
+        } catch (err) {
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fca5a5';
+            fbEl.textContent = '⚠️ ' + ((err && err.message) || 'Falha ao enviar link.');
+          }
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Reenviar link';
+          }
+        }
+      });
+    }
+
+    const linkConfirmBtn = document.getElementById('diag-link-confirm-btn');
+    if (linkConfirmBtn) {
+      linkConfirmBtn.addEventListener('click', async function () {
+        const emailInp = document.getElementById('diag-link-email-input');
+        const confirmInp = document.getElementById('diag-link-confirm-input');
+        const fbEl = document.getElementById('diag-link-email-feedback');
+        const emailVal = emailInp ? emailInp.value.trim() : '';
+        const confirmVal = confirmInp ? confirmInp.value.trim() : '';
+
+        if (!confirmVal) {
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fde68a';
+            fbEl.textContent = '⚠️ Cole o link do e-mail ou digite o código de 6 dígitos.';
+          }
+          if (confirmInp) confirmInp.focus();
+          return;
+        }
+        if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.confirmAndLinkEmail !== 'function') {
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fca5a5';
+            fbEl.textContent = 'Módulo de vínculo indisponível.';
+          }
+          return;
+        }
+
+        linkConfirmBtn.disabled = true;
+        linkConfirmBtn.textContent = '⏳ Vinculando e-mail...';
+        if (fbEl) fbEl.style.display = 'none';
+        try {
+          const piTok = getAuthTokenForServer() || '';
+          const linkedProf = await window.HokageWeb2Auth.confirmAndLinkEmail(emailVal, confirmVal, piTok);
+          authenticatedUser = Object.assign({}, authenticatedUser || {}, {
+            username: (linkedProf && linkedProf.username) || (authenticatedUser && authenticatedUser.username) || '',
+            uid: (linkedProf && linkedProf.uid) || (authenticatedUser && authenticatedUser.uid) || '',
+            authType: 'hybrid',
+            is_pi_verified: true,
+            email: emailVal || (authenticatedUser && authenticatedUser.email) || ''
+          });
+          updateAuthUi(authenticatedUser);
+          showToast('✓ E-mail vinculado à sua conta Pi com sucesso!', 'success');
+          openPiConnectModal({ noAutoAuth: true });
+        } catch (err) {
+          linkConfirmBtn.disabled = false;
+          linkConfirmBtn.textContent = '✓ Confirmar e Vincular à minha conta Pi';
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fca5a5';
+            fbEl.textContent = '⚠️ ' + ((err && err.message) || 'Não foi possível confirmar o vínculo.');
+          }
+        }
+      });
+    }
+
     // Se estiver de fato no Pi Browser e desconectado, tenta autenticar
     if (inPi && !authenticatedUser && !(options && options.noAutoAuth)) {
       setTimeout(function () {
@@ -544,11 +695,23 @@
           throw scopeErr;
         }
       }
-      authenticatedUser = auth.user;
+      let prevCached = null;
+      try {
+        prevCached = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
+      } catch (_) {}
+      if (prevCached && prevCached.username && formatUserHandle(prevCached.username) === formatUserHandle(auth.user.username) && (prevCached.authType === 'hybrid' || prevCached.email)) {
+        authenticatedUser = Object.assign({}, auth.user, {
+          authType: 'hybrid',
+          is_pi_verified: true,
+          email: prevCached.email || ''
+        });
+      } else {
+        authenticatedUser = auth.user;
+      }
       isSdkSessionAuthenticated = true;
 
       try {
-        localStorage.setItem('hokage_pi_user', JSON.stringify(auth.user));
+        localStorage.setItem('hokage_pi_user', JSON.stringify(authenticatedUser));
         if (auth.accessToken) {
           sessionStorage.setItem('hokage_pi_access_token', auth.accessToken);
         }
@@ -621,6 +784,10 @@
 
   // 7. Ponto de Entrada para Login com Pi & Logout
   async function loginWithPi() {
+    if (authenticatedUser && (authenticatedUser.username || authenticatedUser.authType === 'web2')) {
+      openPiConnectModal({ noAutoAuth: true });
+      return authenticatedUser;
+    }
     if (isPiBrowser()) {
       const user = await triggerAuthFlow();
       if (!user) {

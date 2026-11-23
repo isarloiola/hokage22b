@@ -443,10 +443,11 @@
             <option value="other">🌐 Outros</option>
           </select>
 
-          <select id="mural-payment-filter" onchange="window.IsarMural && window.IsarMural.filterPaymentMode(this.value)" aria-label="Filtrar por formato Pi" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fcd34d;font-size:0.8rem;font-weight:600">
-            <option value="todos">⚡ Todos (Aceitam Pi)</option>
-            <option value="pi">⚡ 100% Pi</option>
-            <option value="pi_fiat">⚡💵 Pi + Ref. Local</option>
+          <select id="mural-payment-filter" onchange="window.IsarMural && window.IsarMural.filterPaymentMode(this.value)" aria-label="Filtrar por formato de pagamento" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fcd34d;font-size:0.8rem;font-weight:600">
+            <option value="todos">💰 Todos os Pagamentos</option>
+            <option value="pi">⚡ Somente Pi</option>
+            <option value="pi_fiat">⚡💵 Pi + Moeda</option>
+            <option value="fiat">💵 Somente Moeda</option>
           </select>
 
           <select id="mural-sort-filter" onchange="window.IsarMural && window.IsarMural.sortAds(this.value)" aria-label="Ordenar anúncios" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#e4e4e7;font-size:0.8rem;font-weight:600">
@@ -685,19 +686,46 @@
           <textarea id="ad-input-desc" required rows="3" placeholder="Explique o que você oferece ou deixe seu recado para os pioneiros..." maxlength="1000" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff"></textarea>
         </div>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:14px">
-          <div class="form-group">
-            <label for="ad-input-item-price" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">🏷️ Preço do Produto / Serviço (opcional)</label>
-            <input type="number" id="ad-input-item-price" min="0" step="any" placeholder="Ex: 15.00" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+        <div class="form-group" style="margin-bottom:14px">
+          <label style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:6px;font-weight:700">💳 Formas de Pagamento Aceitas *</label>
+          <input type="hidden" id="ad-input-payment-modes" value="pi" />
+          <input type="hidden" id="ad-input-item-price" value="" />
+          <input type="hidden" id="ad-input-item-currency" value="PI" />
+
+          <div id="ad-pay-mode-group" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin-bottom:10px">
+            <label class="j-pay-check-card" style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;border:1px solid #f59e0b;background:rgba(245,158,11,0.14);cursor:pointer;font-size:0.82rem;font-weight:700;color:#fff">
+              <input type="checkbox" name="ad-pay-mode-check" data-ad-pay-mode="pi" checked style="accent-color:#f59e0b;width:16px;height:16px;flex-shrink:0" />
+              <span>⚡ Somente Pi</span>
+            </label>
+            <label class="j-pay-check-card" style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.14);background:rgba(0,0,0,0.38);cursor:pointer;font-size:0.82rem;font-weight:700;color:#fff">
+              <input type="checkbox" name="ad-pay-mode-check" data-ad-pay-mode="pi_fiat" style="accent-color:#f59e0b;width:16px;height:16px;flex-shrink:0" />
+              <span>⚡💵 Pi + Moeda</span>
+            </label>
+            <label class="j-pay-check-card" style="display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.14);background:rgba(0,0,0,0.38);cursor:pointer;font-size:0.82rem;font-weight:700;color:#fff">
+              <input type="checkbox" name="ad-pay-mode-check" data-ad-pay-mode="fiat" style="accent-color:#f59e0b;width:16px;height:16px;flex-shrink:0" />
+              <span>💵 Só Moeda</span>
+            </label>
           </div>
-          <div class="form-group">
-            <label for="ad-input-item-currency" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">💱 Moeda da Oferta</label>
-            <select id="ad-input-item-currency" style="width:100%;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff">
-              <option value="PI">π (Pi)</option>
-              <option value="BRL">R$ (BRL)</option>
-              <option value="USD">US$ (USD)</option>
-              <option value="EUR">€ (EUR)</option>
-            </select>
+
+          <div style="display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px 12px">
+            <div id="ad-price-pi-wrap">
+              <label for="ad-input-price-pi" style="font-size:0.8rem;color:#fcd34d;display:block;margin-bottom:4px;font-weight:600">⚡ Preço em Pi (π) (opcional)</label>
+              <input type="number" id="ad-input-price-pi" min="0" step="any" placeholder="Ex: 15.00" style="width:100%;box-sizing:border-box;padding:9px 12px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+            </div>
+            <div id="ad-price-fiat-wrap" style="display:none;grid-template-columns:130px 1fr;gap:10px;align-items:end">
+              <div>
+                <label for="ad-input-fiat-currency" style="font-size:0.8rem;color:#6ee7b7;display:block;margin-bottom:4px;font-weight:600">💱 Moeda</label>
+                <select id="ad-input-fiat-currency" style="width:100%;box-sizing:border-box;padding:9px 10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff">
+                  <option value="BRL">R$ (BRL)</option>
+                  <option value="USD">US$ (USD)</option>
+                  <option value="EUR">€ (EUR)</option>
+                </select>
+              </div>
+              <div>
+                <label for="ad-input-price-fiat" style="font-size:0.8rem;color:#6ee7b7;display:block;margin-bottom:4px;font-weight:600">💵 Preço na Moeda (opcional)</label>
+                <input type="number" id="ad-input-price-fiat" min="0" step="any" placeholder="Ex: 50.00" style="width:100%;box-sizing:border-box;padding:9px 12px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -721,13 +749,6 @@
           <div class="form-group">
             <label for="ad-input-location" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">📍 Cidade / Região</label>
             <input type="text" id="ad-input-location" placeholder="Ex: São Paulo, Manila ou Online" maxlength="60" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff" />
-          </div>
-          <div class="form-group">
-            <label for="ad-input-payment-modes" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">⚡ Pagamento em Pi</label>
-            <select id="ad-input-payment-modes" style="width:100%;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff">
-              <option value="pi">⚡ 100% Pi</option>
-              <option value="pi_fiat">⚡💵 Pi + Ref. Moeda Local</option>
-            </select>
           </div>
         </div>
 
@@ -915,19 +936,46 @@
         <textarea id="edit-ad-input-desc" required rows="3" maxlength="1000" style="width:100%;box-sizing:border-box;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff"></textarea>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div class="form-group">
-          <label for="edit-ad-input-item-price" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Preço da Oferta</label>
-          <input type="number" id="edit-ad-input-item-price" min="0" step="any" placeholder="Ex: 15" style="width:100%;box-sizing:border-box;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
+      <div class="form-group" style="margin-bottom:12px">
+        <label style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:6px;font-weight:700">💳 Formas de Pagamento Aceitas *</label>
+        <input type="hidden" id="edit-ad-input-payment-modes" value="pi" />
+        <input type="hidden" id="edit-ad-input-item-price" value="" />
+        <input type="hidden" id="edit-ad-input-item-currency" value="PI" />
+
+        <div id="edit-ad-pay-mode-group" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:10px">
+          <label class="j-pay-check-card" style="display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:10px;border:1px solid #f59e0b;background:rgba(245,158,11,0.14);cursor:pointer;font-size:0.8rem;font-weight:700;color:#fff">
+            <input type="checkbox" name="edit-ad-pay-mode-check" data-edit-ad-pay-mode="pi" checked style="accent-color:#f59e0b;width:15px;height:15px;flex-shrink:0" />
+            <span>⚡ Somente Pi</span>
+          </label>
+          <label class="j-pay-check-card" style="display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.14);background:rgba(0,0,0,0.38);cursor:pointer;font-size:0.8rem;font-weight:700;color:#fff">
+            <input type="checkbox" name="edit-ad-pay-mode-check" data-edit-ad-pay-mode="pi_fiat" style="accent-color:#f59e0b;width:15px;height:15px;flex-shrink:0" />
+            <span>⚡💵 Pi + Moeda</span>
+          </label>
+          <label class="j-pay-check-card" style="display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.14);background:rgba(0,0,0,0.38);cursor:pointer;font-size:0.8rem;font-weight:700;color:#fff">
+            <input type="checkbox" name="edit-ad-pay-mode-check" data-edit-ad-pay-mode="fiat" style="accent-color:#f59e0b;width:15px;height:15px;flex-shrink:0" />
+            <span>💵 Só Moeda</span>
+          </label>
         </div>
-        <div class="form-group">
-          <label for="edit-ad-input-item-currency" style="font-size:0.85rem;color:var(--gray-light);display:block;margin-bottom:4px">Moeda</label>
-          <select id="edit-ad-input-item-currency" style="width:100%;box-sizing:border-box;padding:10px 12px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff">
-            <option value="PI">π (Pi)</option>
-            <option value="BRL">R$ (BRL)</option>
-            <option value="USD">US$ (USD)</option>
-            <option value="EUR">€ (EUR)</option>
-          </select>
+
+        <div style="display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px">
+          <div id="edit-ad-price-pi-wrap">
+            <label for="edit-ad-input-price-pi" style="font-size:0.78rem;color:#fcd34d;display:block;margin-bottom:4px;font-weight:600">⚡ Preço em Pi (π) (opcional)</label>
+            <input type="number" id="edit-ad-input-price-pi" min="0" step="any" placeholder="Ex: 15.00" style="width:100%;box-sizing:border-box;padding:9px 12px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
+          </div>
+          <div id="edit-ad-price-fiat-wrap" style="display:none;grid-template-columns:120px 1fr;gap:8px;align-items:end">
+            <div>
+              <label for="edit-ad-input-fiat-currency" style="font-size:0.78rem;color:#6ee7b7;display:block;margin-bottom:4px;font-weight:600">💱 Moeda</label>
+              <select id="edit-ad-input-fiat-currency" style="width:100%;box-sizing:border-box;padding:9px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff">
+                <option value="BRL">R$ (BRL)</option>
+                <option value="USD">US$ (USD)</option>
+                <option value="EUR">€ (EUR)</option>
+              </select>
+            </div>
+            <div>
+              <label for="edit-ad-input-price-fiat" style="font-size:0.78rem;color:#6ee7b7;display:block;margin-bottom:4px;font-weight:600">💵 Preço na Moeda</label>
+              <input type="number" id="edit-ad-input-price-fiat" min="0" step="any" placeholder="Ex: 50.00" style="width:100%;box-sizing:border-box;padding:9px 12px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff" />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1032,12 +1080,12 @@
   <script src="assets/js/modules/i18n.js?v=4.7"></script>
   <script src="assets/js/modules/ui.js?v=4.7"></script>
   <script src="assets/js/modules/db.js?v=6.2"></script>
-  <script src="assets/js/modules/web2-auth.js?v=1.2"></script>
+  <script src="assets/js/modules/web2-auth.js?v=1.4"></script>
   <script src="assets/js/modules/referral.js?v=2.7"></script>
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
-  <script src="assets/js/modules/pi-pay.js?v=8.2"></script>
-  <script src="assets/js/modules/mural.v4.js?v=9.3"></script>
+  <script src="assets/js/modules/pi-pay.js?v=8.3"></script>
+  <script src="assets/js/modules/mural.v4.js?v=9.4"></script>
   <script src="assets/js/modules/mural-chatbot.js?v=1.2"></script>
   <script>
     function syncMuralOffset() {
