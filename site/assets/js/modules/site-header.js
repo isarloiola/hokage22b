@@ -40,6 +40,30 @@
     }
   ];
 
+  function isPiBrowserEnv() {
+    if (typeof window !== 'undefined' && window.HokagePi && typeof window.HokagePi.isPiBrowser === 'function') {
+      return window.HokagePi.isPiBrowser();
+    }
+    const ua = (typeof navigator !== 'undefined' && (navigator.userAgent || navigator.vendor)) || '';
+    if (/PiBrowser|PiNetwork|minepi/i.test(ua)) return true;
+    if (typeof window !== 'undefined') {
+      if (window.PiNetwork || window.flutter_inappwebview) return true;
+      if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
+    }
+    return false;
+  }
+
+  function hasLoggedSession() {
+    try {
+      const raw = localStorage.getItem('hokage_pi_user') || '';
+      if (!raw) return false;
+      const parsed = JSON.parse(raw);
+      return Boolean(parsed && (parsed.username || parsed.authType === 'web2'));
+    } catch (_) {
+      return false;
+    }
+  }
+
   function getCurrentSlug() {
     const clean = (window.location.pathname || '')
       .replace(/^\/+|\/+$/g, '')
@@ -65,6 +89,12 @@
       );
     }).join('');
 
+    const authDrawerBtn = !hasLoggedSession()
+      ? (isPiBrowserEnv()
+          ? '<a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--full" style="display:flex;align-items:center;justify-content:center;width:100%;padding:11px 16px;border-radius:12px;text-decoration:none;font-weight:700;margin-bottom:8px;border-color:rgba(139,92,246,0.45);color:#c4b5fd">⚡ Conectar no Pi Browser</a>'
+          : '<a href="pioneiro?criar=1" class="portal-btn portal-btn--outline portal-btn--full" style="display:flex;align-items:center;justify-content:center;width:100%;padding:11px 16px;border-radius:12px;text-decoration:none;font-weight:700;margin-bottom:8px;border-color:rgba(56,189,248,0.45);color:#bae6fd">👤 Entrar / Criar Conta</a>')
+      : '';
+
     return (
       '<div class="portal-drawer" id="portal-drawer" role="navigation" aria-label="Menu Mobile">' +
         '<div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08)">' +
@@ -73,6 +103,7 @@
         '</div>' +
         '<div class="portal-drawer__nav">' + drawerNav + '</div>' +
         '<div style="padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);margin-top:8px">' +
+          authDrawerBtn +
           '<a href="jornada" class="portal-btn portal-btn--primary portal-btn--full" style="display:flex;align-items:center;justify-content:center;width:100%;padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);color:#09090b">' +
             '🚀 Começar Minha Jornada' +
           '</a>' +
@@ -132,26 +163,48 @@
   function getHeaderUserChipHtml() {
     try {
       const raw = localStorage.getItem('hokage_pi_user') || '';
-      if (!raw) return '';
-      const parsed = JSON.parse(raw);
-      if (!parsed || !parsed.username) return '';
-      const clean = String(parsed.username).trim().replace(/^@+/, '').toLowerCase().replace(/[^a-z0-9._-]/g, '');
-      if (!clean) return '';
-      const isWebOnly = parsed.authType === 'web2' && !parsed.is_pi_verified;
-      const chipStyle = isWebOnly
-        ? 'white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(56,189,248,0.45);color:#7dd3fc'
-        : 'white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(16,185,129,0.45);color:#6ee7b7';
-      const chipIcon = isWebOnly ? '🌐' : '🟢';
-      const chipTitle = isWebOnly ? 'Meu Passaporte Web' : 'Meu Passaporte Pi';
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.username) {
+          const clean = String(parsed.username).trim().replace(/^@+/, '').toLowerCase().replace(/[^a-z0-9._-]/g, '');
+          if (clean) {
+            const isWebOnly = parsed.authType === 'web2' && !parsed.is_pi_verified;
+            const chipStyle = isWebOnly
+              ? 'white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(56,189,248,0.45);color:#7dd3fc'
+              : 'white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(16,185,129,0.45);color:#6ee7b7';
+            const chipIcon = isWebOnly ? '🌐' : '🟢';
+            const chipTitle = isWebOnly ? 'Meu Passaporte Web' : 'Meu Passaporte Pi';
+            return (
+              '<a href="pioneiro?u=' + encodeURIComponent(clean) + '" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--desktop-only" ' +
+                'style="' + chipStyle + '" title="' + chipTitle + '">' +
+                chipIcon + ' @' + clean +
+              '</a>'
+            );
+          }
+        } else if (parsed && parsed.authType === 'web2') {
+          return (
+            '<a href="pioneiro?setup=web2" class="portal-btn portal-btn--outline portal-btn--sm" ' +
+              'style="white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(56,189,248,0.45);color:#bae6fd" title="Finalizar meu Passaporte">' +
+              '✨ Escolher @usuário' +
+            '</a>'
+          );
+        }
+      }
+    } catch (_) {}
+    if (!isPiBrowserEnv()) {
       return (
-        '<a href="pioneiro?u=' + encodeURIComponent(clean) + '" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--desktop-only" ' +
-          'style="' + chipStyle + '" title="' + chipTitle + '">' +
-          chipIcon + ' @' + clean +
+        '<a href="pioneiro?criar=1" class="portal-btn portal-btn--outline portal-btn--sm" ' +
+          'style="white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(56,189,248,0.45);color:#bae6fd" title="Entrar ou criar conta grátis">' +
+          '👤 Entrar' +
         '</a>'
       );
-    } catch (_) {
-      return '';
     }
+    return (
+      '<a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm" ' +
+        'style="white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(139,92,246,0.45);color:#c4b5fd" title="Conectar no Pi Browser">' +
+        '⚡ Pi' +
+      '</a>'
+    );
   }
 
   function renderHeader() {

@@ -829,7 +829,7 @@
             <span>⚡</span> Conectar Pi Browser &amp; Criar Meu Passaporte
           </button>
           <small style="color:var(--text-muted);font-size:0.75rem;display:block;margin-top:8px">
-            Autenticação segura e instantânea com seu @usuário via Pi SDK Oficial.
+            Autenticação 1-clique no Pi Browser — ou entre por e-mail logo abaixo (Membro Web).
           </small>
         </div>
 
@@ -1383,33 +1383,45 @@
     </div>
   </div>
 
-  <!-- MODAL DE ORIENTAÇÃO PARA NAVEGADORES COMUNS (FORA DO PI BROWSER) -->
+  <!-- MODAL DE CRIAÇÃO DE CONTA WEB2 / ACESSO VIA PI BROWSER -->
   <div class="pi-modal-overlay" id="external-browser-modal" role="dialog" aria-modal="true" aria-hidden="true" style="z-index:10000;display:none">
-    <div class="pi-modal" style="max-width:440px;text-align:center;padding:28px 22px">
+    <div class="pi-modal" style="max-width:440px;text-align:center;padding:26px 20px">
       <button type="button" class="pi-modal-close" onclick="closeExternalBrowserModal()" aria-label="Fechar">✕</button>
-      <div style="font-size:2.4rem;margin-bottom:12px">⚡</div>
-      <h3 style="margin-bottom:8px">Acesso via Pi Browser</h3>
-      <p style="font-size:0.86rem;color:var(--text-secondary);line-height:1.5;margin-bottom:20px">
-        Você está em um <strong>navegador comum</strong>.<br />
-        A autenticação oficial com 1 clique e a gravação definitiva da sua carteira requerem o aplicativo oficial <strong>Pi Browser</strong>.
+      <div style="font-size:2.2rem;margin-bottom:8px">🪪</div>
+      <h3 style="margin-bottom:8px">Criar Conta ou Entrar no Passaporte</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.45;margin-bottom:16px">
+        Crie seu Passaporte Web grátis agora usando seu <strong>e-mail</strong> (sem senha) — ou abra no app <strong>Pi Browser</strong> para autenticar com sua carteira Pi.
       </p>
 
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
-        <button type="button" class="btn btn-primary" onclick="closeExternalBrowserModal(); startSimulatorMode();" style="width:100%;padding:13px;font-size:0.95rem;font-weight:700">
+      <div style="background:rgba(56,189,248,0.09);border:1px solid rgba(56,189,248,0.32);border-radius:14px;padding:14px;margin-bottom:14px;text-align:left">
+        <div style="font-size:0.84rem;font-weight:800;color:#bae6fd;margin-bottom:8px">
+          ✉️ Entrar ou Criar Conta por E-mail (Sem Senha)
+        </div>
+        <form id="ext-modal-web2-form" style="display:flex;flex-direction:column;gap:8px">
+          <input type="email" id="ext-modal-web2-email" required placeholder="seu@email.com" style="width:100%;padding:10px 12px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.22);border-radius:10px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
+          <button type="submit" id="ext-modal-web2-btn" class="btn btn-primary" style="width:100%;padding:11px;font-size:0.9rem;font-weight:800">
+            ✉️ Enviar Link Mágico para Criar Conta
+          </button>
+        </form>
+        <div id="ext-modal-web2-feedback" style="display:none;margin-top:8px;font-size:0.8rem;line-height:1.4"></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+        <button type="button" class="btn btn-outline" onclick="closeExternalBrowserModal(); startSimulatorMode();" style="width:100%;padding:11px;font-size:0.88rem;border-color:rgba(139,92,246,0.45);color:var(--accent-light);font-weight:700">
           🧪 Testar no Simulador Agora
         </button>
 
-        <button type="button" class="btn btn-outline" id="btn-copy-pi-link" onclick="copyPiBrowserLink()" style="width:100%;padding:12px;font-size:0.88rem;border-color:var(--accent);color:var(--accent-light);font-weight:700">
+        <button type="button" class="btn btn-outline" id="btn-copy-pi-link" onclick="copyPiBrowserLink()" style="width:100%;padding:11px;font-size:0.86rem;border-color:rgba(245,158,11,0.45);color:#fde68a;font-weight:700">
           📋 Copiar Link para o Pi Browser
         </button>
 
-        <a href="?u=hokage22b" class="btn btn-outline" style="width:100%;padding:11px;font-size:0.85rem;border-color:rgba(255,255,255,0.2);color:#fff;text-decoration:none">
+        <a href="?u=hokage22b" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.84rem;border-color:rgba(255,255,255,0.2);color:#fff;text-decoration:none">
           🌟 Ver Passaporte do Fundador (@hokage22b)
         </a>
       </div>
 
-      <small style="color:var(--text-muted);font-size:0.75rem;display:block">
-        Dica: abra o app Pi Browser no celular e digite ou cole <code>hokage22b.com/pioneiro</code>
+      <small style="color:var(--text-muted);font-size:0.74rem;display:block">
+        Depois de entrar por e-mail, você pode vincular sua conta Pi quando abrir no Pi Browser.
       </small>
     </div>
   </div>
@@ -1504,13 +1516,13 @@
   <script src="assets/js/modules/referral.js?v=2.7"></script>
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
-  <script src="assets/js/modules/site-header.js?v=1.3"></script>
+  <script src="assets/js/modules/site-header.js?v=1.4"></script>
   <script src="assets/js/modules/i18n.js?v=4.7"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
   <script src="assets/js/modules/db.js?v=6.2"></script>
   <script src="assets/js/modules/web2-auth.js?v=1.0"></script>
 
-  <script src="assets/js/modules/vitrine.js?v=3.8"></script>
+  <script src="assets/js/modules/vitrine.js?v=3.9"></script>
   <script src="assets/js/modules/monte-progression.js?v=1.5"></script>
 </body>
 </html>

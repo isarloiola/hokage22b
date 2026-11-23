@@ -563,9 +563,59 @@
     function openExternalBrowserModal() {
       const modal = document.getElementById('external-browser-modal');
       if (modal) {
+        const extForm = document.getElementById('ext-modal-web2-form');
+        if (extForm && !extForm.dataset.bound) {
+          extForm.dataset.bound = '1';
+          extForm.addEventListener('submit', async function (ev) {
+            ev.preventDefault();
+            const emailInp = document.getElementById('ext-modal-web2-email');
+            const submitBtn = document.getElementById('ext-modal-web2-btn');
+            const fbEl = document.getElementById('ext-modal-web2-feedback');
+            const emailVal = emailInp ? emailInp.value.trim() : '';
+            if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.sendMagicLink !== 'function') {
+              if (fbEl) {
+                fbEl.style.display = 'block';
+                fbEl.style.color = '#fca5a5';
+                fbEl.textContent = 'Autenticação por e-mail indisponível no momento.';
+              }
+              return;
+            }
+            if (submitBtn) {
+              submitBtn.disabled = true;
+              submitBtn.textContent = 'Enviando link...';
+            }
+            if (fbEl) fbEl.style.display = 'none';
+            try {
+              await window.HokageWeb2Auth.sendMagicLink(emailVal, window.location.origin + '/pioneiro');
+              if (fbEl) {
+                fbEl.style.display = 'block';
+                fbEl.style.color = '#6ee7b7';
+                fbEl.innerHTML = '✉️ <strong>Link enviado!</strong> Abra seu e-mail e toque no link para escolher seu @usuário.';
+              }
+              if (emailInp) emailInp.value = '';
+            } catch (err) {
+              if (fbEl) {
+                fbEl.style.display = 'block';
+                fbEl.style.color = '#fca5a5';
+                fbEl.textContent = '⚠️ ' + ((err && err.message) || 'Erro ao enviar link de acesso.');
+              }
+            } finally {
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '✉️ Enviar Link Mágico para Criar Conta';
+              }
+            }
+          });
+        }
         modal.style.display = 'flex';
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
+        const extEmail = document.getElementById('ext-modal-web2-email');
+        if (extEmail) {
+          setTimeout(function () {
+            try { extEmail.focus(); } catch (_) {}
+          }, 120);
+        }
       }
     }
 
@@ -836,10 +886,11 @@
       const loggedUser = getLoggedUser();
       const explicitRef = getQueryParam('ref');
       const isExploreFlow = getQueryParam('explorar') === '1';
+      const isCreateFlow = getQueryParam('criar') === '1' || getQueryParam('entrar') === '1';
       const isAutoStartFlow = getQueryParam('autostart') === '1' || getQueryParam('simulador') === '1' || getQueryParam('teste') === '1';
 
-      // Se entrou por link de convite (?ref=usuario) sem ?u=, ?explorar=1 ou autostart, abre a vitrine de quem convidou
-      if (!username && explicitRef && !isAutoStartFlow && !isExploreFlow) {
+      // Se entrou por link de convite (?ref=usuario) sem ?u=, ?explorar=1, ?criar=1 ou autostart, abre a vitrine de quem convidou
+      if (!username && explicitRef && !isAutoStartFlow && !isExploreFlow && !isCreateFlow) {
         const cleanRefHandle = (window.HokageReferral && typeof window.HokageReferral.normalizeHandle === 'function')
           ? window.HokageReferral.normalizeHandle(explicitRef)
           : String(explicitRef).trim().replace(/^@+/, '').toLowerCase();
@@ -848,8 +899,8 @@
         }
       }
 
-      // Se não passou ?u=, NÃO é ?ref= e NÃO é ?explorar=1, usa a conta logada
-      if (!username && !explicitRef && !isExploreFlow && loggedUser && loggedUser.username) {
+      // Se não passou ?u=, NÃO é ?ref=, NÃO é ?explorar=1 e NÃO é ?criar=1, usa a conta logada
+      if (!username && !explicitRef && !isExploreFlow && !isCreateFlow && loggedUser && loggedUser.username) {
         username = loggedUser.username;
       }
 
@@ -905,6 +956,14 @@
           setTimeout(function () {
             openProfileEditModal();
           }, 200);
+        } else if (isCreateFlow && !isPiBrowser()) {
+          setTimeout(function () {
+            const emailInp = document.getElementById('web2-onboarding-email');
+            if (emailInp) {
+              try { emailInp.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (_) {}
+              try { emailInp.focus(); } catch (_) {}
+            }
+          }, 180);
         } else if (isExploreFlow) {
           setTimeout(function () {
             const dirSec = document.getElementById('pioneer-directory-section');
@@ -1169,7 +1228,7 @@
             `;
           } else {
             topbarActions.innerHTML = `
-              <a href="pioneiro?ref=${encodeURIComponent(cleanOwnerRef)}" class="btn btn-outline btn-sm" style="font-size:0.74rem;padding:5px 11px;border-color:rgba(245,158,11,0.5);color:#fbbf24;font-weight:700;text-decoration:none">
+              <a href="pioneiro?ref=${encodeURIComponent(cleanOwnerRef)}&criar=1" class="btn btn-outline btn-sm" style="font-size:0.74rem;padding:5px 11px;border-color:rgba(245,158,11,0.5);color:#fbbf24;font-weight:700;text-decoration:none">
                 🪪 Criar Passaporte
               </a>
             `;
@@ -1182,11 +1241,11 @@
       if (footerCreateLink) {
         const ownerRefSlug = username.replace(/^@+/, '');
         if (!isOwner && ownerRefSlug) {
-          footerCreateLink.href = `pioneiro?ref=${encodeURIComponent(ownerRefSlug)}`;
+          footerCreateLink.href = `pioneiro?ref=${encodeURIComponent(ownerRefSlug)}&criar=1`;
           footerCreateLink.textContent = `🎁 Crie seu Passaporte grátis pelo convite de ${username} e ganhe 1 Anúncio Bronze (0.314 π) ↗`;
         } else {
-          footerCreateLink.href = 'pioneiro';
-          footerCreateLink.textContent = '🚀 Crie seu Passaporte grátis com seu @usuário Pi ↗';
+          footerCreateLink.href = 'pioneiro?criar=1';
+          footerCreateLink.textContent = '🚀 Crie seu Passaporte grátis com seu @usuário Pi ou E-mail ↗';
         }
       }
       document.getElementById('pioneer-handle').textContent = username;

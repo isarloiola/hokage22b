@@ -125,6 +125,7 @@
     const isWebOnly = Boolean(user && user.authType === 'web2' && !user.is_pi_verified);
     const dotColor = isWebOnly ? '#38bdf8' : '#10b981';
 
+    const inPi = isPiBrowser();
     const headerBtns = document.querySelectorAll('.pi-auth-header-btn');
     headerBtns.forEach(function (btn) {
       if (handle) {
@@ -134,9 +135,12 @@
       } else if (isWebOnly) {
         btn.innerHTML = `<span class="pi-btn-full" style="white-space:nowrap">🌐 Conta Web</span><span class="pi-btn-short" style="white-space:nowrap">🌐 Web</span>`;
         btn.title = 'Sessão Web ativa — escolha seu @usuário no Passaporte';
-      } else {
+      } else if (inPi) {
         btn.innerHTML = `<span class="pi-btn-full" style="white-space:nowrap">⚡ Conectar Pi</span><span class="pi-btn-short" style="white-space:nowrap">⚡ Pi</span>`;
         btn.title = 'Fazer login com Pi Network';
+      } else {
+        btn.innerHTML = `<span class="pi-btn-full" style="white-space:nowrap">👤 Entrar / Criar Conta</span><span class="pi-btn-short" style="white-space:nowrap">👤 Entrar</span>`;
+        btn.title = 'Entrar ou criar conta grátis';
       }
     });
 
@@ -216,80 +220,86 @@
     const netLabel = isSandbox ? '🧪 Pi Testnet (Sandbox)' : '⚡ Pi Network (Produção)';
     const cleanHost = window.location.host || 'hokage22b.com';
     const piOpenUrl = 'pi://' + cleanHost + (window.location.pathname || '/') + (window.location.search || '');
+    const isWebGuestModal = !inPi && !authenticatedUser;
+    const displayTag = isWebGuestModal ? '🌐 Acesso Web2 & Pi Network' : netTag;
+    const displayHeading = isWebGuestModal ? 'Entrar ou Criar Conta' : modalHeading;
 
     modal.innerHTML = `
       <div class="portal-modal" style="max-width:440px">
         <button type="button" class="portal-modal-close" onclick="document.getElementById('modal-pi-connect-diag').classList.remove('active')">✕</button>
-        <div class="section-tag section-tag--purple" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">${netTag}</div>
-        <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">${modalHeading}</h3>
+        <div class="section-tag section-tag--purple" style="background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.3)">${displayTag}</div>
+        <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">${displayHeading}</h3>
 
-        <!-- Diagnóstico em Tempo Real -->
-        <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.85rem">
-          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-            <span style="color:var(--text-muted)">Navegador Atual:</span>
-            <span style="font-weight:700;color:${inPi ? '#10b981' : '#f59e0b'}">
-              ${inPi ? '✓ Pi Browser detectado' : '⚠️ Navegador Comum (Chrome/Safari)'}
-            </span>
-          </div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-            <span style="color:var(--text-muted)">Rede Pi Ativa:</span>
-            <span style="font-weight:700;color:#38bdf8">
-              ${netLabel}
-            </span>
-          </div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-            <span style="color:var(--text-muted)">Pi SDK Oficial:</span>
-            <span style="font-weight:700;color:${hasSdk ? '#10b981' : '#ef4444'}">
-              ${hasSdk ? '✓ Carregado v2.0' : '✕ Não detectado'}
-            </span>
-          </div>
-          <div style="display:flex;justify-content:space-between">
-            <span style="color:var(--text-muted)">Status da Sessão:</span>
-            <span id="diag-auth-status" style="font-weight:700;color:#c4b5fd">
-              ${authenticatedUser ? (
-                authenticatedUser.authType === 'web2' && !authenticatedUser.is_pi_verified
-                  ? (authenticatedUser.username
-                      ? ('🌐 @' + escapeHtml(formatUserHandle(authenticatedUser.username)) + ' (Web)')
-                      : '🌐 Conta Web (E-mail)')
-                  : ('🟢 @' + escapeHtml(formatUserHandle(authenticatedUser.username)))
-              ) : '⚪ Desconectado'}
-            </span>
-          </div>
-        </div>
-
-        ${!inPi && !authenticatedUser ? `
-          <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:0.84rem;color:var(--text-secondary);line-height:1.4">
-            💡 <strong>Você está em um navegador comum:</strong><br>
-            A autenticação automática em 1 clique + carteira biométrica são exclusivas do app <strong>Pi Browser</strong>.
-          </div>
-          <a href="${piOpenUrl}" class="portal-btn portal-btn--amber portal-btn--full" style="margin-bottom:8px;text-align:center;text-decoration:none;font-weight:800;display:block">
-            🚀 Abrir Direto no Pi Browser
-          </a>
-          <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="margin-bottom:14px" onclick="navigator.clipboard.writeText('https://hokage22b.com');this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link para abrir no Pi Browser',2000)">
-            📋 Copiar Link para abrir no Pi Browser
-          </button>
-
-          <div id="diag-web2-box" style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.28);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
-            <div style="font-size:0.85rem;font-weight:800;color:#bae6fd;margin-bottom:6px">
-              🌐 Ou entre agora na Web (E-mail)
+        ${isWebGuestModal ? `
+          <div id="diag-web2-box" style="background:rgba(56,189,248,0.09);border:1px solid rgba(56,189,248,0.32);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px">
+            <div style="font-size:0.9rem;font-weight:800;color:#bae6fd;margin-bottom:6px">
+              ✉️ Criar Conta ou Entrar com E-mail (Link Mágico)
             </div>
-            <p style="font-size:0.76rem;color:var(--text-secondary);margin:0 0 8px;line-height:1.4">
-              Receba um link mágico no seu e-mail para criar seu Passaporte Web e comentar/avaliar. Você poderá vincular sua conta Pi depois para ganhar o selo ✓ Pi Verificado!
+            <p style="font-size:0.78rem;color:var(--text-secondary);margin:0 0 10px;line-height:1.45">
+              Sem senha e 100% grátis: crie seu Passaporte Web, comente e avalie agora no navegador comum. Quando quiser, vincule sua conta Pi para ganhar o selo <strong>✓ Pi Verificado</strong>!
             </p>
             <form id="diag-web2-magic-form" style="display:flex;gap:6px;flex-wrap:wrap">
-              <input type="email" id="diag-web2-email" required placeholder="seu@email.com" style="flex:1;min-width:155px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.55);color:#fff;font-size:0.84rem;box-sizing:border-box" />
-              <button type="submit" id="diag-web2-submit" class="portal-btn portal-btn--primary portal-btn--sm" style="white-space:nowrap;font-weight:700">
+              <input type="email" id="diag-web2-email" required placeholder="seu@email.com" style="flex:1;min-width:155px;padding:9px 11px;border-radius:8px;border:1px solid rgba(255,255,255,0.22);background:rgba(0,0,0,0.55);color:#fff;font-size:0.86rem;box-sizing:border-box" />
+              <button type="submit" id="diag-web2-submit" class="portal-btn portal-btn--primary portal-btn--sm" style="white-space:nowrap;font-weight:800">
                 ✉️ Enviar Link Mágico
               </button>
             </form>
             <div id="diag-web2-feedback" style="display:none;margin-top:8px;font-size:0.78rem;line-height:1.4"></div>
           </div>
-        ` : (!inPi ? `
-          <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:0.84rem;color:var(--text-secondary);line-height:1.4">
-            💡 <strong>Modo Web2 ativo:</strong><br>
-            Para assinar transações em Pi ou ativar o selo <strong>✓ Pi Verificado</strong>, abra sua conta no aplicativo oficial <strong>Pi Browser</strong>.
+
+          <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.28);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px">
+            <div style="font-size:0.82rem;font-weight:700;color:#fde68a;margin-bottom:8px">
+              ⚡ Já usa o Pi Browser? Conecte direto com 1 clique:
+            </div>
+            <a href="${piOpenUrl}" class="portal-btn portal-btn--amber portal-btn--full" style="margin-bottom:8px;text-align:center;text-decoration:none;font-weight:800;display:block">
+              🚀 Abrir Direto no Pi Browser
+            </a>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" onclick="navigator.clipboard.writeText('https://hokage22b.com');this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link para abrir no Pi Browser',2000)">
+              📋 Copiar Link para abrir no Pi Browser
+            </button>
           </div>
-        ` : '')}
+        ` : `
+          <!-- Diagnóstico em Tempo Real -->
+          <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.85rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <span style="color:var(--text-muted)">Navegador Atual:</span>
+              <span style="font-weight:700;color:${inPi ? '#10b981' : '#f59e0b'}">
+                ${inPi ? '✓ Pi Browser detectado' : '⚠️ Navegador Comum (Chrome/Safari)'}
+              </span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <span style="color:var(--text-muted)">Rede Pi Ativa:</span>
+              <span style="font-weight:700;color:#38bdf8">
+                ${netLabel}
+              </span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <span style="color:var(--text-muted)">Pi SDK Oficial:</span>
+              <span style="font-weight:700;color:${hasSdk ? '#10b981' : '#ef4444'}">
+                ${hasSdk ? '✓ Carregado v2.0' : '✕ Não detectado'}
+              </span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="color:var(--text-muted)">Status da Sessão:</span>
+              <span id="diag-auth-status" style="font-weight:700;color:#c4b5fd">
+                ${authenticatedUser ? (
+                  authenticatedUser.authType === 'web2' && !authenticatedUser.is_pi_verified
+                    ? (authenticatedUser.username
+                        ? ('🌐 @' + escapeHtml(formatUserHandle(authenticatedUser.username)) + ' (Web)')
+                        : '🌐 Conta Web (E-mail)')
+                    : ('🟢 @' + escapeHtml(formatUserHandle(authenticatedUser.username)))
+                ) : '⚪ Desconectado'}
+              </span>
+            </div>
+          </div>
+
+          ${!inPi ? `
+            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:0.84rem;color:var(--text-secondary);line-height:1.4">
+              💡 <strong>Modo Web2 ativo:</strong><br>
+              Para assinar transações em Pi ou ativar o selo <strong>✓ Pi Verificado</strong>, abra sua conta no aplicativo oficial <strong>Pi Browser</strong>.
+            </div>
+          ` : ''}
+        `}
 
         <div id="diag-feedback-box" style="padding:12px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:0.85rem;line-height:1.4;display:none"></div>
 
@@ -1364,8 +1374,10 @@
         }
       }
     } catch (_) { }
+    updateAuthUi(authenticatedUser);
 
     document.querySelectorAll('.pi-auth-header-btn').forEach(function (btn) {
+      if (btn.getAttribute('onclick')) return;
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         openPiConnectModal();
