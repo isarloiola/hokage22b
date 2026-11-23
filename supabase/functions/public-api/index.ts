@@ -183,6 +183,8 @@ function projectPassport(row: Record<string, unknown>) {
       instagram_url: row.instagram_url || null,
     },
     products,
+    auth_provider: row.auth_provider || "pi",
+    is_pi_verified: row.is_pi_verified !== false,
     updated_at: row.updated_at || null,
   };
 }

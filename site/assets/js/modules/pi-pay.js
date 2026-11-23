@@ -116,16 +116,24 @@
     return String(raw).replace(/^@+/, '').trim();
   }
 
-  // 4. Atualização de Elementos Visuais com status do pioneiro
+  // 4. Atualização de Elementos Visuais com status do pioneiro (Pi-First ou Membro Web)
   function updateAuthUi(user) {
+    if (user && (user.authType === 'web2' || user.authType === 'hybrid')) {
+      authenticatedUser = user;
+    }
     const handle = user && user.username ? formatUserHandle(user.username) : '';
+    const isWebOnly = Boolean(user && user.authType === 'web2' && !user.is_pi_verified);
+    const dotColor = isWebOnly ? '#38bdf8' : '#10b981';
 
     const headerBtns = document.querySelectorAll('.pi-auth-header-btn');
     headerBtns.forEach(function (btn) {
       if (handle) {
         const shortHandle = handle.length > 7 ? handle.slice(0, 6) + '…' : handle;
-        btn.innerHTML = `<span style="color:#10b981;flex-shrink:0;line-height:1">●</span><span class="pi-btn-full" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${escapeHtml(handle)}</span><span class="pi-btn-short" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${escapeHtml(shortHandle)}</span>`;
-        btn.title = `Conectado como @${handle} — Clique para gerenciar`;
+        btn.innerHTML = `<span style="color:${dotColor};flex-shrink:0;line-height:1">●</span><span class="pi-btn-full" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${escapeHtml(handle)}</span><span class="pi-btn-short" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${escapeHtml(shortHandle)}</span>`;
+        btn.title = isWebOnly ? `Membro Web @${handle} — Clique para gerenciar` : `Conectado como @${handle} — Clique para gerenciar`;
+      } else if (isWebOnly) {
+        btn.innerHTML = `<span class="pi-btn-full" style="white-space:nowrap">🌐 Conta Web</span><span class="pi-btn-short" style="white-space:nowrap">🌐 Web</span>`;
+        btn.title = 'Sessão Web ativa — escolha seu @usuário no Passaporte';
       } else {
         btn.innerHTML = `<span class="pi-btn-full" style="white-space:nowrap">⚡ Conectar Pi</span><span class="pi-btn-short" style="white-space:nowrap">⚡ Pi</span>`;
         btn.title = 'Fazer login com Pi Network';
@@ -135,7 +143,11 @@
     const statusText = document.getElementById('pi-user-status-text');
     if (statusText) {
       if (handle) {
-        statusText.innerHTML = `<span style="color:#10b981;font-weight:700">🟢 Conectado:</span> @${escapeHtml(handle)}`;
+        statusText.innerHTML = isWebOnly
+          ? `<span style="color:#38bdf8;font-weight:700">🌐 Membro Web:</span> @${escapeHtml(handle)}`
+          : `<span style="color:#10b981;font-weight:700">🟢 Conectado:</span> @${escapeHtml(handle)}`;
+      } else if (isWebOnly) {
+        statusText.innerHTML = `<span style="color:#38bdf8;font-weight:700">🌐 Sessão Web ativa</span>`;
       } else {
         statusText.textContent = '⚪ Não conectado';
       }
@@ -144,7 +156,11 @@
     const drawerStatuses = document.querySelectorAll('.pi-drawer-user-status');
     drawerStatuses.forEach(function (el) {
       if (handle) {
-        el.innerHTML = `<span style="color:#10b981;font-weight:700">🟢 @${escapeHtml(handle)}</span>`;
+        el.innerHTML = isWebOnly
+          ? `<span style="color:#38bdf8;font-weight:700">🌐 @${escapeHtml(handle)}</span>`
+          : `<span style="color:#10b981;font-weight:700">🟢 @${escapeHtml(handle)}</span>`;
+      } else if (isWebOnly) {
+        el.innerHTML = `<span style="color:#38bdf8;font-weight:700">🌐 Conta Web</span>`;
       } else {
         el.textContent = '⚪ Não conectado';
       }
@@ -230,42 +246,90 @@
           <div style="display:flex;justify-content:space-between">
             <span style="color:var(--text-muted)">Status da Sessão:</span>
             <span id="diag-auth-status" style="font-weight:700;color:#c4b5fd">
-              ${authenticatedUser ? ('🟢 @' + escapeHtml(formatUserHandle(authenticatedUser.username))) : '⚪ Desconectado'}
+              ${authenticatedUser ? (
+                authenticatedUser.authType === 'web2' && !authenticatedUser.is_pi_verified
+                  ? (authenticatedUser.username
+                      ? ('🌐 @' + escapeHtml(formatUserHandle(authenticatedUser.username)) + ' (Web)')
+                      : '🌐 Conta Web (E-mail)')
+                  : ('🟢 @' + escapeHtml(formatUserHandle(authenticatedUser.username)))
+              ) : '⚪ Desconectado'}
             </span>
           </div>
         </div>
 
-        ${!inPi ? `
-          <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;font-size:0.84rem;color:var(--text-secondary);line-height:1.4">
+        ${!inPi && !authenticatedUser ? `
+          <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:0.84rem;color:var(--text-secondary);line-height:1.4">
             💡 <strong>Você está em um navegador comum:</strong><br>
-            A autenticação automática por 1 clique é exclusiva do aplicativo <strong>Pi Browser</strong>. Abra o app Pi Browser no celular e acesse <strong>hokage22b.com</strong> para conectar!
+            A autenticação automática em 1 clique + carteira biométrica são exclusivas do app <strong>Pi Browser</strong>.
           </div>
-          <a href="${piOpenUrl}" class="portal-btn portal-btn--amber portal-btn--full" style="margin-bottom:10px;text-align:center;text-decoration:none;font-weight:800;display:block">
+          <a href="${piOpenUrl}" class="portal-btn portal-btn--amber portal-btn--full" style="margin-bottom:8px;text-align:center;text-decoration:none;font-weight:800;display:block">
             🚀 Abrir Direto no Pi Browser
           </a>
-          <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="margin-bottom:12px" onclick="navigator.clipboard.writeText('https://hokage22b.com');this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link para abrir no Pi Browser',2000)">
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="margin-bottom:14px" onclick="navigator.clipboard.writeText('https://hokage22b.com');this.textContent='✓ Link Copiado!';setTimeout(()=>this.textContent='📋 Copiar Link para abrir no Pi Browser',2000)">
             📋 Copiar Link para abrir no Pi Browser
           </button>
-        ` : ''}
+
+          <div id="diag-web2-box" style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.28);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
+            <div style="font-size:0.85rem;font-weight:800;color:#bae6fd;margin-bottom:6px">
+              🌐 Ou entre agora na Web (E-mail)
+            </div>
+            <p style="font-size:0.76rem;color:var(--text-secondary);margin:0 0 8px;line-height:1.4">
+              Receba um link mágico no seu e-mail para criar seu Passaporte Web e comentar/avaliar. Você poderá vincular sua conta Pi depois para ganhar o selo ✓ Pi Verificado!
+            </p>
+            <form id="diag-web2-magic-form" style="display:flex;gap:6px;flex-wrap:wrap">
+              <input type="email" id="diag-web2-email" required placeholder="seu@email.com" style="flex:1;min-width:155px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.55);color:#fff;font-size:0.84rem;box-sizing:border-box" />
+              <button type="submit" id="diag-web2-submit" class="portal-btn portal-btn--primary portal-btn--sm" style="white-space:nowrap;font-weight:700">
+                ✉️ Enviar Link Mágico
+              </button>
+            </form>
+            <div id="diag-web2-feedback" style="display:none;margin-top:8px;font-size:0.78rem;line-height:1.4"></div>
+          </div>
+        ` : (!inPi ? `
+          <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:0.84rem;color:var(--text-secondary);line-height:1.4">
+            💡 <strong>Modo Web2 ativo:</strong><br>
+            Para assinar transações em Pi ou ativar o selo <strong>✓ Pi Verificado</strong>, abra sua conta no aplicativo oficial <strong>Pi Browser</strong>.
+          </div>
+        ` : '')}
 
         <div id="diag-feedback-box" style="padding:12px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:0.85rem;line-height:1.4;display:none"></div>
 
         <!-- Ações -->
         <div style="display:flex;flex-direction:column;gap:10px">
-          ${authenticatedUser ? `
-            <div style="text-align:center;color:#10b981;font-weight:700;padding:12px;background:rgba(16,185,129,0.1);border-radius:var(--radius-sm);border:1px solid rgba(16,185,129,0.3)">
-              ✓ Você já está conectado como @${escapeHtml(formatUserHandle(authenticatedUser.username))}!
-            </div>
-            <a href="pioneiro?u=${encodeURIComponent(formatUserHandle(authenticatedUser.username))}" class="portal-btn portal-btn--amber portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px">
-              <span>🪪</span> Ir para Meu Passaporte
-            </a>
-            <a href="pioneiro?explorar=1" class="portal-btn portal-btn--outline portal-btn--full" style="text-align:center;text-decoration:none;font-size:0.85rem;padding:9px">
-              🔍 Explorar Outros Passaportes
-            </a>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="color:var(--text-muted);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="HokagePi.logout()">
-              Desconectar / Trocar de Conta
-            </button>
-          ` : (inPi ? `
+          ${authenticatedUser ? (
+            authenticatedUser.authType === 'web2' && !authenticatedUser.is_pi_verified ? `
+              <div style="text-align:center;color:#7dd3fc;font-weight:700;padding:12px;background:rgba(56,189,248,0.1);border-radius:var(--radius-sm);border:1px solid rgba(56,189,248,0.3)">
+                🌐 Sessão Membro Web ativa${authenticatedUser.username ? (' como @' + escapeHtml(formatUserHandle(authenticatedUser.username))) : (authenticatedUser.email ? (' (' + escapeHtml(authenticatedUser.email) + ')') : '')}
+              </div>
+              ${authenticatedUser.username ? `
+                <a href="pioneiro?u=${encodeURIComponent(formatUserHandle(authenticatedUser.username))}" class="portal-btn portal-btn--primary portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px">
+                  <span>🪪</span> Ir para Meu Passaporte
+                </a>
+              ` : `
+                <a href="pioneiro?setup=web2" class="portal-btn portal-btn--primary portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px">
+                  <span>✨</span> Escolher meu @usuário
+                </a>
+              `}
+              <a href="${piOpenUrl}" class="portal-btn portal-btn--amber portal-btn--full" style="text-align:center;text-decoration:none;font-size:0.85rem;font-weight:700;padding:10px">
+                🚀 Abrir no Pi Browser para selo ✓ Pi Verificado
+              </a>
+              <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="color:var(--text-muted);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="HokagePi.logout()">
+                Sair
+              </button>
+            ` : `
+              <div style="text-align:center;color:#10b981;font-weight:700;padding:12px;background:rgba(16,185,129,0.1);border-radius:var(--radius-sm);border:1px solid rgba(16,185,129,0.3)">
+                ✓ Você já está conectado como @${escapeHtml(formatUserHandle(authenticatedUser.username))}!
+              </div>
+              <a href="pioneiro?u=${encodeURIComponent(formatUserHandle(authenticatedUser.username))}" class="portal-btn portal-btn--amber portal-btn--full" style="text-align:center;text-decoration:none;font-weight:700;padding:13px;font-size:0.95rem;display:flex;align-items:center;justify-content:center;gap:8px">
+                <span>🪪</span> Ir para Meu Passaporte
+              </a>
+              <a href="pioneiro?explorar=1" class="portal-btn portal-btn--outline portal-btn--full" style="text-align:center;text-decoration:none;font-size:0.85rem;padding:9px">
+                🔍 Explorar Outros Passaportes
+              </a>
+              <button type="button" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm" style="color:var(--text-muted);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="HokagePi.logout()">
+                Desconectar / Trocar de Conta
+              </button>
+            `
+          ) : (inPi ? `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="diag-auth-trigger-btn" onclick="HokagePi.triggerAuthFlow()" style="padding:14px;font-weight:700">
               ⚡ Conectar no Pi Browser
             </button>
@@ -285,6 +349,50 @@
     `;
 
     modal.classList.add('active');
+
+    const web2Form = document.getElementById('diag-web2-magic-form');
+    if (web2Form) {
+      web2Form.addEventListener('submit', async function (ev) {
+        ev.preventDefault();
+        const emailInp = document.getElementById('diag-web2-email');
+        const submitBtn = document.getElementById('diag-web2-submit');
+        const fbEl = document.getElementById('diag-web2-feedback');
+        const emailVal = emailInp ? emailInp.value.trim() : '';
+        if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.sendMagicLink !== 'function') {
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fca5a5';
+            fbEl.textContent = 'Módulo de login Web indisponível nesta página. Acesse /pioneiro para entrar por e-mail.';
+          }
+          return;
+        }
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Enviando...';
+        }
+        if (fbEl) fbEl.style.display = 'none';
+        try {
+          await window.HokageWeb2Auth.sendMagicLink(emailVal, window.location.origin + '/pioneiro');
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#6ee7b7';
+            fbEl.innerHTML = '✉️ <strong>Link enviado!</strong> Confira sua caixa de entrada (e spam) e toque no link para entrar instantaneamente.';
+          }
+          if (emailInp) emailInp.value = '';
+        } catch (err) {
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fca5a5';
+            fbEl.textContent = '⚠️ ' + ((err && err.message) || 'Falha ao enviar link de acesso.');
+          }
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = '✉️ Enviar Link Mágico';
+          }
+        }
+      });
+    }
 
     // Se estiver de fato no Pi Browser e desconectado, tenta autenticar
     if (inPi && !authenticatedUser && !(options && options.noAutoAuth)) {
@@ -458,13 +566,16 @@
   function logout() {
     authenticatedUser = null;
     isSdkSessionAuthenticated = false;
+    if (window.HokageWeb2Auth && typeof window.HokageWeb2Auth.signOut === 'function') {
+      try { window.HokageWeb2Auth.signOut(); } catch (_) {}
+    }
     try {
       localStorage.removeItem('hokage_pi_user');
       sessionStorage.removeItem('hokage_pi_user');
       sessionStorage.removeItem('hokage_pi_access_token');
     } catch (_) { }
     updateAuthUi(null);
-    showToast('Sessão Pi desconectada.', 'info');
+    showToast('Sessão desconectada.', 'info');
     setTimeout(function () {
       window.location.reload();
     }, 350);
@@ -1207,6 +1318,7 @@
     restoreOwnedEbooks: restoreOwnedEbooks,
     isPaymentInFlight: function () { return isPaymentRequestInFlight; },
     getUser: function () { return authenticatedUser; },
+    updateAuthUi: updateAuthUi,
     getAccessToken: function () {
       return getAuthTokenForServer();
     },
@@ -1231,7 +1343,7 @@
       const cached = localStorage.getItem('hokage_pi_user');
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (parsed && parsed.username) {
+        if (parsed && (parsed.username || parsed.authType === 'web2')) {
           authenticatedUser = parsed;
           updateAuthUi(authenticatedUser);
 

@@ -137,10 +137,16 @@
       if (!parsed || !parsed.username) return '';
       const clean = String(parsed.username).trim().replace(/^@+/, '').toLowerCase().replace(/[^a-z0-9._-]/g, '');
       if (!clean) return '';
+      const isWebOnly = parsed.authType === 'web2' && !parsed.is_pi_verified;
+      const chipStyle = isWebOnly
+        ? 'white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(56,189,248,0.45);color:#7dd3fc'
+        : 'white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(16,185,129,0.45);color:#6ee7b7';
+      const chipIcon = isWebOnly ? '🌐' : '🟢';
+      const chipTitle = isWebOnly ? 'Meu Passaporte Web' : 'Meu Passaporte Pi';
       return (
         '<a href="pioneiro?u=' + encodeURIComponent(clean) + '" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--desktop-only" ' +
-          'style="white-space:nowrap;font-weight:700;text-decoration:none;border-color:rgba(16,185,129,0.45);color:#6ee7b7" title="Meu Passaporte Pi">' +
-          '🟢 @' + clean +
+          'style="' + chipStyle + '" title="' + chipTitle + '">' +
+          chipIcon + ' @' + clean +
         '</a>'
       );
     } catch (_) {

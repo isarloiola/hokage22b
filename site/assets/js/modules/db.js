@@ -12,28 +12,47 @@
 
   const MURAL_ACTION_URL = SUPABASE_URL + '/functions/v1/mural-action';
 
-  async function callMuralAction(action, payload) {
-    let accessToken = (window.HokagePi && window.HokagePi.getAccessToken)
+  async function resolveClientTokens() {
+    let piToken = (window.HokagePi && window.HokagePi.getAccessToken)
       ? window.HokagePi.getAccessToken()
       : '';
 
-    if (!accessToken) {
-      try { accessToken = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) { }
+    if (!piToken) {
+      try { piToken = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) { }
     }
 
-    if (!accessToken && window.Pi && typeof window.Pi.authenticate === 'function') {
+    if (!piToken && window.Pi && typeof window.Pi.authenticate === 'function') {
       try {
         const auth = await window.Pi.authenticate(['username'], function () { });
         if (auth && auth.accessToken) {
-          accessToken = auth.accessToken;
-          try { sessionStorage.setItem('hokage_pi_access_token', accessToken); } catch (_) { }
+          piToken = auth.accessToken;
+          try { sessionStorage.setItem('hokage_pi_access_token', piToken); } catch (_) { }
         }
       } catch (_) { }
     }
 
-    if (!accessToken) {
-      throw new Error('Sessão Pi Network não autenticada. Conecte-se no Pi Browser.');
+    let web2Token = '';
+    if (!piToken && window.HokageWeb2Auth && typeof window.HokageWeb2Auth.getAccessToken === 'function') {
+      try {
+        web2Token = await window.HokageWeb2Auth.getAccessToken();
+      } catch (_) { }
     }
+
+    return { accessToken: piToken || '', web2Token: web2Token || '' };
+  }
+
+  async function callMuralAction(action, payload) {
+    const tokens = await resolveClientTokens();
+    if (!tokens.accessToken && !tokens.web2Token) {
+      throw new Error('Sessão não autenticada. Conecte no Pi Browser ou entre com seu e-mail.');
+    }
+
+    const reqBody = {
+      action: action,
+      payload: payload || {}
+    };
+    if (tokens.accessToken) reqBody.accessToken = tokens.accessToken;
+    if (tokens.web2Token) reqBody.web2Token = tokens.web2Token;
 
     const res = await fetch(MURAL_ACTION_URL, {
       method: 'POST',
@@ -42,11 +61,7 @@
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
       },
-      body: JSON.stringify({
-        action: action,
-        accessToken: accessToken,
-        payload: payload || {}
-      })
+      body: JSON.stringify(reqBody)
     });
 
     const json = await res.json().catch(function () { return {}; });
@@ -803,28 +818,29 @@
         throw new Error('Chave pública da Pi Wallet inválida (checksum CRC16 não confere)');
       }
 
-      // 1. Gravação exclusiva via Edge Function segura com validação de token na Pi Core Team
-      var token = (window.HokagePi && window.HokagePi.getAccessToken) ? window.HokagePi.getAccessToken() : '';
-      if (!token) {
-        try {
-          token = sessionStorage.getItem('hokage_pi_access_token') || '';
-        } catch (_) { }
-      }
-      if (!token) {
-        throw new Error('Sessão Pi Network não autenticada. Conecte-se no Pi Browser para salvar seu Passaporte.');
+      // 1. Gravação exclusiva via Edge Function segura (Pi SDK /v2/me ou Supabase Auth Web2 JWT)
+      var tokens = await resolveClientTokens();
+      if (!tokens.accessToken && !tokens.web2Token) {
+        throw new Error('Sessão não autenticada. Conecte-se no Pi Browser ou entre com seu e-mail para salvar seu Passaporte.');
       }
 
       var pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')
         ? window.HokageReferral.getPendingRef()
         : null;
+      var profilePayloadBody = {
+        profileData: profileData,
+        refCode: pendingRef
+      };
+      if (tokens.accessToken) {
+        profilePayloadBody.accessToken = tokens.accessToken;
+      } else if (tokens.web2Token) {
+        profilePayloadBody.web2Token = tokens.web2Token;
+        profilePayloadBody.requestedHandle = '@' + clean;
+      }
       var edgeRes = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          accessToken: token,
-          profileData: profileData,
-          refCode: pendingRef
-        })
+        body: JSON.stringify(profilePayloadBody)
       });
       var edgeJson = await edgeRes.json().catch(function () { return {}; });
       if (!edgeRes.ok || !edgeJson.ok) {
@@ -1029,21 +1045,25 @@
         reader.readAsDataURL(file);
       });
     }
-    let token = '';
-    try {
-      token = (window.HokagePi && window.HokagePi.getAccessToken) ? window.HokagePi.getAccessToken() : '';
-      if (!token) token = sessionStorage.getItem('hokage_pi_access_token') || '';
-    } catch (_) {}
-    if (!token) throw new Error('Conecte-se no Pi Browser para enviar sua foto de perfil.');
+    var tokens = await resolveClientTokens();
+    if (!tokens.accessToken && !tokens.web2Token) {
+      throw new Error('Conecte-se no Pi Browser ou via e-mail para enviar sua foto de perfil.');
+    }
+
+    var uploadBody = {
+      action: 'upload_profile_image',
+      dataUrl: dataUrl
+    };
+    if (tokens.accessToken) {
+      uploadBody.accessToken = tokens.accessToken;
+    } else {
+      uploadBody.web2Token = tokens.web2Token;
+    }
 
     const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'upload_profile_image',
-        accessToken: token,
-        dataUrl: dataUrl
-      })
+      body: JSON.stringify(uploadBody)
     });
     const json = await res.json().catch(function () { return {}; });
     if (!res.ok || !json.ok) {

@@ -262,6 +262,7 @@
     const flags = localFlags && typeof localFlags === 'object' ? localFlags : readLocalFlags();
     const prog = evaluateProgression(prof, flags);
     const hasPiAuth = Boolean(prof.username && String(prof.username).trim());
+    const isPiVerified = prof.is_pi_verified !== false && hasPiAuth;
     const hasWallet = Boolean(prof.wallet_address && /^G[A-Z2-7]{55}$/.test(String(prof.wallet_address).trim()));
     const hasProducts = Array.isArray(prof.products) && prof.products.length > 0;
     const hasGithub = Boolean(prof.github_url) || (Array.isArray(prof.social_links) && prof.social_links.some(function (s) { return s && s.network === 'github'; }));
@@ -271,7 +272,7 @@
       construtor: hasWallet || hasProducts || prog.rank.level >= 2,
       desenvolvedor: Boolean(flags.dev_api_used) || hasGithub,
       hokage: Boolean(prof.is_ambassador) || prog.rank.level === 4 || normalizeUserKey(prof.username) === 'hokage22b',
-      pi_kyc: hasPiAuth || Boolean(flags.passport),
+      pi_kyc: isPiVerified,
       comerciante: hasProducts || Boolean(flags.mural_posted),
       embaixador: Boolean(prof.is_ambassador) || Number(prof.referral_qualified_count || 0) > 0
     };

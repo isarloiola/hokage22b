@@ -564,6 +564,10 @@
         const bio = esc(String(p.bio || 'Pioneiro verificado no ecossistema HOKAGE22B aceitando Pi na Mainnet.').slice(0, 110));
         const hasWallet = Boolean(p.wallet_address);
         const tier = String(p.journey_tier || '').toLowerCase();
+        const isPiVerified = p.is_pi_verified !== false;
+        const verifiedPill = isPiVerified
+          ? '<span style="font-size:0.65rem;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.38);color:#34d399;padding:1px 7px;border-radius:999px;font-weight:700">✓ Pi Verificado</span>'
+          : '<span style="font-size:0.65rem;background:rgba(56,189,248,0.14);border:1px solid rgba(56,189,248,0.38);color:#7dd3fc;padding:1px 7px;border-radius:999px;font-weight:700">🌐 Membro Web</span>';
         const avatarHtml = safeAvatar
           ? '<img src="' + safeAvatar + '" alt="@' + esc(cleanHandle) + '" style="width:100%;height:100%;object-fit:cover" loading="lazy" />'
           : '<span style="font-size:1.1rem;font-weight:800;color:#fff">' + initial + '</span>';
@@ -575,7 +579,7 @@
               '<div style="min-width:0;flex:1">' +
                 '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
                   '<strong class="notranslate" translate="no" style="color:#fff;font-size:0.95rem">@' + esc(cleanHandle) + '</strong>' +
-                  '<span style="font-size:0.65rem;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.38);color:#34d399;padding:1px 7px;border-radius:999px;font-weight:700">✓ Pi Verificado</span>' +
+                  verifiedPill +
                   (tier === 'hokage' ? '<span style="font-size:0.65rem;background:rgba(249,115,22,0.16);border:1px solid rgba(249,115,22,0.45);color:#fb923c;padding:1px 7px;border-radius:999px;font-weight:700">🔥 Hokage</span>' : '') +
                   (hasWallet ? '<span style="font-size:0.65rem;background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.4);color:#fbbf24;padding:1px 7px;border-radius:999px;font-weight:700">⚡ Pi</span>' : '') +
                 '</div>' +

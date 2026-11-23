@@ -15,7 +15,7 @@ import {
   MURAL_CONFIG,
   parseJsonBody,
 } from "../_shared/http.ts";
-import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
+import { normalizeHandle, resolveActor, verifyPiAccessToken } from "../_shared/pi-auth.ts";
 import { notifyAdmin } from "../_shared/notify.ts";
 
 const MAX_BODY_BYTES = 800 * 1024; // 800 KB para suportar fotos Base64 de produtos/anúncios
@@ -137,7 +137,7 @@ serve(async (req) => {
 
   try {
     const body = await parseJsonBody(req, MAX_BODY_BYTES);
-    const { action, accessToken, payload } = body || {};
+    const { action, accessToken, web2Token, payload } = body || {};
 
     if (!action || typeof action !== "string") {
       return jsonError("INVALID_ACTION", "Ação inválida.", 400);
@@ -148,15 +148,26 @@ serve(async (req) => {
       return jsonOk("MURAL_CONFIG", { config: MURAL_CONFIG });
     }
 
-    if (!accessToken || typeof accessToken !== "string") {
-      return jsonError("MISSING_ACCESS_TOKEN", "Autenticação Pi Browser obrigatória (accessToken ausente).", 401);
-    }
-
-    const piUser = await verifyPiAccessToken(accessToken);
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const COMMUNITY_WEB2_ALLOWED = new Set(["create_comment", "create_report", "submit_review"]);
+    let piUser: { uid: string; username: string };
+
+    if (COMMUNITY_WEB2_ALLOWED.has(action)) {
+      const actor = await resolveActor(supabase, {
+        accessToken,
+        web2Token,
+        requireExistingProfile: true,
+      });
+      piUser = { uid: actor.uid, username: actor.username };
+    } else {
+      if (!accessToken || typeof accessToken !== "string") {
+        return jsonError("MISSING_ACCESS_TOKEN", "Autenticação Pi Browser obrigatória (accessToken ausente).", 401);
+      }
+      piUser = await verifyPiAccessToken(accessToken);
+    }
 
     // ── 1. CRIAR ANÚNCIO PAGO ──────────────────────────────────
     if (action === "create_ad") {

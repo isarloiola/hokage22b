@@ -35,6 +35,19 @@
     };
   }
 
+  function getCommunityUser() {
+    const piUser = getAuthenticatedPiUser();
+    if (piUser) return piUser;
+    const u = (window.HokagePi && window.HokagePi.getUser) ? window.HokagePi.getUser() : null;
+    if (u && u.username && (u.authType === 'web2' || u.authType === 'hybrid')) {
+      return {
+        uid: u.uid || '',
+        username: '@' + normalizeHandle(u.username)
+      };
+    }
+    return null;
+  }
+
   function getAdEditStatus(ad) {
     if (!ad || !ad.created_at) {
       return { editable: false, hoursLeft: 0 };
@@ -2953,7 +2966,7 @@
   }
 
   function renderCommentsDrawerHtml(adId, comments) {
-    const authUser = getAuthenticatedPiUser();
+    const authUser = getCommunityUser();
     const isPi = Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
 
     const listHtml = (!comments || comments.length === 0)
@@ -2993,7 +3006,10 @@
     } else {
       formHtml = `
         <div class="ad-comment-auth-note">
-          <span>🔒 Comentários verificados disponíveis exclusivamente dentro do <strong>Pi Browser</strong>.</span>
+          <span>💬 Entre no <strong>Pi Browser</strong> ou com seu <strong>e-mail (Membro Web)</strong> para comentar:</span>
+          <button type="button" class="btn btn-outline btn-sm" onclick="if(window.HokagePi&&window.HokagePi.openPiConnectModal)window.HokagePi.openPiConnectModal()" style="border-color:rgba(56,189,248,0.5);color:#bae6fd">
+            🔑 Entrar / Conectar
+          </button>
         </div>
       `;
     }
@@ -3056,9 +3072,9 @@
   }
 
   async function submitComment(adId) {
-    const authUser = getAuthenticatedPiUser();
+    const authUser = getCommunityUser();
     if (!authUser) {
-      if (window.HokagePi && window.HokagePi.showToast) window.HokagePi.showToast('Conecte-se no Pi Browser para comentar.', 'warning');
+      if (window.HokagePi && window.HokagePi.showToast) window.HokagePi.showToast('Conecte-se no Pi Browser ou entre com seu e-mail para comentar.', 'warning');
       return;
     }
 

@@ -630,6 +630,12 @@
       return Boolean(user && user.authType === 'pi-sdk' && user.uid && !user.uid.startsWith('demo-'));
     }
 
+    function isWeb2Authenticated() {
+      const user = getLoggedUser();
+      if (!user) return false;
+      return Boolean(user.authType === 'web2' || user.authType === 'hybrid');
+    }
+
     function isOwnerOfCurrentPage() {
       if (isSimulatorMode) return true;
       const logged = getLoggedUser();
@@ -637,14 +643,17 @@
       return cleanUsername(logged.username) === cleanUsername(currentPioneerUser);
     }
 
-    function setLoggedUser(username, uid, authType, accessToken) {
-      const clean = cleanUsername(username);
+    function setLoggedUser(username, uid, authType, accessToken, extra) {
+      const clean = username ? cleanUsername(username) : '';
       const existing = getLoggedUser();
-      const preservedUid = uid || (existing && cleanUsername(existing.username) === clean ? existing.uid : null) || ('user_' + clean.replace('@', ''));
-      const userObj = { 
-        username: clean, 
+      const preservedUid = uid || (existing && clean && cleanUsername(existing.username) === clean ? existing.uid : null) || (clean ? ('user_' + clean.replace('@', '')) : '');
+      const resolvedType = authType || (existing && existing.authType) || 'demo';
+      const userObj = {
+        username: clean,
         uid: preservedUid,
-        authType: authType || (existing && existing.authType) || 'demo'
+        authType: resolvedType,
+        is_pi_verified: (extra && extra.is_pi_verified !== undefined) ? Boolean(extra.is_pi_verified) : (resolvedType !== 'web2'),
+        email: (extra && extra.email) || (existing && existing.email) || undefined
       };
       try {
         localStorage.setItem('hokage_pi_user', JSON.stringify(userObj));
@@ -653,6 +662,9 @@
           sessionStorage.setItem('hokage_pi_access_token', accessToken);
         }
       } catch (_) {}
+      if (window.HokagePi && typeof window.HokagePi.updateAuthUi === 'function') {
+        try { window.HokagePi.updateAuthUi(userObj); } catch (_) {}
+      }
     }
 
     async function ensurePiAccessToken() {
@@ -677,7 +689,10 @@
       return token;
     }
 
-    function logoutPioneer() {
+    async function logoutPioneer() {
+      if (window.HokageWeb2Auth && typeof window.HokageWeb2Auth.signOut === 'function') {
+        try { await window.HokageWeb2Auth.signOut(); } catch (_) {}
+      }
       try {
         localStorage.removeItem('hokage_pi_user');
         localStorage.removeItem('isar_pi_user');
@@ -702,6 +717,97 @@
       currentPioneerUser = currentProfileData.username || SIMULATOR_DEMO_PROFILE.username;
       renderShowcaseData(currentProfileData, []);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function syncOnboardingAuthBoxes() {
+      const logged = getLoggedUser();
+      const loggedBox = document.getElementById('onboarding-logged-box');
+      const web2Box = document.getElementById('web2-onboarding-box');
+      const inPi = isPiBrowser();
+
+      if (loggedBox) {
+        if (logged && logged.username) {
+          const cleanLogged = cleanUsername(logged.username).replace(/^@+/, '');
+          const isWebOnly = logged.authType === 'web2' && !logged.is_pi_verified;
+          loggedBox.innerHTML = `
+            <div class="onboarding-logged-card">
+              <div style="min-width:0">
+                <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600">${isWebOnly ? 'Sua Sessão Web Conectada:' : 'Sua Sessão Pi Conectada:'}</div>
+                <div style="font-size:0.95rem;color:${isWebOnly ? '#38bdf8' : '#10b981'};font-weight:800;word-break:break-word">${isWebOnly ? '🌐' : '🟢'} @${escapeHtml(cleanLogged)}</div>
+              </div>
+              <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="padding:9px 16px;font-size:0.86rem;font-weight:700;text-decoration:none;flex-shrink:0">
+                🪪 Ir para Meu Passaporte →
+              </a>
+            </div>
+          `;
+          loggedBox.style.display = 'block';
+        } else if (logged && logged.authType === 'web2' && logged.needsHandle) {
+          loggedBox.innerHTML = `
+            <div class="onboarding-logged-card" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.1)">
+              <div style="min-width:0">
+                <div style="font-size:0.75rem;color:#7dd3fc;font-weight:700">✓ E-mail Confirmado · Falta só 1 passo</div>
+                <div style="font-size:0.9rem;color:#fff;font-weight:800;word-break:break-word">${escapeHtml(logged.email || 'Membro Web')}</div>
+              </div>
+              <button type="button" onclick="openProfileEditModal()" class="btn btn-primary btn-sm" style="padding:9px 16px;font-size:0.86rem;font-weight:700;flex-shrink:0">
+                ✨ Escolher meu @usuário →
+              </button>
+            </div>
+          `;
+          loggedBox.style.display = 'block';
+        } else {
+          loggedBox.style.display = 'none';
+        }
+      }
+
+      if (web2Box) {
+        const isAlreadySignedIn = Boolean(logged && (logged.username || logged.authType === 'web2'));
+        web2Box.style.display = (!inPi && !isAlreadySignedIn) ? 'block' : 'none';
+      }
+
+      const web2Form = document.getElementById('web2-onboarding-form');
+      if (web2Form && !web2Form.dataset.bound) {
+        web2Form.dataset.bound = '1';
+        web2Form.addEventListener('submit', async function (ev) {
+          ev.preventDefault();
+          const emailInp = document.getElementById('web2-onboarding-email');
+          const submitBtn = document.getElementById('web2-onboarding-btn');
+          const fbEl = document.getElementById('web2-onboarding-feedback');
+          const emailVal = emailInp ? emailInp.value.trim() : '';
+          if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.sendMagicLink !== 'function') {
+            if (fbEl) {
+              fbEl.style.display = 'block';
+              fbEl.style.color = '#fca5a5';
+              fbEl.textContent = 'Autenticação por e-mail indisponível no momento.';
+            }
+            return;
+          }
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+          }
+          if (fbEl) fbEl.style.display = 'none';
+          try {
+            await window.HokageWeb2Auth.sendMagicLink(emailVal, window.location.origin + '/pioneiro');
+            if (fbEl) {
+              fbEl.style.display = 'block';
+              fbEl.style.color = '#6ee7b7';
+              fbEl.innerHTML = '✉️ <strong>Link de acesso enviado!</strong> Abra seu e-mail e toque no link para criar seu Passaporte Web.';
+            }
+            if (emailInp) emailInp.value = '';
+          } catch (err) {
+            if (fbEl) {
+              fbEl.style.display = 'block';
+              fbEl.style.color = '#fca5a5';
+              fbEl.textContent = '⚠️ ' + ((err && err.message) || 'Erro ao enviar link de acesso.');
+            }
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = '✉️ Receber Link de Acesso';
+            }
+          }
+        });
+      }
     }
 
     // Carrega Perfil Real (Supabase) ou Oficial do Hokage22b
@@ -792,30 +898,14 @@
           }
         }
 
-        // Mostra atalho de 1 clique caso já esteja logado
-        const logged = getLoggedUser();
-        const loggedBox = document.getElementById('onboarding-logged-box');
-        if (loggedBox) {
-          if (logged && logged.username) {
-            const cleanLogged = cleanUsername(logged.username).replace(/^@+/, '');
-            loggedBox.innerHTML = `
-              <div class="onboarding-logged-card">
-                <div style="min-width:0">
-                  <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600">Sua Sessão Pi Conectada:</div>
-                  <div style="font-size:0.95rem;color:#10b981;font-weight:800;word-break:break-word">🟢 @${escapeHtml(cleanLogged)}</div>
-                </div>
-                <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="padding:9px 16px;font-size:0.86rem;font-weight:700;text-decoration:none;flex-shrink:0">
-                  🪪 Ir para Meu Passaporte →
-                </a>
-              </div>
-            `;
-            loggedBox.style.display = 'block';
-          } else {
-            loggedBox.style.display = 'none';
-          }
-        }
+        // Mostra atalho de 1 clique caso já esteja logado (e login Web2 fora do Pi Browser)
+        syncOnboardingAuthBoxes();
         loadPioneersDirectory();
-        if (isExploreFlow) {
+        if (getQueryParam('setup') === 'web2' && loggedUser && loggedUser.authType === 'web2' && loggedUser.needsHandle) {
+          setTimeout(function () {
+            openProfileEditModal();
+          }, 200);
+        } else if (isExploreFlow) {
           setTimeout(function () {
             const dirSec = document.getElementById('pioneer-directory-section');
             if (dirSec) dirSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1101,6 +1191,21 @@
       }
       document.getElementById('pioneer-handle').textContent = username;
       document.title = `${username} — Passaporte Oficial na Pi Network | HOKAGE22B`;
+
+      const statusBar = document.getElementById('pioneer-account-status-bar');
+      if (statusBar) {
+        if (!prof._notFound && prof.is_pi_verified === false) {
+          let barHtml = '<span style="display:inline-flex;align-items:center;gap:6px;font-size:0.74rem;background:rgba(56,189,248,0.14);border:1px solid rgba(56,189,248,0.4);color:#7dd3fc;padding:4px 12px;border-radius:20px;font-weight:700">🌐 Membro Web</span>';
+          if (isOwner && !isSimulatorMode) {
+            barHtml += '<div style="margin:8px auto 0;max-width:440px;padding:9px 12px;border-radius:12px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.28);font-size:0.76rem;color:#cbd5e1;line-height:1.4">🌐 <strong>Conta Web ativa</strong> — Abra no <a href="pi://hokage22b.com/pioneiro" style="color:#fbbf24;font-weight:700;text-decoration:underline">Pi Browser</a> quando quiser vincular sua conta Pi e ativar o selo <strong>✓ Pi Verificado</strong>.</div>';
+          }
+          statusBar.innerHTML = barHtml;
+          statusBar.style.display = 'block';
+        } else {
+          statusBar.innerHTML = '';
+          statusBar.style.display = 'none';
+        }
+      }
 
       // Renderiza Avatar (Foto com Cortador ou Letra Inicial)
       applyAvatarOnScreen(prof.avatar_url, username);
@@ -1462,6 +1567,8 @@
             console.error('Erro Pi SDK:', err);
             alert('Falha ao conectar via Pi SDK. Por favor, tente novamente no Pi Browser.');
           });
+      } else if (isWeb2Authenticated()) {
+        openProfileEditModal();
       } else {
         openExternalBrowserModal();
       }
@@ -1497,11 +1604,12 @@
     }
 
     // ==========================================
-    // MODAL DE EDIÇÃO (EXCLUSIVO NO PI BROWSER)
+    // MODAL DE EDIÇÃO (PI BROWSER OU CONTA WEB)
     // ==========================================
     function openProfileEditModal() {
-      // Bloqueio estrito: edição oficial só ocorre dentro do Pi Browser (ou no Simulador Interativo)
-      if (!isSimulatorMode && !isPiBrowser()) {
+      const inPi = isPiBrowser();
+      const hasWeb2 = isWeb2Authenticated();
+      if (!isSimulatorMode && !inPi && !hasWeb2) {
         openExternalBrowserModal();
         return;
       }
@@ -1511,9 +1619,25 @@
       switchEditTab('perfil');
 
       const loggedUser = getLoggedUser();
-      const activeUser = currentPioneerUser || (loggedUser ? loggedUser.username : '@meu_usuario');
+      const isPickingWeb2Handle = Boolean(!isSimulatorMode && !inPi && hasWeb2 && (!loggedUser || !loggedUser.username || loggedUser.needsHandle));
+      const activeUser = isPickingWeb2Handle ? '' : (currentPioneerUser || (loggedUser && loggedUser.username ? loggedUser.username : '@meu_usuario'));
 
-      document.getElementById('prof-input-user').value = activeUser;
+      const userInp = document.getElementById('prof-input-user');
+      const handleHint = document.getElementById('prof-user-handle-hint');
+      if (userInp) {
+        userInp.value = activeUser;
+        userInp.readOnly = !isSimulatorMode && !isPickingWeb2Handle;
+        userInp.placeholder = isPickingWeb2Handle ? '@seu_usuario' : '@seunome';
+      }
+      if (handleHint) {
+        if (isPickingWeb2Handle) {
+          handleHint.textContent = '✨ Escolha seu @usuário exclusivo (3 a 24 caracteres: letras minúsculas, números e _).';
+          handleHint.style.display = 'block';
+        } else {
+          handleHint.textContent = '';
+          handleHint.style.display = 'none';
+        }
+      }
 
       const saveBtn = document.getElementById('btn-save-profile');
       const subTitle = document.getElementById('modal-profile-subtitle');
@@ -1523,6 +1647,9 @@
       if (isSimulatorMode) {
         if (saveBtn) saveBtn.textContent = '👀 Atualizar Prévia no Simulador';
         if (subTitle) subTitle.textContent = 'Modo Simulador: adicione fotos e links para testar a prévia na sua tela.';
+      } else if (!inPi && hasWeb2) {
+        if (saveBtn) saveBtn.textContent = '💾 Publicar Passaporte Web';
+        if (subTitle) subTitle.textContent = 'Configure sua bio, links e catálogo. Vincule sua conta Pi depois no Pi Browser!';
       } else {
         if (saveBtn) saveBtn.textContent = '💾 Salvar Oficialmente na Pi Network';
         if (subTitle) subTitle.textContent = 'Configure sua bio, foto de perfil, carteira Pi, contatos e produtos.';
@@ -1706,6 +1833,10 @@
         const hasWallet = Boolean(p.wallet_address);
         const prodCount = Array.isArray(p.products) ? p.products.length : 0;
         const isAmb = Boolean(p.is_ambassador || Number(p.referral_qualified_count || 0) >= 5 || uSlug === 'hokage22b');
+        const isPiVerified = p.is_pi_verified !== false;
+        const verifiedBadge = isPiVerified
+          ? '<span style="font-size:0.65rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:1px 6px;border-radius:10px;font-weight:700" title="Conta autenticada via Pi Browser">✓ Pi Verificado</span>'
+          : '<span style="font-size:0.65rem;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#7dd3fc;padding:1px 6px;border-radius:10px;font-weight:700" title="Conta Web verificada por e-mail">🌐 Membro Web</span>';
 
         html += `
           <div class="dir-card">
@@ -1716,7 +1847,7 @@
               <div style="min-width:0;flex:1">
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
                   <strong style="color:#fff;font-size:0.9rem;word-break:break-word" class="notranslate">${escapeHtml(uName)}</strong>
-                  <span style="font-size:0.65rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:1px 6px;border-radius:10px;font-weight:700" title="Conta autenticada via Pi Browser">✓ Pi Verificado</span>
+                  ${verifiedBadge}
                   ${isAmb ? `<span style="font-size:0.65rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.5);color:#fcd34d;padding:1px 6px;border-radius:10px;font-weight:700">🏅 Embaixador</span>` : ''}
                   ${hasWallet ? `<span style="font-size:0.65rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:1px 6px;border-radius:10px;font-weight:700">⚡ Pi</span>` : ''}
                   ${prodCount > 0 ? `<span style="font-size:0.65rem;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);color:var(--accent-light);padding:1px 6px;border-radius:10px;font-weight:700">🛍️ ${prodCount}</span>` : ''}
@@ -2039,30 +2170,40 @@
       }
       let username = cleanUsername(rawUser);
 
-      // Verificação de Segurança Anti-Fraude (Exclusivo Pi Browser):
+      // Verificação de Segurança Anti-Fraude (Pi Browser OU Conta Web autenticada por e-mail):
       const inPi = isPiBrowser();
       const isAuth = isPiSdkAuthenticated();
+      const hasWeb2Token = Boolean(window.HokageWeb2Auth && typeof window.HokageWeb2Auth.getAccessToken === 'function' && await window.HokageWeb2Auth.getAccessToken());
+      const hasWeb2 = isWeb2Authenticated() || hasWeb2Token;
 
-      if (!inPi && !isAuth) {
+      if (!inPi && !isAuth && !hasWeb2) {
         applyLivePreviewFromForm();
         alert(
-          '💡 Modo Simulação (Navegador Comum)\n\n' +
+          '💡 Modo Simulação (Visitante sem Login)\n\n' +
           'Sua prévia foi atualizada na sua tela com sucesso!\n\n' +
-          '🔒 Como publicar definitivamente na rede mundial?\n' +
-          'Abra este site dentro do aplicativo Pi Browser para autenticar que você é o verdadeiro dono do @usuário.'
+          '🔒 Como publicar definitivamente?\n' +
+          'Entre com seu e-mail aqui na Web ou abra este site dentro do Pi Browser.'
         );
         return;
       }
 
-      // Garante token Pi SDK ativo (mesmo se o pioneiro fechou e reabriu o Pi Browser em outro dia)
+      // Garante token Pi SDK ativo quando dentro do Pi Browser
       if (inPi && window.Pi) {
         const freshToken = await ensurePiAccessToken();
         const refreshedUser = getLoggedUser();
         if (refreshedUser && refreshedUser.username) {
           username = cleanUsername(refreshedUser.username);
         }
-        if (!freshToken) {
+        if (!freshToken && !hasWeb2Token) {
           alert('Falha na autenticação Pi. Confirme a autorização da sua conta dentro do Pi Browser para salvar oficialmente.');
+          return;
+        }
+      } else if (hasWeb2) {
+        const cleanHandleCheck = username.replace(/^@+/, '').toLowerCase();
+        if (!/^[a-z0-9_]{3,24}$/.test(cleanHandleCheck)) {
+          alert('Escolha um @usuário válido entre 3 e 24 caracteres (letras minúsculas, números e _).');
+          const userInpEl = document.getElementById('prof-input-user');
+          if (userInpEl) userInpEl.focus();
           return;
         }
       }
@@ -2141,16 +2282,27 @@
             }
           } catch (_) {}
 
-          setLoggedUser(username, null, 'pi-sdk');
-          currentPioneerUser = username;
+          const savedUid = (savedResp && savedResp.uid) || (getLoggedUser() && getLoggedUser().uid) || null;
+          const savedIsPiVerified = (savedResp && savedResp.is_pi_verified !== undefined)
+            ? Boolean(savedResp.is_pi_verified)
+            : (inPi || isAuth);
+          const savedAuthType = savedResp && savedResp.auth_provider
+            ? (savedResp.auth_provider === 'pi' ? 'pi-sdk' : savedResp.auth_provider)
+            : ((inPi || isAuth) ? 'pi-sdk' : 'web2');
+          const savedHandle = (savedResp && savedResp.username) ? cleanUsername(savedResp.username) : username;
+
+          setLoggedUser(savedHandle, savedUid, savedAuthType, null, { is_pi_verified: savedIsPiVerified });
+          currentPioneerUser = savedHandle;
           if (currentProfileData) {
             currentProfileData.avatar_url = finalAvatarUrl;
           }
-          applyAvatarOnScreen(finalAvatarUrl, username);
-          window.history.replaceState(null, '', `?u=${encodeURIComponent(cleanSlug)}`);
+          applyAvatarOnScreen(finalAvatarUrl, savedHandle);
+          window.history.replaceState(null, '', `?u=${encodeURIComponent(savedHandle.replace(/^@+/, ''))}`);
 
           if (savedResp && savedResp._referralResult && savedResp._referralResult.awarded) {
             showVitrineToast('🎉 Vitrine salva! Você ganhou +1 Crédito de Anúncio Bronze Grátis (0.314 π) no Mural!', 'success');
+          } else if (!savedIsPiVerified) {
+            showVitrineToast('✓ Passaporte Web publicado! Vincule no Pi Browser quando quiser ativar o selo ✓ Pi Verificado.', 'success');
           } else {
             showVitrineToast('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!', 'success');
           }
@@ -2169,14 +2321,14 @@
           fbEl.style.border = '1px solid rgba(239,68,68,0.45)';
           fbEl.style.color = '#fca5a5';
           fbEl.innerHTML = isAuthErr
-            ? `<div style="margin-bottom:8px">🔒 <strong>Sessão Pi expirada ou não autenticada:</strong> ${escapeHtml(msg)}</div>
-               <button type="button" onclick="connectPiBrowserAndStart()" class="btn btn-primary btn-sm" style="font-weight:700">⚡ Reconectar Pi Agora</button>`
+            ? `<div style="margin-bottom:8px">🔒 <strong>Sessão expirada ou não autenticada:</strong> ${escapeHtml(msg)}</div>
+               <button type="button" onclick="${inPi ? 'connectPiBrowserAndStart()' : 'if(window.HokagePi&&window.HokagePi.openPiConnectModal)window.HokagePi.openPiConnectModal()'}" class="btn btn-primary btn-sm" style="font-weight:700">${inPi ? '⚡ Reconectar Pi Agora' : '🔑 Entrar / Reconectar Agora'}</button>`
             : `⚠️ ${escapeHtml(msg)}`;
         }
         showVitrineToast(msg, 'error');
       } finally {
         btn.disabled = false;
-        btn.textContent = '💾 Salvar Oficialmente na Pi Network';
+        btn.textContent = (!inPi && hasWeb2) ? '💾 Publicar Passaporte Web' : '💾 Salvar Oficialmente na Pi Network';
       }
     }
 
@@ -2924,7 +3076,7 @@
 
       const isPi = isPiBrowser() || Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
       const piUser = getLoggedUser() || ((window.HokagePi && window.HokagePi.getUser) ? window.HokagePi.getUser() : null);
-      if (isPi && piUser && piUser.username) {
+      if (piUser && piUser.username && (isPi || piUser.authType === 'web2' || piUser.authType === 'hybrid')) {
         formBox.innerHTML = `
           <form id="pioneer-review-form" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.22);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
@@ -2963,7 +3115,7 @@
           });
         }
       } else {
-        formBox.innerHTML = `<div style="font-size:0.76rem;color:var(--text-muted);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px">🔒 Avaliações verificadas disponíveis exclusivamente para usuários conectados no <strong>Pi Browser</strong>.</div>`;
+        formBox.innerHTML = `<div style="font-size:0.76rem;color:var(--text-muted);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>💬 Entre no <strong>Pi Browser</strong> ou com seu <strong>e-mail</strong> no Passaporte para recomendar este perfil.</span><a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm" style="text-decoration:none;border-color:rgba(56,189,248,0.45);color:#bae6fd">🔑 Entrar</a></div>`;
       }
     }
 
@@ -3017,6 +3169,27 @@
       closeWalletQrModal();
       closeExternalBrowserModal();
       closeProfileEditModal();
+    });
+
+    window.addEventListener('hokage:web2-auth-ready', function (ev) {
+      if (typeof syncOnboardingAuthBoxes === 'function') {
+        syncOnboardingAuthBoxes();
+      }
+      const detail = (ev && ev.detail) || {};
+      const u = detail.user;
+      const hasExplicitTarget = Boolean(getQueryParam('u') || getQueryParam('user') || getQueryParam('explorar') === '1' || getQueryParam('teste') === '1' || getQueryParam('simulador') === '1');
+      if (!isSimulatorMode && !hasExplicitTarget && u) {
+        if (u.username) {
+          const slug = cleanUsername(u.username).replace(/^@+/, '');
+          window.history.replaceState(null, '', '?u=' + encodeURIComponent(slug));
+          loadPioneerProfile();
+        } else if (u.needsHandle) {
+          const modal = document.getElementById('edit-profile-modal');
+          if (!modal || !modal.classList.contains('active')) {
+            openProfileEditModal();
+          }
+        }
+      }
     });
 
     document.addEventListener('DOMContentLoaded', loadPioneerProfile);

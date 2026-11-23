@@ -12,7 +12,7 @@ import {
   jsonOk,
   parseJsonBody,
 } from "../_shared/http.ts";
-import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
+import { normalizeHandle, resolveActor, verifyPiAccessToken, verifyWeb2AccessToken } from "../_shared/pi-auth.ts";
 import { notifyAdmin } from "../_shared/notify.ts";
 
 function sanitizeProfileHttpUrl(raw: unknown): string | null {
@@ -103,17 +103,143 @@ serve(async (req) => {
 
   try {
     const body = await parseJsonBody(req, 1024 * 1024);
-    const { action, dataUrl, accessToken, profileData, refCode } = body;
+    const { action, dataUrl, accessToken, web2Token, requestedHandle, profileData, refCode } = body;
 
-    // 1. VALIDAÇÃO CRIPTOGRÁFICA DO TOKEN DIRETAMENTE NA API DA PI CORE TEAM (/v2/me)
-    const piUser = await verifyPiAccessToken(accessToken);
-    const verifiedUid = piUser.uid;
-    const verifiedUsername = piUser.username;
-
-    // 2. INICIALIZA CLIENT SUPABASE COM SERVICE_ROLE
+    // 1. INICIALIZA CLIENT SUPABASE COM SERVICE_ROLE
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // 1A. CONSULTAR PASSAPORTE VINCULADO À SESSÃO WEB2
+    if (action === "get_my_web2_profile") {
+      const web2 = await verifyWeb2AccessToken(supabase, String(web2Token || ""));
+      const { data: myProf, error: myProfErr } = await supabase
+        .from("pioneiros")
+        .select("uid, username, bio, avatar_url, wallet_address, auth_provider, is_pi_verified, updated_at")
+        .eq("auth_user_id", web2.authUserId)
+        .maybeSingle();
+      if (myProfErr) throw myProfErr;
+      return jsonOk("WEB2_PROFILE_LOADED", { profile: myProf || null }, corsHeaders, 200);
+    }
+
+    // 1B. VINCULAR CONTA WEB2 EXISTENTE COM IDENTIDADE OFICIAL PI SDK (/v2/me)
+    if (action === "link_pi_account") {
+      const web2 = await verifyWeb2AccessToken(supabase, String(web2Token || ""));
+      const piUser = await verifyPiAccessToken(String(accessToken || ""));
+
+      const [{ data: web2Row }, { data: piRowByUid }, { data: piRowByUser }] = await Promise.all([
+        supabase
+          .from("pioneiros")
+          .select("*")
+          .eq("auth_user_id", web2.authUserId)
+          .maybeSingle(),
+        supabase
+          .from("pioneiros")
+          .select("*")
+          .eq("uid", piUser.uid)
+          .maybeSingle(),
+        supabase
+          .from("pioneiros")
+          .select("*")
+          .ilike("username", piUser.username)
+          .maybeSingle(),
+      ]);
+
+      const piRow = piRowByUid || piRowByUser || null;
+      if (piRow && piRow.auth_user_id && String(piRow.auth_user_id) !== web2.authUserId) {
+        return jsonError(
+          "PI_ALREADY_LINKED",
+          "Esta conta Pi já está vinculada a outro e-mail.",
+          corsHeaders,
+          409
+        );
+      }
+
+      let updatedRow = null;
+      const nowIso = new Date().toISOString();
+
+      if (piRow && web2Row && String(piRow.uid) !== String(web2Row.uid)) {
+        const { error: clearErr } = await supabase
+          .from("pioneiros")
+          .update({ auth_user_id: null, updated_at: nowIso })
+          .eq("uid", web2Row.uid);
+        if (clearErr) throw clearErr;
+
+        const { data: merged, error: mergeErr } = await supabase
+          .from("pioneiros")
+          .update({
+            uid: piUser.uid,
+            username: piUser.username,
+            auth_user_id: web2.authUserId,
+            auth_provider: "hybrid",
+            is_pi_verified: true,
+            updated_at: nowIso,
+          })
+          .eq("uid", piRow.uid)
+          .select()
+          .single();
+        if (mergeErr) throw mergeErr;
+        updatedRow = merged;
+      } else if (piRow) {
+        const { data: linked, error: linkErr } = await supabase
+          .from("pioneiros")
+          .update({
+            uid: piUser.uid,
+            username: piUser.username,
+            auth_user_id: web2.authUserId,
+            auth_provider: "hybrid",
+            is_pi_verified: true,
+            updated_at: nowIso,
+          })
+          .eq("uid", piRow.uid)
+          .select()
+          .single();
+        if (linkErr) throw linkErr;
+        updatedRow = linked;
+      } else if (web2Row) {
+        const { data: upgraded, error: upgErr } = await supabase
+          .from("pioneiros")
+          .update({
+            uid: piUser.uid,
+            username: piUser.username,
+            auth_provider: "hybrid",
+            is_pi_verified: true,
+            updated_at: nowIso,
+          })
+          .eq("uid", web2Row.uid)
+          .select()
+          .single();
+        if (upgErr) throw upgErr;
+        updatedRow = upgraded;
+      } else {
+        const { data: created, error: createErr } = await supabase
+          .from("pioneiros")
+          .insert([{
+            uid: piUser.uid,
+            username: piUser.username,
+            auth_user_id: web2.authUserId,
+            auth_provider: "hybrid",
+            is_pi_verified: true,
+            updated_at: nowIso,
+          }])
+          .select()
+          .single();
+        if (createErr) throw createErr;
+        updatedRow = created;
+      }
+
+      return jsonOk("PI_ACCOUNT_LINKED", { profile: updatedRow }, corsHeaders, 200);
+    }
+
+    // 2. RESOLUÇÃO ZERO-TRUST DO ATOR (Pi SDK /v2/me OU Supabase Auth JWT Web2)
+    const actor = await resolveActor(supabase, {
+      accessToken,
+      web2Token,
+      requestedHandle: requestedHandle || (profileData && profileData.username),
+      requireExistingProfile: action === "upload_profile_image",
+    });
+    const verifiedUid = actor.uid;
+    const verifiedUsername = actor.username;
 
     if (action === "upload_profile_image") {
       const { bytes, ext, mime } = decodeProfileImageDataUrl(dataUrl);
@@ -157,13 +283,13 @@ serve(async (req) => {
     // Consulta estado real no servidor para validar títulos meritocráticos e preservar checklist_state
     const { data: existingByUser } = await supabase
       .from("pioneiros")
-      .select("uid, is_ambassador, referral_qualified_count, reputation_score, wallet_address, referred_by_username, checklist_state, hokage_since")
+      .select("uid, is_ambassador, referral_qualified_count, reputation_score, wallet_address, referred_by_username, checklist_state, hokage_since, auth_user_id, auth_provider, is_pi_verified")
       .ilike("username", verifiedUsername)
       .maybeSingle();
 
     const { data: existingByUid } = await supabase
       .from("pioneiros")
-      .select("uid, is_ambassador, referral_qualified_count, reputation_score, wallet_address, referred_by_username, checklist_state, hokage_since")
+      .select("uid, is_ambassador, referral_qualified_count, reputation_score, wallet_address, referred_by_username, checklist_state, hokage_since, auth_user_id, auth_provider, is_pi_verified")
       .eq("uid", verifiedUid)
       .maybeSingle();
 
@@ -216,7 +342,7 @@ serve(async (req) => {
       Number(existingFlags?.referral_qualified_count || 0) > 0;
     const hasGithubSocial = Array.isArray(checklistState.social_links) &&
       (checklistState.social_links as Array<{ network: string }>).some((s) => s.network === "github");
-    const unlockedServerTitles = new Set<string>(["pioneiro", "pi_kyc"]);
+    const unlockedServerTitles = new Set<string>(actor.isPiVerified ? ["pioneiro", "pi_kyc"] : ["pioneiro"]);
     if (Boolean(cleanWallet) || cleanProducts.length > 0 || isHokageServer) unlockedServerTitles.add("construtor");
     if (hasGithubSocial || Boolean(checklistState.dev_api_used) || cleanHandle === "hokage22b") unlockedServerTitles.add("desenvolvedor");
     if (isHokageServer) unlockedServerTitles.add("hokage");
@@ -244,6 +370,11 @@ serve(async (req) => {
       ? "hokage"
       : (Boolean(cleanWallet) && (cleanProducts.length > 0 || repScore >= 70) ? "construtor" : "pioneiro");
 
+    const resolvedAuthUserId = actor.authUserId ?? existingFlags?.auth_user_id ?? null;
+    const resolvedAuthProvider = actor.kind === "pi"
+      ? (resolvedAuthUserId ? "hybrid" : "pi")
+      : (actor.isPiVerified ? "hybrid" : "web2");
+
     const updatePayload = {
       uid: verifiedUid,
       username: verifiedUsername,
@@ -257,6 +388,9 @@ serve(async (req) => {
       checklist_state: checklistState,
       products: cleanProducts,
       journey_tier: computedJourneyTier,
+      auth_user_id: resolvedAuthUserId,
+      auth_provider: resolvedAuthProvider,
+      is_pi_verified: actor.isPiVerified,
       updated_at: new Date().toISOString(),
     };
 
@@ -337,8 +471,8 @@ serve(async (req) => {
       }
     }
 
-    // 4. GRAVAÇÃO SEGURA NO SUPABASE (Com migração automática caso exista registro prévio user_<username>)
-    if (existingByUser && existingByUser.uid && existingByUser.uid !== verifiedUid) {
+    // 4. GRAVAÇÃO SEGURA NO SUPABASE (Com migração automática apenas quando autenticado via Pi SDK)
+    if (actor.kind === "pi" && existingByUser && existingByUser.uid && existingByUser.uid !== verifiedUid) {
       await supabase
         .from("pioneiros")
         .update({ uid: verifiedUid })
@@ -355,9 +489,9 @@ serve(async (req) => {
       throw error;
     }
 
-    // 5. PROCESSAMENTO SEGURO DE INDICAÇÃO (Somente se a vitrine estiver minimamente qualificada)
+    // 5. PROCESSAMENTO SEGURO DE INDICAÇÃO (Exclusivo para contas Pi verificadas, anti-farm Web2)
     let referralResult: unknown = null;
-    if (refCode && typeof refCode === "string") {
+    if (actor.isPiVerified && refCode && typeof refCode === "string") {
       const cleanRef = refCode.trim().replace(/^@+/, "").toLowerCase();
       const hasBio = Boolean(updatePayload.bio && updatePayload.bio.trim().length >= 10);
       const hasProducts = Array.isArray(updatePayload.products) && updatePayload.products.length > 0;
@@ -451,7 +585,7 @@ serve(async (req) => {
       const slug = verifiedUsername.replace(/^@+/, "");
       const bioPreview = updatePayload.bio ? updatePayload.bio.slice(0, 120) : "Sem bio ainda";
       const lines = [
-        `Pioneiro: ${verifiedUsername}`,
+        `Pioneiro: ${verifiedUsername} (${actor.isPiVerified ? "Pi Verificado" : "Web2 / E-mail"})`,
         `Carteira Pi: ${cleanWallet ? cleanWallet.slice(0, 8) + "..." + cleanWallet.slice(-6) : "Não informada"}`,
         `Produtos no catálogo: ${updatePayload.products.length}`,
         `Bio: ${bioPreview}`,
