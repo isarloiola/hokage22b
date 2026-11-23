@@ -24,6 +24,7 @@
   let currentGoogleRawNonce = '';
   let activeGoogleOnSuccess = null;
   let activeGoogleOnError = null;
+  let activeGoogleSkipRedirect = false;
 
   function isPiBrowserEnv() {
     if (window.HokagePi && typeof window.HokagePi.isPiBrowser === 'function') {
@@ -147,8 +148,8 @@
       if (typeof activeGoogleOnSuccess === 'function') {
         activeGoogleOnSuccess(data, currentWeb2Profile);
       }
-      const isPioneiroPage = /\/pioneiro(\.html)?$/i.test(window.location.pathname || '');
-      if (!isPioneiroPage && (!currentWeb2Profile || !currentWeb2Profile.username)) {
+      const isInlineOnboardingPage = /\/(pioneiro|jornada)(\.html)?\/?$/i.test(window.location.pathname || '');
+      if (!activeGoogleSkipRedirect && !isInlineOnboardingPage && (!currentWeb2Profile || !currentWeb2Profile.username)) {
         window.location.assign('pioneiro?setup=web2');
       }
     } catch (err) {
@@ -159,12 +160,14 @@
     }
   }
 
-  async function ensureGsiInitialized(onSuccess, onError) {
+  async function ensureGsiInitialized(onSuccess, onError, opts) {
     if (isPiBrowserEnv()) {
       throw new Error('Google login desabilitado no Pi Browser.');
     }
+    const options = opts && typeof opts === 'object' ? opts : {};
     if (typeof onSuccess === 'function') activeGoogleOnSuccess = onSuccess;
     if (typeof onError === 'function') activeGoogleOnError = onError;
+    activeGoogleSkipRedirect = Boolean(options.skipAutoRedirect);
 
     const googleObj = await loadGoogleGsi();
     const pair = await generateNoncePair();
@@ -183,7 +186,7 @@
     if (isPiBrowserEnv() || !containerEl) return false;
     const options = opts && typeof opts === 'object' ? opts : {};
     try {
-      const googleObj = await ensureGsiInitialized(options.onSuccess, options.onError);
+      const googleObj = await ensureGsiInitialized(options.onSuccess, options.onError, options);
       const rawWidth = containerEl.clientWidth || 320;
       const width = Math.min(360, Math.max(240, rawWidth));
       containerEl.innerHTML = '';
@@ -233,7 +236,7 @@
       throw new Error('Use a conexão nativa do Pi Browser.');
     }
     const options = opts && typeof opts === 'object' ? opts : {};
-    const googleObj = await ensureGsiInitialized(options.onSuccess, options.onError);
+    const googleObj = await ensureGsiInitialized(options.onSuccess, options.onError, options);
     googleObj.accounts.id.prompt();
     return { ok: true };
   }

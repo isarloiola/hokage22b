@@ -1,9 +1,10 @@
 /**
  * ============================================================
- * HOKAGE22B.COM — Module: Jornada Interactive Quiz Engine
+ * HOKAGE22B.COM — Module: Jornada Conversion Funnel Engine
  * ============================================================
- * Motor determinístico (Node + Browser) para diagnosticar o
- * momento do visitante em Web3/IA e recomendar a trilha ideal.
+ * Motor determinístico (Node + Browser) para o fluxo linear
+ * de conversão: Qualificação -> A Vila + Passaporte (Hokage ID)
+ * -> Login -> Pronto para Comprar ou Vender.
  */
 (function (root, factory) {
   'use strict';
@@ -19,186 +20,220 @@
 
   const QUESTIONS = [
     {
-      id: 'role',
-      stepLabel: 'Pergunta 1 de 3',
-      title: 'Qual opção descreve melhor você hoje?',
-      subtitle: 'Não precisa saber nada sobre cripto para começar.',
+      id: 'intent',
+      stepLabel: 'Passo 1 de 5',
+      title: 'O que você quer fazer primeiro aqui?',
+      subtitle: 'Escolha uma opção — levamos você direto ao ponto.',
       options: [
-        { value: 'curioso', icon: '🌱', label: 'Curioso / Explorando o futuro', desc: 'Quero entender para onde Web3 e IA estão indo.' },
-        { value: 'estudante', icon: '🎓', label: 'Estudante / Aprendiz', desc: 'Quero aprender tecnologia, segurança digital e IA na prática.' },
-        { value: 'empreendedor', icon: '🛍️', label: 'Empreendedor / Autônomo', desc: 'Quero divulgar produtos, serviços ou vender online.' },
-        { value: 'dev', icon: '⚡', label: 'Desenvolvedor / Construtor', desc: 'Quero usar APIs, incorporar widgets ou integrar código.' }
+        {
+          value: 'buy',
+          icon: '🛒',
+          label: 'Comprar ou explorar ofertas',
+          desc: 'Encontrar produtos, serviços e pioneiros verificados na Vila.'
+        },
+        {
+          value: 'sell',
+          icon: '🏷️',
+          label: 'Vender ou divulgar meu trabalho',
+          desc: 'Publicar anúncios na Vila e montar minha vitrine profissional.'
+        },
+        {
+          value: 'both',
+          icon: '⚡',
+          label: 'Comprar e vender na comunidade',
+          desc: 'Participar da economia completa com identidade verificada.'
+        },
+        {
+          value: 'explore',
+          icon: '🌱',
+          label: 'Ainda estou conhecendo',
+          desc: 'Quero entender rápido como funciona antes de negociar.'
+        }
       ]
     },
     {
-      id: 'crypto',
-      stepLabel: 'Pergunta 2 de 3',
-      title: 'Qual sua familiaridade com Web3 e criptomoedas?',
-      subtitle: 'Isso ajusta a profundidade da nossa recomendação.',
+      id: 'experience',
+      stepLabel: 'Passo 2 de 5',
+      title: 'Você já usa a Pi Network?',
+      subtitle: 'Assim ajustamos seu acesso da forma mais fácil para você.',
       options: [
-        { value: 'zero', icon: '🆕', label: 'Estou começando do zero', desc: 'Nunca usei carteiras digitais ou cripto.' },
-        { value: 'crypto_other', icon: '🪙', label: 'Já conheço ou uso cripto', desc: 'Já entendo o básico de blockchain e carteiras.' },
-        { value: 'pi_user', icon: '🟣', label: 'Já tenho conta na Pi Network', desc: 'Quero ir além do clique diário e usar na prática.' }
-      ]
-    },
-    {
-      id: 'goal',
-      stepLabel: 'Pergunta 3 de 3',
-      title: 'O que você quer resolver primeiro?',
-      subtitle: 'Vamos montar seu próximo passo ideal em 1 clique.',
-      options: [
-        { value: 'learn', icon: '📘', label: 'Aprender com segurança (sem hype)', desc: 'Entender como funciona e evitar golpes comuns.' },
-        { value: 'ai', icon: '🤖', label: 'Usar IA no trabalho ou estudos', desc: 'Transformar IA em assistente pessoal produtivo.' },
-        { value: 'business', icon: '🪪', label: 'Criar presença digital ou negociar', desc: 'Montar meu Passaporte Web3 ou explorar A Vila P2P.' },
-        { value: 'build', icon: '🔧', label: 'Integrar código, APIs e ferramentas', desc: 'Construir apps, bots e soluções sobre infraestrutura aberta.' }
+        {
+          value: 'pi_user',
+          icon: '🟣',
+          label: 'Sim, já tenho conta na Pi Network',
+          desc: 'Quero usar meu @usuário Pi na prática além do clique diário.'
+        },
+        {
+          value: 'web_user',
+          icon: '🌐',
+          label: 'Ainda não / Uso só internet comum',
+          desc: 'Quero entrar rápido com Google ou E-mail sem complicação.'
+        },
+        {
+          value: 'crypto_user',
+          icon: '🪙',
+          label: 'Já uso outras criptos ou Web3',
+          desc: 'Quero conhecer a economia P2P da Vila e o Passaporte.'
+        }
       ]
     }
   ];
 
-  function recommendPath(answers) {
+  function buildEducationStep(answers) {
     const a = answers && typeof answers === 'object' ? answers : {};
-    const role = a.role || 'curioso';
-    const crypto = a.crypto || 'zero';
-    const goal = a.goal || 'learn';
+    const intent = a.intent || 'explore';
+    const experience = a.experience || 'web_user';
 
-    const roleNames = {
-      curioso: 'Curioso',
-      estudante: 'Estudante',
-      empreendedor: 'Empreendedor',
-      dev: 'Desenvolvedor'
+    let highlight = 'Em menos de 1 minuto você ativa seu acesso e entra pronto para negociar com pessoas reais.';
+    if (intent === 'sell') {
+      highlight = 'Para vender: seu Passaporte (futuro Hokage ID) funciona como vitrine confiável e publica suas ofertas direto na Vila.';
+    } else if (intent === 'buy') {
+      highlight = 'Para comprar: na Vila você encontra ofertas reais e confere pelo Passaporte (futuro Hokage ID) quem está por trás de cada anúncio.';
+    } else if (intent === 'both') {
+      highlight = 'Para comprar e vender: uma única conta conecta sua reputação no Passaporte (futuro Hokage ID) aos anúncios da Vila.';
+    }
+
+    if (experience === 'pi_user') {
+      highlight += ' Como você já usa Pi, pode conectar direto pelo Pi Browser ou entrar agora pela Web e vincular depois.';
+    } else if (experience === 'web_user') {
+      highlight += ' Não precisa entender cripto nem instalar carteira agora: entre com Google ou E-mail em segundos.';
+    }
+
+    return {
+      stepLabel: 'Passo 3 de 5',
+      title: 'Como tudo funciona em 20 segundos',
+      subtitle: 'Dois pilares simples conectam confiança e negócios reais:',
+      pillars: [
+        {
+          icon: '🏘️',
+          badge: 'Mercado Comunitário',
+          title: 'A Vila (Classificados P2P)',
+          desc: 'A praça de negócios da comunidade. Pessoas reais comprando e vendendo produtos, serviços e parcerias direto entre si — sem taxas abusivas.'
+        },
+        {
+          icon: '🪪',
+          badge: 'Em breve: Hokage ID',
+          title: 'Passaporte (futuro Hokage ID)',
+          desc: 'Sua identidade única e vitrine verificada. Ele liga seus anúncios ao seu perfil, mostra sua reputação e gera confiança imediata para fechar negócios.'
+        }
+      ],
+      highlight: highlight,
+      ctaLabel: 'Entendi! Ativar meu acesso →'
     };
-    const cryptoNames = {
-      zero: 'Iniciante Web3',
-      crypto_other: 'Usa Cripto',
-      pi_user: 'Já tem Pi'
+  }
+
+  function recommendPath(answers, user) {
+    const a = answers && typeof answers === 'object' ? answers : {};
+    const intent = a.intent || 'explore';
+    const experience = a.experience || 'web_user';
+    const u = user && typeof user === 'object' ? user : null;
+    const rawSlug = u && u.username ? String(u.username).replace(/^@+/, '').trim() : '';
+    const hasHandle = Boolean(rawSlug);
+    const passportEditHref = hasHandle ? ('pioneiro?u=' + encodeURIComponent(rawSlug)) : 'pioneiro?criar=1';
+    const passportViewHref = hasHandle ? ('pioneiro?u=' + encodeURIComponent(rawSlug)) : 'pioneiro';
+
+    const intentNames = {
+      buy: 'Comprar & Explorar',
+      sell: 'Vender & Divulgar',
+      both: 'Comprar & Vender',
+      explore: 'Conhecendo a Vila'
     };
-    const goalNames = {
-      learn: 'Aprender com Segurança',
-      ai: 'IA na Prática',
-      business: 'Negócios & Passaporte',
-      build: 'Código & APIs'
+    const expNames = {
+      pi_user: 'Usa Pi Network',
+      web_user: 'Acesso Web',
+      crypto_user: 'Experiência Web3'
     };
 
-    const profileLabel = (roleNames[role] || role) + ' · ' + (cryptoNames[crypto] || crypto) + ' · ' + (goalNames[goal] || goal);
+    const profileLabel = (intentNames[intent] || intent) + ' · ' + (expNames[experience] || experience);
 
-    const futureInsight = [
-      'Identidade verificada: menos bots e mais confiança entre humanos reais na internet.',
-      'Economia direta (Web3): pagamentos e trocas sem depender de intermediários caros.',
-      'IA como alavanca: quem aprende a usar ferramentas abertas hoje sai na frente.'
-    ];
-
-    // 1. Trilha Desenvolvedor / Construir
-    if (goal === 'build' || role === 'dev') {
+    if (intent === 'sell') {
       return {
         profileLabel: profileLabel,
-        futureInsight: futureInsight,
+        headline: 'Tudo pronto para você vender e divulgar na Vila!',
+        subheadline: hasHandle
+          ? 'Seu Passaporte (futuro Hokage ID) já está ativo como @' + rawSlug + '. Agora publique sua primeira oferta ou ajuste sua vitrine.'
+          : 'Entre na Vila para publicar anúncios ou configure a vitrine do seu Passaporte (futuro Hokage ID).',
         primary: {
-          badge: 'Recomendado para Construtores',
-          title: '⚡ Área Construir: API Aberta, Embed & Starter Kit',
-          desc: 'Consuma Passaportes verificados, feed P2P da Vila, validador CRC16 e suba seu dApp em 10 minutos sem pagar servidor.',
-          href: 'construir',
-          cta: 'Ir para Construir (Devs) →'
+          label: '🏷️ Abrir A Vila e Publicar Anúncio →',
+          href: 'mural',
+          style: 'amber'
         },
-        secondary: crypto === 'zero'
-          ? { title: '📘 Entender a base em Pi do Zero', href: 'zero', cta: 'Ver Passo Zero →' }
-          : { title: '🛠️ Ferramentas Web3 (Validador & QR)', href: 'ferramentas', cta: 'Abrir Ferramentas →' }
+        secondary: {
+          label: hasHandle ? '🪪 Editar meu Passaporte (@' + rawSlug + ')' : '🪪 Configurar meu Passaporte (Hokage ID)',
+          href: passportEditHref
+        },
+        tertiary: {
+          label: '📘 Ver guia rápido de como vender →',
+          href: 'vender'
+        }
       };
     }
 
-    // 2. Trilha IA na Prática
-    if (goal === 'ai') {
+    if (intent === 'buy') {
       return {
         profileLabel: profileLabel,
-        futureInsight: futureInsight,
+        headline: 'Tudo pronto para você explorar e comprar na Vila!',
+        subheadline: 'Navegue pelos classificados P2P, filtre por categoria e fale direto com anunciantes verificados.',
         primary: {
-          badge: 'Recomendado para Produtividade',
-          title: '🤖 IA na Prática: O Seu Assistente Pessoal',
-          desc: 'Guia prático com 293 páginas e 50 prompts prontos para aplicar IA no trabalho, estudos, segurança e negócios.',
-          href: './#produto-ia-na-pratica',
-          cta: 'Conhecer IA na Prática →'
+          label: '🛒 Explorar e Comprar na Vila →',
+          href: 'mural',
+          style: 'amber'
         },
-        secondary: crypto === 'pi_user'
-          ? { title: '🚀 Passo 1: Além do Clique (Pi Browser)', href: 'um', cta: 'Ir para Passo 1 →' }
-          : { title: '📘 Fundamentos Web3 em Pi do Zero', href: 'zero', cta: 'Ver Passo Zero →' }
+        secondary: {
+          label: hasHandle ? '🪪 Ver meu Passaporte (@' + rawSlug + ')' : '🪪 Ver meu Passaporte (Hokage ID)',
+          href: passportViewHref
+        },
+        tertiary: {
+          label: '🌐 Explorar Pioneiros Verificados →',
+          href: 'explorar'
+        }
       };
     }
 
-    // 3. Trilha Empreendedor / Negócios / Passaporte
-    if (goal === 'business' || role === 'empreendedor') {
-      if (crypto === 'pi_user') {
-        return {
-          profileLabel: profileLabel,
-          futureInsight: futureInsight,
-          primary: {
-            badge: 'Recomendado para Vender & Divulgar',
-            title: '🏷️ Tutorial: Como Vender & Anunciar no Passaporte',
-            desc: 'Monte sua página profissional aceitando Pi, gere placa QR de balcão e publique na Vila em 1 minuto via Chatbot.',
-            href: 'vender',
-            cta: 'Ver Tutorial de Venda →'
-          },
-          secondary: { title: '🏘️ Explorar ofertas na Vila (P2P)', href: 'mural', cta: 'Entrar na Vila →' }
-        };
-      }
-      if (crypto === 'crypto_other') {
-        return {
-          profileLabel: profileLabel,
-          futureInsight: futureInsight,
-          primary: {
-            badge: 'Recomendado para Quem Já Usa Cripto',
-            title: '🚀 Passo 1: Pi Browser & Passaporte Web3',
-            desc: 'Veja como funciona a camada de identidade verificada da Pi e ative seu Passaporte para negócios.',
-            href: 'um',
-            cta: 'Ir para Passo 1 →'
-          },
-          secondary: { title: '🏷️ Tutorial: Como Vender no Passaporte', href: 'vender', cta: 'Ver Tutorial →' }
-        };
-      }
+    if (intent === 'both') {
       return {
         profileLabel: profileLabel,
-        futureInsight: futureInsight,
+        headline: 'Acesso pronto para comprar e vender na comunidade!',
+        subheadline: 'Use A Vila para descobrir negócios e anunciar suas ofertas com a confiança do seu Passaporte (futuro Hokage ID).',
         primary: {
-          badge: 'Melhor Começo Sem Risco',
-          title: '📘 Passo Zero: Entenda Web3 & Autocustódia',
-          desc: 'Antes de vender ou receber em cripto, domine em minutos como funciona uma carteira pública e como evitar golpes.',
-          href: 'zero',
-          cta: 'Começar pelo Passo Zero →'
+          label: '🛒 Entrar na Vila (Comprar & Anunciar) →',
+          href: 'mural',
+          style: 'amber'
         },
-        secondary: { title: '🏷️ Ver como funciona vender no Passaporte', href: 'vender', cta: 'Ver Tutorial →' }
-      };
-    }
-
-    // 4. Trilha Aprendizado / Curioso / Estudante
-    if (crypto === 'pi_user') {
-      return {
-        profileLabel: profileLabel,
-        futureInsight: futureInsight,
-        primary: {
-          badge: 'Próximo Nível para Pioneiros',
-          title: '🚀 Passo 1: Além do Clique Diário',
-          desc: 'Saia da espera passiva: domine o Pi Browser, segurança avançada e ative seu Passaporte Web3.',
-          href: 'um',
-          cta: 'Ir para Passo 1 →'
+        secondary: {
+          label: hasHandle ? '🪪 Abrir meu Passaporte (@' + rawSlug + ')' : '🪪 Ativar Vitrine do Passaporte (Hokage ID)',
+          href: passportEditHref
         },
-        secondary: { title: '🔥 Conhecer o Monte Hokage (Mérito)', href: 'monte', cta: 'Ver Monte Hokage →' }
+        tertiary: {
+          label: '🏷️ Guia rápido para vender mais →',
+          href: 'vender'
+        }
       };
     }
 
     return {
       profileLabel: profileLabel,
-      futureInsight: futureInsight,
+      headline: 'Bem-vindo à comunidade! Escolha por onde começar:',
+      subheadline: 'Você já entendeu como A Vila e o Passaporte (futuro Hokage ID) funcionam. Veja a praça de negócios ao vivo ou aprenda a base sem hype.',
       primary: {
-        badge: 'Ponto de Partida Ideal',
-        title: '📘 Passo Zero: Web3 & Pi Network sem Hype',
-        desc: 'Aprenda do zero o que é blockchain, como funciona a economia digital e como proteger seus ativos sem promessas mágicas.',
-        href: 'zero',
-        cta: 'Começar pelo Passo Zero →'
+        label: '🏘️ Conhecer A Vila agora →',
+        href: 'mural',
+        style: 'amber'
       },
-      secondary: { title: '🛠️ Testar Ferramentas Anti-Golpe & Calculadora', href: 'ferramentas', cta: 'Abrir Ferramentas →' }
+      secondary: {
+        label: '📘 Aprender do Zero (sem hype)',
+        href: 'zero'
+      },
+      tertiary: {
+        label: hasHandle ? '🪪 Ver meu Passaporte (@' + rawSlug + ') →' : '🪪 Ver meu Passaporte (Hokage ID) →',
+        href: passportViewHref
+      }
     };
   }
 
   return {
     QUESTIONS: QUESTIONS,
+    buildEducationStep: buildEducationStep,
     recommendPath: recommendPath
   };
 });
