@@ -70,6 +70,22 @@
     return { ok: true, email: cleanEmail };
   }
 
+  async function signInWithGoogle(redirectUrl) {
+    const sb = getSupabase();
+    if (!sb || !sb.auth) {
+      throw new Error('Serviço de autenticação indisponível no momento.');
+    }
+    const targetRedirect = redirectUrl || (window.location.origin + '/pioneiro');
+    const { data, error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: targetRedirect }
+    });
+    if (error) {
+      throw new Error('Login com Google em ativação — use seu e-mail abaixo para entrar agora!');
+    }
+    return data;
+  }
+
   async function getSession() {
     if (currentWeb2Session && currentWeb2Session.access_token) {
       return currentWeb2Session;
@@ -275,6 +291,7 @@
   window.HokageWeb2Auth = {
     getSupabase: getSupabase,
     sendMagicLink: sendMagicLink,
+    signInWithGoogle: signInWithGoogle,
     getSession: getSession,
     getAccessToken: getAccessToken,
     fetchMyProfile: fetchMyProfile,

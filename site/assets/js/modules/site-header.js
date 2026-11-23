@@ -14,28 +14,28 @@
 
   const NAV_GROUPS = [
     {
-      heading: 'Trilha',
+      heading: 'Principal',
       items: [
-        { href: 'zero', match: ['zero'], label: '📘 Pi do Zero', desktopLabel: 'Pi do Zero', color: 'var(--amber-light)' },
-        { href: 'um', match: ['um', 'alem-do-clique'], label: '🚀 Passo 1: Além do Clique', desktopLabel: 'Passo 1', color: 'var(--amber-light)' },
+        { href: 'explorar', match: ['explorar', 'diretorio'], label: '🌐 Explorar Pioneiros', desktopLabel: 'Explorar', color: '#34d399' },
+        { href: 'mural', match: ['mural'], label: '🏘️ Classificados (A Vila)', desktopLabel: 'Classificados', color: 'var(--amber-light)' },
+        { href: 'pioneiro', match: ['pioneiro'], label: '🪪 Passaporte (Meu Perfil)', desktopLabel: 'Passaporte', color: 'var(--accent-light)' },
+        { href: 'zero', match: ['zero'], label: '📘 Aprender (Pi do Zero)', desktopLabel: 'Aprender', color: '#fde68a' }
+      ]
+    },
+    {
+      heading: 'Trilha & Jornada',
+      items: [
+        { href: 'um', match: ['um', 'alem-do-clique'], label: '🚀 Passo 1: Além do Clique', desktopLabel: null, color: 'var(--amber-light)' },
         { href: 'jornada', match: ['jornada'], label: '🧭 Começar Jornada', desktopLabel: null }
       ]
     },
     {
-      heading: 'Ecossistema',
+      heading: 'Ecossistema & Devs',
       items: [
-        { href: 'pioneiro', match: ['pioneiro'], label: '🪪 Passaporte', desktopLabel: 'Passaporte', color: 'var(--accent-light)' },
-        { href: 'explorar', match: ['explorar', 'diretorio'], label: '🌐 Explorar Pioneiros', desktopLabel: 'Explorar', color: '#34d399' },
-        { href: 'mural', match: ['mural'], label: '🏘️ A Vila (P2P)', desktopLabel: 'A Vila (P2P)', color: 'var(--amber-light)' },
+        { href: 'monte', match: ['monte'], label: '🏔️ Monte Hokage', desktopLabel: null, color: '#fb923c' },
+        { href: 'ferramentas', match: ['ferramentas'], label: '🛠️ Ferramentas Web3', desktopLabel: null, color: '#6ee7b7' },
         { href: 'vender', match: ['vender'], label: '🏷️ Como Vender', desktopLabel: null },
-        { href: 'monte', match: ['monte'], label: '🏔️ Monte Hokage', desktopLabel: 'Monte', color: '#fb923c' }
-      ]
-    },
-    {
-      heading: 'Ferramentas & Devs',
-      items: [
-        { href: 'ferramentas', match: ['ferramentas'], label: '🛠️ Ferramentas Web3', desktopLabel: 'Ferramentas', color: '#6ee7b7' },
-        { href: 'construir', match: ['construir', 'desenvolvedores'], label: '⚡ Construir (API & Devs)', desktopLabel: 'Construir' }
+        { href: 'construir', match: ['construir', 'desenvolvedores'], label: '⚡ Construir (API & Devs)', desktopLabel: null }
       ]
     }
   ];
@@ -110,6 +110,21 @@
         '</div>' +
       '</div>'
     );
+  }
+
+  function injectHeaderMoreStyles() {
+    if (document.getElementById('hk-nav-more-css')) return;
+    const style = document.createElement('style');
+    style.id = 'hk-nav-more-css';
+    style.textContent =
+      '.hk-nav-more{position:relative;list-style:none}' +
+      '.hk-nav-more-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.14);color:#e4e4e7;font-size:0.8rem;font-weight:700;padding:4px 10px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}' +
+      '.hk-nav-more-btn:hover,.hk-nav-more-btn[aria-expanded="true"]{border-color:#8b5cf6;color:#fff;background:rgba(139,92,246,0.16)}' +
+      '.hk-nav-more-menu{display:none;position:absolute;top:calc(100% + 8px);left:0;min-width:225px;background:rgba(14,14,20,0.98);border:1px solid rgba(139,92,246,0.38);border-radius:12px;padding:6px;box-shadow:0 18px 40px rgba(0,0,0,0.85);z-index:9999}' +
+      '.hk-nav-more.open .hk-nav-more-menu{display:flex;flex-direction:column;gap:2px}' +
+      '.hk-nav-more-menu a{display:block;padding:8px 10px;border-radius:8px;font-size:0.82rem;font-weight:700;color:#e4e4e7;text-decoration:none;white-space:nowrap}' +
+      '.hk-nav-more-menu a:hover{background:rgba(139,92,246,0.16);color:#fff}';
+    document.head.appendChild(style);
   }
 
   function injectStandaloneDrawerStyles() {
@@ -239,6 +254,26 @@
     });
 
     const userChipHtml = getHeaderUserChipHtml();
+    injectHeaderMoreStyles();
+
+    const moreLinks = [
+      { href: 'um', match: ['um', 'alem-do-clique'], label: '🚀 Passo 1: Além do Clique' },
+      { href: 'jornada', match: ['jornada'], label: '🧭 Começar Jornada' },
+      { href: 'monte', match: ['monte'], label: '🏔️ Monte Hokage' },
+      { href: 'ferramentas', match: ['ferramentas'], label: '🛠️ Ferramentas Web3' },
+      { href: 'vender', match: ['vender'], label: '🏷️ Como Vender' },
+      { href: 'construir', match: ['construir', 'desenvolvedores'], label: '⚡ Construir (API & Devs)' }
+    ].map(function (item) {
+      const isActive = item.match.indexOf(current) !== -1;
+      return '<a href="' + item.href + '"' + (isActive ? ' aria-current="page" style="background:rgba(139,92,246,0.18);color:#fff"' : '') + '>' + item.label + '</a>';
+    }).join('');
+
+    desktopItems.push(
+      '<li class="hk-nav-more" id="hk-nav-more">' +
+        '<button type="button" class="hk-nav-more-btn" id="hk-nav-more-btn" aria-expanded="false" aria-haspopup="true">Mais ▾</button>' +
+        '<div class="hk-nav-more-menu" role="menu">' + moreLinks + '</div>' +
+      '</li>'
+    );
 
     mount.innerHTML =
       '<header class="portal-header" id="portal-header">' +
@@ -268,6 +303,28 @@
         '</div>' +
       '</header>' +
       buildDrawerHtml(current);
+
+    const moreWrap = document.getElementById('hk-nav-more');
+    const moreBtn = document.getElementById('hk-nav-more-btn');
+    if (moreWrap && moreBtn) {
+      moreBtn.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        const isOpen = moreWrap.classList.toggle('open');
+        moreBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      document.addEventListener('click', function (ev) {
+        if (moreWrap.classList.contains('open') && !moreWrap.contains(ev.target)) {
+          moreWrap.classList.remove('open');
+          moreBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && moreWrap.classList.contains('open')) {
+          moreWrap.classList.remove('open');
+          moreBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
 
     bindDrawerEvents();
   }

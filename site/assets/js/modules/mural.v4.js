@@ -2016,18 +2016,33 @@
               try { sessionStorage.setItem('hokage_pi_access_token', token); } catch (_) {}
             }
           }
-          if (!token) {
-            showSubmitFeedback('warning', 'Conecte sua conta no <strong>Pi Browser</strong> para publicar gratuitamente na Vila.');
+          let web2Token = '';
+          if (!token && window.HokageWeb2Auth && typeof window.HokageWeb2Auth.getAccessToken === 'function') {
+            try { web2Token = await window.HokageWeb2Auth.getAccessToken(); } catch (_) {}
+          }
+          if (!token && !web2Token) {
+            const isInPi = Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
+            if (isInPi) {
+              showSubmitFeedback('warning', 'Conecte sua conta no <strong>Pi Browser</strong> para publicar gratuitamente na Vila.');
+            } else {
+              showSubmitFeedback(
+                'warning',
+                'Para publicar seu anúncio grátis, entre com seu <strong>E-mail / Google</strong> ou crie seu @usuário primeiro.',
+                '<button type="button" class="btn btn-sm btn-primary" onclick="if(window.HokagePi&&window.HokagePi.openPiConnectModal)window.HokagePi.openPiConnectModal()">🔑 Entrar / Criar Conta</button>'
+              );
+            }
             return;
           }
+          const freeReqBody = {
+            action: 'publish_free_ad',
+            adPayload: newAd
+          };
+          if (token) freeReqBody.accessToken = token;
+          if (web2Token) freeReqBody.web2Token = web2Token;
           const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/pi-payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'publish_free_ad',
-              accessToken: token,
-              adPayload: newAd
-            })
+            body: JSON.stringify(freeReqBody)
           });
           const json = await res.json().catch(() => ({}));
           if (!res.ok || !json.ok) {

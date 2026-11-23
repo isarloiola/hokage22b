@@ -15,7 +15,7 @@ import {
   MURAL_CONFIG,
   parseJsonBody,
 } from "../_shared/http.ts";
-import { normalizeHandle, verifyPiAccessToken } from "../_shared/pi-auth.ts";
+import { normalizeHandle, resolveActor, verifyPiAccessToken } from "../_shared/pi-auth.ts";
 import { notifyAdmin } from "../_shared/notify.ts";
 
 const SAFE_PAYMENT_ID_RE = /^[A-Za-z0-9_.:-]{4,128}$/;
@@ -993,19 +993,15 @@ serve(async (req) => {
     }
 
     if (action === "publish_free_ad") {
-      const piUser = await verifyPiAccessToken(String(accessToken || ""));
-      if (!piUser || !piUser.username) {
-        return jsonError(
-          "PI_AUTH_REQUIRED",
-          "Conecte sua conta oficial no Pi Browser para publicar gratuitamente na Vila.",
-          corsHeaders,
-          401
-        );
-      }
+      const actor = await resolveActor(supabase, {
+        accessToken,
+        web2Token: body?.web2Token,
+        requireExistingProfile: true,
+      });
 
-      const cleanHandle = normalizeHandle(piUser.username);
+      const cleanHandle = normalizeHandle(actor.username);
       if (!cleanHandle) {
-        return jsonError("INVALID_USERNAME", "Usuário Pi inválido.", corsHeaders, 400);
+        return jsonError("INVALID_USERNAME", "Usuário inválido.", corsHeaders, 400);
       }
 
       const payloadObj = (body && typeof body.adPayload === "object" && body.adPayload)
@@ -1074,7 +1070,7 @@ serve(async (req) => {
       await notifyAdmin({
         priority: "normal",
         tag: "VILA · GRÁTIS",
-        title: `Nova publicação gratuita de @${cleanHandle}`,
+        title: `Nova publicação gratuita de @${cleanHandle} (${actor.isPiVerified ? "Pi Verificado" : "Membro Web"})`,
         lines: [`Título: ${title}`, `Categoria: ${String(payloadObj.category || "geral")}`],
         linkUrl: "https://hokage22b.com/mural",
         linkLabel: "Abrir A Vila",

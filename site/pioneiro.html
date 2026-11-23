@@ -840,8 +840,12 @@
             <span style="font-size:0.7rem;background:rgba(56,189,248,0.18);color:#7dd3fc;padding:2px 8px;border-radius:999px;font-weight:700">Membro Web</span>
           </div>
           <p style="font-size:0.8rem;color:var(--text-secondary);margin:0 0 10px;line-height:1.45">
-            Crie seu Passaporte Web grátis agora pelo navegador comum e vincule sua conta Pi depois para liberar o selo <strong>✓ Pi Verificado</strong>.
+            Entre com 1 clique pelo Google ou receba um link mágico no e-mail para criar seu Passaporte Web grátis. Vincule sua conta Pi depois quando quiser!
           </p>
+          <button type="button" id="web2-onboarding-google-btn" class="btn btn-outline" style="width:100%;margin-bottom:10px;padding:10px 14px;background:#fff;color:#111827;border-color:#e5e7eb;font-size:0.88rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f3f4f6;color:#2563eb;font-weight:900;font-size:0.8rem">G</span>
+            <span>Continuar com Google</span>
+          </button>
           <form id="web2-onboarding-form" style="display:flex;gap:8px;flex-wrap:wrap">
             <input type="email" id="web2-onboarding-email" required placeholder="seu@email.com" style="flex:1;min-width:180px;padding:10px 12px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.2);border-radius:10px;color:#fff;font-size:0.86rem;box-sizing:border-box" />
             <button type="submit" id="web2-onboarding-btn" class="btn btn-outline" style="padding:10px 16px;font-size:0.86rem;font-weight:700;border-color:rgba(56,189,248,0.5);color:#bae6fd;flex-shrink:0">
@@ -1199,6 +1203,16 @@
 
       <form id="profile-edit-form" onsubmit="saveProfileForm(event)">
 
+        <!-- Banner de Cadastro Rápido (30 segundos) para novos usuários Web2 -->
+        <div id="prof-quick-setup-banner" style="display:none;background:rgba(56,189,248,0.09);border:1px solid rgba(56,189,248,0.3);border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:0.78rem;color:#cbd5e1;line-height:1.45">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+            <span>⚡ <strong style="color:#bae6fd">Cadastro Rápido (30s):</strong> escolha seu @nome e o que você faz. Foto, carteira e catálogo ficam para depois!</span>
+            <button type="button" onclick="toggleFullEditMode()" style="background:none;border:none;color:#7dd3fc;font-size:0.74rem;font-weight:700;text-decoration:underline;cursor:pointer;padding:0">
+              Mostrar editor completo ▾
+            </button>
+          </div>
+        </div>
+
         <!-- Abas de Navegação Rápida no Editor (Organização Mobile-First) -->
         <div class="edit-tabs-bar" role="tablist" aria-label="Etapas de edição do passaporte">
           <button type="button" class="edit-tab-btn active" data-edit-tab="perfil" onclick="switchEditTab('perfil')" role="tab" aria-selected="true">
@@ -1215,7 +1229,7 @@
         <!-- ABA 1: PERFIL & CARTEIRA -->
         <div class="edit-tab-panel active" data-edit-panel="perfil">
           <!-- Foto de Perfil com Cortador Interativo -->
-          <div class="form-group" style="margin-bottom:16px;text-align:center;background:rgba(255,255,255,0.03);padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08)">
+          <div id="prof-avatar-group" class="form-group" style="margin-bottom:16px;text-align:center;background:rgba(255,255,255,0.03);padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08)">
             <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:8px;font-weight:700">Foto de Perfil</label>
             <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap">
               <div style="position:relative;width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--accent);box-shadow:0 0 16px rgba(139,92,246,0.4);background:#1a0533;display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -1247,8 +1261,14 @@
             <input type="text" id="prof-input-bio" maxlength="140" placeholder="Ex: Criador Web3, aceitando Pi na Mainnet para produtos e mentorias." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;box-sizing:border-box" />
           </div>
 
+          <!-- WhatsApp Rápido (visível apenas no Cadastro Rápido de 30s) -->
+          <div id="prof-quick-whatsapp-wrap" class="form-group" style="display:none;margin-bottom:14px">
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">WhatsApp para Contato (Opcional)</label>
+            <input type="text" id="prof-quick-whatsapp" placeholder="Ex: 11999999999 ou https://wa.me/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;box-sizing:border-box" />
+          </div>
+
           <!-- Chave Pública Pi Wallet com Validador Criptográfico -->
-          <div class="form-group" style="margin-bottom:16px">
+          <div id="prof-wallet-group" class="form-group" style="margin-bottom:16px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:4px">
               <label style="font-size:0.8rem;color:var(--gray-light);font-weight:700">Chave Pública da Pi Wallet (Mainnet P2P)</label>
               <span id="prof-wallet-badge" style="font-size:0.72rem;font-weight:700"></span>
@@ -1395,8 +1415,12 @@
 
       <div style="background:rgba(56,189,248,0.09);border:1px solid rgba(56,189,248,0.32);border-radius:14px;padding:14px;margin-bottom:14px;text-align:left">
         <div style="font-size:0.84rem;font-weight:800;color:#bae6fd;margin-bottom:8px">
-          ✉️ Entrar ou Criar Conta por E-mail (Sem Senha)
+          🌐 Criar Conta ou Entrar Agora (Grátis)
         </div>
+        <button type="button" id="ext-modal-google-btn" class="btn btn-outline" style="width:100%;margin-bottom:10px;padding:10px 12px;background:#fff;color:#111827;border-color:#e5e7eb;font-size:0.88rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f3f4f6;color:#2563eb;font-weight:900;font-size:0.8rem">G</span>
+          <span>Continuar com Google</span>
+        </button>
         <form id="ext-modal-web2-form" style="display:flex;flex-direction:column;gap:8px">
           <input type="email" id="ext-modal-web2-email" required placeholder="seu@email.com" style="width:100%;padding:10px 12px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.22);border-radius:10px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
           <button type="submit" id="ext-modal-web2-btn" class="btn btn-primary" style="width:100%;padding:11px;font-size:0.9rem;font-weight:800">
@@ -1516,13 +1540,13 @@
   <script src="assets/js/modules/referral.js?v=2.7"></script>
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
-  <script src="assets/js/modules/site-header.js?v=1.4"></script>
+  <script src="assets/js/modules/site-header.js?v=1.5"></script>
   <script src="assets/js/modules/i18n.js?v=4.7"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
   <script src="assets/js/modules/db.js?v=6.2"></script>
-  <script src="assets/js/modules/web2-auth.js?v=1.0"></script>
+  <script src="assets/js/modules/web2-auth.js?v=1.1"></script>
 
-  <script src="assets/js/modules/vitrine.js?v=3.9"></script>
+  <script src="assets/js/modules/vitrine.js?v=4.0"></script>
   <script src="assets/js/modules/monte-progression.js?v=1.5"></script>
 </body>
 </html>

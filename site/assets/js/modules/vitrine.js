@@ -1,364 +1,364 @@
-    // =========================================================================
-    // PERFIL OFICIAL E REAL DO HOKAGE22B (FUNDADOR / PLATAFORMA)
-    // =========================================================================
-    const HOKAGE22B_OFFICIAL_PROFILE = {
-      username: '@hokage22b',
-      avatar_url: 'assets/img/founder-profile.jpg',
-      bio: 'Fundador do HOKAGE22B.COM · Educação Web3, ferramentas para pioneiros e comércio seguro na Pi Network. Aceitando 100% Pi na Mainnet.',
-      wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR',
-      whatsapp_url: 'https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2',
-      youtube_url: 'https://www.youtube.com/@justhokage22b',
-      instagram_url: 'https://instagram.com/hokage22b',
-      twitter_url: 'https://twitter.com/hokage22b',
-      github_url: 'https://github.com/isarloiola/hokage22b',
-      linkedin_url: 'https://www.linkedin.com/in/isarloiola/',
-      telegram_url: 'https://t.me/hokage22b_oficial_bot?start=ia_na_pratica',
-      social_links: [
-        { network: 'telegram', url: 'https://t.me/hokage22b_oficial_bot?start=ia_na_pratica' },
-        { network: 'github', url: 'https://github.com/isarloiola/hokage22b' },
-        { network: 'linkedin', url: 'https://www.linkedin.com/in/isarloiola/' }
-      ],
-      featured_links: [
-        {
-          title: '📘 Pi Network do Zero (Guia Iniciante)',
-          subtitle: 'Aprenda do zero: carteira, blockchain e segurança anti-golpes',
-          badge: 'Trilha Grátis',
-          url: 'zero',
-          type: 'zero'
-        },
-        {
-          title: '🏘️ A Vila (P2P) dos Pioneiros (Mural de Anúncios)',
-          subtitle: 'Divulgue sua loja, canal ou serviço para a comunidade',
-          badge: 'Classificados P2P',
-          url: 'mural',
-          type: 'mural'
-        }
-      ],
-      products: [
-        {
-          title: 'IA na Prática: O Seu Assistente Pessoal (293 pág.)',
-          price: '7.50 π',
-          price_fiat: 'R$ 47,00',
-          badge: 'Lançamento · 50 Prompts',
-          link: 'https://hokage22b.com/#produto-ia-na-pratica',
-          image_url: 'assets/img/ebook-ia-na-pratica.png',
-          cta: 'Ver Lançamento →'
-        },
-        {
-          title: 'Consultoria P2P & Setup de Loja Aceitando Pi',
-          price: '10.00 π',
-          badge: 'Mentoria Direta',
-          link: 'https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2',
-          image_url: 'assets/img/ebook-cover.png',
-          cta: 'Agendar no WhatsApp →'
-        },
-        {
-          title: 'E-book Pi para seu Negócio (Edição Comercial)',
-          price: '3.14 π',
-          badge: 'Manual Comercial',
-          link: 'https://hokage22b.com/#produtos',
-          image_url: 'assets/img/ebook-pago-negocios.jpg',
-          cta: 'Adquirir (3.14 π) →'
-        },
-        {
-          title: 'Manual Oficial Pi Network (PDF & EPUB)',
-          price: 'Grátis',
-          badge: '100% Gratuito',
-          link: 'https://hokage22b.com/#comece-aqui',
-          image_url: 'assets/img/ebook-cover.png',
-          cta: 'Baixar Manual →'
-        }
-      ]
-    };
-
-    // =========================================================================
-    // PERFIL DE TESTE / SIMULADOR (PLAYGROUND)
-    // =========================================================================
-    const SIMULATOR_DEMO_PROFILE = {
-      username: '@pioneiro_teste',
-      bio: '🧪 Este é um Passaporte de simulação. Experimente trocar fotos, links e produtos no botão "Personalizar no Teste"!',
-      wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR',
-      whatsapp_url: 'https://wa.me/5500000000000',
-      youtube_url: 'https://youtube.com',
-      instagram_url: 'https://instagram.com',
-      twitter_url: 'https://x.com',
-      featured_links: [
-        {
-          title: '📘 Pi Network do Zero (Guia Iniciante)',
-          subtitle: 'Aprenda do zero: carteira, blockchain e segurança anti-golpes',
-          badge: 'Trilha Grátis',
-          url: 'zero',
-          type: 'zero'
-        }
-      ],
-      products: [
-        {
-          title: 'Exemplo: Camiseta Oficial Pi Network',
-          price: '2.50 π',
-          badge: 'Vestuário',
-          link: '#',
-          image_url: 'assets/img/ebook-cover.png',
-          cta: 'Ver Detalhes →'
-        },
-        {
-          title: 'Exemplo: Café Especial Aceitando Pi',
-          price: '0.50 π',
-          badge: 'Alimentos & Bebidas',
-          link: '#',
-          image_url: '',
-          cta: 'Pedir →'
-        }
-      ]
-    };
-
-    let currentPioneerUser = '';
-    let currentPioneerWallet = '';
-    let currentProfileData = null;
-    let isSimulatorMode = false;
-
-    function cleanUsername(raw) {
-      if (!raw) return '';
-      return '@' + String(raw).replace(/@+/g, '').trim().toLowerCase();
+// =========================================================================
+// PERFIL OFICIAL E REAL DO HOKAGE22B (FUNDADOR / PLATAFORMA)
+// =========================================================================
+const HOKAGE22B_OFFICIAL_PROFILE = {
+  username: '@hokage22b',
+  avatar_url: 'assets/img/founder-profile.jpg',
+  bio: 'Fundador do HOKAGE22B.COM · Educação Web3, ferramentas para pioneiros e comércio seguro na Pi Network. Aceitando 100% Pi na Mainnet.',
+  wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR',
+  whatsapp_url: 'https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2',
+  youtube_url: 'https://www.youtube.com/@justhokage22b',
+  instagram_url: 'https://instagram.com/hokage22b',
+  twitter_url: 'https://twitter.com/hokage22b',
+  github_url: 'https://github.com/isarloiola/hokage22b',
+  linkedin_url: 'https://www.linkedin.com/in/isarloiola/',
+  telegram_url: 'https://t.me/hokage22b_oficial_bot?start=ia_na_pratica',
+  social_links: [
+    { network: 'telegram', url: 'https://t.me/hokage22b_oficial_bot?start=ia_na_pratica' },
+    { network: 'github', url: 'https://github.com/isarloiola/hokage22b' },
+    { network: 'linkedin', url: 'https://www.linkedin.com/in/isarloiola/' }
+  ],
+  featured_links: [
+    {
+      title: '📘 Pi Network do Zero (Guia Iniciante)',
+      subtitle: 'Aprenda do zero: carteira, blockchain e segurança anti-golpes',
+      badge: 'Trilha Grátis',
+      url: 'zero',
+      type: 'zero'
+    },
+    {
+      title: '🏘️ A Vila (P2P) dos Pioneiros (Mural de Anúncios)',
+      subtitle: 'Divulgue sua loja, canal ou serviço para a comunidade',
+      badge: 'Classificados P2P',
+      url: 'mural',
+      type: 'mural'
     }
-
-    function showVitrineToast(msg, type) {
-      if (window.HokagePi && typeof window.HokagePi.showToast === 'function') {
-        window.HokagePi.showToast(msg, type || 'info');
-        return;
-      }
-      let toast = document.getElementById('hokage-vitrine-floating-toast');
-      if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'hokage-vitrine-floating-toast';
-        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10090;padding:12px 20px;border-radius:12px;font-size:0.86rem;font-weight:700;max-width:92vw;box-shadow:0 12px 36px rgba(0,0,0,0.85);transition:all 0.25s ease;text-align:center;pointer-events:none;';
-        document.body.appendChild(toast);
-      }
-      if (type === 'success') {
-        toast.style.background = '#065f46';
-        toast.style.color = '#a7f3d0';
-        toast.style.border = '1px solid #10b981';
-      } else if (type === 'error') {
-        toast.style.background = '#7f1d1d';
-        toast.style.color = '#fecaca';
-        toast.style.border = '1px solid #ef4444';
-      } else {
-        toast.style.background = '#312e81';
-        toast.style.color = '#c7d2fe';
-        toast.style.border = '1px solid #6366f1';
-      }
-      toast.textContent = msg;
-      toast.style.display = 'block';
-      toast.style.opacity = '1';
-      if (window._vitrineToastTimer) clearTimeout(window._vitrineToastTimer);
-      window._vitrineToastTimer = setTimeout(function () {
-        if (toast) {
-          toast.style.opacity = '0';
-          setTimeout(function () { toast.style.display = 'none'; }, 260);
-        }
-      }, 4200);
+  ],
+  products: [
+    {
+      title: 'IA na Prática: O Seu Assistente Pessoal (293 pág.)',
+      price: '7.50 π',
+      price_fiat: 'R$ 47,00',
+      badge: 'Lançamento · 50 Prompts',
+      link: 'https://hokage22b.com/#produto-ia-na-pratica',
+      image_url: 'assets/img/ebook-ia-na-pratica.png',
+      cta: 'Ver Lançamento →'
+    },
+    {
+      title: 'Consultoria P2P & Setup de Loja Aceitando Pi',
+      price: '10.00 π',
+      badge: 'Mentoria Direta',
+      link: 'https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2',
+      image_url: 'assets/img/ebook-cover.png',
+      cta: 'Agendar no WhatsApp →'
+    },
+    {
+      title: 'E-book Pi para seu Negócio (Edição Comercial)',
+      price: '3.14 π',
+      badge: 'Manual Comercial',
+      link: 'https://hokage22b.com/#produtos',
+      image_url: 'assets/img/ebook-pago-negocios.jpg',
+      cta: 'Adquirir (3.14 π) →'
+    },
+    {
+      title: 'Manual Oficial Pi Network (PDF & EPUB)',
+      price: 'Grátis',
+      badge: '100% Gratuito',
+      link: 'https://hokage22b.com/#comece-aqui',
+      image_url: 'assets/img/ebook-cover.png',
+      cta: 'Baixar Manual →'
     }
+  ]
+};
 
-    // =========================================================================
-    // BLINDAGEM CRIPTOGRÁFICA & SEGURANÇA WEB3 (ZERO-TRUST)
-    // =========================================================================
-
-    // Sanitização Rígida de HTML contra Stored XSS (Unificada via HokageUtils)
-    function escapeHtml(str) {
-      if (window.HokageUtils && typeof window.HokageUtils.escapeHtml === 'function') {
-        return window.HokageUtils.escapeHtml(str);
-      }
-      if (str === null || str === undefined) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+// =========================================================================
+// PERFIL DE TESTE / SIMULADOR (PLAYGROUND)
+// =========================================================================
+const SIMULATOR_DEMO_PROFILE = {
+  username: '@pioneiro_teste',
+  bio: '🧪 Este é um Passaporte de simulação. Experimente trocar fotos, links e produtos no botão "Personalizar no Teste"!',
+  wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR',
+  whatsapp_url: 'https://wa.me/5500000000000',
+  youtube_url: 'https://youtube.com',
+  instagram_url: 'https://instagram.com',
+  twitter_url: 'https://x.com',
+  featured_links: [
+    {
+      title: '📘 Pi Network do Zero (Guia Iniciante)',
+      subtitle: 'Aprenda do zero: carteira, blockchain e segurança anti-golpes',
+      badge: 'Trilha Grátis',
+      url: 'zero',
+      type: 'zero'
     }
-
-    // Sanitização de URLs para certificar esquemas válidos e bloquear vetores maliciosos
-    function sanitizeUrl(url) {
-      if (!url) return '';
-      const clean = String(url).trim();
-      if (!clean || /[\s<>"'`]/.test(clean) || /^\/\//.test(clean)) return '';
-      if (/^(https?:\/\/|mailto:|tel:|\/(?!\/)|\?|#)/i.test(clean)) {
-        try {
-          const parsed = new URL(clean, window.location.origin);
-          if (['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol)) {
-            return clean;
-          }
-        } catch (_) {}
-      }
-      return '';
+  ],
+  products: [
+    {
+      title: 'Exemplo: Camiseta Oficial Pi Network',
+      price: '2.50 π',
+      badge: 'Vestuário',
+      link: '#',
+      image_url: 'assets/img/ebook-cover.png',
+      cta: 'Ver Detalhes →'
+    },
+    {
+      title: 'Exemplo: Café Especial Aceitando Pi',
+      price: '0.50 π',
+      badge: 'Alimentos & Bebidas',
+      link: '#',
+      image_url: '',
+      cta: 'Pedir →'
     }
+  ]
+};
 
-    // Sanitização rigorosa de imagens e avatares (permite URLs remotas, assets locais e data:image seguros)
-    function sanitizeImageUrl(url) {
-      if (!url) return '';
-      const clean = String(url).trim();
-      if (/^https?:\/\/[^\s<>"'`]+$/i.test(clean)) {
+let currentPioneerUser = '';
+let currentPioneerWallet = '';
+let currentProfileData = null;
+let isSimulatorMode = false;
+
+function cleanUsername(raw) {
+  if (!raw) return '';
+  return '@' + String(raw).replace(/@+/g, '').trim().toLowerCase();
+}
+
+function showVitrineToast(msg, type) {
+  if (window.HokagePi && typeof window.HokagePi.showToast === 'function') {
+    window.HokagePi.showToast(msg, type || 'info');
+    return;
+  }
+  let toast = document.getElementById('hokage-vitrine-floating-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'hokage-vitrine-floating-toast';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10090;padding:12px 20px;border-radius:12px;font-size:0.86rem;font-weight:700;max-width:92vw;box-shadow:0 12px 36px rgba(0,0,0,0.85);transition:all 0.25s ease;text-align:center;pointer-events:none;';
+    document.body.appendChild(toast);
+  }
+  if (type === 'success') {
+    toast.style.background = '#065f46';
+    toast.style.color = '#a7f3d0';
+    toast.style.border = '1px solid #10b981';
+  } else if (type === 'error') {
+    toast.style.background = '#7f1d1d';
+    toast.style.color = '#fecaca';
+    toast.style.border = '1px solid #ef4444';
+  } else {
+    toast.style.background = '#312e81';
+    toast.style.color = '#c7d2fe';
+    toast.style.border = '1px solid #6366f1';
+  }
+  toast.textContent = msg;
+  toast.style.display = 'block';
+  toast.style.opacity = '1';
+  if (window._vitrineToastTimer) clearTimeout(window._vitrineToastTimer);
+  window._vitrineToastTimer = setTimeout(function () {
+    if (toast) {
+      toast.style.opacity = '0';
+      setTimeout(function () { toast.style.display = 'none'; }, 260);
+    }
+  }, 4200);
+}
+
+// =========================================================================
+// BLINDAGEM CRIPTOGRÁFICA & SEGURANÇA WEB3 (ZERO-TRUST)
+// =========================================================================
+
+// Sanitização Rígida de HTML contra Stored XSS (Unificada via HokageUtils)
+function escapeHtml(str) {
+  if (window.HokageUtils && typeof window.HokageUtils.escapeHtml === 'function') {
+    return window.HokageUtils.escapeHtml(str);
+  }
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Sanitização de URLs para certificar esquemas válidos e bloquear vetores maliciosos
+function sanitizeUrl(url) {
+  if (!url) return '';
+  const clean = String(url).trim();
+  if (!clean || /[\s<>"'`]/.test(clean) || /^\/\//.test(clean)) return '';
+  if (/^(https?:\/\/|mailto:|tel:|\/(?!\/)|\?|#)/i.test(clean)) {
+    try {
+      const parsed = new URL(clean, window.location.origin);
+      if (['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol)) {
         return clean;
       }
-      if (/^assets\/img\/[a-zA-Z0-9_\-\.]+\.(jpg|jpeg|png|webp|svg)$/i.test(clean)) {
-        return clean;
-      }
-      if (/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(clean)) {
-        return clean;
-      }
-      return '';
+    } catch (_) { }
+  }
+  return '';
+}
+
+// Sanitização rigorosa de imagens e avatares (permite URLs remotas, assets locais e data:image seguros)
+function sanitizeImageUrl(url) {
+  if (!url) return '';
+  const clean = String(url).trim();
+  if (/^https?:\/\/[^\s<>"'`]+$/i.test(clean)) {
+    return clean;
+  }
+  if (/^assets\/img\/[a-zA-Z0-9_\-\.]+\.(jpg|jpeg|png|webp|svg)$/i.test(clean)) {
+    return clean;
+  }
+  if (/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(clean)) {
+    return clean;
+  }
+  return '';
+}
+
+// Validador Criptográfico estrito de Chave Pública Pi Network (Unificado via HokageUtils / IsarDB)
+function isValidPiPublicKey(address) {
+  if (window.HokageUtils && typeof window.HokageUtils.isValidPiPublicKey === 'function') {
+    return window.HokageUtils.isValidPiPublicKey(address);
+  }
+  if (window.IsarDB && typeof window.IsarDB.isValidPiPublicKey === 'function') {
+    return window.IsarDB.isValidPiPublicKey(address);
+  }
+  if (!address || typeof address !== 'string') return false;
+  return /^G[A-Z2-7]{55}$/.test(address.trim());
+}
+
+// Validador em tempo real do campo de carteira no formulário de edição
+function validateWalletInputLive(val) {
+  const badge = document.getElementById('prof-wallet-badge');
+  const input = document.getElementById('prof-input-wallet');
+  const hint = document.getElementById('prof-wallet-hint');
+  const trimmed = (val || '').trim();
+
+  if (!trimmed) {
+    if (badge) { badge.textContent = ''; badge.style.color = ''; }
+    if (input) input.style.borderColor = 'rgba(255,255,255,0.2)';
+    if (hint) {
+      hint.textContent = '🔒 Começa com "G" e possui exatamente 56 caracteres Base32 com CRC16. Nunca informe sua Passphrase de 24 palavras.';
+      hint.style.color = 'var(--text-muted)';
     }
+    return true;
+  }
 
-    // Validador Criptográfico estrito de Chave Pública Pi Network (Unificado via HokageUtils / IsarDB)
-    function isValidPiPublicKey(address) {
-      if (window.HokageUtils && typeof window.HokageUtils.isValidPiPublicKey === 'function') {
-        return window.HokageUtils.isValidPiPublicKey(address);
-      }
-      if (window.IsarDB && typeof window.IsarDB.isValidPiPublicKey === 'function') {
-        return window.IsarDB.isValidPiPublicKey(address);
-      }
-      if (!address || typeof address !== 'string') return false;
-      return /^G[A-Z2-7]{55}$/.test(address.trim());
+  const isValid = isValidPiPublicKey(trimmed);
+  if (isValid) {
+    if (badge) { badge.textContent = '✓ Chave Válida (CRC16 Ok)'; badge.style.color = '#10b981'; }
+    if (input) input.style.borderColor = '#10b981';
+    if (hint) {
+      hint.textContent = '✓ Formato e checksum ed25519 verificados com sucesso para a Mainnet.';
+      hint.style.color = '#10b981';
     }
-
-    // Validador em tempo real do campo de carteira no formulário de edição
-    function validateWalletInputLive(val) {
-      const badge = document.getElementById('prof-wallet-badge');
-      const input = document.getElementById('prof-input-wallet');
-      const hint = document.getElementById('prof-wallet-hint');
-      const trimmed = (val || '').trim();
-
-      if (!trimmed) {
-        if (badge) { badge.textContent = ''; badge.style.color = ''; }
-        if (input) input.style.borderColor = 'rgba(255,255,255,0.2)';
-        if (hint) {
-          hint.textContent = '🔒 Começa com "G" e possui exatamente 56 caracteres Base32 com CRC16. Nunca informe sua Passphrase de 24 palavras.';
-          hint.style.color = 'var(--text-muted)';
-        }
-        return true;
-      }
-
-      const isValid = isValidPiPublicKey(trimmed);
-      if (isValid) {
-        if (badge) { badge.textContent = '✓ Chave Válida (CRC16 Ok)'; badge.style.color = '#10b981'; }
-        if (input) input.style.borderColor = '#10b981';
-        if (hint) {
-          hint.textContent = '✓ Formato e checksum ed25519 verificados com sucesso para a Mainnet.';
-          hint.style.color = '#10b981';
-        }
+  } else {
+    if (badge) { badge.textContent = '✕ Chave Inválida'; badge.style.color = '#ef4444'; }
+    if (input) input.style.borderColor = '#ef4444';
+    if (hint) {
+      if (trimmed.length !== 56) {
+        hint.textContent = `A chave possui ${trimmed.length} caracteres (deve ter exatamente 56).`;
+      } else if (!trimmed.startsWith('G')) {
+        hint.textContent = 'A chave da Pi Network deve começar com a letra "G".';
       } else {
-        if (badge) { badge.textContent = '✕ Chave Inválida'; badge.style.color = '#ef4444'; }
-        if (input) input.style.borderColor = '#ef4444';
-        if (hint) {
-          if (trimmed.length !== 56) {
-            hint.textContent = `A chave possui ${trimmed.length} caracteres (deve ter exatamente 56).`;
-          } else if (!trimmed.startsWith('G')) {
-            hint.textContent = 'A chave da Pi Network deve começar com a letra "G".';
-          } else {
-            hint.textContent = 'Checksum de integridade inválido. Verifique se digitou alguma letra errada.';
-          }
-          hint.style.color = '#ef4444';
-        }
+        hint.textContent = 'Checksum de integridade inválido. Verifique se digitou alguma letra errada.';
       }
-      return isValid;
+      hint.style.color = '#ef4444';
+    }
+  }
+  return isValid;
+}
+
+// ==========================================
+// TERMINAL POS & QR CODE DINÂMICO (PI COMMERCE)
+// ==========================================
+let posCurrentMode = 'dynamic';
+
+function switchPosMode(mode) {
+  posCurrentMode = mode;
+  const dynTab = document.getElementById('pos-tab-dynamic');
+  const staTab = document.getElementById('pos-tab-static');
+  const amtGroup = document.getElementById('pos-amount-group');
+
+  if (mode === 'dynamic') {
+    if (dynTab) { dynTab.style.background = 'var(--accent)'; dynTab.style.color = '#fff'; }
+    if (staTab) { staTab.style.background = 'transparent'; staTab.style.color = 'var(--text-secondary)'; }
+    if (amtGroup) amtGroup.style.display = 'block';
+  } else {
+    if (staTab) { staTab.style.background = 'var(--accent)'; staTab.style.color = '#fff'; }
+    if (dynTab) { dynTab.style.background = 'transparent'; dynTab.style.color = 'var(--text-secondary)'; }
+    if (amtGroup) amtGroup.style.display = 'none';
+  }
+  updateDynamicQrPayload();
+}
+
+function setPosQuickAmount(amount) {
+  const amtInp = document.getElementById('pos-input-amount');
+  if (amtInp) {
+    amtInp.value = amount;
+    updateDynamicQrPayload();
+  }
+}
+
+function updateDynamicQrPayload() {
+  if (!currentPioneerWallet) return;
+  const img = document.getElementById('wallet-qr-img');
+  const previewEl = document.getElementById('wallet-qr-preview');
+  const amtInp = document.getElementById('pos-input-amount');
+  const memoInp = document.getElementById('pos-input-memo');
+
+  const amountVal = amtInp ? amtInp.value.trim() : '';
+  const memoVal = memoInp ? memoInp.value.trim() : '';
+
+  let payload = currentPioneerWallet;
+  if (posCurrentMode === 'dynamic' && (amountVal || memoVal)) {
+    // Formato Pi/Stellar URI compatível com scanners de wallet
+    payload = `pi://pay?recipient=${encodeURIComponent(currentPioneerWallet)}`;
+    if (amountVal) payload += `&amount=${encodeURIComponent(amountVal)}`;
+    if (memoVal) payload += `&memo=${encodeURIComponent(memoVal)}`;
+  }
+
+  if (previewEl) {
+    previewEl.textContent = payload;
+  }
+  if (img) {
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(payload)}`;
+  }
+}
+
+function openWalletQrModal(presetAmount, presetMemo) {
+  if (!currentPioneerWallet) {
+    alert('Chave pública não cadastrada para este pioneiro.');
+    return;
+  }
+  const modal = document.getElementById('wallet-qr-modal');
+  const userEl = document.getElementById('wallet-qr-user');
+  const amtInp = document.getElementById('pos-input-amount');
+  const memoInp = document.getElementById('pos-input-memo');
+  const cleanUser = cleanUsername(currentPioneerUser);
+  const safeCleanUser = escapeHtml(cleanUser);
+  const isOwner = isOwnerOfCurrentPage();
+  const inPi = isPiBrowser();
+
+  if (userEl) userEl.textContent = cleanUser;
+  if (amtInp && presetAmount) amtInp.value = presetAmount;
+  if (memoInp && presetMemo) memoInp.value = presetMemo;
+
+  const modalTitle = document.getElementById('wallet-qr-modal-title');
+  const ownerControls = document.getElementById('pos-owner-controls');
+  const visitorPresetBadge = document.getElementById('pos-visitor-preset-badge');
+  const visitorPresetAmt = document.getElementById('pos-visitor-preset-amount');
+  const visitorPresetMemoWrap = document.getElementById('pos-visitor-preset-memo-wrap');
+  const visitorPresetMemo = document.getElementById('pos-visitor-preset-memo');
+  const browserTip = document.getElementById('pos-browser-tip');
+  const actionsContainer = document.getElementById('pos-actions-container');
+
+  // 1. Configurações Específicas por Cenário / Papel
+  if (isOwner) {
+    // CENÁRIO 3: O PRÓPRIO DONO (TERMINAL POS / COBRANÇA)
+    if (modalTitle) modalTitle.innerHTML = '<span>⚡</span> Meu Terminal POS &amp; Cobrança';
+    if (ownerControls) ownerControls.style.display = 'block';
+    if (visitorPresetBadge) visitorPresetBadge.style.display = 'none';
+
+    if (browserTip) {
+      browserTip.innerHTML = '🏪 <strong>Modo Lojista:</strong> Digite o valor em π para gerar o QR code dinâmico para seu cliente ou envie o link de cobrança direto.';
     }
 
-    // ==========================================
-    // TERMINAL POS & QR CODE DINÂMICO (PI COMMERCE)
-    // ==========================================
-    let posCurrentMode = 'dynamic';
-
-    function switchPosMode(mode) {
-      posCurrentMode = mode;
-      const dynTab = document.getElementById('pos-tab-dynamic');
-      const staTab = document.getElementById('pos-tab-static');
-      const amtGroup = document.getElementById('pos-amount-group');
-
-      if (mode === 'dynamic') {
-        if (dynTab) { dynTab.style.background = 'var(--accent)'; dynTab.style.color = '#fff'; }
-        if (staTab) { staTab.style.background = 'transparent'; staTab.style.color = 'var(--text-secondary)'; }
-        if (amtGroup) amtGroup.style.display = 'block';
-      } else {
-        if (staTab) { staTab.style.background = 'var(--accent)'; staTab.style.color = '#fff'; }
-        if (dynTab) { dynTab.style.background = 'transparent'; dynTab.style.color = 'var(--text-secondary)'; }
-        if (amtGroup) amtGroup.style.display = 'none';
-      }
-      updateDynamicQrPayload();
-    }
-
-    function setPosQuickAmount(amount) {
-      const amtInp = document.getElementById('pos-input-amount');
-      if (amtInp) {
-        amtInp.value = amount;
-        updateDynamicQrPayload();
-      }
-    }
-
-    function updateDynamicQrPayload() {
-      if (!currentPioneerWallet) return;
-      const img = document.getElementById('wallet-qr-img');
-      const previewEl = document.getElementById('wallet-qr-preview');
-      const amtInp = document.getElementById('pos-input-amount');
-      const memoInp = document.getElementById('pos-input-memo');
-
-      const amountVal = amtInp ? amtInp.value.trim() : '';
-      const memoVal = memoInp ? memoInp.value.trim() : '';
-
-      let payload = currentPioneerWallet;
-      if (posCurrentMode === 'dynamic' && (amountVal || memoVal)) {
-        // Formato Pi/Stellar URI compatível com scanners de wallet
-        payload = `pi://pay?recipient=${encodeURIComponent(currentPioneerWallet)}`;
-        if (amountVal) payload += `&amount=${encodeURIComponent(amountVal)}`;
-        if (memoVal) payload += `&memo=${encodeURIComponent(memoVal)}`;
-      }
-
-      if (previewEl) {
-        previewEl.textContent = payload;
-      }
-      if (img) {
-        img.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(payload)}`;
-      }
-    }
-
-    function openWalletQrModal(presetAmount, presetMemo) {
-      if (!currentPioneerWallet) {
-        alert('Chave pública não cadastrada para este pioneiro.');
-        return;
-      }
-      const modal = document.getElementById('wallet-qr-modal');
-      const userEl = document.getElementById('wallet-qr-user');
-      const amtInp = document.getElementById('pos-input-amount');
-      const memoInp = document.getElementById('pos-input-memo');
-      const cleanUser = cleanUsername(currentPioneerUser);
-      const safeCleanUser = escapeHtml(cleanUser);
-      const isOwner = isOwnerOfCurrentPage();
-      const inPi = isPiBrowser();
-
-      if (userEl) userEl.textContent = cleanUser;
-      if (amtInp && presetAmount) amtInp.value = presetAmount;
-      if (memoInp && presetMemo) memoInp.value = presetMemo;
-
-      const modalTitle = document.getElementById('wallet-qr-modal-title');
-      const ownerControls = document.getElementById('pos-owner-controls');
-      const visitorPresetBadge = document.getElementById('pos-visitor-preset-badge');
-      const visitorPresetAmt = document.getElementById('pos-visitor-preset-amount');
-      const visitorPresetMemoWrap = document.getElementById('pos-visitor-preset-memo-wrap');
-      const visitorPresetMemo = document.getElementById('pos-visitor-preset-memo');
-      const browserTip = document.getElementById('pos-browser-tip');
-      const actionsContainer = document.getElementById('pos-actions-container');
-
-      // 1. Configurações Específicas por Cenário / Papel
-      if (isOwner) {
-        // CENÁRIO 3: O PRÓPRIO DONO (TERMINAL POS / COBRANÇA)
-        if (modalTitle) modalTitle.innerHTML = '<span>⚡</span> Meu Terminal POS &amp; Cobrança';
-        if (ownerControls) ownerControls.style.display = 'block';
-        if (visitorPresetBadge) visitorPresetBadge.style.display = 'none';
-
-        if (browserTip) {
-          browserTip.innerHTML = '🏪 <strong>Modo Lojista:</strong> Digite o valor em π para gerar o QR code dinâmico para seu cliente ou envie o link de cobrança direto.';
-        }
-
-        if (actionsContainer) {
-          actionsContainer.innerHTML = `
+    if (actionsContainer) {
+      actionsContainer.innerHTML = `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="copyPosPaymentLink()" id="btn-copy-pos-link" style="font-weight:700;padding:11px">
               📋 Copiar Link de Cobrança com Valor
             </button>
@@ -366,37 +366,37 @@
               💬 Enviar Cobrança ao Cliente no WhatsApp ↗
             </button>
           `;
-        }
+    }
 
-        switchPosMode('dynamic');
+    switchPosMode('dynamic');
 
-      } else {
-        // VISITANTE (PIONEIRO OU CLIENTE EXTERNO)
-        if (modalTitle) modalTitle.innerHTML = `<span>⚡</span> Pagar ${safeCleanUser} com Pi`;
-        if (ownerControls) ownerControls.style.display = 'none';
+  } else {
+    // VISITANTE (PIONEIRO OU CLIENTE EXTERNO)
+    if (modalTitle) modalTitle.innerHTML = `<span>⚡</span> Pagar ${safeCleanUser} com Pi`;
+    if (ownerControls) ownerControls.style.display = 'none';
 
-        if (presetAmount) {
-          if (visitorPresetBadge) visitorPresetBadge.style.display = 'block';
-          if (visitorPresetAmt) visitorPresetAmt.textContent = `${presetAmount} π`;
-          if (presetMemo && visitorPresetMemoWrap && visitorPresetMemo) {
-            visitorPresetMemoWrap.style.display = 'block';
-            visitorPresetMemo.textContent = presetMemo;
-          }
-          switchPosMode('dynamic');
-        } else {
-          if (visitorPresetBadge) visitorPresetBadge.style.display = 'none';
-          switchPosMode('static');
-        }
+    if (presetAmount) {
+      if (visitorPresetBadge) visitorPresetBadge.style.display = 'block';
+      if (visitorPresetAmt) visitorPresetAmt.textContent = `${presetAmount} π`;
+      if (presetMemo && visitorPresetMemoWrap && visitorPresetMemo) {
+        visitorPresetMemoWrap.style.display = 'block';
+        visitorPresetMemo.textContent = presetMemo;
+      }
+      switchPosMode('dynamic');
+    } else {
+      if (visitorPresetBadge) visitorPresetBadge.style.display = 'none';
+      switchPosMode('static');
+    }
 
-        const hasWhatsApp = Boolean(currentProfileData && currentProfileData.whatsapp_url);
+    const hasWhatsApp = Boolean(currentProfileData && currentProfileData.whatsapp_url);
 
-        if (inPi) {
-          // CENÁRIO 2: OUTRO PIONEIRO LOGADO DENTRO DO PI BROWSER
-          if (browserTip) {
-            browserTip.innerHTML = `📱 <strong>No Pi Browser:</strong> Você pode transferir diretamente pela sua <code>wallet.pi</code> com biometria ou escanear o QR code da carteira de ${safeCleanUser}.`;
-          }
+    if (inPi) {
+      // CENÁRIO 2: OUTRO PIONEIRO LOGADO DENTRO DO PI BROWSER
+      if (browserTip) {
+        browserTip.innerHTML = `📱 <strong>No Pi Browser:</strong> Você pode transferir diretamente pela sua <code>wallet.pi</code> com biometria ou escanear o QR code da carteira de ${safeCleanUser}.`;
+      }
 
-          let actionsHtml = `
+      let actionsHtml = `
             <a href="https://wallet.pi" class="portal-btn portal-btn--amber portal-btn--sm" style="text-decoration:none;font-weight:700;padding:11px;display:flex;align-items:center;justify-content:center;gap:6px">
               <span>🚀</span> Abrir wallet.pi para Transferir ↗
             </a>
@@ -405,23 +405,23 @@
             </button>
           `;
 
-          if (hasWhatsApp) {
-            actionsHtml += `
+      if (hasWhatsApp) {
+        actionsHtml += `
               <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="sendPaymentProofOnWhatsApp()" style="border-color:rgba(37,211,102,0.5);color:#25d366;font-weight:700;padding:10px">
                 💬 Avisar Pagamento para ${safeCleanUser} no WhatsApp ↗
               </button>
             `;
-          }
+      }
 
-          if (actionsContainer) actionsContainer.innerHTML = actionsHtml;
+      if (actionsContainer) actionsContainer.innerHTML = actionsHtml;
 
-        } else {
-          // CENÁRIO 1: VISITANTE FORA DO PI BROWSER (CHROME / SAFARI / WHATSAPP)
-          if (browserTip) {
-            browserTip.innerHTML = `💡 <strong>Navegador Comum:</strong> Para pagar com Pi, copie a chave pública abaixo, abra o <strong>Pi Browser</strong> no seu celular e acesse sua <code>wallet.pi</code>.`;
-          }
+    } else {
+      // CENÁRIO 1: VISITANTE FORA DO PI BROWSER (CHROME / SAFARI / WHATSAPP)
+      if (browserTip) {
+        browserTip.innerHTML = `💡 <strong>Navegador Comum:</strong> Para pagar com Pi, copie a chave pública abaixo, abra o <strong>Pi Browser</strong> no seu celular e acesse sua <code>wallet.pi</code>.`;
+      }
 
-          let actionsHtml = `
+      let actionsHtml = `
             <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="copyWalletKey()" style="font-weight:700;padding:11px">
               📋 Copiar Chave Pública de ${safeCleanUser}
             </button>
@@ -430,139 +430,176 @@
             </button>
           `;
 
-          if (hasWhatsApp) {
-            actionsHtml += `
+      if (hasWhatsApp) {
+        actionsHtml += `
               <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="sendPaymentProofOnWhatsApp()" style="border-color:rgba(37,211,102,0.5);color:#25d366;font-weight:700;padding:10px">
                 💬 Falar com ${safeCleanUser} no WhatsApp ↗
               </button>
             `;
-          }
+      }
 
-          if (actionsContainer) actionsContainer.innerHTML = actionsHtml;
+      if (actionsContainer) actionsContainer.innerHTML = actionsHtml;
+    }
+  }
+
+  updateDynamicQrPayload();
+
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  // Registra métrica de clique
+  incrementProfileMetric('copies');
+}
+
+function closeWalletQrModal() {
+  const modal = document.getElementById('wallet-qr-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function copyPosPaymentLink() {
+  const cleanUser = cleanUsername(currentPioneerUser).replace(/^@+/, '');
+  const amtInp = document.getElementById('pos-input-amount');
+  const memoInp = document.getElementById('pos-input-memo');
+  const amountVal = amtInp ? amtInp.value.trim() : '';
+  const memoVal = memoInp ? memoInp.value.trim() : '';
+
+  let link = `https://hokage22b.com/pioneiro?u=${encodeURIComponent(cleanUser)}`;
+  if (amountVal) link += `&pay=${encodeURIComponent(amountVal)}`;
+  if (memoVal) link += `&memo=${encodeURIComponent(memoVal)}`;
+
+  navigator.clipboard.writeText(link).then(() => {
+    const btn = document.getElementById('btn-copy-pos-link');
+    if (btn) {
+      const prev = btn.textContent;
+      btn.textContent = '✓ Link de Cobrança Copiado!';
+      btn.style.color = '#34d399';
+      setTimeout(() => {
+        btn.textContent = prev;
+        btn.style.color = '';
+      }, 2500);
+    }
+  });
+}
+
+function shareOwnerPosOnWhatsApp() {
+  const cleanUser = cleanUsername(currentPioneerUser);
+  const amtInp = document.getElementById('pos-input-amount');
+  const memoInp = document.getElementById('pos-input-memo');
+  const amountVal = amtInp ? amtInp.value.trim() : '';
+  const memoVal = memoInp ? memoInp.value.trim() : '';
+
+  let link = `https://hokage22b.com/pioneiro?u=${encodeURIComponent(cleanUser.replace(/^@+/, ''))}`;
+  if (amountVal) link += `&pay=${encodeURIComponent(amountVal)}`;
+  if (memoVal) link += `&memo=${encodeURIComponent(memoVal)}`;
+
+  const msg = `Olá! Segue o link do meu Passaporte no HOKAGE22B para pagamento direto em Pi Network (${amountVal ? amountVal + ' π' : 'P2P'}):\n${link}\n\nDestinatário: ${cleanUser}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+}
+
+function sendPaymentProofOnWhatsApp() {
+  const cleanUser = cleanUsername(currentPioneerUser);
+  const rawWaUrl = currentProfileData && currentProfileData.whatsapp_url ? currentProfileData.whatsapp_url.trim() : '';
+  const waUrl = sanitizeUrl(rawWaUrl);
+
+  if (!waUrl || !/^https?:\/\//i.test(waUrl)) {
+    alert('Este pioneiro ainda não cadastrou um link HTTPS válido de contato no WhatsApp.');
+    return;
+  }
+
+  // Se for link de grupo comunitário (ex: chat.whatsapp.com)
+  if (waUrl.includes('chat.whatsapp.com')) {
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+    return;
+  }
+
+  // Se for número wa.me direto ou link personalizado
+  const msg = `Olá ${cleanUser}! Acessei seu Passaporte no HOKAGE22B e efetuei uma transferência em Pi Network para a sua carteira. Segue o comprovante:`;
+  if (waUrl.includes('wa.me/')) {
+    const separator = waUrl.includes('?') ? '&' : '?';
+    window.open(`${waUrl}${separator}text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+  } else {
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+  }
+}
+
+function copyShowcasePiBrowserLink() {
+  const cleanUser = cleanUsername(currentPioneerUser).replace(/^@+/, '');
+  const link = `https://hokage22b.com/@${cleanUser}`;
+  navigator.clipboard.writeText(link).then(() => {
+    const btn = document.getElementById('btn-copy-pibrowser-link');
+    if (btn) {
+      const original = btn.innerHTML;
+      btn.innerHTML = '✓ Link Copiado! Cole no Pi Browser';
+      btn.style.color = '#34d399';
+      btn.style.borderColor = '#10b981';
+      setTimeout(() => {
+        btn.innerHTML = original;
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 3000);
+    }
+  }).catch(() => {
+    prompt('Copie o link abaixo para abrir dentro do Pi Browser:', link);
+  });
+}
+
+function isPiBrowser() {
+  const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+  if (/PiBrowser|PiNetwork|minepi/i.test(ua)) return true;
+  if (typeof window !== 'undefined') {
+    if (window.PiNetwork || window.flutter_inappwebview) return true;
+    if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
+  }
+  return false;
+}
+
+    async function triggerWeb2GoogleLogin(btnEl, fbEl) {
+      if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.signInWithGoogle !== 'function') {
+        if (fbEl) {
+          fbEl.style.display = 'block';
+          fbEl.style.color = '#fca5a5';
+          fbEl.textContent = 'Login Google indisponível no momento. Use seu e-mail abaixo.';
         }
-      }
-
-      updateDynamicQrPayload();
-
-      if (modal) {
-        modal.style.display = 'flex';
-        modal.classList.add('active');
-        modal.setAttribute('aria-hidden', 'false');
-      }
-
-      // Registra métrica de clique
-      incrementProfileMetric('copies');
-    }
-
-    function closeWalletQrModal() {
-      const modal = document.getElementById('wallet-qr-modal');
-      if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-        modal.setAttribute('aria-hidden', 'true');
-      }
-    }
-
-    function copyPosPaymentLink() {
-      const cleanUser = cleanUsername(currentPioneerUser).replace(/^@+/, '');
-      const amtInp = document.getElementById('pos-input-amount');
-      const memoInp = document.getElementById('pos-input-memo');
-      const amountVal = amtInp ? amtInp.value.trim() : '';
-      const memoVal = memoInp ? memoInp.value.trim() : '';
-
-      let link = `https://hokage22b.com/pioneiro?u=${encodeURIComponent(cleanUser)}`;
-      if (amountVal) link += `&pay=${encodeURIComponent(amountVal)}`;
-      if (memoVal) link += `&memo=${encodeURIComponent(memoVal)}`;
-
-      navigator.clipboard.writeText(link).then(() => {
-        const btn = document.getElementById('btn-copy-pos-link');
-        if (btn) {
-          const prev = btn.textContent;
-          btn.textContent = '✓ Link de Cobrança Copiado!';
-          btn.style.color = '#34d399';
-          setTimeout(() => { 
-            btn.textContent = prev;
-            btn.style.color = '';
-          }, 2500);
-        }
-      });
-    }
-
-    function shareOwnerPosOnWhatsApp() {
-      const cleanUser = cleanUsername(currentPioneerUser);
-      const amtInp = document.getElementById('pos-input-amount');
-      const memoInp = document.getElementById('pos-input-memo');
-      const amountVal = amtInp ? amtInp.value.trim() : '';
-      const memoVal = memoInp ? memoInp.value.trim() : '';
-
-      let link = `https://hokage22b.com/pioneiro?u=${encodeURIComponent(cleanUser.replace(/^@+/, ''))}`;
-      if (amountVal) link += `&pay=${encodeURIComponent(amountVal)}`;
-      if (memoVal) link += `&memo=${encodeURIComponent(memoVal)}`;
-
-      const msg = `Olá! Segue o link do meu Passaporte no HOKAGE22B para pagamento direto em Pi Network (${amountVal ? amountVal + ' π' : 'P2P'}):\n${link}\n\nDestinatário: ${cleanUser}`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
-    }
-
-    function sendPaymentProofOnWhatsApp() {
-      const cleanUser = cleanUsername(currentPioneerUser);
-      const rawWaUrl = currentProfileData && currentProfileData.whatsapp_url ? currentProfileData.whatsapp_url.trim() : '';
-      const waUrl = sanitizeUrl(rawWaUrl);
-
-      if (!waUrl || !/^https?:\/\//i.test(waUrl)) {
-        alert('Este pioneiro ainda não cadastrou um link HTTPS válido de contato no WhatsApp.');
         return;
       }
-
-      // Se for link de grupo comunitário (ex: chat.whatsapp.com)
-      if (waUrl.includes('chat.whatsapp.com')) {
-        window.open(waUrl, '_blank', 'noopener,noreferrer');
-        return;
+      const origHtml = btnEl ? btnEl.innerHTML : '';
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.textContent = '⏳ Conectando ao Google...';
       }
-
-      // Se for número wa.me direto ou link personalizado
-      const msg = `Olá ${cleanUser}! Acessei seu Passaporte no HOKAGE22B e efetuei uma transferência em Pi Network para a sua carteira. Segue o comprovante:`;
-      if (waUrl.includes('wa.me/')) {
-        const separator = waUrl.includes('?') ? '&' : '?';
-        window.open(`${waUrl}${separator}text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
-      } else {
-        window.open(waUrl, '_blank', 'noopener,noreferrer');
-      }
-    }
-
-    function copyShowcasePiBrowserLink() {
-      const cleanUser = cleanUsername(currentPioneerUser).replace(/^@+/, '');
-      const link = `https://hokage22b.com/@${cleanUser}`;
-      navigator.clipboard.writeText(link).then(() => {
-        const btn = document.getElementById('btn-copy-pibrowser-link');
-        if (btn) {
-          const original = btn.innerHTML;
-          btn.innerHTML = '✓ Link Copiado! Cole no Pi Browser';
-          btn.style.color = '#34d399';
-          btn.style.borderColor = '#10b981';
-          setTimeout(() => {
-            btn.innerHTML = original;
-            btn.style.color = '';
-            btn.style.borderColor = '';
-          }, 3000);
+      if (fbEl) fbEl.style.display = 'none';
+      try {
+        await window.HokageWeb2Auth.signInWithGoogle(window.location.origin + '/pioneiro');
+      } catch (err) {
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.innerHTML = origHtml;
         }
-      }).catch(() => {
-        prompt('Copie o link abaixo para abrir dentro do Pi Browser:', link);
-      });
-    }
-
-    function isPiBrowser() {
-      const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-      if (/PiBrowser|PiNetwork|minepi/i.test(ua)) return true;
-      if (typeof window !== 'undefined') {
-        if (window.PiNetwork || window.flutter_inappwebview) return true;
-        if (window.location && (window.location.protocol === 'pi:' || (window.location.hostname && window.location.hostname.endsWith('.pi')))) return true;
+        if (fbEl) {
+          fbEl.style.display = 'block';
+          fbEl.style.color = '#fde68a';
+          fbEl.textContent = 'ℹ️ ' + ((err && err.message) || 'Login com Google em ativação — use seu e-mail abaixo!');
+        }
       }
-      return false;
     }
 
     function openExternalBrowserModal() {
       const modal = document.getElementById('external-browser-modal');
       if (modal) {
+        const extGoogleBtn = document.getElementById('ext-modal-google-btn');
+        if (extGoogleBtn && !extGoogleBtn.dataset.bound) {
+          extGoogleBtn.dataset.bound = '1';
+          extGoogleBtn.addEventListener('click', function () {
+            triggerWeb2GoogleLogin(extGoogleBtn, document.getElementById('ext-modal-web2-feedback'));
+          });
+        }
         const extForm = document.getElementById('ext-modal-web2-form');
         if (extForm && !extForm.dataset.bound) {
           extForm.dataset.bound = '1';
@@ -619,167 +656,167 @@
       }
     }
 
-    function closeExternalBrowserModal() {
-      const modal = document.getElementById('external-browser-modal');
-      if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-        modal.setAttribute('aria-hidden', 'true');
+function closeExternalBrowserModal() {
+  const modal = document.getElementById('external-browser-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function copyPiBrowserLink() {
+  const pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')
+    ? window.HokageReferral.getPendingRef()
+    : null;
+  const url = pendingRef
+    ? ((window.HokageReferral && typeof window.HokageReferral.buildInviteUrl === 'function')
+      ? window.HokageReferral.buildInviteUrl(pendingRef)
+      : ('https://hokage22b.com/pioneiro?u=' + encodeURIComponent(pendingRef) + '&ref=' + encodeURIComponent(pendingRef)))
+    : 'https://hokage22b.com/pioneiro';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(function () {
+      const btn = document.getElementById('btn-copy-pi-link');
+      if (btn) {
+        btn.innerHTML = '✓ Link Copiado! Cole no Pi Browser';
+        btn.style.borderColor = '#10b981';
+        btn.style.color = '#10b981';
+        setTimeout(function () {
+          btn.innerHTML = '📋 Copiar Link para o Pi Browser';
+          btn.style.borderColor = 'var(--accent)';
+          btn.style.color = 'var(--accent-light)';
+        }, 3500);
       }
-    }
+    }).catch(function () {
+      prompt('Copie o link abaixo e cole dentro do aplicativo Pi Browser:', url);
+    });
+  } else {
+    prompt('Copie o link abaixo e cole dentro do aplicativo Pi Browser:', url);
+  }
+}
 
-    function copyPiBrowserLink() {
-      const pendingRef = (window.HokageReferral && typeof window.HokageReferral.getPendingRef === 'function')
-        ? window.HokageReferral.getPendingRef()
-        : null;
-      const url = pendingRef
-        ? ((window.HokageReferral && typeof window.HokageReferral.buildInviteUrl === 'function')
-            ? window.HokageReferral.buildInviteUrl(pendingRef)
-            : ('https://hokage22b.com/pioneiro?u=' + encodeURIComponent(pendingRef) + '&ref=' + encodeURIComponent(pendingRef)))
-        : 'https://hokage22b.com/pioneiro';
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(function() {
-          const btn = document.getElementById('btn-copy-pi-link');
-          if (btn) {
-            btn.innerHTML = '✓ Link Copiado! Cole no Pi Browser';
-            btn.style.borderColor = '#10b981';
-            btn.style.color = '#10b981';
-            setTimeout(function() {
-              btn.innerHTML = '📋 Copiar Link para o Pi Browser';
-              btn.style.borderColor = 'var(--accent)';
-              btn.style.color = 'var(--accent-light)';
-            }, 3500);
-          }
-        }).catch(function() {
-          prompt('Copie o link abaixo e cole dentro do aplicativo Pi Browser:', url);
-        });
-      } else {
-        prompt('Copie o link abaixo e cole dentro do aplicativo Pi Browser:', url);
+function getQueryParam(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
+function getLoggedUser() {
+  try {
+    const h = localStorage.getItem('hokage_pi_user');
+    if (h) return JSON.parse(h);
+  } catch (_) { }
+  try {
+    const i = localStorage.getItem('isar_pi_user');
+    if (i) return JSON.parse(i);
+  } catch (_) { }
+  return null;
+}
+
+function isPiSdkAuthenticated() {
+  const user = getLoggedUser();
+  return Boolean(user && user.authType === 'pi-sdk' && user.uid && !user.uid.startsWith('demo-'));
+}
+
+function isWeb2Authenticated() {
+  const user = getLoggedUser();
+  if (!user) return false;
+  return Boolean(user.authType === 'web2' || user.authType === 'hybrid');
+}
+
+function isOwnerOfCurrentPage() {
+  if (isSimulatorMode) return true;
+  const logged = getLoggedUser();
+  if (!logged || !logged.username || !currentPioneerUser) return false;
+  return cleanUsername(logged.username) === cleanUsername(currentPioneerUser);
+}
+
+function setLoggedUser(username, uid, authType, accessToken, extra) {
+  const clean = username ? cleanUsername(username) : '';
+  const existing = getLoggedUser();
+  const preservedUid = uid || (existing && clean && cleanUsername(existing.username) === clean ? existing.uid : null) || (clean ? ('user_' + clean.replace('@', '')) : '');
+  const resolvedType = authType || (existing && existing.authType) || 'demo';
+  const userObj = {
+    username: clean,
+    uid: preservedUid,
+    authType: resolvedType,
+    is_pi_verified: (extra && extra.is_pi_verified !== undefined) ? Boolean(extra.is_pi_verified) : (resolvedType !== 'web2'),
+    email: (extra && extra.email) || (existing && existing.email) || undefined
+  };
+  try {
+    localStorage.setItem('hokage_pi_user', JSON.stringify(userObj));
+    localStorage.setItem('isar_pi_user', JSON.stringify(userObj));
+    if (accessToken) {
+      sessionStorage.setItem('hokage_pi_access_token', accessToken);
+    }
+  } catch (_) { }
+  if (window.HokagePi && typeof window.HokagePi.updateAuthUi === 'function') {
+    try { window.HokagePi.updateAuthUi(userObj); } catch (_) { }
+  }
+}
+
+async function ensurePiAccessToken() {
+  let token = '';
+  try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) { }
+  if (token) return token;
+  if (isPiBrowser() && window.Pi && typeof window.Pi.authenticate === 'function') {
+    try {
+      let auth;
+      try {
+        auth = await window.Pi.authenticate(['username', 'payments', 'wallet_address'], function () { });
+      } catch (_) {
+        auth = await window.Pi.authenticate(['username'], function () { });
       }
-    }
-
-    function getQueryParam(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name);
-    }
-
-    function getLoggedUser() {
-      try {
-        const h = localStorage.getItem('hokage_pi_user');
-        if (h) return JSON.parse(h);
-      } catch (_) {}
-      try {
-        const i = localStorage.getItem('isar_pi_user');
-        if (i) return JSON.parse(i);
-      } catch (_) {}
-      return null;
-    }
-
-    function isPiSdkAuthenticated() {
-      const user = getLoggedUser();
-      return Boolean(user && user.authType === 'pi-sdk' && user.uid && !user.uid.startsWith('demo-'));
-    }
-
-    function isWeb2Authenticated() {
-      const user = getLoggedUser();
-      if (!user) return false;
-      return Boolean(user.authType === 'web2' || user.authType === 'hybrid');
-    }
-
-    function isOwnerOfCurrentPage() {
-      if (isSimulatorMode) return true;
-      const logged = getLoggedUser();
-      if (!logged || !logged.username || !currentPioneerUser) return false;
-      return cleanUsername(logged.username) === cleanUsername(currentPioneerUser);
-    }
-
-    function setLoggedUser(username, uid, authType, accessToken, extra) {
-      const clean = username ? cleanUsername(username) : '';
-      const existing = getLoggedUser();
-      const preservedUid = uid || (existing && clean && cleanUsername(existing.username) === clean ? existing.uid : null) || (clean ? ('user_' + clean.replace('@', '')) : '');
-      const resolvedType = authType || (existing && existing.authType) || 'demo';
-      const userObj = {
-        username: clean,
-        uid: preservedUid,
-        authType: resolvedType,
-        is_pi_verified: (extra && extra.is_pi_verified !== undefined) ? Boolean(extra.is_pi_verified) : (resolvedType !== 'web2'),
-        email: (extra && extra.email) || (existing && existing.email) || undefined
-      };
-      try {
-        localStorage.setItem('hokage_pi_user', JSON.stringify(userObj));
-        localStorage.setItem('isar_pi_user', JSON.stringify(userObj));
-        if (accessToken) {
-          sessionStorage.setItem('hokage_pi_access_token', accessToken);
-        }
-      } catch (_) {}
-      if (window.HokagePi && typeof window.HokagePi.updateAuthUi === 'function') {
-        try { window.HokagePi.updateAuthUi(userObj); } catch (_) {}
+      if (auth && auth.accessToken) {
+        token = auth.accessToken;
+        const authHandle = (auth.user && auth.user.username) ? cleanUsername(auth.user.username) : currentPioneerUser;
+        setLoggedUser(authHandle, auth.user && auth.user.uid, 'pi-sdk', token);
       }
-    }
+    } catch (_) { }
+  }
+  return token;
+}
 
-    async function ensurePiAccessToken() {
-      let token = '';
-      try { token = sessionStorage.getItem('hokage_pi_access_token') || ''; } catch (_) {}
-      if (token) return token;
-      if (isPiBrowser() && window.Pi && typeof window.Pi.authenticate === 'function') {
-        try {
-          let auth;
-          try {
-            auth = await window.Pi.authenticate(['username', 'payments', 'wallet_address'], function () {});
-          } catch (_) {
-            auth = await window.Pi.authenticate(['username'], function () {});
-          }
-          if (auth && auth.accessToken) {
-            token = auth.accessToken;
-            const authHandle = (auth.user && auth.user.username) ? cleanUsername(auth.user.username) : currentPioneerUser;
-            setLoggedUser(authHandle, auth.user && auth.user.uid, 'pi-sdk', token);
-          }
-        } catch (_) {}
-      }
-      return token;
-    }
+async function logoutPioneer() {
+  if (window.HokageWeb2Auth && typeof window.HokageWeb2Auth.signOut === 'function') {
+    try { await window.HokageWeb2Auth.signOut(); } catch (_) { }
+  }
+  try {
+    localStorage.removeItem('hokage_pi_user');
+    localStorage.removeItem('isar_pi_user');
+    sessionStorage.removeItem('hokage_pi_access_token');
+  } catch (_) { }
+  window.location.href = 'pioneiro';
+}
 
-    async function logoutPioneer() {
-      if (window.HokageWeb2Auth && typeof window.HokageWeb2Auth.signOut === 'function') {
-        try { await window.HokageWeb2Auth.signOut(); } catch (_) {}
-      }
-      try {
-        localStorage.removeItem('hokage_pi_user');
-        localStorage.removeItem('isar_pi_user');
-        sessionStorage.removeItem('hokage_pi_access_token');
-      } catch (_) {}
-      window.location.href = 'pioneiro';
-    }
+const SIMULATOR_DRAFT_KEY = 'hokage_simulator_draft_v1';
 
-    const SIMULATOR_DRAFT_KEY = 'hokage_simulator_draft_v1';
+// Inicia o Modo Simulador Interativo (preservando rascunho local da simulação)
+function startSimulatorMode() {
+  isSimulatorMode = true;
+  let loadedDraft = null;
+  try {
+    const raw = localStorage.getItem(SIMULATOR_DRAFT_KEY);
+    if (raw) loadedDraft = JSON.parse(raw);
+  } catch (_) { }
+  currentProfileData = (loadedDraft && typeof loadedDraft === 'object')
+    ? loadedDraft
+    : JSON.parse(JSON.stringify(SIMULATOR_DEMO_PROFILE));
+  currentPioneerUser = currentProfileData.username || SIMULATOR_DEMO_PROFILE.username;
+  renderShowcaseData(currentProfileData, []);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-    // Inicia o Modo Simulador Interativo (preservando rascunho local da simulação)
-    function startSimulatorMode() {
-      isSimulatorMode = true;
-      let loadedDraft = null;
-      try {
-        const raw = localStorage.getItem(SIMULATOR_DRAFT_KEY);
-        if (raw) loadedDraft = JSON.parse(raw);
-      } catch (_) {}
-      currentProfileData = (loadedDraft && typeof loadedDraft === 'object')
-        ? loadedDraft
-        : JSON.parse(JSON.stringify(SIMULATOR_DEMO_PROFILE));
-      currentPioneerUser = currentProfileData.username || SIMULATOR_DEMO_PROFILE.username;
-      renderShowcaseData(currentProfileData, []);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+function syncOnboardingAuthBoxes() {
+  const logged = getLoggedUser();
+  const loggedBox = document.getElementById('onboarding-logged-box');
+  const web2Box = document.getElementById('web2-onboarding-box');
+  const inPi = isPiBrowser();
 
-    function syncOnboardingAuthBoxes() {
-      const logged = getLoggedUser();
-      const loggedBox = document.getElementById('onboarding-logged-box');
-      const web2Box = document.getElementById('web2-onboarding-box');
-      const inPi = isPiBrowser();
-
-      if (loggedBox) {
-        if (logged && logged.username) {
-          const cleanLogged = cleanUsername(logged.username).replace(/^@+/, '');
-          const isWebOnly = logged.authType === 'web2' && !logged.is_pi_verified;
-          loggedBox.innerHTML = `
+  if (loggedBox) {
+    if (logged && logged.username) {
+      const cleanLogged = cleanUsername(logged.username).replace(/^@+/, '');
+      const isWebOnly = logged.authType === 'web2' && !logged.is_pi_verified;
+      loggedBox.innerHTML = `
             <div class="onboarding-logged-card">
               <div style="min-width:0">
                 <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600">${isWebOnly ? 'Sua Sessão Web Conectada:' : 'Sua Sessão Pi Conectada:'}</div>
@@ -790,9 +827,9 @@
               </a>
             </div>
           `;
-          loggedBox.style.display = 'block';
-        } else if (logged && logged.authType === 'web2' && logged.needsHandle) {
-          loggedBox.innerHTML = `
+      loggedBox.style.display = 'block';
+    } else if (logged && logged.authType === 'web2' && logged.needsHandle) {
+      loggedBox.innerHTML = `
             <div class="onboarding-logged-card" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.1)">
               <div style="min-width:0">
                 <div style="font-size:0.75rem;color:#7dd3fc;font-weight:700">✓ E-mail Confirmado · Falta só 1 passo</div>
@@ -803,85 +840,93 @@
               </button>
             </div>
           `;
-          loggedBox.style.display = 'block';
-        } else {
-          loggedBox.style.display = 'none';
-        }
-      }
-
-      if (web2Box) {
-        const isAlreadySignedIn = Boolean(logged && (logged.username || logged.authType === 'web2'));
-        web2Box.style.display = (!inPi && !isAlreadySignedIn) ? 'block' : 'none';
-      }
-
-      const web2Form = document.getElementById('web2-onboarding-form');
-      if (web2Form && !web2Form.dataset.bound) {
-        web2Form.dataset.bound = '1';
-        web2Form.addEventListener('submit', async function (ev) {
-          ev.preventDefault();
-          const emailInp = document.getElementById('web2-onboarding-email');
-          const submitBtn = document.getElementById('web2-onboarding-btn');
-          const fbEl = document.getElementById('web2-onboarding-feedback');
-          const emailVal = emailInp ? emailInp.value.trim() : '';
-          if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.sendMagicLink !== 'function') {
-            if (fbEl) {
-              fbEl.style.display = 'block';
-              fbEl.style.color = '#fca5a5';
-              fbEl.textContent = 'Autenticação por e-mail indisponível no momento.';
-            }
-            return;
-          }
-          if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Enviando...';
-          }
-          if (fbEl) fbEl.style.display = 'none';
-          try {
-            await window.HokageWeb2Auth.sendMagicLink(emailVal, window.location.origin + '/pioneiro');
-            if (fbEl) {
-              fbEl.style.display = 'block';
-              fbEl.style.color = '#6ee7b7';
-              fbEl.innerHTML = '✉️ <strong>Link de acesso enviado!</strong> Abra seu e-mail e toque no link para criar seu Passaporte Web.';
-            }
-            if (emailInp) emailInp.value = '';
-          } catch (err) {
-            if (fbEl) {
-              fbEl.style.display = 'block';
-              fbEl.style.color = '#fca5a5';
-              fbEl.textContent = '⚠️ ' + ((err && err.message) || 'Erro ao enviar link de acesso.');
-            }
-          } finally {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.textContent = '✉️ Receber Link de Acesso';
-            }
-          }
-        });
-      }
+      loggedBox.style.display = 'block';
+    } else {
+      loggedBox.style.display = 'none';
     }
+  }
 
-    // Carrega Perfil Real (Supabase) ou Oficial do Hokage22b
-    async function loadPioneerProfile() {
-      // 1. Verifica se foi chamado explicitamente modo teste
-      if (getQueryParam('teste') === '1' || getQueryParam('simulador') === '1') {
-        startSimulatorMode();
+  if (web2Box) {
+    const isAlreadySignedIn = Boolean(logged && (logged.username || logged.authType === 'web2'));
+    web2Box.style.display = (!inPi && !isAlreadySignedIn) ? 'block' : 'none';
+  }
+
+  const web2GoogleBtn = document.getElementById('web2-onboarding-google-btn');
+  if (web2GoogleBtn && !web2GoogleBtn.dataset.bound) {
+    web2GoogleBtn.dataset.bound = '1';
+    web2GoogleBtn.addEventListener('click', function () {
+      triggerWeb2GoogleLogin(web2GoogleBtn, document.getElementById('web2-onboarding-feedback'));
+    });
+  }
+
+  const web2Form = document.getElementById('web2-onboarding-form');
+  if (web2Form && !web2Form.dataset.bound) {
+    web2Form.dataset.bound = '1';
+    web2Form.addEventListener('submit', async function (ev) {
+      ev.preventDefault();
+      const emailInp = document.getElementById('web2-onboarding-email');
+      const submitBtn = document.getElementById('web2-onboarding-btn');
+      const fbEl = document.getElementById('web2-onboarding-feedback');
+      const emailVal = emailInp ? emailInp.value.trim() : '';
+      if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.sendMagicLink !== 'function') {
+        if (fbEl) {
+          fbEl.style.display = 'block';
+          fbEl.style.color = '#fca5a5';
+          fbEl.textContent = 'Autenticação por e-mail indisponível no momento.';
+        }
         return;
       }
-
-      let username = getQueryParam('u') || getQueryParam('user');
-
-      // Fallback de caminho caso venha por /pioneiro/@usuario ou /@usuario
-      if (!username) {
-        const pathSegments = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
-        const lastSeg = pathSegments[pathSegments.length - 1] || '';
-        if (lastSeg.startsWith('@')) {
-          username = lastSeg;
-        } else if (pathSegments.length === 2 && pathSegments[0].toLowerCase() === 'pioneiro') {
-          username = '@' + lastSeg;
-        } else if (pathSegments.length === 1 && !['zero', 'um', 'vender', 'mural', 'pioneiro', 'explorar', 'diretorio', 'ferramentas', 'monte', 'jornada', 'legal', 'index', 'construir', 'hackathon', 'obrigado', 'admin', 'alem-do-clique', 'desenvolvedores'].includes(pathSegments[0].toLowerCase()) && !pathSegments[0].includes('.')) {
-          username = '@' + pathSegments[0];
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+      }
+      if (fbEl) fbEl.style.display = 'none';
+      try {
+        await window.HokageWeb2Auth.sendMagicLink(emailVal, window.location.origin + '/pioneiro');
+        if (fbEl) {
+          fbEl.style.display = 'block';
+          fbEl.style.color = '#6ee7b7';
+          fbEl.innerHTML = '✉️ <strong>Link de acesso enviado!</strong> Abra seu e-mail e toque no link para criar seu Passaporte Web.';
+        }
+        if (emailInp) emailInp.value = '';
+      } catch (err) {
+        if (fbEl) {
+          fbEl.style.display = 'block';
+          fbEl.style.color = '#fca5a5';
+          fbEl.textContent = '⚠️ ' + ((err && err.message) || 'Erro ao enviar link de acesso.');
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '✉️ Receber Link de Acesso';
         }
       }
+    });
+  }
+}
+
+// Carrega Perfil Real (Supabase) ou Oficial do Hokage22b
+async function loadPioneerProfile() {
+  // 1. Verifica se foi chamado explicitamente modo teste
+  if (getQueryParam('teste') === '1' || getQueryParam('simulador') === '1') {
+    startSimulatorMode();
+    return;
+  }
+
+  let username = getQueryParam('u') || getQueryParam('user');
+
+  // Fallback de caminho caso venha por /pioneiro/@usuario ou /@usuario
+  if (!username) {
+    const pathSegments = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
+    const lastSeg = pathSegments[pathSegments.length - 1] || '';
+    if (lastSeg.startsWith('@')) {
+      username = lastSeg;
+    } else if (pathSegments.length === 2 && pathSegments[0].toLowerCase() === 'pioneiro') {
+      username = '@' + lastSeg;
+    } else if (pathSegments.length === 1 && !['zero', 'um', 'vender', 'mural', 'pioneiro', 'explorar', 'diretorio', 'ferramentas', 'monte', 'jornada', 'legal', 'index', 'construir', 'hackathon', 'obrigado', 'admin', 'alem-do-clique', 'desenvolvedores'].includes(pathSegments[0].toLowerCase()) && !pathSegments[0].includes('.')) {
+      username = '@' + pathSegments[0];
+    }
+  }
 
       const loggedUser = getLoggedUser();
       const explicitRef = getQueryParam('ref');
@@ -904,23 +949,23 @@
         username = loggedUser.username;
       }
 
-      // Se NÃO tem parâmetro de perfil (?u=): tela de onboarding / boas-vindas
-      if (!username) {
-        document.getElementById('onboarding-navbar').style.display = 'block';
-        document.getElementById('vitrine-topbar').style.display = 'none';
-        document.getElementById('onboarding-view').style.display = 'block';
-        document.getElementById('pioneer-card').style.display = 'none';
-        document.getElementById('pioneer-footer').style.display = 'none';
+  // Se NÃO tem parâmetro de perfil (?u=): tela de onboarding / boas-vindas
+  if (!username) {
+    document.getElementById('onboarding-navbar').style.display = 'block';
+    document.getElementById('vitrine-topbar').style.display = 'none';
+    document.getElementById('onboarding-view').style.display = 'block';
+    document.getElementById('pioneer-card').style.display = 'none';
+    document.getElementById('pioneer-footer').style.display = 'none';
 
-        // Renderiza Banner Persistente de Convite Oficial caso exista ?ref= ou convite pendente
-        const activeRef = (window.HokageReferral && typeof window.HokageReferral.normalizeHandle === 'function')
-          ? (window.HokageReferral.normalizeHandle(explicitRef) || (window.HokageReferral.getPendingRef ? window.HokageReferral.getPendingRef() : ''))
-          : '';
-        const refBanner = document.getElementById('onboarding-referral-banner');
-        if (refBanner) {
-          if (activeRef) {
-            const safeActiveRef = escapeHtml(activeRef);
-            refBanner.innerHTML = `
+    // Renderiza Banner Persistente de Convite Oficial caso exista ?ref= ou convite pendente
+    const activeRef = (window.HokageReferral && typeof window.HokageReferral.normalizeHandle === 'function')
+      ? (window.HokageReferral.normalizeHandle(explicitRef) || (window.HokageReferral.getPendingRef ? window.HokageReferral.getPendingRef() : ''))
+      : '';
+    const refBanner = document.getElementById('onboarding-referral-banner');
+    if (refBanner) {
+      if (activeRef) {
+        const safeActiveRef = escapeHtml(activeRef);
+        refBanner.innerHTML = `
               <div style="background:linear-gradient(135deg, rgba(245,158,11,0.14), rgba(16,185,129,0.12), rgba(139,92,246,0.16));border:1.5px solid rgba(245,158,11,0.5);border-radius:16px;padding:14px 16px;margin-bottom:18px;text-align:left;box-shadow:0 10px 28px rgba(0,0,0,0.35)">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">
                   <span style="font-size:0.74rem;font-weight:800;color:#fbbf24;text-transform:uppercase;letter-spacing:0.04em">
@@ -943,11 +988,11 @@
                 </div>
               </div>
             `;
-            refBanner.style.display = 'block';
-          } else {
-            refBanner.style.display = 'none';
-          }
-        }
+        refBanner.style.display = 'block';
+      } else {
+        refBanner.style.display = 'none';
+      }
+    }
 
         // Mostra atalho de 1 clique caso já esteja logado (e login Web2 fora do Pi Browser)
         syncOnboardingAuthBoxes();
@@ -981,223 +1026,223 @@
         return;
       }
 
-      loadPioneersDirectory();
+  loadPioneersDirectory();
 
-      username = cleanUsername(username);
-      currentPioneerUser = username;
-      isSimulatorMode = false;
+  username = cleanUsername(username);
+  currentPioneerUser = username;
+  isSimulatorMode = false;
 
-      if (!isAutoStartFlow && window.HokageReferral && typeof window.HokageReferral.ensureVitrineInvite === 'function') {
-        window.HokageReferral.ensureVitrineInvite(username, loggedUser && loggedUser.username);
-      }
+  if (!isAutoStartFlow && window.HokageReferral && typeof window.HokageReferral.ensureVitrineInvite === 'function') {
+    window.HokageReferral.ensureVitrineInvite(username, loggedUser && loggedUser.username);
+  }
 
-      // Se for @hokage22b: Perfil Oficial do Fundador com merge dinâmico (avatar, bio customizada, produtos)
-      if (username === '@hokage22b') {
-        currentProfileData = JSON.parse(JSON.stringify(HOKAGE22B_OFFICIAL_PROFILE));
+  // Se for @hokage22b: Perfil Oficial do Fundador com merge dinâmico (avatar, bio customizada, produtos)
+  if (username === '@hokage22b') {
+    currentProfileData = JSON.parse(JSON.stringify(HOKAGE22B_OFFICIAL_PROFILE));
 
-        // 1. Merge com cache local instantâneo
-        try {
-          const cachedAvatar = localStorage.getItem('hokage_pioneer_avatar_hokage22b');
-          if (cachedAvatar) currentProfileData.avatar_url = cachedAvatar;
-        } catch (_) {}
+    // 1. Merge com cache local instantâneo
+    try {
+      const cachedAvatar = localStorage.getItem('hokage_pioneer_avatar_hokage22b');
+      if (cachedAvatar) currentProfileData.avatar_url = cachedAvatar;
+    } catch (_) { }
 
-        // 2. Merge com dados salvos no Supabase
-        if (window.IsarDB && window.IsarDB.getPioneerFullProfile) {
-          try {
-            const dbProf = await window.IsarDB.getPioneerFullProfile('@hokage22b');
-            if (dbProf) {
-              if (dbProf.avatar_url) {
-                currentProfileData.avatar_url = dbProf.avatar_url;
-                try { localStorage.setItem('hokage_pioneer_avatar_hokage22b', dbProf.avatar_url); } catch (_) {}
-              }
-              if (dbProf.bio) currentProfileData.bio = dbProf.bio;
-              if (Array.isArray(dbProf.products) && dbProf.products.length > 0) {
-                currentProfileData.products = dbProf.products;
-              }
-              if (dbProf.checklist_state && typeof dbProf.checklist_state === 'object') {
-                currentProfileData.checklist_state = dbProf.checklist_state;
-              }
-              if (Array.isArray(dbProf.selected_titles)) {
-                currentProfileData.selected_titles = dbProf.selected_titles;
-              }
-            }
-          } catch (e) {
-            console.warn('Erro ao mesclar dados do fundador do Supabase:', e);
+    // 2. Merge com dados salvos no Supabase
+    if (window.IsarDB && window.IsarDB.getPioneerFullProfile) {
+      try {
+        const dbProf = await window.IsarDB.getPioneerFullProfile('@hokage22b');
+        if (dbProf) {
+          if (dbProf.avatar_url) {
+            currentProfileData.avatar_url = dbProf.avatar_url;
+            try { localStorage.setItem('hokage_pioneer_avatar_hokage22b', dbProf.avatar_url); } catch (_) { }
+          }
+          if (dbProf.bio) currentProfileData.bio = dbProf.bio;
+          if (Array.isArray(dbProf.products) && dbProf.products.length > 0) {
+            currentProfileData.products = dbProf.products;
+          }
+          if (dbProf.checklist_state && typeof dbProf.checklist_state === 'object') {
+            currentProfileData.checklist_state = dbProf.checklist_state;
+          }
+          if (Array.isArray(dbProf.selected_titles)) {
+            currentProfileData.selected_titles = dbProf.selected_titles;
           }
         }
-        
-        // Busca anúncios reais do @hokage22b se houver
-        let ads = [];
-        if (window.IsarDB && window.IsarDB.getMyAds) {
-          try { ads = await window.IsarDB.getMyAds('@hokage22b'); } catch (_) {}
+      } catch (e) {
+        console.warn('Erro ao mesclar dados do fundador do Supabase:', e);
+      }
+    }
+
+    // Busca anúncios reais do @hokage22b se houver
+    let ads = [];
+    if (window.IsarDB && window.IsarDB.getMyAds) {
+      try { ads = await window.IsarDB.getMyAds('@hokage22b'); } catch (_) { }
+    }
+    renderShowcaseData(currentProfileData, ads);
+    return;
+  }
+
+  // Perfil de qualquer outro pioneiro: Busca dados no Supabase + Cache Local
+  if (window.IsarDB && window.IsarDB.getPioneerFullProfile) {
+    try {
+      const prof = await window.IsarDB.getPioneerFullProfile(username);
+      const isLoggedOwner = Boolean(loggedUser && loggedUser.username && cleanUsername(loggedUser.username) === username);
+      if (!prof && !isLoggedOwner) {
+        currentProfileData = {
+          username: username,
+          bio: 'Este endereço ainda não possui um Passaporte ativo no HOKAGE22B.',
+          wallet_address: '',
+          products: [],
+          _notFound: true
+        };
+      } else {
+        currentProfileData = prof || {
+          username: username,
+          bio: 'Pioneiro Verificado na comunidade independente HOKAGE22B.',
+          wallet_address: '',
+          products: []
+        };
+      }
+
+      // Fallback de cache local caso o upload de avatar seja recente
+      const cleanSlug = username.replace(/^@+/, '');
+      try {
+        const cachedAvatar = localStorage.getItem('hokage_pioneer_avatar_' + cleanSlug);
+        if (cachedAvatar && !currentProfileData.avatar_url && !currentProfileData._notFound) {
+          currentProfileData.avatar_url = cachedAvatar;
         }
-        renderShowcaseData(currentProfileData, ads);
-        return;
-      }
+      } catch (_) { }
 
-      // Perfil de qualquer outro pioneiro: Busca dados no Supabase + Cache Local
-      if (window.IsarDB && window.IsarDB.getPioneerFullProfile) {
-        try {
-          const prof = await window.IsarDB.getPioneerFullProfile(username);
-          const isLoggedOwner = Boolean(loggedUser && loggedUser.username && cleanUsername(loggedUser.username) === username);
-          if (!prof && !isLoggedOwner) {
-            currentProfileData = {
-              username: username,
-              bio: 'Este endereço ainda não possui um Passaporte ativo no HOKAGE22B.',
-              wallet_address: '',
-              products: [],
-              _notFound: true
-            };
-          } else {
-            currentProfileData = prof || {
-              username: username,
-              bio: 'Pioneiro Verificado na comunidade independente HOKAGE22B.',
-              wallet_address: '',
-              products: []
-            };
-          }
-
-          // Fallback de cache local caso o upload de avatar seja recente
-          const cleanSlug = username.replace(/^@+/, '');
-          try {
-            const cachedAvatar = localStorage.getItem('hokage_pioneer_avatar_' + cleanSlug);
-            if (cachedAvatar && !currentProfileData.avatar_url && !currentProfileData._notFound) {
-              currentProfileData.avatar_url = cachedAvatar;
-            }
-          } catch (_) {}
-
-          const ads = (window.IsarDB.getMyAds && !currentProfileData._notFound) ? await window.IsarDB.getMyAds(username) : [];
-          renderShowcaseData(currentProfileData, ads);
-        } catch (err) {
-          console.warn('Erro ao carregar perfil do pioneiro:', err);
-          renderShowcaseData({
-            username: username,
-            bio: 'Não foi possível verificar este Passaporte no momento.',
-            wallet_address: '',
-            products: [],
-            _notFound: true
-          }, []);
-        }
-      }
+      const ads = (window.IsarDB.getMyAds && !currentProfileData._notFound) ? await window.IsarDB.getMyAds(username) : [];
+      renderShowcaseData(currentProfileData, ads);
+    } catch (err) {
+      console.warn('Erro ao carregar perfil do pioneiro:', err);
+      renderShowcaseData({
+        username: username,
+        bio: 'Não foi possível verificar este Passaporte no momento.',
+        wallet_address: '',
+        products: [],
+        _notFound: true
+      }, []);
     }
+  }
+}
 
-    // Renderiza a Vitrine (Linktree Puro)
-    const SOCIAL_ICON_CATALOG = {
-      whatsapp: {
-        label: 'WhatsApp',
-        cls: 'social-icon-pill--whatsapp',
-        svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z"/></svg>'
-      },
-      youtube: {
-        label: 'YouTube',
-        cls: 'social-icon-pill--youtube',
-        svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>'
-      },
-      instagram: {
-        label: 'Instagram',
-        cls: 'social-icon-pill--instagram',
-        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>'
-      },
-      twitter: {
-        label: 'X / Twitter',
-        cls: 'social-icon-pill--twitter',
-        svg: '<svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>'
-      },
-      telegram: {
-        label: 'Telegram',
-        cls: 'social-icon-pill--telegram',
-        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#24a1de"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.818 8.234-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.211-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.833.941z"/></svg>'
-      },
-      tiktok: {
-        label: 'TikTok',
-        cls: 'social-icon-pill--tiktok',
-        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fe2c55"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>'
-      },
-      linkedin: {
-        label: 'LinkedIn',
-        cls: 'social-icon-pill--linkedin',
-        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>'
-      },
-      facebook: {
-        label: 'Facebook',
-        cls: 'social-icon-pill--facebook',
-        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#1877f2"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>'
-      },
-      discord: {
-        label: 'Discord',
-        cls: 'social-icon-pill--discord',
-        svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="#5865f2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>'
-      },
-      github: {
-        label: 'GitHub',
-        cls: 'social-icon-pill--github',
-        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>'
-      },
-      kwai: {
-        label: 'Kwai',
-        cls: 'social-icon-pill--kwai',
-        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#ff7700"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="3"/><rect x="4" y="13" width="12" height="7" rx="3"/><polygon points="17,14 22,12 22,20 17,18"/></svg>'
-      },
-      website: {
-        label: 'Site Oficial',
-        cls: 'social-icon-pill--website',
-        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>'
-      }
-    };
+// Renderiza a Vitrine (Linktree Puro)
+const SOCIAL_ICON_CATALOG = {
+  whatsapp: {
+    label: 'WhatsApp',
+    cls: 'social-icon-pill--whatsapp',
+    svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.979-.276-.101-.476-.15-.677.15-.2.301-.776.979-.952 1.18-.176.201-.351.226-.652.076-.301-.151-1.27-.468-2.42-1.493-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.15-.175.2-.301.301-.501.101-.2.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.234-.244-.587-.492-.507-.677-.516-.175-.008-.376-.01-.577-.01-.201 0-.527.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.899.12.579-.087 1.78-.727 2.03-1.43.251-.703.251-1.304.176-1.43-.075-.126-.276-.201-.577-.352zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.98.577 3.824 1.579 5.385L2 22l4.757-1.547a9.98 9.98 0 0 0 5.283 1.498h.004c5.523 0 10.012-4.488 10.012-10.012A9.99 9.99 0 0 0 12.04 2z"/></svg>'
+  },
+  youtube: {
+    label: 'YouTube',
+    cls: 'social-icon-pill--youtube',
+    svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>'
+  },
+  instagram: {
+    label: 'Instagram',
+    cls: 'social-icon-pill--instagram',
+    svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>'
+  },
+  twitter: {
+    label: 'X / Twitter',
+    cls: 'social-icon-pill--twitter',
+    svg: '<svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>'
+  },
+  telegram: {
+    label: 'Telegram',
+    cls: 'social-icon-pill--telegram',
+    svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#24a1de"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.818 8.234-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.211-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.833.941z"/></svg>'
+  },
+  tiktok: {
+    label: 'TikTok',
+    cls: 'social-icon-pill--tiktok',
+    svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fe2c55"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>'
+  },
+  linkedin: {
+    label: 'LinkedIn',
+    cls: 'social-icon-pill--linkedin',
+    svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>'
+  },
+  facebook: {
+    label: 'Facebook',
+    cls: 'social-icon-pill--facebook',
+    svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#1877f2"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>'
+  },
+  discord: {
+    label: 'Discord',
+    cls: 'social-icon-pill--discord',
+    svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="#5865f2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>'
+  },
+  github: {
+    label: 'GitHub',
+    cls: 'social-icon-pill--github',
+    svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>'
+  },
+  kwai: {
+    label: 'Kwai',
+    cls: 'social-icon-pill--kwai',
+    svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#ff7700"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="3"/><rect x="4" y="13" width="12" height="7" rx="3"/><polygon points="17,14 22,12 22,20 17,18"/></svg>'
+  },
+  website: {
+    label: 'Site Oficial',
+    cls: 'social-icon-pill--website',
+    svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>'
+  }
+};
 
-    function detectSocialNetwork(url) {
-      const u = String(url || '').toLowerCase();
-      if (/wa\.me|whatsapp\.com/.test(u)) return 'whatsapp';
-      if (/youtube\.com|youtu\.be/.test(u)) return 'youtube';
-      if (/instagram\.com/.test(u)) return 'instagram';
-      if (/twitter\.com|x\.com/.test(u)) return 'twitter';
-      if (/t\.me|telegram\.me|telegram\.org/.test(u)) return 'telegram';
-      if (/tiktok\.com/.test(u)) return 'tiktok';
-      if (/linkedin\.com/.test(u)) return 'linkedin';
-      if (/facebook\.com|fb\.com|fb\.me/.test(u)) return 'facebook';
-      if (/discord\.gg|discord\.com/.test(u)) return 'discord';
-      if (/github\.com/.test(u)) return 'github';
-      if (/kwai\.com|s\.kw\.ai/.test(u)) return 'kwai';
-      return 'website';
-    }
+function detectSocialNetwork(url) {
+  const u = String(url || '').toLowerCase();
+  if (/wa\.me|whatsapp\.com/.test(u)) return 'whatsapp';
+  if (/youtube\.com|youtu\.be/.test(u)) return 'youtube';
+  if (/instagram\.com/.test(u)) return 'instagram';
+  if (/twitter\.com|x\.com/.test(u)) return 'twitter';
+  if (/t\.me|telegram\.me|telegram\.org/.test(u)) return 'telegram';
+  if (/tiktok\.com/.test(u)) return 'tiktok';
+  if (/linkedin\.com/.test(u)) return 'linkedin';
+  if (/facebook\.com|fb\.com|fb\.me/.test(u)) return 'facebook';
+  if (/discord\.gg|discord\.com/.test(u)) return 'discord';
+  if (/github\.com/.test(u)) return 'github';
+  if (/kwai\.com|s\.kw\.ai/.test(u)) return 'kwai';
+  return 'website';
+}
 
-    function normalizeSocialUrl(network, rawValue) {
-      const val = String(rawValue || '').trim();
-      if (!val) return '';
-      if (/^https?:\/\//i.test(val)) return val;
-      const handle = val.replace(/^@+/, '').trim();
-      if (network === 'whatsapp') {
-        const digits = val.replace(/\D/g, '');
-        if (digits.length >= 8) return 'https://wa.me/' + (digits.length <= 11 ? '55' + digits : digits);
-      }
-      const bases = {
-        instagram: 'https://instagram.com/',
-        twitter: 'https://x.com/',
-        youtube: 'https://youtube.com/@',
-        telegram: 'https://t.me/',
-        tiktok: 'https://tiktok.com/@',
-        github: 'https://github.com/'
-      };
-      if (bases[network] && !val.includes('.')) {
-        return bases[network] + handle;
-      }
-      return 'https://' + val.replace(/^\/+/, '');
-    }
+function normalizeSocialUrl(network, rawValue) {
+  const val = String(rawValue || '').trim();
+  if (!val) return '';
+  if (/^https?:\/\//i.test(val)) return val;
+  const handle = val.replace(/^@+/, '').trim();
+  if (network === 'whatsapp') {
+    const digits = val.replace(/\D/g, '');
+    if (digits.length >= 8) return 'https://wa.me/' + (digits.length <= 11 ? '55' + digits : digits);
+  }
+  const bases = {
+    instagram: 'https://instagram.com/',
+    twitter: 'https://x.com/',
+    youtube: 'https://youtube.com/@',
+    telegram: 'https://t.me/',
+    tiktok: 'https://tiktok.com/@',
+    github: 'https://github.com/'
+  };
+  if (bases[network] && !val.includes('.')) {
+    return bases[network] + handle;
+  }
+  return 'https://' + val.replace(/^\/+/, '');
+}
 
-    function renderShowcaseData(prof, ads) {
-      document.getElementById('onboarding-navbar').style.display = 'none';
-      document.getElementById('vitrine-topbar').style.display = 'flex';
-      document.getElementById('onboarding-view').style.display = 'none';
-      document.getElementById('pioneer-card').style.display = 'block';
-      document.getElementById('pioneer-footer').style.display = 'block';
+function renderShowcaseData(prof, ads) {
+  document.getElementById('onboarding-navbar').style.display = 'none';
+  document.getElementById('vitrine-topbar').style.display = 'flex';
+  document.getElementById('onboarding-view').style.display = 'none';
+  document.getElementById('pioneer-card').style.display = 'block';
+  document.getElementById('pioneer-footer').style.display = 'block';
 
-      // Configura ações da barra de topo de forma limpa
-      const topbarActions = document.getElementById('topbar-actions');
-      const isOwner = isOwnerOfCurrentPage();
+  // Configura ações da barra de topo de forma limpa
+  const topbarActions = document.getElementById('topbar-actions');
+  const isOwner = isOwnerOfCurrentPage();
 
-      if (isSimulatorMode) {
-        document.getElementById('simulator-banner').style.display = 'flex';
-        topbarActions.innerHTML = `
+  if (isSimulatorMode) {
+    document.getElementById('simulator-banner').style.display = 'flex';
+    topbarActions.innerHTML = `
           <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="font-size:0.75rem;padding:6px 14px;font-weight:700">
             ✏️ Editar no Simulador
           </button>
@@ -1205,10 +1250,10 @@
             ✕ Sair do Teste
           </button>
         `;
-      } else {
-        document.getElementById('simulator-banner').style.display = 'none';
-        if (isOwner) {
-          topbarActions.innerHTML = `
+  } else {
+    document.getElementById('simulator-banner').style.display = 'none';
+    if (isOwner) {
+      topbarActions.innerHTML = `
             <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="font-size:0.74rem;padding:5px 11px;font-weight:700">
               ⚙️ Editar Passaporte
             </button>
@@ -1216,25 +1261,25 @@
               Sair
             </button>
           `;
-        } else {
-          const logged = getLoggedUser();
-          const cleanLogged = logged && logged.username ? cleanUsername(logged.username).replace(/^@+/, '') : '';
-          const cleanOwnerRef = cleanUsername(prof.username || currentPioneerUser || 'hokage22b').replace(/^@+/, '');
-          if (cleanLogged) {
-            topbarActions.innerHTML = `
+    } else {
+      const logged = getLoggedUser();
+      const cleanLogged = logged && logged.username ? cleanUsername(logged.username).replace(/^@+/, '') : '';
+      const cleanOwnerRef = cleanUsername(prof.username || currentPioneerUser || 'hokage22b').replace(/^@+/, '');
+      if (cleanLogged) {
+        topbarActions.innerHTML = `
               <a href="?u=${encodeURIComponent(cleanLogged)}" class="btn btn-primary btn-sm" style="font-size:0.74rem;padding:5px 11px;font-weight:700;text-decoration:none">
                 🪪 Meu Passaporte (@${escapeHtml(cleanLogged)})
               </a>
             `;
-          } else {
-            topbarActions.innerHTML = `
+      } else {
+        topbarActions.innerHTML = `
               <a href="pioneiro?ref=${encodeURIComponent(cleanOwnerRef)}&criar=1" class="btn btn-outline btn-sm" style="font-size:0.74rem;padding:5px 11px;border-color:rgba(245,158,11,0.5);color:#fbbf24;font-weight:700;text-decoration:none">
                 🪪 Criar Passaporte
               </a>
             `;
-          }
-        }
       }
+    }
+  }
 
       const username = cleanUsername(prof.username || currentPioneerUser || '@pioneiro');
       const footerCreateLink = document.getElementById('pioneer-footer-create-link');
@@ -1251,90 +1296,90 @@
       document.getElementById('pioneer-handle').textContent = username;
       document.title = `${username} — Passaporte Oficial na Pi Network | HOKAGE22B`;
 
-      const statusBar = document.getElementById('pioneer-account-status-bar');
-      if (statusBar) {
-        if (!prof._notFound && prof.is_pi_verified === false) {
-          let barHtml = '<span style="display:inline-flex;align-items:center;gap:6px;font-size:0.74rem;background:rgba(56,189,248,0.14);border:1px solid rgba(56,189,248,0.4);color:#7dd3fc;padding:4px 12px;border-radius:20px;font-weight:700">🌐 Membro Web</span>';
-          if (isOwner && !isSimulatorMode) {
-            barHtml += '<div style="margin:8px auto 0;max-width:440px;padding:9px 12px;border-radius:12px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.28);font-size:0.76rem;color:#cbd5e1;line-height:1.4">🌐 <strong>Conta Web ativa</strong> — Abra no <a href="pi://hokage22b.com/pioneiro" style="color:#fbbf24;font-weight:700;text-decoration:underline">Pi Browser</a> quando quiser vincular sua conta Pi e ativar o selo <strong>✓ Pi Verificado</strong>.</div>';
-          }
-          statusBar.innerHTML = barHtml;
-          statusBar.style.display = 'block';
-        } else {
-          statusBar.innerHTML = '';
-          statusBar.style.display = 'none';
-        }
+  const statusBar = document.getElementById('pioneer-account-status-bar');
+  if (statusBar) {
+    if (!prof._notFound && prof.is_pi_verified === false) {
+      let barHtml = '<span style="display:inline-flex;align-items:center;gap:6px;font-size:0.74rem;background:rgba(56,189,248,0.14);border:1px solid rgba(56,189,248,0.4);color:#7dd3fc;padding:4px 12px;border-radius:20px;font-weight:700">🌐 Membro Web</span>';
+      if (isOwner && !isSimulatorMode) {
+        barHtml += '<div style="margin:8px auto 0;max-width:440px;padding:9px 12px;border-radius:12px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.28);font-size:0.76rem;color:#cbd5e1;line-height:1.4">🌐 <strong>Conta Web ativa</strong> — Abra no <a href="pi://hokage22b.com/pioneiro" style="color:#fbbf24;font-weight:700;text-decoration:underline">Pi Browser</a> quando quiser vincular sua conta Pi e ativar o selo <strong>✓ Pi Verificado</strong>.</div>';
       }
+      statusBar.innerHTML = barHtml;
+      statusBar.style.display = 'block';
+    } else {
+      statusBar.innerHTML = '';
+      statusBar.style.display = 'none';
+    }
+  }
 
-      // Renderiza Avatar (Foto com Cortador ou Letra Inicial)
-      applyAvatarOnScreen(prof.avatar_url, username);
+  // Renderiza Avatar (Foto com Cortador ou Letra Inicial)
+  applyAvatarOnScreen(prof.avatar_url, username);
 
-      // Mostra botão de câmera do avatar se for dono da vitrine ou simulador
-      const cameraBtn = document.getElementById('btn-avatar-camera');
-      if (cameraBtn) {
-        cameraBtn.style.display = isOwner ? 'flex' : 'none';
-      }
+  // Mostra botão de câmera do avatar se for dono da vitrine ou simulador
+  const cameraBtn = document.getElementById('btn-avatar-camera');
+  if (cameraBtn) {
+    cameraBtn.style.display = isOwner ? 'flex' : 'none';
+  }
 
-      const shortUrl = `hokage22b.com/@${username.replace(/^@+/, '')}`;
-      const shortUrlEl = document.getElementById('pioneer-short-url');
-      if (shortUrlEl) shortUrlEl.textContent = shortUrl;
+  const shortUrl = `hokage22b.com/@${username.replace(/^@+/, '')}`;
+  const shortUrlEl = document.getElementById('pioneer-short-url');
+  if (shortUrlEl) shortUrlEl.textContent = shortUrl;
 
-      // Bio
-      document.getElementById('pioneer-bio').textContent = prof.bio || 'Pioneiro oficial na comunidade independente Pi Network.';
+  // Bio
+  document.getElementById('pioneer-bio').textContent = prof.bio || 'Pioneiro oficial na comunidade independente Pi Network.';
 
-      // Atualiza barra de evolução da jornada (Pioneiro -> Construtor -> Hokage)
-      updatePassportJourneyBar(prof, username);
+  // Atualiza barra de evolução da jornada (Pioneiro -> Construtor -> Hokage)
+  updatePassportJourneyBar(prof, username);
 
-      // Carteira Pi com Verificação Criptográfica de Integridade
-      const walletBox = document.getElementById('pioneer-wallet-box');
-      const walletEmpty = document.getElementById('pioneer-wallet-empty');
-      const walletBadge = document.getElementById('wallet-verified-badge');
-      const headEl = document.getElementById('wallet-head-tag');
-      const tailEl = document.getElementById('wallet-tail-tag');
-      const shortKeyEl = document.getElementById('wallet-short-key');
+  // Carteira Pi com Verificação Criptográfica de Integridade
+  const walletBox = document.getElementById('pioneer-wallet-box');
+  const walletEmpty = document.getElementById('pioneer-wallet-empty');
+  const walletBadge = document.getElementById('wallet-verified-badge');
+  const headEl = document.getElementById('wallet-head-tag');
+  const tailEl = document.getElementById('wallet-tail-tag');
+  const shortKeyEl = document.getElementById('wallet-short-key');
 
-      if (prof.wallet_address) {
-        currentPioneerWallet = prof.wallet_address.trim();
-        const keyEl = document.getElementById('pioneer-wallet-key');
-        if (keyEl) keyEl.textContent = currentPioneerWallet;
+  if (prof.wallet_address) {
+    currentPioneerWallet = prof.wallet_address.trim();
+    const keyEl = document.getElementById('pioneer-wallet-key');
+    if (keyEl) keyEl.textContent = currentPioneerWallet;
 
-        const isChecksumOk = isValidPiPublicKey(currentPioneerWallet);
-        if (walletBadge) {
-          if (isChecksumOk) {
-            walletBadge.textContent = '✓ Válida';
-            walletBadge.style.color = '#10b981';
-          } else {
-            walletBadge.textContent = '⚠️ Não Verificada';
-            walletBadge.style.color = '#f59e0b';
-          }
-        }
-
-        const head = currentPioneerWallet.substring(0, 4);
-        const tail = currentPioneerWallet.substring(currentPioneerWallet.length - 4);
-
-        if (headEl) headEl.textContent = head + '...';
-        if (tailEl) tailEl.textContent = '...' + tail;
-        if (shortKeyEl) shortKeyEl.textContent = `${head}...${tail}`;
-
-        walletBox.style.display = 'flex';
-        walletEmpty.style.display = 'none';
-
-        const qrBtn = document.getElementById('btn-show-qr');
-        if (qrBtn) {
-          qrBtn.innerHTML = isOwner ? '⚡ Cobrar / POS' : '⚡ Pagar / QR';
-        }
+    const isChecksumOk = isValidPiPublicKey(currentPioneerWallet);
+    if (walletBadge) {
+      if (isChecksumOk) {
+        walletBadge.textContent = '✓ Válida';
+        walletBadge.style.color = '#10b981';
       } else {
-        currentPioneerWallet = '';
-        walletBox.style.display = 'none';
-        walletEmpty.style.display = 'block';
+        walletBadge.textContent = '⚠️ Não Verificada';
+        walletBadge.style.color = '#f59e0b';
       }
+    }
 
-      // Links Oficiais (Linktree Web3)
-      const linksList = document.getElementById('pioneer-links-list');
-      let linksHtml = '';
+    const head = currentPioneerWallet.substring(0, 4);
+    const tail = currentPioneerWallet.substring(currentPioneerWallet.length - 4);
 
-      if (prof._notFound) {
-        linksHtml += `
+    if (headEl) headEl.textContent = head + '...';
+    if (tailEl) tailEl.textContent = '...' + tail;
+    if (shortKeyEl) shortKeyEl.textContent = `${head}...${tail}`;
+
+    walletBox.style.display = 'flex';
+    walletEmpty.style.display = 'none';
+
+    const qrBtn = document.getElementById('btn-show-qr');
+    if (qrBtn) {
+      qrBtn.innerHTML = isOwner ? '⚡ Cobrar / POS' : '⚡ Pagar / QR';
+    }
+  } else {
+    currentPioneerWallet = '';
+    walletBox.style.display = 'none';
+    walletEmpty.style.display = 'block';
+  }
+
+  // Links Oficiais (Linktree Web3)
+  const linksList = document.getElementById('pioneer-links-list');
+  let linksHtml = '';
+
+  if (prof._notFound) {
+    linksHtml += `
           <div style="background:rgba(245,158,11,0.09);border:1px solid rgba(245,158,11,0.38);border-radius:14px;padding:18px;text-align:left;margin-bottom:12px">
             <strong style="color:#fbbf24;display:block;margin-bottom:6px;font-size:0.95rem">🔍 Passaporte ${escapeHtml(username)} ainda não ativado</strong>
             <p style="font-size:0.84rem;color:#d4d4d8;margin:0 0 14px;line-height:1.5">
@@ -1350,14 +1395,14 @@
             </div>
           </div>
         `;
-      }
+  }
 
-      // 1. Links em Destaque da Comunidade (Qualquer pioneiro pode ativar para ajudar a rede)
-      const showZero = (!prof._notFound && prof.showcase_zero !== false);
-      const showMural = (!prof._notFound && prof.showcase_mural !== false);
+  // 1. Links em Destaque da Comunidade (Qualquer pioneiro pode ativar para ajudar a rede)
+  const showZero = (!prof._notFound && prof.showcase_zero !== false);
+  const showMural = (!prof._notFound && prof.showcase_mural !== false);
 
-      if (showZero) {
-        linksHtml += `
+  if (showZero) {
+    linksHtml += `
           <a href="zero" class="pioneer-link-btn pioneer-link-btn--featured">
             <div class="pioneer-link-icon-wrap">
               <span style="font-size:1.35rem">📘</span>
@@ -1372,10 +1417,10 @@
             <span class="pioneer-link-chevron">↗</span>
           </a>
         `;
-      }
+  }
 
-      if (showMural) {
-        linksHtml += `
+  if (showMural) {
+    linksHtml += `
           <a href="mural" class="pioneer-link-btn pioneer-link-btn--featured">
             <div class="pioneer-link-icon-wrap">
               <span style="font-size:1.35rem">🏘️</span>
@@ -1390,104 +1435,104 @@
             <span class="pioneer-link-chevron">↗</span>
           </a>
         `;
-      }
+  }
 
-      // 2. Barra Compacta de Ícones Pequenos para Redes Sociais (Principais + Extras Dinâmicos, Anti-XSS)
-      const socialBar = document.getElementById('pioneer-social-bar');
-      if (socialBar) {
-        const socialEntries = [];
-        const seenUrls = new Set();
-        function pushSocialEntry(net, rawUrl) {
-          const safe = escapeHtml(sanitizeUrl(rawUrl));
-          if (!safe || safe === '#' || seenUrls.has(safe)) return;
-          seenUrls.add(safe);
-          const resolvedNet = (net && net !== 'auto' && SOCIAL_ICON_CATALOG[net]) ? net : detectSocialNetwork(safe);
-          socialEntries.push({ net: resolvedNet, url: safe });
-        }
+  // 2. Barra Compacta de Ícones Pequenos para Redes Sociais (Principais + Extras Dinâmicos, Anti-XSS)
+  const socialBar = document.getElementById('pioneer-social-bar');
+  if (socialBar) {
+    const socialEntries = [];
+    const seenUrls = new Set();
+    function pushSocialEntry(net, rawUrl) {
+      const safe = escapeHtml(sanitizeUrl(rawUrl));
+      if (!safe || safe === '#' || seenUrls.has(safe)) return;
+      seenUrls.add(safe);
+      const resolvedNet = (net && net !== 'auto' && SOCIAL_ICON_CATALOG[net]) ? net : detectSocialNetwork(safe);
+      socialEntries.push({ net: resolvedNet, url: safe });
+    }
 
-        pushSocialEntry('whatsapp', prof.whatsapp_url);
-        pushSocialEntry('youtube', prof.youtube_url);
-        pushSocialEntry('instagram', prof.instagram_url);
-        pushSocialEntry('twitter', prof.twitter_url);
-        pushSocialEntry('telegram', prof.telegram_url);
-        pushSocialEntry('github', prof.github_url);
-        pushSocialEntry('linkedin', prof.linkedin_url);
+    pushSocialEntry('whatsapp', prof.whatsapp_url);
+    pushSocialEntry('youtube', prof.youtube_url);
+    pushSocialEntry('instagram', prof.instagram_url);
+    pushSocialEntry('twitter', prof.twitter_url);
+    pushSocialEntry('telegram', prof.telegram_url);
+    pushSocialEntry('github', prof.github_url);
+    pushSocialEntry('linkedin', prof.linkedin_url);
 
-        if (Array.isArray(prof.social_links)) {
-          prof.social_links.forEach(item => {
-            if (item && item.url) pushSocialEntry(item.network || 'auto', item.url);
-          });
-        }
+    if (Array.isArray(prof.social_links)) {
+      prof.social_links.forEach(item => {
+        if (item && item.url) pushSocialEntry(item.network || 'auto', item.url);
+      });
+    }
 
-        socialBar.innerHTML = socialEntries.map(entry => {
-          const meta = SOCIAL_ICON_CATALOG[entry.net] || SOCIAL_ICON_CATALOG.website;
-          return `<a href="${entry.url}" target="_blank" rel="noopener noreferrer" class="social-icon-pill ${meta.cls}" title="${meta.label}" aria-label="${meta.label}">${meta.svg}</a>`;
-        }).join('');
-        socialBar.style.display = socialEntries.length > 0 ? 'flex' : 'none';
-      }
+    socialBar.innerHTML = socialEntries.map(entry => {
+      const meta = SOCIAL_ICON_CATALOG[entry.net] || SOCIAL_ICON_CATALOG.website;
+      return `<a href="${entry.url}" target="_blank" rel="noopener noreferrer" class="social-icon-pill ${meta.cls}" title="${meta.label}" aria-label="${meta.label}">${meta.svg}</a>`;
+    }).join('');
+    socialBar.style.display = socialEntries.length > 0 ? 'flex' : 'none';
+  }
 
-      const linksSection = document.getElementById('pioneer-links-section');
-      if (linksHtml) {
-        linksList.innerHTML = linksHtml;
-        if (linksSection) linksSection.style.display = 'block';
-      } else {
-        linksList.innerHTML = '';
-        if (linksSection) linksSection.style.display = (socialBar && socialBar.innerHTML) ? 'none' : 'block';
-        if (!socialBar || !socialBar.innerHTML) {
-          linksList.innerHTML = `
+  const linksSection = document.getElementById('pioneer-links-section');
+  if (linksHtml) {
+    linksList.innerHTML = linksHtml;
+    if (linksSection) linksSection.style.display = 'block';
+  } else {
+    linksList.innerHTML = '';
+    if (linksSection) linksSection.style.display = (socialBar && socialBar.innerHTML) ? 'none' : 'block';
+    if (!socialBar || !socialBar.innerHTML) {
+      linksList.innerHTML = `
             <div style="background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;padding:14px;color:var(--text-muted);font-size:0.85rem">
               Nenhum link cadastrado no momento.
             </div>
           `;
+    }
+  }
+
+  // Produtos com Fotos Reais (Suporta R$ e π com formatação profissional + Anti-XSS)
+  const productsSection = document.getElementById('pioneer-products-section');
+  const productsList = document.getElementById('pioneer-products-list');
+
+  if (Array.isArray(prof.products) && prof.products.length > 0) {
+    window._vitrinePromoteItems = [];
+    window.promoteVitrineProduct = window.promoteVitrineProduct || function (idx) {
+      try {
+        const item = (window._vitrinePromoteItems || [])[idx];
+        if (item) {
+          const payload = JSON.stringify(item);
+          try { sessionStorage.setItem('hokage_promote_draft', payload); } catch (_) { }
+          try { localStorage.setItem('hokage_promote_draft', payload); } catch (_) { }
         }
-      }
+      } catch (_) { }
+      window.location.href = 'mural?promote_draft=1';
+    };
+    productsList.innerHTML = prof.products.map((p, idx) => {
+      const safeTitle = escapeHtml(p.title || 'Produto / Serviço');
+      const rawPrice = String(p.price || 'Sob Consulta').trim();
+      const safePrice = escapeHtml(rawPrice);
+      const safePriceFiat = p.price_fiat ? escapeHtml(String(p.price_fiat).trim()) : '';
+      const isBrl = /^(R\$|\$|€|USD|EUR|BRL)/i.test(rawPrice);
+      const isPi = /π|\bpi\b/i.test(rawPrice);
+      const priceClass = isBrl ? 'product-price product-price--brl' : (isPi ? 'product-price product-price--pi' : 'product-price');
+      const safeBadge = p.badge ? escapeHtml(p.badge) : '';
+      const safeLink = sanitizeUrl(p.link);
+      const safeCta = escapeHtml(p.cta || 'Acessar →');
+      const safeImg = sanitizeImageUrl(p.image_url);
+      window._vitrinePromoteItems[idx] = {
+        title: p.title || '',
+        desc: (p.price ? p.price + ' — ' : '') + (p.badge || 'Disponível na minha Passaporte Web3'),
+        link: safeLink && safeLink !== '#' ? safeLink : ('https://hokage22b.com/pioneiro?u=' + encodeURIComponent(prof.username || '')),
+        img: safeImg || '',
+        cat: 'produto'
+      };
 
-      // Produtos com Fotos Reais (Suporta R$ e π com formatação profissional + Anti-XSS)
-      const productsSection = document.getElementById('pioneer-products-section');
-      const productsList = document.getElementById('pioneer-products-list');
+      const safeAttrImg = escapeHtml(safeImg);
+      const safeAttrLink = escapeHtml(safeLink);
 
-      if (Array.isArray(prof.products) && prof.products.length > 0) {
-        window._vitrinePromoteItems = [];
-        window.promoteVitrineProduct = window.promoteVitrineProduct || function (idx) {
-          try {
-            const item = (window._vitrinePromoteItems || [])[idx];
-            if (item) {
-              const payload = JSON.stringify(item);
-              try { sessionStorage.setItem('hokage_promote_draft', payload); } catch (_) {}
-              try { localStorage.setItem('hokage_promote_draft', payload); } catch (_) {}
-            }
-          } catch (_) {}
-          window.location.href = 'mural?promote_draft=1';
-        };
-        productsList.innerHTML = prof.products.map((p, idx) => {
-          const safeTitle = escapeHtml(p.title || 'Produto / Serviço');
-          const rawPrice = String(p.price || 'Sob Consulta').trim();
-          const safePrice = escapeHtml(rawPrice);
-          const safePriceFiat = p.price_fiat ? escapeHtml(String(p.price_fiat).trim()) : '';
-          const isBrl = /^(R\$|\$|€|USD|EUR|BRL)/i.test(rawPrice);
-          const isPi = /π|\bpi\b/i.test(rawPrice);
-          const priceClass = isBrl ? 'product-price product-price--brl' : (isPi ? 'product-price product-price--pi' : 'product-price');
-          const safeBadge = p.badge ? escapeHtml(p.badge) : '';
-          const safeLink = sanitizeUrl(p.link);
-          const safeCta = escapeHtml(p.cta || 'Acessar →');
-          const safeImg = sanitizeImageUrl(p.image_url);
-          window._vitrinePromoteItems[idx] = {
-            title: p.title || '',
-            desc: (p.price ? p.price + ' — ' : '') + (p.badge || 'Disponível na minha Passaporte Web3'),
-            link: safeLink && safeLink !== '#' ? safeLink : ('https://hokage22b.com/pioneiro?u=' + encodeURIComponent(prof.username || '')),
-            img: safeImg || '',
-            cat: 'produto'
-          };
-
-          const safeAttrImg = escapeHtml(safeImg);
-          const safeAttrLink = escapeHtml(safeLink);
-
-          return `
+      return `
             <div class="product-mini-card" id="vitrine-product-${idx}" style="display:flex;flex-direction:column;gap:12px;align-items:stretch;width:100%;box-sizing:border-box">
               <div class="product-card-top" style="display:flex;align-items:center;gap:14px;width:100%;min-width:0">
-                ${safeAttrImg 
-                  ? `<img src="${safeAttrImg}" alt="${safeTitle}" class="product-thumb" />` 
-                  : `<div class="product-thumb-fallback">🛍️</div>`}
+                ${safeAttrImg
+          ? `<img src="${safeAttrImg}" alt="${safeTitle}" class="product-thumb" />`
+          : `<div class="product-thumb-fallback">🛍️</div>`}
                 <div class="product-info" style="flex:1;min-width:0">
                   <strong class="product-title" style="display:block;font-size:0.95rem !important;line-height:1.35 !important;margin-bottom:4px !important;word-break:normal !important;overflow-wrap:break-word !important;white-space:normal !important">${safeTitle}</strong>
                   <div class="product-meta-row">
@@ -1503,33 +1548,33 @@
               </div>
             </div>
           `;
-        }).join('');
-        productsSection.style.display = 'block';
-      } else {
-        productsSection.style.display = 'none';
-      }
+    }).join('');
+    productsSection.style.display = 'block';
+  } else {
+    productsSection.style.display = 'none';
+  }
 
-      loadPioneerReviews(prof.username, isOwner);
-      loadPioneerReferralPanel(prof.username, isOwner);
+  loadPioneerReviews(prof.username, isOwner);
+  loadPioneerReferralPanel(prof.username, isOwner);
 
-      // Anúncios Reais no Mural Pi (Com fotos, métricas e integração)
-      const adsSection = document.getElementById('pioneer-ads-section');
-      const adsList = document.getElementById('pioneer-ads-list');
-      const adsTitle = document.getElementById('pioneer-ads-title');
+  // Anúncios Reais no Mural Pi (Com fotos, métricas e integração)
+  const adsSection = document.getElementById('pioneer-ads-section');
+  const adsList = document.getElementById('pioneer-ads-list');
+  const adsTitle = document.getElementById('pioneer-ads-title');
 
-      if (adsTitle) {
-        adsTitle.textContent = isOwner ? '📢 Meus Anúncios no Mural Pi' : '📢 Anúncios em Destaque no Mural Pi';
-      }
+  if (adsTitle) {
+    adsTitle.textContent = isOwner ? '📢 Meus Anúncios no Mural Pi' : '📢 Anúncios em Destaque no Mural Pi';
+  }
 
-      if (Array.isArray(ads) && ads.length > 0) {
-        adsList.innerHTML = ads.map(ad => {
-          const safeAdTitle = escapeHtml(ad.title || '');
-          const safeAdDesc = escapeHtml(ad.description || '');
-          const safeAdLink = escapeHtml(sanitizeUrl(ad.link_url));
-          const safeAdTier = escapeHtml(ad.plan_tier ? ad.plan_tier.toUpperCase() : 'DESTAQUE');
-          const safeAdImg = escapeHtml(sanitizeImageUrl(ad.image_url));
+  if (Array.isArray(ads) && ads.length > 0) {
+    adsList.innerHTML = ads.map(ad => {
+      const safeAdTitle = escapeHtml(ad.title || '');
+      const safeAdDesc = escapeHtml(ad.description || '');
+      const safeAdLink = escapeHtml(sanitizeUrl(ad.link_url));
+      const safeAdTier = escapeHtml(ad.plan_tier ? ad.plan_tier.toUpperCase() : 'DESTAQUE');
+      const safeAdImg = escapeHtml(sanitizeImageUrl(ad.image_url));
 
-          return `
+      return `
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;text-align:left">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
                 <span style="font-size:0.75rem;color:var(--amber-light);font-weight:700">📢 ${safeAdTier}</span>
@@ -1541,10 +1586,10 @@
               ${safeAdLink && safeAdLink !== '#' ? `<a href="${safeAdLink}" target="_blank" rel="noopener noreferrer" class="portal-btn portal-btn--amber portal-btn--sm" style="display:inline-block;text-decoration:none;font-weight:700">Acessar Oferta →</a>` : ''}
             </div>
           `;
-        }).join('');
-        adsSection.style.display = 'block';
-      } else if (isOwner && !isSimulatorMode) {
-        adsList.innerHTML = `
+    }).join('');
+    adsSection.style.display = 'block';
+  } else if (isOwner && !isSimulatorMode) {
+    adsList.innerHTML = `
           <div style="text-align:left;padding:18px;background:linear-gradient(135deg,rgba(139,92,246,0.09),rgba(245,158,11,0.08));border:1px dashed rgba(245,158,11,0.45);border-radius:14px">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">
               <strong style="font-size:0.88rem;color:#fbbf24">📢 Pendência do Passaporte: Sem anúncio na Vila</strong>
@@ -1563,341 +1608,377 @@
             </div>
           </div>
         `;
-        adsSection.style.display = 'block';
-      } else {
-        adsSection.style.display = 'none';
-      }
+    adsSection.style.display = 'block';
+  } else {
+    adsSection.style.display = 'none';
+  }
 
-      // Atualiza selos de título desbloqueáveis no Passaporte
-      if (window.HokageMonteProgression && typeof window.HokageMonteProgression.renderPassportTitles === 'function') {
-        window.HokageMonteProgression.renderPassportTitles('pioneer-titles-bar', prof, isOwner);
-      }
+  // Atualiza selos de título desbloqueáveis no Passaporte
+  if (window.HokageMonteProgression && typeof window.HokageMonteProgression.renderPassportTitles === 'function') {
+    window.HokageMonteProgression.renderPassportTitles('pioneer-titles-bar', prof, isOwner);
+  }
 
-      // Inicializa/sincroniza o seletor de idiomas nos pontos de montagem da vitrine
-      if (window.HokageI18n && window.HokageI18n.init) {
-        window.HokageI18n.init();
-      }
+  // Inicializa/sincroniza o seletor de idiomas nos pontos de montagem da vitrine
+  if (window.HokageI18n && window.HokageI18n.init) {
+    window.HokageI18n.init();
+  }
 
-      // Incrementa métrica de visualizações da vitrine
-      incrementProfileMetric('views');
+  // Incrementa métrica de visualizações da vitrine
+  incrementProfileMetric('views');
 
-      // Verifica se a vitrine foi aberta com parâmetros diretos (?pay=1, ?pay=X&memo=Y ou ?product=0)
-      const payParam = getQueryParam('pay') || getQueryParam('cobrar') || getQueryParam('amount') || getQueryParam('pos');
-      const memoParam = getQueryParam('memo') || getQueryParam('motivo') || '';
-      if (payParam && currentPioneerWallet) {
-        setTimeout(() => {
-          const presetAmt = (payParam === '1' && !getQueryParam('amount')) ? undefined : payParam;
-          openWalletQrModal(presetAmt, memoParam);
-        }, 400);
-      }
+  // Verifica se a vitrine foi aberta com parâmetros diretos (?pay=1, ?pay=X&memo=Y ou ?product=0)
+  const payParam = getQueryParam('pay') || getQueryParam('cobrar') || getQueryParam('amount') || getQueryParam('pos');
+  const memoParam = getQueryParam('memo') || getQueryParam('motivo') || '';
+  if (payParam && currentPioneerWallet) {
+    setTimeout(() => {
+      const presetAmt = (payParam === '1' && !getQueryParam('amount')) ? undefined : payParam;
+      openWalletQrModal(presetAmt, memoParam);
+    }, 400);
+  }
 
-      const prodParam = getQueryParam('product') || getQueryParam('produto');
-      if (prodParam !== null && prodParam !== '') {
-        const prodIdx = parseInt(prodParam, 10);
-        if (!isNaN(prodIdx)) {
-          setTimeout(() => {
-            const prodEl = document.getElementById('vitrine-product-' + prodIdx);
-            if (prodEl) {
-              prodEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              prodEl.style.borderColor = 'rgba(245,158,11,0.75)';
-              prodEl.style.boxShadow = '0 0 22px rgba(245,158,11,0.25)';
-            }
-          }, 350);
-        }
-      }
-    }
-
-    // Conectar via Pi Browser
-    function connectPiBrowserAndStart() {
-      const inPi = isPiBrowser();
-      if (inPi && window.Pi) {
-        window.Pi.authenticate(['username', 'payments', 'wallet_address'], function(p) { console.log('Pendência:', p); })
-          .then(function(auth) {
-            if (auth && auth.user && auth.user.username) {
-              const clean = cleanUsername(auth.user.username);
-              setLoggedUser(clean, auth.user.uid, 'pi-sdk', auth.accessToken || '');
-              window.history.replaceState(null, '', `?u=${encodeURIComponent(clean)}`);
-              loadPioneerProfile().then(() => {
-                openProfileEditModal();
-              });
-            }
-          })
-          .catch(function(err) {
-            console.error('Erro Pi SDK:', err);
-            alert('Falha ao conectar via Pi SDK. Por favor, tente novamente no Pi Browser.');
-          });
-      } else if (isWeb2Authenticated()) {
-        openProfileEditModal();
-      } else {
-        openExternalBrowserModal();
-      }
-    }
-
-    // Submissão Manual na Onboarding
-    function handleOnboardingManualSubmit(e) {
-      if (e) e.preventDefault();
-      let inputVal = document.getElementById('onboarding-user-input').value.trim();
-      if (!inputVal) return;
-      const clean = cleanUsername(inputVal);
-
-      window.history.replaceState(null, '', `?u=${encodeURIComponent(clean)}`);
-      loadPioneerProfile();
-    }
-
-    // Volta para o Onboarding
-    function resetToOnboarding() {
-      isSimulatorMode = false;
-      window.history.replaceState(null, '', 'pioneiro');
-      loadPioneerProfile();
-    }
-
-    function switchEditTab(tabName) {
-      document.querySelectorAll('.edit-tab-btn').forEach(btn => {
-        const isActive = btn.getAttribute('data-edit-tab') === tabName;
-        btn.classList.toggle('active', isActive);
-        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-      });
-      document.querySelectorAll('.edit-tab-panel').forEach(panel => {
-        panel.classList.toggle('active', panel.getAttribute('data-edit-panel') === tabName);
-      });
-    }
-
-    // ==========================================
-    // MODAL DE EDIÇÃO (PI BROWSER OU CONTA WEB)
-    // ==========================================
-    function openProfileEditModal() {
-      const inPi = isPiBrowser();
-      const hasWeb2 = isWeb2Authenticated();
-      if (!isSimulatorMode && !inPi && !hasWeb2) {
-        openExternalBrowserModal();
-        return;
-      }
-
-      const modal = document.getElementById('edit-profile-modal');
-      if (!modal) return;
-      switchEditTab('perfil');
-
-      const loggedUser = getLoggedUser();
-      const isPickingWeb2Handle = Boolean(!isSimulatorMode && !inPi && hasWeb2 && (!loggedUser || !loggedUser.username || loggedUser.needsHandle));
-      const activeUser = isPickingWeb2Handle ? '' : (currentPioneerUser || (loggedUser && loggedUser.username ? loggedUser.username : '@meu_usuario'));
-
-      const userInp = document.getElementById('prof-input-user');
-      const handleHint = document.getElementById('prof-user-handle-hint');
-      if (userInp) {
-        userInp.value = activeUser;
-        userInp.readOnly = !isSimulatorMode && !isPickingWeb2Handle;
-        userInp.placeholder = isPickingWeb2Handle ? '@seu_usuario' : '@seunome';
-      }
-      if (handleHint) {
-        if (isPickingWeb2Handle) {
-          handleHint.textContent = '✨ Escolha seu @usuário exclusivo (3 a 24 caracteres: letras minúsculas, números e _).';
-          handleHint.style.display = 'block';
-        } else {
-          handleHint.textContent = '';
-          handleHint.style.display = 'none';
-        }
-      }
-
-      const saveBtn = document.getElementById('btn-save-profile');
-      const subTitle = document.getElementById('modal-profile-subtitle');
-      const fbEl = document.getElementById('prof-save-feedback');
-      if (fbEl) { fbEl.style.display = 'none'; fbEl.innerHTML = ''; }
-
-      if (isSimulatorMode) {
-        if (saveBtn) saveBtn.textContent = '👀 Atualizar Prévia no Simulador';
-        if (subTitle) subTitle.textContent = 'Modo Simulador: adicione fotos e links para testar a prévia na sua tela.';
-      } else if (!inPi && hasWeb2) {
-        if (saveBtn) saveBtn.textContent = '💾 Publicar Passaporte Web';
-        if (subTitle) subTitle.textContent = 'Configure sua bio, links e catálogo. Vincule sua conta Pi depois no Pi Browser!';
-      } else {
-        if (saveBtn) saveBtn.textContent = '💾 Salvar Oficialmente na Pi Network';
-        if (subTitle) subTitle.textContent = 'Configure sua bio, foto de perfil, carteira Pi, contatos e produtos.';
-      }
-
-      // Foto de Perfil no Modal
-      const existingAvatar = (currentProfileData && currentProfileData.avatar_url) ? currentProfileData.avatar_url : '';
-      setModalAvatar(existingAvatar, activeUser);
-
-      if (currentProfileData) {
-        document.getElementById('prof-input-bio').value = currentProfileData.bio || '';
-        document.getElementById('prof-input-wallet').value = currentProfileData.wallet_address || '';
-        document.getElementById('prof-input-whatsapp').value = currentProfileData.whatsapp_url || '';
-        document.getElementById('prof-input-social').value = currentProfileData.youtube_url || '';
-        document.getElementById('prof-input-instagram').value = currentProfileData.instagram_url || '';
-        document.getElementById('prof-input-twitter').value = currentProfileData.twitter_url || '';
-      }
-
-      // Checkboxes de Destaque da Comunidade (Qualquer Pioneiro pode ativar/desativar)
-      const checkZero = document.getElementById('prof-check-zero');
-      const checkMural = document.getElementById('prof-check-mural');
-      if (checkZero) checkZero.checked = (!currentProfileData || currentProfileData.showcase_zero !== false);
-      if (checkMural) checkMural.checked = (!currentProfileData || currentProfileData.showcase_mural !== false);
-
-      // Preenche outras redes sociais dinâmicas
-      const extraSocialsContainer = document.getElementById('prof-extra-socials-container');
-      if (extraSocialsContainer) {
-        extraSocialsContainer.innerHTML = '';
-        if (currentProfileData && Array.isArray(currentProfileData.social_links) && currentProfileData.social_links.length > 0) {
-          currentProfileData.social_links.forEach(item => {
-            addExtraSocialRow(item.network || 'auto', item.url || '');
-          });
-        }
-      }
-
-      // Preenche produtos com suporte a fotos
-      const container = document.getElementById('prof-products-container');
-      container.innerHTML = '';
-
-      if (currentProfileData && Array.isArray(currentProfileData.products) && currentProfileData.products.length > 0) {
-        currentProfileData.products.forEach(p => {
-          addProductRow(p.title || '', p.price || '', p.link || '', p.image_url || '', p.price_fiat || '');
-        });
-      } else {
-        addProductRow('', '', '', '', '');
-      }
-
-      modal.classList.add('active');
-      modal.setAttribute('aria-hidden', 'false');
-      loadProfileAnalytics(activeUser);
-
-      // Validação em tempo real do campo de carteira ao abrir
+  const prodParam = getQueryParam('product') || getQueryParam('produto');
+  if (prodParam !== null && prodParam !== '') {
+    const prodIdx = parseInt(prodParam, 10);
+    if (!isNaN(prodIdx)) {
       setTimeout(() => {
-        validateWalletInputLive(document.getElementById('prof-input-wallet').value);
-      }, 50);
+        const prodEl = document.getElementById('vitrine-product-' + prodIdx);
+        if (prodEl) {
+          prodEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          prodEl.style.borderColor = 'rgba(245,158,11,0.75)';
+          prodEl.style.boxShadow = '0 0 22px rgba(245,158,11,0.25)';
+        }
+      }, 350);
+    }
+  }
+}
+
+// Conectar via Pi Browser
+function connectPiBrowserAndStart() {
+  const inPi = isPiBrowser();
+  if (inPi && window.Pi) {
+    window.Pi.authenticate(['username', 'payments', 'wallet_address'], function (p) { console.log('Pendência:', p); })
+      .then(function (auth) {
+        if (auth && auth.user && auth.user.username) {
+          const clean = cleanUsername(auth.user.username);
+          setLoggedUser(clean, auth.user.uid, 'pi-sdk', auth.accessToken || '');
+          window.history.replaceState(null, '', `?u=${encodeURIComponent(clean)}`);
+          loadPioneerProfile().then(() => {
+            openProfileEditModal();
+          });
+        }
+      })
+      .catch(function (err) {
+        console.error('Erro Pi SDK:', err);
+        alert('Falha ao conectar via Pi SDK. Por favor, tente novamente no Pi Browser.');
+      });
+  } else if (isWeb2Authenticated()) {
+    openProfileEditModal();
+  } else {
+    openExternalBrowserModal();
+  }
+}
+
+// Submissão Manual na Onboarding
+function handleOnboardingManualSubmit(e) {
+  if (e) e.preventDefault();
+  let inputVal = document.getElementById('onboarding-user-input').value.trim();
+  if (!inputVal) return;
+  const clean = cleanUsername(inputVal);
+
+  window.history.replaceState(null, '', `?u=${encodeURIComponent(clean)}`);
+  loadPioneerProfile();
+}
+
+// Volta para o Onboarding
+function resetToOnboarding() {
+  isSimulatorMode = false;
+  window.history.replaceState(null, '', 'pioneiro');
+  loadPioneerProfile();
+}
+
+function switchEditTab(tabName) {
+  document.querySelectorAll('.edit-tab-btn').forEach(btn => {
+    const isActive = btn.getAttribute('data-edit-tab') === tabName;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+  document.querySelectorAll('.edit-tab-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.getAttribute('data-edit-panel') === tabName);
+  });
+}
+
+function setQuickSetupMode(enabled) {
+  const quickBanner = document.getElementById('prof-quick-setup-banner');
+  const analyticsCard = document.getElementById('prof-analytics-card');
+  const tabsBar = document.querySelector('#edit-profile-modal .edit-tabs-bar');
+  const avatarGroup = document.getElementById('prof-avatar-group');
+  const walletGroup = document.getElementById('prof-wallet-group');
+  const quickWaWrap = document.getElementById('prof-quick-whatsapp-wrap');
+  const modalTitle = document.getElementById('modal-profile-title');
+  const saveBtn = document.getElementById('btn-save-profile');
+
+  if (quickBanner) quickBanner.style.display = enabled ? 'block' : 'none';
+  if (analyticsCard) analyticsCard.style.display = enabled ? 'none' : 'grid';
+  if (tabsBar) tabsBar.style.display = enabled ? 'none' : 'grid';
+  if (avatarGroup) avatarGroup.style.display = enabled ? 'none' : 'block';
+  if (walletGroup) walletGroup.style.display = enabled ? 'none' : 'block';
+  if (quickWaWrap) quickWaWrap.style.display = enabled ? 'block' : 'none';
+  if (modalTitle) {
+    modalTitle.textContent = enabled ? 'Criar Meu Passaporte (30s)' : 'Personalizar Meu Passaporte Pi';
+  }
+  if (enabled && saveBtn) {
+    saveBtn.textContent = '🚀 Publicar Meu Passaporte Agora';
+  }
+}
+
+function toggleFullEditMode() {
+  setQuickSetupMode(false);
+}
+
+// ==========================================
+// MODAL DE EDIÇÃO (PI BROWSER OU CONTA WEB)
+// ==========================================
+function openProfileEditModal() {
+  const inPi = isPiBrowser();
+  const hasWeb2 = isWeb2Authenticated();
+  if (!isSimulatorMode && !inPi && !hasWeb2) {
+    openExternalBrowserModal();
+    return;
+  }
+
+  const modal = document.getElementById('edit-profile-modal');
+  if (!modal) return;
+  switchEditTab('perfil');
+
+  const loggedUser = getLoggedUser();
+  const isPickingWeb2Handle = Boolean(!isSimulatorMode && !inPi && hasWeb2 && (!loggedUser || !loggedUser.username || loggedUser.needsHandle));
+  const activeUser = isPickingWeb2Handle ? '' : (currentPioneerUser || (loggedUser && loggedUser.username ? loggedUser.username : '@meu_usuario'));
+
+  const userInp = document.getElementById('prof-input-user');
+  const handleHint = document.getElementById('prof-user-handle-hint');
+  if (userInp) {
+    userInp.value = activeUser;
+    userInp.readOnly = !isSimulatorMode && !isPickingWeb2Handle;
+    userInp.placeholder = isPickingWeb2Handle ? '@seu_usuario' : '@seunome';
+  }
+  if (handleHint) {
+    if (isPickingWeb2Handle) {
+      handleHint.textContent = '✨ Escolha seu @usuário exclusivo (3 a 24 caracteres: letras minúsculas, números e _).';
+      handleHint.style.display = 'block';
+    } else {
+      handleHint.textContent = '';
+      handleHint.style.display = 'none';
+    }
+  }
+
+  const saveBtn = document.getElementById('btn-save-profile');
+  const subTitle = document.getElementById('modal-profile-subtitle');
+  const fbEl = document.getElementById('prof-save-feedback');
+  if (fbEl) { fbEl.style.display = 'none'; fbEl.innerHTML = ''; }
+
+  if (isSimulatorMode) {
+    if (saveBtn) saveBtn.textContent = '👀 Atualizar Prévia no Simulador';
+    if (subTitle) subTitle.textContent = 'Modo Simulador: adicione fotos e links para testar a prévia na sua tela.';
+  } else if (!inPi && hasWeb2) {
+    if (saveBtn) saveBtn.textContent = isPickingWeb2Handle ? '🚀 Publicar Meu Passaporte Agora' : '💾 Publicar Passaporte Web';
+    if (subTitle) {
+      subTitle.textContent = isPickingWeb2Handle
+        ? 'Seu e-mail está confirmado! Em 30 segundos sua vitrine entra no ar.'
+        : 'Configure sua bio, links e catálogo. Vincule sua conta Pi depois no Pi Browser!';
+    }
+  } else {
+    if (saveBtn) saveBtn.textContent = '💾 Salvar Oficialmente na Pi Network';
+    if (subTitle) subTitle.textContent = 'Configure sua bio, foto de perfil, carteira Pi, contatos e produtos.';
+  }
+
+  const quickWaInp = document.getElementById('prof-quick-whatsapp');
+  if (quickWaInp) quickWaInp.value = '';
+  setQuickSetupMode(isPickingWeb2Handle);
+
+  // Foto de Perfil no Modal
+  const existingAvatar = (currentProfileData && currentProfileData.avatar_url) ? currentProfileData.avatar_url : '';
+  setModalAvatar(existingAvatar, activeUser);
+
+  if (currentProfileData) {
+    document.getElementById('prof-input-bio').value = currentProfileData.bio || '';
+    document.getElementById('prof-input-wallet').value = currentProfileData.wallet_address || '';
+    document.getElementById('prof-input-whatsapp').value = currentProfileData.whatsapp_url || '';
+    document.getElementById('prof-input-social').value = currentProfileData.youtube_url || '';
+    document.getElementById('prof-input-instagram').value = currentProfileData.instagram_url || '';
+    document.getElementById('prof-input-twitter').value = currentProfileData.twitter_url || '';
+  }
+
+  // Checkboxes de Destaque da Comunidade (Qualquer Pioneiro pode ativar/desativar)
+  const checkZero = document.getElementById('prof-check-zero');
+  const checkMural = document.getElementById('prof-check-mural');
+  if (checkZero) checkZero.checked = (!currentProfileData || currentProfileData.showcase_zero !== false);
+  if (checkMural) checkMural.checked = (!currentProfileData || currentProfileData.showcase_mural !== false);
+
+  // Preenche outras redes sociais dinâmicas
+  const extraSocialsContainer = document.getElementById('prof-extra-socials-container');
+  if (extraSocialsContainer) {
+    extraSocialsContainer.innerHTML = '';
+    if (currentProfileData && Array.isArray(currentProfileData.social_links) && currentProfileData.social_links.length > 0) {
+      currentProfileData.social_links.forEach(item => {
+        addExtraSocialRow(item.network || 'auto', item.url || '');
+      });
+    }
+  }
+
+  // Preenche produtos com suporte a fotos
+  const container = document.getElementById('prof-products-container');
+  container.innerHTML = '';
+
+  if (currentProfileData && Array.isArray(currentProfileData.products) && currentProfileData.products.length > 0) {
+    currentProfileData.products.forEach(p => {
+      addProductRow(p.title || '', p.price || '', p.link || '', p.image_url || '', p.price_fiat || '');
+    });
+  } else {
+    addProductRow('', '', '', '', '');
+  }
+
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+  loadProfileAnalytics(activeUser);
+
+  // Validação em tempo real do campo de carteira ao abrir
+  setTimeout(() => {
+    validateWalletInputLive(document.getElementById('prof-input-wallet').value);
+  }, 50);
+}
+
+function closeProfileEditModal() {
+  const modal = document.getElementById('edit-profile-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+}
+
+// ==========================================
+// ANALYTICS & MÉTRICAS PESSOAIS DA VITRINE
+// ==========================================
+function incrementProfileMetric(metricKey) {
+  if (!currentPioneerUser) return;
+  const cleanUser = cleanUsername(currentPioneerUser).replace(/^@+/, '').toLowerCase();
+  try {
+    const storageKey = `hokage_metric_${metricKey}_${cleanUser}`;
+    const current = parseInt(localStorage.getItem(storageKey) || '0', 10);
+    localStorage.setItem(storageKey, (current + 1).toString());
+  } catch (_) { }
+}
+
+function loadProfileAnalytics(username) {
+  const cleanUser = cleanUsername(username || currentPioneerUser).replace(/^@+/, '').toLowerCase();
+  try {
+    const views = parseInt(localStorage.getItem(`hokage_metric_views_${cleanUser}`) || '1', 10);
+    const copies = parseInt(localStorage.getItem(`hokage_metric_copies_${cleanUser}`) || '0', 10);
+    const clicks = parseInt(localStorage.getItem(`hokage_metric_clicks_${cleanUser}`) || '0', 10);
+
+    const vEl = document.getElementById('analytics-views-val');
+    const cEl = document.getElementById('analytics-copies-val');
+    const kEl = document.getElementById('analytics-clicks-val');
+
+    if (vEl) vEl.textContent = views;
+    if (cEl) cEl.textContent = copies;
+    if (kEl) kEl.textContent = clicks;
+  } catch (_) { }
+}
+
+// ==========================================
+// DIRETÓRIO GLOBAL DE PIONEIROS & NEGÓCIOS (HACKATHON GRADE)
+// ==========================================
+let cachedDirectoryPioneers = [];
+let currentDirCategory = 'todos';
+let dirSearchDebounce = null;
+
+const CURATED_DEFAULT_PIONEERS = [
+  {
+    username: '@hokage22b',
+    bio: 'Fundador do HOKAGE22B. Desenvolvedor Web3 e entusiasta da economia descentralizada Pi.',
+    avatar_url: 'assets/img/founder-profile.jpg',
+    category: 'servicos',
+    wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
+  }
+];
+
+async function loadPioneersDirectory() {
+  const grid = document.getElementById('pioneer-directory-grid');
+  if (!grid) return;
+
+  try {
+    let pioneers = [];
+    if (window.IsarDB && window.IsarDB.getPioneersDirectory) {
+      pioneers = await window.IsarDB.getPioneersDirectory({ limit: 40 });
     }
 
-    function closeProfileEditModal() {
-      const modal = document.getElementById('edit-profile-modal');
-      if (modal) {
-        modal.classList.remove('active');
-        modal.setAttribute('aria-hidden', 'true');
+    if (!pioneers || pioneers.length === 0) {
+      pioneers = CURATED_DEFAULT_PIONEERS;
+    } else {
+      // Garante que o fundador esteja no topo se não constar na lista da nuvem
+      const hasHokage = pioneers.some(p => cleanUsername(p.username).toLowerCase() === '@hokage22b');
+      if (!hasHokage) {
+        pioneers.unshift(CURATED_DEFAULT_PIONEERS[0]);
       }
     }
 
-    // ==========================================
-    // ANALYTICS & MÉTRICAS PESSOAIS DA VITRINE
-    // ==========================================
-    function incrementProfileMetric(metricKey) {
-      if (!currentPioneerUser) return;
-      const cleanUser = cleanUsername(currentPioneerUser).replace(/^@+/, '').toLowerCase();
-      try {
-        const storageKey = `hokage_metric_${metricKey}_${cleanUser}`;
-        const current = parseInt(localStorage.getItem(storageKey) || '0', 10);
-        localStorage.setItem(storageKey, (current + 1).toString());
-      } catch (_) {}
+    cachedDirectoryPioneers = pioneers;
+    const countBadge = document.getElementById('dir-live-count-badge');
+    if (countBadge) {
+      countBadge.textContent = pioneers.length + (pioneers.length === 1 ? ' Passaporte Verificado' : ' Passaportes Verificados');
     }
 
-    function loadProfileAnalytics(username) {
-      const cleanUser = cleanUsername(username || currentPioneerUser).replace(/^@+/, '').toLowerCase();
-      try {
-        const views = parseInt(localStorage.getItem(`hokage_metric_views_${cleanUser}`) || '1', 10);
-        const copies = parseInt(localStorage.getItem(`hokage_metric_copies_${cleanUser}`) || '0', 10);
-        const clicks = parseInt(localStorage.getItem(`hokage_metric_clicks_${cleanUser}`) || '0', 10);
-
-        const vEl = document.getElementById('analytics-views-val');
-        const cEl = document.getElementById('analytics-copies-val');
-        const kEl = document.getElementById('analytics-clicks-val');
-
-        if (vEl) vEl.textContent = views;
-        if (cEl) cEl.textContent = copies;
-        if (kEl) kEl.textContent = clicks;
-      } catch (_) {}
+    const urlQuery = (getQueryParam('q') || '').trim();
+    const urlCat = (getQueryParam('cat') || '').trim().toLowerCase();
+    const searchInp = document.getElementById('dir-search-input');
+    if (searchInp && urlQuery) {
+      searchInp.value = urlQuery;
     }
-
-    // ==========================================
-    // DIRETÓRIO GLOBAL DE PIONEIROS & NEGÓCIOS (HACKATHON GRADE)
-    // ==========================================
-    let cachedDirectoryPioneers = [];
-    let currentDirCategory = 'todos';
-    let dirSearchDebounce = null;
-
-    const CURATED_DEFAULT_PIONEERS = [
-      {
-        username: '@hokage22b',
-        bio: 'Fundador do HOKAGE22B. Desenvolvedor Web3 e entusiasta da economia descentralizada Pi.',
-        avatar_url: 'assets/img/founder-profile.jpg',
-        category: 'servicos',
-        wallet_address: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
-      }
-    ];
-
-    async function loadPioneersDirectory() {
-      const grid = document.getElementById('pioneer-directory-grid');
-      if (!grid) return;
-
-      try {
-        let pioneers = [];
-        if (window.IsarDB && window.IsarDB.getPioneersDirectory) {
-          pioneers = await window.IsarDB.getPioneersDirectory({ limit: 40 });
-        }
-
-        if (!pioneers || pioneers.length === 0) {
-          pioneers = CURATED_DEFAULT_PIONEERS;
-        } else {
-          // Garante que o fundador esteja no topo se não constar na lista da nuvem
-          const hasHokage = pioneers.some(p => cleanUsername(p.username).toLowerCase() === '@hokage22b');
-          if (!hasHokage) {
-            pioneers.unshift(CURATED_DEFAULT_PIONEERS[0]);
-          }
-        }
-
-        cachedDirectoryPioneers = pioneers;
-        const countBadge = document.getElementById('dir-live-count-badge');
-        if (countBadge) {
-          countBadge.textContent = pioneers.length + (pioneers.length === 1 ? ' Passaporte Verificado' : ' Passaportes Verificados');
-        }
-
-        const urlQuery = (getQueryParam('q') || '').trim();
-        const urlCat = (getQueryParam('cat') || '').trim().toLowerCase();
-        const searchInp = document.getElementById('dir-search-input');
-        if (searchInp && urlQuery) {
-          searchInp.value = urlQuery;
-        }
-        if (urlCat && ['todos', 'embaixadores', 'lojas', 'servicos', 'criadores'].includes(urlCat)) {
-          const pillEl = document.querySelector('.dir-cat-pill[data-cat="' + urlCat + '"]');
-          filterDirectoryCategory(urlCat, pillEl);
-        } else if (urlQuery) {
-          applyDirectoryFilters();
-        } else {
-          renderDirectoryGrid(pioneers);
-        }
-      } catch (err) {
-        console.warn('Erro ao carregar diretório:', err);
-        cachedDirectoryPioneers = CURATED_DEFAULT_PIONEERS;
-        renderDirectoryGrid(CURATED_DEFAULT_PIONEERS);
-      }
+    if (urlCat && ['todos', 'embaixadores', 'lojas', 'servicos', 'criadores'].includes(urlCat)) {
+      const pillEl = document.querySelector('.dir-cat-pill[data-cat="' + urlCat + '"]');
+      filterDirectoryCategory(urlCat, pillEl);
+    } else if (urlQuery) {
+      applyDirectoryFilters();
+    } else {
+      renderDirectoryGrid(pioneers);
     }
+  } catch (err) {
+    console.warn('Erro ao carregar diretório:', err);
+    cachedDirectoryPioneers = CURATED_DEFAULT_PIONEERS;
+    renderDirectoryGrid(CURATED_DEFAULT_PIONEERS);
+  }
+}
 
-    function renderDirectoryGrid(pioneers) {
-      const grid = document.getElementById('pioneer-directory-grid');
-      if (!grid) return;
+function renderDirectoryGrid(pioneers) {
+  const grid = document.getElementById('pioneer-directory-grid');
+  if (!grid) return;
 
-      if (!pioneers || pioneers.length === 0) {
-        grid.innerHTML = `
+  if (!pioneers || pioneers.length === 0) {
+    grid.innerHTML = `
           <div style="text-align:center;padding:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:var(--text-muted);font-size:0.85rem">
             🔍 Nenhum pioneiro encontrado para esta busca.<br>
             <span style="color:var(--accent-light);cursor:pointer;margin-top:6px;display:inline-block;font-weight:700" onclick="document.getElementById('dir-search-input').value='';applyDirectoryFilters()">Limpar busca</span>
           </div>
         `;
-        return;
-      }
+    return;
+  }
 
-      let html = '';
-      pioneers.forEach(p => {
-        const uName = cleanUsername(p.username);
-        const uSlug = uName.replace(/^@+/, '');
-        const bio = p.bio || 'Pioneiro oficial na comunidade descentralizada Pi Network.';
-        const avatar = escapeHtml(sanitizeImageUrl(p.avatar_url || ''));
-        const safeInitial = escapeHtml(uSlug.charAt(0).toUpperCase() || 'P');
-        const hasWallet = Boolean(p.wallet_address);
-        const prodCount = Array.isArray(p.products) ? p.products.length : 0;
-        const isAmb = Boolean(p.is_ambassador || Number(p.referral_qualified_count || 0) >= 5 || uSlug === 'hokage22b');
-        const isPiVerified = p.is_pi_verified !== false;
-        const verifiedBadge = isPiVerified
-          ? '<span style="font-size:0.65rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:1px 6px;border-radius:10px;font-weight:700" title="Conta autenticada via Pi Browser">✓ Pi Verificado</span>'
-          : '<span style="font-size:0.65rem;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#7dd3fc;padding:1px 6px;border-radius:10px;font-weight:700" title="Conta Web verificada por e-mail">🌐 Membro Web</span>';
+  let html = '';
+  pioneers.forEach(p => {
+    const uName = cleanUsername(p.username);
+    const uSlug = uName.replace(/^@+/, '');
+    const bio = p.bio || 'Pioneiro oficial na comunidade descentralizada Pi Network.';
+    const avatar = escapeHtml(sanitizeImageUrl(p.avatar_url || ''));
+    const safeInitial = escapeHtml(uSlug.charAt(0).toUpperCase() || 'P');
+    const hasWallet = Boolean(p.wallet_address);
+    const prodCount = Array.isArray(p.products) ? p.products.length : 0;
+    const isAmb = Boolean(p.is_ambassador || Number(p.referral_qualified_count || 0) >= 5 || uSlug === 'hokage22b');
+    const isPiVerified = p.is_pi_verified !== false;
+    const verifiedBadge = isPiVerified
+      ? '<span style="font-size:0.65rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:1px 6px;border-radius:10px;font-weight:700" title="Conta autenticada via Pi Browser">✓ Pi Verificado</span>'
+      : '<span style="font-size:0.65rem;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#7dd3fc;padding:1px 6px;border-radius:10px;font-weight:700" title="Conta Web verificada por e-mail">🌐 Membro Web</span>';
 
-        html += `
+    html += `
           <div class="dir-card">
             <div class="dir-card-main">
               <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;background:#1a0533;border:2px solid rgba(139,92,246,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -1921,67 +2002,67 @@
             </a>
           </div>
         `;
-      });
+  });
 
-      grid.innerHTML = html;
-    }
+  grid.innerHTML = html;
+}
 
-    function filterDirectoryCategory(cat, btn) {
-      currentDirCategory = cat;
-      document.querySelectorAll('.dir-cat-pill').forEach(b => {
-        b.style.background = 'rgba(255,255,255,0.06)';
-        b.style.color = 'var(--text-secondary)';
-        b.classList.remove('active');
-      });
-      if (btn) {
-        btn.style.background = 'var(--accent)';
-        btn.style.color = '#fff';
-        btn.classList.add('active');
-      }
-      applyDirectoryFilters();
-    }
+function filterDirectoryCategory(cat, btn) {
+  currentDirCategory = cat;
+  document.querySelectorAll('.dir-cat-pill').forEach(b => {
+    b.style.background = 'rgba(255,255,255,0.06)';
+    b.style.color = 'var(--text-secondary)';
+    b.classList.remove('active');
+  });
+  if (btn) {
+    btn.style.background = 'var(--accent)';
+    btn.style.color = '#fff';
+    btn.classList.add('active');
+  }
+  applyDirectoryFilters();
+}
 
-    function filterDirectoryDebounced() {
-      if (dirSearchDebounce) clearTimeout(dirSearchDebounce);
-      dirSearchDebounce = setTimeout(() => {
-        applyDirectoryFilters();
-      }, 250);
-    }
+function filterDirectoryDebounced() {
+  if (dirSearchDebounce) clearTimeout(dirSearchDebounce);
+  dirSearchDebounce = setTimeout(() => {
+    applyDirectoryFilters();
+  }, 250);
+}
 
-    function applyDirectoryFilters() {
-      const searchInp = document.getElementById('dir-search-input');
-      const term = searchInp ? searchInp.value.trim().toLowerCase().replace(/^@+/, '') : '';
+function applyDirectoryFilters() {
+  const searchInp = document.getElementById('dir-search-input');
+  const term = searchInp ? searchInp.value.trim().toLowerCase().replace(/^@+/, '') : '';
 
-      let filtered = cachedDirectoryPioneers.filter(p => {
-        const u = cleanUsername(p.username).toLowerCase().replace(/^@+/, '');
-        const b = (p.bio || '').toLowerCase();
-        const prodsText = Array.isArray(p.products)
-          ? p.products.map(item => (item && item.title ? String(item.title).toLowerCase() : '')).join(' ')
-          : '';
-        const matchesTerm = !term || u.includes(term) || b.includes(term) || prodsText.includes(term);
+  let filtered = cachedDirectoryPioneers.filter(p => {
+    const u = cleanUsername(p.username).toLowerCase().replace(/^@+/, '');
+    const b = (p.bio || '').toLowerCase();
+    const prodsText = Array.isArray(p.products)
+      ? p.products.map(item => (item && item.title ? String(item.title).toLowerCase() : '')).join(' ')
+      : '';
+    const matchesTerm = !term || u.includes(term) || b.includes(term) || prodsText.includes(term);
 
-        if (!matchesTerm) return false;
+    if (!matchesTerm) return false;
 
-        if (currentDirCategory === 'todos') return true;
-        if (currentDirCategory === 'embaixadores') return Boolean(p.is_ambassador || Number(p.referral_qualified_count || 0) >= 5 || u === 'hokage22b');
-        if (currentDirCategory === 'lojas') return (Array.isArray(p.products) && p.products.length > 0) || b.includes('loja') || b.includes('produto') || b.includes('venda') || b.includes('comércio') || b.includes('ecommerce');
-        if (currentDirCategory === 'servicos') return b.includes('serviço') || b.includes('design') || b.includes('dev') || b.includes('consultoria') || b.includes('advogado') || b.includes('tecnologia');
-        if (currentDirCategory === 'criadores') return b.includes('criador') || b.includes('canal') || b.includes('youtube') || b.includes('vídeo') || b.includes('conteúdo') || b.includes('influencer');
+    if (currentDirCategory === 'todos') return true;
+    if (currentDirCategory === 'embaixadores') return Boolean(p.is_ambassador || Number(p.referral_qualified_count || 0) >= 5 || u === 'hokage22b');
+    if (currentDirCategory === 'lojas') return (Array.isArray(p.products) && p.products.length > 0) || b.includes('loja') || b.includes('produto') || b.includes('venda') || b.includes('comércio') || b.includes('ecommerce');
+    if (currentDirCategory === 'servicos') return b.includes('serviço') || b.includes('design') || b.includes('dev') || b.includes('consultoria') || b.includes('advogado') || b.includes('tecnologia');
+    if (currentDirCategory === 'criadores') return b.includes('criador') || b.includes('canal') || b.includes('youtube') || b.includes('vídeo') || b.includes('conteúdo') || b.includes('influencer');
 
-        return true;
-      });
+    return true;
+  });
 
-      renderDirectoryGrid(filtered);
-    }
+  renderDirectoryGrid(filtered);
+}
 
-    function addExtraSocialRow(network, url) {
-      const container = document.getElementById('prof-extra-socials-container');
-      if (!container) return;
-      const row = document.createElement('div');
-      row.className = 'extra-social-row';
-      const net = network || 'auto';
-      const safeUrl = (url || '').replace(/"/g, '&quot;');
-      row.innerHTML = `
+function addExtraSocialRow(network, url) {
+  const container = document.getElementById('prof-extra-socials-container');
+  if (!container) return;
+  const row = document.createElement('div');
+  row.className = 'extra-social-row';
+  const net = network || 'auto';
+  const safeUrl = (url || '').replace(/"/g, '&quot;');
+  row.innerHTML = `
         <select class="extra-social-net" aria-label="Rede Social" style="padding:8px 6px;background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:var(--accent-light);font-size:0.78rem;font-weight:700;width:100%;box-sizing:border-box">
           <option value="auto"${net === 'auto' ? ' selected' : ''}>Detectar URL</option>
           <option value="telegram"${net === 'telegram' ? ' selected' : ''}>Telegram</option>
@@ -1996,51 +2077,51 @@
         <input type="text" class="extra-social-url" placeholder="https://... ou @usuario" value="${safeUrl}" style="width:100%;padding:8px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.18);border-radius:6px;color:#fff;font-size:0.82rem;box-sizing:border-box;min-width:0" />
         <button type="button" onclick="this.parentElement.remove()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#ef4444;border-radius:6px;height:32px;cursor:pointer;font-size:0.85rem" title="Remover rede">✕</button>
       `;
-      container.appendChild(row);
-    }
+  container.appendChild(row);
+}
 
-    function collectExtraSocialsFromForm() {
-      const rows = document.querySelectorAll('#prof-extra-socials-container .extra-social-row');
-      const list = [];
-      rows.forEach(row => {
-        const netEl = row.querySelector('.extra-social-net');
-        const urlEl = row.querySelector('.extra-social-url');
-        const net = netEl ? netEl.value : 'auto';
-        const raw = urlEl ? urlEl.value.trim() : '';
-        if (!raw) return;
-        const normalized = normalizeSocialUrl(net, raw);
-        const resolvedNet = (net === 'auto') ? detectSocialNetwork(normalized) : net;
-        list.push({ network: resolvedNet, url: normalized });
-      });
-      return list;
-    }
+function collectExtraSocialsFromForm() {
+  const rows = document.querySelectorAll('#prof-extra-socials-container .extra-social-row');
+  const list = [];
+  rows.forEach(row => {
+    const netEl = row.querySelector('.extra-social-net');
+    const urlEl = row.querySelector('.extra-social-url');
+    const net = netEl ? netEl.value : 'auto';
+    const raw = urlEl ? urlEl.value.trim() : '';
+    if (!raw) return;
+    const normalized = normalizeSocialUrl(net, raw);
+    const resolvedNet = (net === 'auto') ? detectSocialNetwork(normalized) : net;
+    list.push({ network: resolvedNet, url: normalized });
+  });
+  return list;
+}
 
-    // Adiciona uma linha de produto/serviço editável com preço principal (π/USD/EUR/BRL), 2º preço opcional e foto
-    function addProductRow(title, price, link, imageUrl, priceFiat) {
-      const container = document.getElementById('prof-products-container');
-      const itemEl = document.createElement('div');
-      itemEl.className = 'product-edit-item';
+// Adiciona uma linha de produto/serviço editável com preço principal (π/USD/EUR/BRL), 2º preço opcional e foto
+function addProductRow(title, price, link, imageUrl, priceFiat) {
+  const container = document.getElementById('prof-products-container');
+  const itemEl = document.createElement('div');
+  itemEl.className = 'product-edit-item';
 
-      function parseCurrencyVal(raw) {
-        const text = (raw || '').trim();
-        if (/^R\$/i.test(text)) return { cur: 'BRL', val: text.replace(/^R\$\s*/i, '').trim() };
-        if (/^\$|USD/i.test(text)) return { cur: 'USD', val: text.replace(/^(\$|USD)\s*/i, '').replace(/\s*USD$/i, '').trim() };
-        if (/^€|EUR/i.test(text)) return { cur: 'EUR', val: text.replace(/^(€|EUR)\s*/i, '').replace(/\s*EUR$/i, '').trim() };
-        if (/π|\bpi\b/i.test(text)) return { cur: 'PI', val: text.replace(/\s*(?:π|pi)\s*$/i, '').trim() };
-        return { cur: text ? 'CUSTOM' : 'PI', val: text };
-      }
+  function parseCurrencyVal(raw) {
+    const text = (raw || '').trim();
+    if (/^R\$/i.test(text)) return { cur: 'BRL', val: text.replace(/^R\$\s*/i, '').trim() };
+    if (/^\$|USD/i.test(text)) return { cur: 'USD', val: text.replace(/^(\$|USD)\s*/i, '').replace(/\s*USD$/i, '').trim() };
+    if (/^€|EUR/i.test(text)) return { cur: 'EUR', val: text.replace(/^(€|EUR)\s*/i, '').replace(/\s*EUR$/i, '').trim() };
+    if (/π|\bpi\b/i.test(text)) return { cur: 'PI', val: text.replace(/\s*(?:π|pi)\s*$/i, '').trim() };
+    return { cur: text ? 'CUSTOM' : 'PI', val: text };
+  }
 
-      const parsedPrimary = parseCurrencyVal(price);
-      const parsedFiat = parseCurrencyVal(priceFiat);
-      if (!priceFiat) parsedFiat.cur = 'USD';
+  const parsedPrimary = parseCurrencyVal(price);
+  const parsedFiat = parseCurrencyVal(priceFiat);
+  if (!priceFiat) parsedFiat.cur = 'USD';
 
-      const safeTitle = title ? title.replace(/"/g, '&quot;') : '';
-      const safePrice = parsedPrimary.val ? parsedPrimary.val.replace(/"/g, '&quot;') : '';
-      const safeFiat = parsedFiat.val ? parsedFiat.val.replace(/"/g, '&quot;') : '';
-      const safeLink = link ? link.replace(/"/g, '&quot;') : '';
-      const safeImg = imageUrl ? imageUrl.replace(/"/g, '&quot;') : '';
+  const safeTitle = title ? title.replace(/"/g, '&quot;') : '';
+  const safePrice = parsedPrimary.val ? parsedPrimary.val.replace(/"/g, '&quot;') : '';
+  const safeFiat = parsedFiat.val ? parsedFiat.val.replace(/"/g, '&quot;') : '';
+  const safeLink = link ? link.replace(/"/g, '&quot;') : '';
+  const safeImg = imageUrl ? imageUrl.replace(/"/g, '&quot;') : '';
 
-      itemEl.innerHTML = `
+  itemEl.innerHTML = `
         <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#ef4444;cursor:pointer;font-size:0.9rem" title="Remover item">✕</button>
         <div style="font-size:0.75rem;font-weight:700;color:var(--amber-light);margin-bottom:6px">Produto / Serviço</div>
         
@@ -2076,882 +2157,892 @@
           ${safeImg ? `<img src="${safeImg}" class="prod-item-preview" style="width:28px;height:28px;border-radius:4px;object-fit:cover;flex-shrink:0" />` : `<img class="prod-item-preview" style="width:28px;height:28px;border-radius:4px;object-fit:cover;display:none;flex-shrink:0" />`}
         </div>
       `;
-      container.appendChild(itemEl);
+  container.appendChild(itemEl);
+}
+
+function formatCurrencyValue(currency, rawVal) {
+  const val = (rawVal || '').trim();
+  if (!val) return '';
+  if (currency === 'BRL') return /^R\$/i.test(val) ? val : ('R$ ' + val);
+  if (currency === 'USD') return /^\$|USD/i.test(val) ? val : ('$ ' + val + ' USD');
+  if (currency === 'EUR') return /^€|EUR/i.test(val) ? val : ('€ ' + val);
+  if (currency === 'PI') return /π|\bpi\b/i.test(val) ? val : (val + ' π');
+  return val;
+}
+
+function collectProductsFromForm() {
+  const productElements = document.querySelectorAll('#prof-products-container .product-edit-item');
+  const products = [];
+  productElements.forEach(el => {
+    const title = el.querySelector('.prod-item-title').value.trim();
+    const currencyEl = el.querySelector('.prod-item-currency');
+    const currency = currencyEl ? currencyEl.value : 'CUSTOM';
+    const rawVal = el.querySelector('.prod-item-price').value.trim();
+
+    const fiatCurEl = el.querySelector('.prod-item-fiat-currency');
+    const fiatCur = fiatCurEl ? fiatCurEl.value : 'USD';
+    const rawFiatVal = (el.querySelector('.prod-item-fiat-price') && el.querySelector('.prod-item-fiat-price').value.trim()) || '';
+
+    const link = el.querySelector('.prod-item-link').value.trim();
+    const img = el.querySelector('.prod-item-img').value.trim();
+
+    const formattedPrice = rawVal ? formatCurrencyValue(currency, rawVal) : 'Sob Consulta';
+    const formattedFiat = rawFiatVal ? formatCurrencyValue(fiatCur, rawFiatVal) : '';
+
+    if (title || link) {
+      products.push({ title: title, price: formattedPrice, price_fiat: formattedFiat, link: link, image_url: img });
     }
+  });
+  return products;
+}
 
-    function formatCurrencyValue(currency, rawVal) {
-      const val = (rawVal || '').trim();
-      if (!val) return '';
-      if (currency === 'BRL') return /^R\$/i.test(val) ? val : ('R$ ' + val);
-      if (currency === 'USD') return /^\$|USD/i.test(val) ? val : ('$ ' + val + ' USD');
-      if (currency === 'EUR') return /^€|EUR/i.test(val) ? val : ('€ ' + val);
-      if (currency === 'PI') return /π|\bpi\b/i.test(val) ? val : (val + ' π');
-      return val;
-    }
+// Leitor de Foto Local com Compressão Canvas Automática (Evita Base64 Gigante no Banco)
+function handleProductPhotoUpload(e, inputEl) {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    function collectProductsFromForm() {
-      const productElements = document.querySelectorAll('#prof-products-container .product-edit-item');
-      const products = [];
-      productElements.forEach(el => {
-        const title = el.querySelector('.prod-item-title').value.trim();
-        const currencyEl = el.querySelector('.prod-item-currency');
-        const currency = currencyEl ? currencyEl.value : 'CUSTOM';
-        const rawVal = el.querySelector('.prod-item-price').value.trim();
-
-        const fiatCurEl = el.querySelector('.prod-item-fiat-currency');
-        const fiatCur = fiatCurEl ? fiatCurEl.value : 'USD';
-        const rawFiatVal = (el.querySelector('.prod-item-fiat-price') && el.querySelector('.prod-item-fiat-price').value.trim()) || '';
-
-        const link = el.querySelector('.prod-item-link').value.trim();
-        const img = el.querySelector('.prod-item-img').value.trim();
-
-        const formattedPrice = rawVal ? formatCurrencyValue(currency, rawVal) : 'Sob Consulta';
-        const formattedFiat = rawFiatVal ? formatCurrencyValue(fiatCur, rawFiatVal) : '';
-
-        if (title || link) {
-          products.push({ title: title, price: formattedPrice, price_fiat: formattedFiat, link: link, image_url: img });
-        }
-      });
-      return products;
-    }
-
-    // Leitor de Foto Local com Compressão Canvas Automática (Evita Base64 Gigante no Banco)
-    function handleProductPhotoUpload(e, inputEl) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const img = new Image();
-        img.onload = function() {
-          const maxDim = 420;
-          let w = img.naturalWidth || img.width || 420;
-          let h = img.naturalHeight || img.height || 420;
-          if (w > maxDim || h > maxDim) {
-            const scale = maxDim / Math.max(w, h);
-            w = Math.round(w * scale);
-            h = Math.round(h * scale);
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.80);
-
-          const parent = inputEl.closest('.product-edit-item');
-          if (parent) {
-            const hiddenInput = parent.querySelector('.prod-item-img');
-            const previewImg = parent.querySelector('.prod-item-preview');
-            if (hiddenInput) hiddenInput.value = compressedBase64;
-            if (previewImg) {
-              previewImg.src = compressedBase64;
-              previewImg.style.display = 'inline-block';
-            }
-          }
-        };
-        img.src = evt.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function collectSocialFieldsFromForm() {
-      return {
-        whatsapp_url: normalizeSocialUrl('whatsapp', document.getElementById('prof-input-whatsapp').value),
-        youtube_url: normalizeSocialUrl('youtube', document.getElementById('prof-input-social').value),
-        instagram_url: normalizeSocialUrl('instagram', document.getElementById('prof-input-instagram').value),
-        twitter_url: normalizeSocialUrl('twitter', document.getElementById('prof-input-twitter').value),
-        social_links: collectExtraSocialsFromForm()
-      };
-    }
-
-    // Atualização da Prévia no Modo Simulador
-    function applyLivePreviewFromForm() {
-      const username = document.getElementById('prof-input-user').value.trim() || '@pioneiro';
-      const bio = document.getElementById('prof-input-bio').value.trim();
-      const wallet = document.getElementById('prof-input-wallet').value.trim();
-
-      // Validação Criptográfica Estrita da Chave Pública antes de Gravar na Blockchain / Supabase
-      if (wallet && !isValidPiPublicKey(wallet)) {
-        alert('⚠️ Chave Pública Inválida!\n\nA chave da Pi Wallet deve começar com a letra "G", conter exatamente 56 caracteres e possuir checksum CRC16 válido da rede Stellar/Pi.\n\nPor favor, copie sua chave diretamente da sua carteira no aplicativo Pi Browser (wallet.pi).');
-        const walletInp = document.getElementById('prof-input-wallet');
-        if (walletInp) { walletInp.focus(); walletInp.style.borderColor = '#ef4444'; }
-        return;
+  const reader = new FileReader();
+  reader.onload = function (evt) {
+    const img = new Image();
+    img.onload = function () {
+      const maxDim = 420;
+      let w = img.naturalWidth || img.width || 420;
+      let h = img.naturalHeight || img.height || 420;
+      if (w > maxDim || h > maxDim) {
+        const scale = maxDim / Math.max(w, h);
+        w = Math.round(w * scale);
+        h = Math.round(h * scale);
       }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.80);
 
-      const socials = collectSocialFieldsFromForm();
-      const avatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
-      const showcaseZero = document.getElementById('prof-check-zero') ? document.getElementById('prof-check-zero').checked : true;
-      const showcaseMural = document.getElementById('prof-check-mural') ? document.getElementById('prof-check-mural').checked : true;
+      const parent = inputEl.closest('.product-edit-item');
+      if (parent) {
+        const hiddenInput = parent.querySelector('.prod-item-img');
+        const previewImg = parent.querySelector('.prod-item-preview');
+        if (hiddenInput) hiddenInput.value = compressedBase64;
+        if (previewImg) {
+          previewImg.src = compressedBase64;
+          previewImg.style.display = 'inline-block';
+        }
+      }
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
-      const products = collectProductsFromForm();
+function collectSocialFieldsFromForm() {
+  return {
+    whatsapp_url: normalizeSocialUrl('whatsapp', document.getElementById('prof-input-whatsapp').value),
+    youtube_url: normalizeSocialUrl('youtube', document.getElementById('prof-input-social').value),
+    instagram_url: normalizeSocialUrl('instagram', document.getElementById('prof-input-instagram').value),
+    twitter_url: normalizeSocialUrl('twitter', document.getElementById('prof-input-twitter').value),
+    social_links: collectExtraSocialsFromForm()
+  };
+}
 
-      currentProfileData = {
-        username: username,
+// Atualização da Prévia no Modo Simulador
+function applyLivePreviewFromForm() {
+  const username = document.getElementById('prof-input-user').value.trim() || '@pioneiro';
+  const bio = document.getElementById('prof-input-bio').value.trim();
+  const wallet = document.getElementById('prof-input-wallet').value.trim();
+
+  // Validação Criptográfica Estrita da Chave Pública antes de Gravar na Blockchain / Supabase
+  if (wallet && !isValidPiPublicKey(wallet)) {
+    alert('⚠️ Chave Pública Inválida!\n\nA chave da Pi Wallet deve começar com a letra "G", conter exatamente 56 caracteres e possuir checksum CRC16 válido da rede Stellar/Pi.\n\nPor favor, copie sua chave diretamente da sua carteira no aplicativo Pi Browser (wallet.pi).');
+    const walletInp = document.getElementById('prof-input-wallet');
+    if (walletInp) { walletInp.focus(); walletInp.style.borderColor = '#ef4444'; }
+    return;
+  }
+
+  const quickWaVal = document.getElementById('prof-quick-whatsapp') ? document.getElementById('prof-quick-whatsapp').value.trim() : '';
+  const mainWaInp = document.getElementById('prof-input-whatsapp');
+  if (quickWaVal && mainWaInp && !mainWaInp.value.trim()) {
+    mainWaInp.value = quickWaVal;
+  }
+  const socials = collectSocialFieldsFromForm();
+  const avatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
+  const showcaseZero = document.getElementById('prof-check-zero') ? document.getElementById('prof-check-zero').checked : true;
+  const showcaseMural = document.getElementById('prof-check-mural') ? document.getElementById('prof-check-mural').checked : true;
+
+  const products = collectProductsFromForm();
+
+  currentProfileData = {
+    username: username,
+    bio: bio,
+    avatar_url: avatarUrl,
+    wallet_address: wallet,
+    whatsapp_url: socials.whatsapp_url,
+    youtube_url: socials.youtube_url,
+    instagram_url: socials.instagram_url,
+    twitter_url: socials.twitter_url,
+    social_links: socials.social_links,
+    showcase_zero: showcaseZero,
+    showcase_mural: showcaseMural,
+    products: products
+  };
+
+  try {
+    localStorage.setItem(SIMULATOR_DRAFT_KEY, JSON.stringify(currentProfileData));
+  } catch (_) { }
+
+  currentPioneerUser = username;
+  renderShowcaseData(currentProfileData, []);
+  closeProfileEditModal();
+
+  showVitrineToast('✨ Prévia atualizada com sucesso no Simulador!', 'success');
+}
+
+// Salvar Oficialmente na Pi Network (Exige Pi Browser para Validar Identidade KYC)
+async function saveProfileForm(e) {
+  if (e) e.preventDefault();
+
+  // Se estiver no Simulador, apenas atualiza a prévia
+  if (isSimulatorMode) {
+    applyLivePreviewFromForm();
+    return;
+  }
+
+  let rawUser = document.getElementById('prof-input-user').value.trim();
+  if (!rawUser) {
+    alert('Por favor, informe seu @usuário Pi.');
+    return;
+  }
+  let username = cleanUsername(rawUser);
+
+  // Verificação de Segurança Anti-Fraude (Pi Browser OU Conta Web autenticada por e-mail):
+  const inPi = isPiBrowser();
+  const isAuth = isPiSdkAuthenticated();
+  const hasWeb2Token = Boolean(window.HokageWeb2Auth && typeof window.HokageWeb2Auth.getAccessToken === 'function' && await window.HokageWeb2Auth.getAccessToken());
+  const hasWeb2 = isWeb2Authenticated() || hasWeb2Token;
+
+  if (!inPi && !isAuth && !hasWeb2) {
+    applyLivePreviewFromForm();
+    alert(
+      '💡 Modo Simulação (Visitante sem Login)\n\n' +
+      'Sua prévia foi atualizada na sua tela com sucesso!\n\n' +
+      '🔒 Como publicar definitivamente?\n' +
+      'Entre com seu e-mail aqui na Web ou abra este site dentro do Pi Browser.'
+    );
+    return;
+  }
+
+  // Garante token Pi SDK ativo quando dentro do Pi Browser
+  if (inPi && window.Pi) {
+    const freshToken = await ensurePiAccessToken();
+    const refreshedUser = getLoggedUser();
+    if (refreshedUser && refreshedUser.username) {
+      username = cleanUsername(refreshedUser.username);
+    }
+    if (!freshToken && !hasWeb2Token) {
+      alert('Falha na autenticação Pi. Confirme a autorização da sua conta dentro do Pi Browser para salvar oficialmente.');
+      return;
+    }
+  } else if (hasWeb2) {
+    const cleanHandleCheck = username.replace(/^@+/, '').toLowerCase();
+    if (!/^[a-z0-9_]{3,24}$/.test(cleanHandleCheck)) {
+      alert('Escolha um @usuário válido entre 3 e 24 caracteres (letras minúsculas, números e _).');
+      const userInpEl = document.getElementById('prof-input-user');
+      if (userInpEl) userInpEl.focus();
+      return;
+    }
+  }
+
+  const bio = document.getElementById('prof-input-bio').value.trim();
+  const wallet = document.getElementById('prof-input-wallet').value.trim();
+
+  // Validação Criptográfica Estrita da Chave Pública antes de Gravar na Blockchain / Supabase
+  if (wallet && !isValidPiPublicKey(wallet)) {
+    alert('⚠️ Chave Pública Inválida!\n\nA chave da Pi Wallet deve começar com a letra "G", conter exatamente 56 caracteres e possuir checksum CRC16 válido da rede Stellar/Pi.\n\nPor favor, copie sua chave diretamente da sua carteira no aplicativo Pi Browser (wallet.pi).');
+    const walletInp = document.getElementById('prof-input-wallet');
+    if (walletInp) { walletInp.focus(); walletInp.style.borderColor = '#ef4444'; }
+    return;
+  }
+  const quickWaVal = document.getElementById('prof-quick-whatsapp') ? document.getElementById('prof-quick-whatsapp').value.trim() : '';
+  const mainWaInp = document.getElementById('prof-input-whatsapp');
+  if (quickWaVal && mainWaInp && !mainWaInp.value.trim()) {
+    mainWaInp.value = quickWaVal;
+  }
+  const socials = collectSocialFieldsFromForm();
+
+  let finalAvatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
+  const showcaseZero = document.getElementById('prof-check-zero') ? document.getElementById('prof-check-zero').checked : true;
+  const showcaseMural = document.getElementById('prof-check-mural') ? document.getElementById('prof-check-mural').checked : true;
+
+  const products = collectProductsFromForm();
+
+  const btn = document.getElementById('btn-save-profile');
+  const fbEl = document.getElementById('prof-save-feedback');
+  if (fbEl) { fbEl.style.display = 'none'; fbEl.innerHTML = ''; }
+  btn.disabled = true;
+  btn.textContent = '⏳ Salvando no Supabase...';
+
+  try {
+    if (finalAvatarUrl && finalAvatarUrl.startsWith('data:image/') && window.IsarDB && typeof window.IsarDB.uploadProfileImage === 'function') {
+      btn.textContent = '⏳ Enviando foto de perfil...';
+      try {
+        const blob = await (await fetch(finalAvatarUrl)).blob();
+        const avatarFile = new File([blob], 'avatar.jpg', { type: blob.type || 'image/jpeg' });
+        const uploadedUrl = await window.IsarDB.uploadProfileImage(avatarFile);
+        if (uploadedUrl) {
+          finalAvatarUrl = uploadedUrl;
+          const avInp = document.getElementById('prof-input-avatar');
+          if (avInp) avInp.value = finalAvatarUrl;
+        }
+      } catch (uploadErr) {
+        console.warn('Upload de avatar para Storage falhou, tentando persistência padrão:', uploadErr);
+      }
+      btn.textContent = '⏳ Salvando no Supabase...';
+    }
+
+    const existingSelectedTitles = (currentProfileData && Array.isArray(currentProfileData.selected_titles))
+      ? currentProfileData.selected_titles
+      : (currentProfileData && currentProfileData.checklist_state && Array.isArray(currentProfileData.checklist_state.selected_titles)
+        ? currentProfileData.checklist_state.selected_titles
+        : undefined);
+
+    if (window.IsarDB && window.IsarDB.savePioneerProfile) {
+      const savedResp = await window.IsarDB.savePioneerProfile(username, {
         bio: bio,
-        avatar_url: avatarUrl,
+        avatar_url: finalAvatarUrl,
         wallet_address: wallet,
         whatsapp_url: socials.whatsapp_url,
         youtube_url: socials.youtube_url,
         instagram_url: socials.instagram_url,
         twitter_url: socials.twitter_url,
         social_links: socials.social_links,
+        selected_titles: existingSelectedTitles,
         showcase_zero: showcaseZero,
         showcase_mural: showcaseMural,
         products: products
-      };
-
-      try {
-        localStorage.setItem(SIMULATOR_DRAFT_KEY, JSON.stringify(currentProfileData));
-      } catch (_) {}
-
-      currentPioneerUser = username;
-      renderShowcaseData(currentProfileData, []);
-      closeProfileEditModal();
-
-      showVitrineToast('✨ Prévia atualizada com sucesso no Simulador!', 'success');
-    }
-
-    // Salvar Oficialmente na Pi Network (Exige Pi Browser para Validar Identidade KYC)
-    async function saveProfileForm(e) {
-      if (e) e.preventDefault();
-
-      // Se estiver no Simulador, apenas atualiza a prévia
-      if (isSimulatorMode) {
-        applyLivePreviewFromForm();
-        return;
-      }
-
-      let rawUser = document.getElementById('prof-input-user').value.trim();
-      if (!rawUser) {
-        alert('Por favor, informe seu @usuário Pi.');
-        return;
-      }
-      let username = cleanUsername(rawUser);
-
-      // Verificação de Segurança Anti-Fraude (Pi Browser OU Conta Web autenticada por e-mail):
-      const inPi = isPiBrowser();
-      const isAuth = isPiSdkAuthenticated();
-      const hasWeb2Token = Boolean(window.HokageWeb2Auth && typeof window.HokageWeb2Auth.getAccessToken === 'function' && await window.HokageWeb2Auth.getAccessToken());
-      const hasWeb2 = isWeb2Authenticated() || hasWeb2Token;
-
-      if (!inPi && !isAuth && !hasWeb2) {
-        applyLivePreviewFromForm();
-        alert(
-          '💡 Modo Simulação (Visitante sem Login)\n\n' +
-          'Sua prévia foi atualizada na sua tela com sucesso!\n\n' +
-          '🔒 Como publicar definitivamente?\n' +
-          'Entre com seu e-mail aqui na Web ou abra este site dentro do Pi Browser.'
-        );
-        return;
-      }
-
-      // Garante token Pi SDK ativo quando dentro do Pi Browser
-      if (inPi && window.Pi) {
-        const freshToken = await ensurePiAccessToken();
-        const refreshedUser = getLoggedUser();
-        if (refreshedUser && refreshedUser.username) {
-          username = cleanUsername(refreshedUser.username);
-        }
-        if (!freshToken && !hasWeb2Token) {
-          alert('Falha na autenticação Pi. Confirme a autorização da sua conta dentro do Pi Browser para salvar oficialmente.');
-          return;
-        }
-      } else if (hasWeb2) {
-        const cleanHandleCheck = username.replace(/^@+/, '').toLowerCase();
-        if (!/^[a-z0-9_]{3,24}$/.test(cleanHandleCheck)) {
-          alert('Escolha um @usuário válido entre 3 e 24 caracteres (letras minúsculas, números e _).');
-          const userInpEl = document.getElementById('prof-input-user');
-          if (userInpEl) userInpEl.focus();
-          return;
-        }
-      }
-
-      const bio = document.getElementById('prof-input-bio').value.trim();
-      const wallet = document.getElementById('prof-input-wallet').value.trim();
-
-      // Validação Criptográfica Estrita da Chave Pública antes de Gravar na Blockchain / Supabase
-      if (wallet && !isValidPiPublicKey(wallet)) {
-        alert('⚠️ Chave Pública Inválida!\n\nA chave da Pi Wallet deve começar com a letra "G", conter exatamente 56 caracteres e possuir checksum CRC16 válido da rede Stellar/Pi.\n\nPor favor, copie sua chave diretamente da sua carteira no aplicativo Pi Browser (wallet.pi).');
-        const walletInp = document.getElementById('prof-input-wallet');
-        if (walletInp) { walletInp.focus(); walletInp.style.borderColor = '#ef4444'; }
-        return;
-      }
-      const socials = collectSocialFieldsFromForm();
-
-      let finalAvatarUrl = document.getElementById('prof-input-avatar') ? document.getElementById('prof-input-avatar').value.trim() : '';
-      const showcaseZero = document.getElementById('prof-check-zero') ? document.getElementById('prof-check-zero').checked : true;
-      const showcaseMural = document.getElementById('prof-check-mural') ? document.getElementById('prof-check-mural').checked : true;
-
-      const products = collectProductsFromForm();
-
-      const btn = document.getElementById('btn-save-profile');
-      const fbEl = document.getElementById('prof-save-feedback');
-      if (fbEl) { fbEl.style.display = 'none'; fbEl.innerHTML = ''; }
-      btn.disabled = true;
-      btn.textContent = '⏳ Salvando no Supabase...';
-
-      try {
-        if (finalAvatarUrl && finalAvatarUrl.startsWith('data:image/') && window.IsarDB && typeof window.IsarDB.uploadProfileImage === 'function') {
-          btn.textContent = '⏳ Enviando foto de perfil...';
-          try {
-            const blob = await (await fetch(finalAvatarUrl)).blob();
-            const avatarFile = new File([blob], 'avatar.jpg', { type: blob.type || 'image/jpeg' });
-            const uploadedUrl = await window.IsarDB.uploadProfileImage(avatarFile);
-            if (uploadedUrl) {
-              finalAvatarUrl = uploadedUrl;
-              const avInp = document.getElementById('prof-input-avatar');
-              if (avInp) avInp.value = finalAvatarUrl;
-            }
-          } catch (uploadErr) {
-            console.warn('Upload de avatar para Storage falhou, tentando persistência padrão:', uploadErr);
-          }
-          btn.textContent = '⏳ Salvando no Supabase...';
-        }
-
-        const existingSelectedTitles = (currentProfileData && Array.isArray(currentProfileData.selected_titles))
-          ? currentProfileData.selected_titles
-          : (currentProfileData && currentProfileData.checklist_state && Array.isArray(currentProfileData.checklist_state.selected_titles)
-            ? currentProfileData.checklist_state.selected_titles
-            : undefined);
-
-        if (window.IsarDB && window.IsarDB.savePioneerProfile) {
-          const savedResp = await window.IsarDB.savePioneerProfile(username, {
-            bio: bio,
-            avatar_url: finalAvatarUrl,
-            wallet_address: wallet,
-            whatsapp_url: socials.whatsapp_url,
-            youtube_url: socials.youtube_url,
-            instagram_url: socials.instagram_url,
-            twitter_url: socials.twitter_url,
-            social_links: socials.social_links,
-            selected_titles: existingSelectedTitles,
-            showcase_zero: showcaseZero,
-            showcase_mural: showcaseMural,
-            products: products
-          });
-
-          // Salva no cache imediato do navegador para persistência instantânea
-          const cleanSlug = cleanUsername(username).replace('@', '');
-          try {
-            if (finalAvatarUrl) {
-              localStorage.setItem('hokage_pioneer_avatar_' + cleanSlug, finalAvatarUrl);
-            } else {
-              localStorage.removeItem('hokage_pioneer_avatar_' + cleanSlug);
-            }
-          } catch (_) {}
-
-          const savedUid = (savedResp && savedResp.uid) || (getLoggedUser() && getLoggedUser().uid) || null;
-          const savedIsPiVerified = (savedResp && savedResp.is_pi_verified !== undefined)
-            ? Boolean(savedResp.is_pi_verified)
-            : (inPi || isAuth);
-          const savedAuthType = savedResp && savedResp.auth_provider
-            ? (savedResp.auth_provider === 'pi' ? 'pi-sdk' : savedResp.auth_provider)
-            : ((inPi || isAuth) ? 'pi-sdk' : 'web2');
-          const savedHandle = (savedResp && savedResp.username) ? cleanUsername(savedResp.username) : username;
-
-          setLoggedUser(savedHandle, savedUid, savedAuthType, null, { is_pi_verified: savedIsPiVerified });
-          currentPioneerUser = savedHandle;
-          if (currentProfileData) {
-            currentProfileData.avatar_url = finalAvatarUrl;
-          }
-          applyAvatarOnScreen(finalAvatarUrl, savedHandle);
-          window.history.replaceState(null, '', `?u=${encodeURIComponent(savedHandle.replace(/^@+/, ''))}`);
-
-          if (savedResp && savedResp._referralResult && savedResp._referralResult.awarded) {
-            showVitrineToast('🎉 Vitrine salva! Você ganhou +1 Crédito de Anúncio Bronze Grátis (0.314 π) no Mural!', 'success');
-          } else if (!savedIsPiVerified) {
-            showVitrineToast('✓ Passaporte Web publicado! Vincule no Pi Browser quando quiser ativar o selo ✓ Pi Verificado.', 'success');
-          } else {
-            showVitrineToast('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!', 'success');
-          }
-          closeProfileEditModal();
-          loadPioneerProfile();
-        } else {
-          throw new Error('Banco de dados não disponível.');
-        }
-      } catch (err) {
-        console.error('Erro ao salvar vitrine:', err);
-        const msg = (err && err.message) ? String(err.message) : 'Erro ao gravar dados no servidor.';
-        const isAuthErr = /401|sessão|token|expirad|autentic/i.test(msg);
-        if (fbEl) {
-          fbEl.style.display = 'block';
-          fbEl.style.background = 'rgba(239,68,68,0.14)';
-          fbEl.style.border = '1px solid rgba(239,68,68,0.45)';
-          fbEl.style.color = '#fca5a5';
-          fbEl.innerHTML = isAuthErr
-            ? `<div style="margin-bottom:8px">🔒 <strong>Sessão expirada ou não autenticada:</strong> ${escapeHtml(msg)}</div>
-               <button type="button" onclick="${inPi ? 'connectPiBrowserAndStart()' : 'if(window.HokagePi&&window.HokagePi.openPiConnectModal)window.HokagePi.openPiConnectModal()'}" class="btn btn-primary btn-sm" style="font-weight:700">${inPi ? '⚡ Reconectar Pi Agora' : '🔑 Entrar / Reconectar Agora'}</button>`
-            : `⚠️ ${escapeHtml(msg)}`;
-        }
-        showVitrineToast(msg, 'error');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = (!inPi && hasWeb2) ? '💾 Publicar Passaporte Web' : '💾 Salvar Oficialmente na Pi Network';
-      }
-    }
-
-    // ==========================================
-    // FOTO DE PERFIL: HELPER DO MODAL
-    // ==========================================
-    function setModalAvatar(dataUrl, username) {
-      const imgEl = document.getElementById('modal-avatar-img');
-      const phEl = document.getElementById('modal-avatar-placeholder');
-      const removeBtn = document.getElementById('btn-remove-avatar');
-      const hiddenInp = document.getElementById('prof-input-avatar');
-
-      const safeDataUrl = sanitizeImageUrl(dataUrl);
-
-      if (hiddenInp) hiddenInp.value = safeDataUrl || '';
-
-      if (safeDataUrl) {
-        if (imgEl) {
-          imgEl.src = safeDataUrl;
-          imgEl.style.display = 'block';
-        }
-        if (phEl) phEl.style.display = 'none';
-        if (removeBtn) removeBtn.style.display = 'inline-block';
-      } else {
-        if (imgEl) {
-          imgEl.src = '';
-          imgEl.style.display = 'none';
-        }
-        if (phEl) {
-          const clean = cleanUsername(username || currentPioneerUser || '@p');
-          const initial = clean.replace('@', '').charAt(0).toUpperCase() || 'π';
-          phEl.textContent = initial;
-          phEl.style.display = 'flex';
-        }
-        if (removeBtn) removeBtn.style.display = 'none';
-      }
-    }
-
-    // ==========================================
-    // CORTADOR DE FOTO DE PERFIL (HTML5 CANVAS INTERATIVO)
-    // ==========================================
-    let cropImg = new Image();
-    let cropState = {
-      x: 0,
-      y: 0,
-      zoom: 1,
-      baseScale: 1,
-      minZoom: 0.1,
-      maxZoom: 5,
-      isDragging: false,
-      startX: 0,
-      startY: 0,
-      lastX: 0,
-      lastY: 0,
-      touchDist: 0
-    };
-
-    function triggerAvatarUpload() {
-      const input = document.getElementById('avatar-file-input');
-      if (input) {
-        input.value = '';
-        input.click();
-      }
-    }
-
-    function handleAvatarFileSelect(e) {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-
-      const fileName = file.name || '';
-      const isImage = (file.type && file.type.startsWith('image/')) || /\.(jpe?g|png|webp|gif|bmp|heic|svg)$/i.test(fileName);
-      if (!isImage && file.type) {
-        alert('Por favor, selecione um arquivo de imagem válido (JPG, PNG ou WEBP).');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const tempImg = new Image();
-        tempImg.onload = function() {
-          // Downscaling preventivo para fotos gigantes de smartphones (evita crash de memória no WebView)
-          const maxDim = 1200;
-          let w = tempImg.naturalWidth || tempImg.width;
-          let h = tempImg.naturalHeight || tempImg.height;
-
-          if (w > maxDim || h > maxDim) {
-            const scale = maxDim / Math.max(w, h);
-            const sw = Math.round(w * scale);
-            const sh = Math.round(h * scale);
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = sw;
-            tempCanvas.height = sh;
-            const tCtx = tempCanvas.getContext('2d');
-            tCtx.drawImage(tempImg, 0, 0, sw, sh);
-
-            cropImg = new Image();
-            cropImg.onload = function() {
-              openAvatarCropModal();
-            };
-            cropImg.src = tempCanvas.toDataURL('image/jpeg', 0.92);
-          } else {
-            cropImg = tempImg;
-            openAvatarCropModal();
-          }
-        };
-        tempImg.onerror = function() {
-          alert('Não foi possível processar a imagem selecionada. Tente outra foto.');
-        };
-        tempImg.src = evt.target.result;
-      };
-      reader.onerror = function() {
-        alert('Erro ao ler arquivo do dispositivo.');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function openAvatarCropModal() {
-      const modal = document.getElementById('avatar-crop-modal');
-      const canvas = document.getElementById('crop-canvas');
-      const zoomRange = document.getElementById('crop-zoom-range');
-      if (!modal || !canvas) return;
-
-      const imgW = cropImg.naturalWidth || cropImg.width || 240;
-      const imgH = cropImg.naturalHeight || cropImg.height || 240;
-
-      // Calcula escala inicial para cobrir o círculo de 240x240 sem deformação
-      const side = Math.min(imgW, imgH);
-      const baseScale = 240 / side;
-
-      cropState.baseScale = baseScale;
-      cropState.zoom = baseScale;
-      cropState.minZoom = baseScale * 0.7;
-      cropState.maxZoom = baseScale * 4.0;
-      cropState.x = (240 - imgW * cropState.zoom) / 2;
-      cropState.y = (240 - imgH * cropState.zoom) / 2;
-      cropState.isDragging = false;
-      cropState.touchDist = 0;
-
-      if (zoomRange) {
-        zoomRange.min = cropState.minZoom.toFixed(4);
-        zoomRange.max = cropState.maxZoom.toFixed(4);
-        zoomRange.step = ((cropState.maxZoom - cropState.minZoom) / 100).toFixed(4);
-        zoomRange.value = cropState.zoom.toFixed(4);
-      }
-
-      setupCropCanvasEvents();
-      drawCropCanvas();
-
-      modal.style.display = 'flex';
-      modal.classList.add('active');
-      modal.setAttribute('aria-hidden', 'false');
-    }
-
-    function closeAvatarCropModal() {
-      const modal = document.getElementById('avatar-crop-modal');
-      if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-        modal.setAttribute('aria-hidden', 'true');
-      }
-    }
-
-    function drawCropCanvas() {
-      const canvas = document.getElementById('crop-canvas');
-      if (!canvas || !cropImg.complete) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.save();
-      ctx.fillStyle = '#09090b';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const imgW = cropImg.naturalWidth || cropImg.width;
-      const imgH = cropImg.naturalHeight || cropImg.height;
-
-      ctx.drawImage(
-        cropImg,
-        cropState.x,
-        cropState.y,
-        imgW * cropState.zoom,
-        imgH * cropState.zoom
-      );
-      ctx.restore();
-    }
-
-    function onCropZoomChange(val) {
-      const newZoom = parseFloat(val);
-      const canvas = document.getElementById('crop-canvas');
-      if (!canvas || isNaN(newZoom)) return;
-
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-
-      const prevZoom = cropState.zoom;
-      cropState.x = centerX - ((centerX - cropState.x) / prevZoom) * newZoom;
-      cropState.y = centerY - ((centerY - cropState.y) / prevZoom) * newZoom;
-      cropState.zoom = newZoom;
-
-      drawCropCanvas();
-    }
-
-    function adjustCropZoom(delta) {
-      const zoomRange = document.getElementById('crop-zoom-range');
-      if (!zoomRange) return;
-      let next = parseFloat(zoomRange.value) + delta;
-      next = Math.max(parseFloat(zoomRange.min), Math.min(parseFloat(zoomRange.max), next));
-      zoomRange.value = next.toFixed(4);
-      onCropZoomChange(next);
-    }
-
-    let isCropEventsInitialized = false;
-    function setupCropCanvasEvents() {
-      if (isCropEventsInitialized) return;
-      const viewport = document.getElementById('crop-viewport');
-      if (!viewport) return;
-
-      function getPointerPos(e) {
-        if (e.touches && e.touches.length > 0) {
-          return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        }
-        return { x: e.clientX, y: e.clientY };
-      }
-
-      function getTouchDist(e) {
-        if (!e.touches || e.touches.length < 2) return 0;
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        return Math.sqrt(dx * dx + dy * dy);
-      }
-
-      function onStart(e) {
-        if (e.touches && e.touches.length === 2) {
-          cropState.isDragging = false;
-          cropState.touchDist = getTouchDist(e);
-          return;
-        }
-        e.preventDefault();
-        cropState.isDragging = true;
-        viewport.style.cursor = 'grabbing';
-        const p = getPointerPos(e);
-        cropState.startX = p.x;
-        cropState.startY = p.y;
-        cropState.lastX = cropState.x;
-        cropState.lastY = cropState.y;
-      }
-
-      function onMove(e) {
-        // Pinch-to-zoom com 2 dedos no celular / Pi Browser
-        if (e.touches && e.touches.length === 2) {
-          e.preventDefault();
-          const curDist = getTouchDist(e);
-          if (cropState.touchDist > 0 && curDist > 0) {
-            const diff = curDist - cropState.touchDist;
-            if (Math.abs(diff) > 2) {
-              adjustCropZoom(diff * 0.006);
-              cropState.touchDist = curDist;
-            }
-          }
-          return;
-        }
-
-        if (!cropState.isDragging) return;
-        e.preventDefault();
-        const p = getPointerPos(e);
-        const dx = p.x - cropState.startX;
-        const dy = p.y - cropState.startY;
-        cropState.x = cropState.lastX + dx;
-        cropState.y = cropState.lastY + dy;
-        drawCropCanvas();
-      }
-
-      function onEnd(e) {
-        if (e.touches && e.touches.length > 0) {
-          cropState.touchDist = 0;
-          return;
-        }
-        if (!cropState.isDragging) return;
-        cropState.isDragging = false;
-        viewport.style.cursor = 'grab';
-      }
-
-      // Mouse events
-      viewport.addEventListener('mousedown', onStart);
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('mouseup', onEnd);
-
-      // Touch events (Compatível com Mobile e Pi Browser)
-      viewport.addEventListener('touchstart', onStart, { passive: false });
-      window.addEventListener('touchmove', onMove, { passive: false });
-      window.addEventListener('touchend', onEnd);
-      window.addEventListener('touchcancel', onEnd);
-
-      // Mouse wheel zoom
-      viewport.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        const delta = e.deltaY < 0 ? (cropState.zoom * 0.08) : -(cropState.zoom * 0.08);
-        adjustCropZoom(delta);
-      }, { passive: false });
-
-      isCropEventsInitialized = true;
-    }
-
-    function confirmAvatarCrop() {
-      const canvas = document.getElementById('crop-canvas');
-      if (!canvas) return;
-
-      // Gera um canvas limpo 256x256 de alta resolução para salvar
-      const outCanvas = document.createElement('canvas');
-      outCanvas.width = 256;
-      outCanvas.height = 256;
-      const outCtx = outCanvas.getContext('2d');
-
-      // Desenha com proporção exata escalada de 240 para 256
-      outCtx.drawImage(
-        canvas,
-        0, 0, 240, 240,
-        0, 0, 256, 256
-      );
-
-      // Converte para JPEG com qualidade 0.85 (leve, ~15KB)
-      const croppedDataUrl = outCanvas.toDataURL('image/jpeg', 0.85);
-
-      // Atualiza formulário do modal
-      setModalAvatar(croppedDataUrl, currentPioneerUser);
-
-      // Aplica imediatamente na vitrine
-      applyAvatarOnScreen(croppedDataUrl, currentPioneerUser);
-      if (currentProfileData) {
-        currentProfileData.avatar_url = croppedDataUrl;
-      }
-
-      closeAvatarCropModal();
-
-      // Garante que o modal de edição continue aberto
-      const editModal = document.getElementById('edit-profile-modal');
-      if (editModal && !editModal.classList.contains('active')) {
-        openProfileEditModal();
-      }
-    }
-
-    function removeAvatar() {
-      setModalAvatar('', currentPioneerUser);
-      applyAvatarOnScreen('', currentPioneerUser);
-      if (currentProfileData) {
-        currentProfileData.avatar_url = '';
-      }
-    }
-
-    function applyAvatarOnScreen(avatarUrl, username) {
-      const avatarEl = document.getElementById('pioneer-avatar');
-      if (!avatarEl) return;
-
-      const safeUrl = sanitizeImageUrl(avatarUrl);
-      if (safeUrl) {
-        avatarEl.innerHTML = '';
-        const img = document.createElement('img');
-        img.src = safeUrl;
-        img.alt = 'Avatar de ' + escapeHtml(cleanUsername(username || currentPioneerUser || 'Pioneiro'));
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
-        img.onerror = () => {
-          applyAvatarOnScreen('', username);
-        };
-        avatarEl.appendChild(img);
-      } else {
-        const clean = cleanUsername(username || currentPioneerUser || '@p');
-        const initial = clean.replace('@', '').charAt(0).toUpperCase() || 'π';
-        avatarEl.innerHTML = `<span style="font-size:2.4rem;font-weight:800;color:var(--accent-light)">${escapeHtml(initial)}</span>`;
-      }
-    }
-
-    // Copiar Chave Pública com Feedback Imediato e Proteção Anti-Clipper Guard
-    function copyWalletKey() {
-      if (!currentPioneerWallet) {
-        alert('Chave pública não cadastrada para este pioneiro.');
-        return;
-      }
-      incrementProfileMetric('copies');
-      navigator.clipboard.writeText(currentPioneerWallet).then(() => {
-        const btn = document.getElementById('btn-copy-wallet');
-        if (btn) {
-          const originalText = btn.innerHTML;
-          btn.innerHTML = '✓ Copiada!';
-          btn.style.borderColor = '#10b981';
-          btn.style.color = '#34d399';
-          setTimeout(() => { 
-            btn.innerHTML = originalText;
-            btn.style.borderColor = '';
-            btn.style.color = '';
-          }, 3000);
-        }
-      }).catch(() => {
-        prompt('Copie a chave pública abaixo:', currentPioneerWallet);
       });
-    }
 
-    // Barra de Evolução da Jornada no Passaporte (Pioneiro -> Construtor -> Hokage)
-    function updatePassportJourneyBar(prof, rawUsername) {
-      const labelEl = document.getElementById('journey-current-label');
-      const fillEl = document.getElementById('journey-progress-fill');
-      const s1 = document.getElementById('journey-step-1');
-      const s2 = document.getElementById('journey-step-2');
-      const s3 = document.getElementById('journey-step-3');
-      const hintEl = document.getElementById('journey-next-hint');
-      if (!labelEl || !fillEl) return;
+      // Salva no cache imediato do navegador para persistência instantânea
+      const cleanSlug = cleanUsername(username).replace('@', '');
+      try {
+        if (finalAvatarUrl) {
+          localStorage.setItem('hokage_pioneer_avatar_' + cleanSlug, finalAvatarUrl);
+        } else {
+          localStorage.removeItem('hokage_pioneer_avatar_' + cleanSlug);
+        }
+      } catch (_) { }
 
-      const uClean = String(rawUsername || prof.username || '').replace(/^@+/, '').toLowerCase();
-      const isHokage = Boolean(
-        prof.journey_tier === 'hokage' ||
-        prof.is_ambassador ||
-        Number(prof.referral_qualified_count || 0) >= 5 ||
-        uClean === 'hokage22b'
-      );
-      const hasWallet = Boolean(prof.wallet_address && isValidPiPublicKey(String(prof.wallet_address)));
-      const hasProducts = Array.isArray(prof.products) && prof.products.length > 0;
-      const isConstrutor = !isHokage && (
-        prof.journey_tier === 'construtor' ||
-        (hasWallet && (hasProducts || Number(prof.reputation_score || 0) >= 70))
-      );
+      const savedUid = (savedResp && savedResp.uid) || (getLoggedUser() && getLoggedUser().uid) || null;
+      const savedIsPiVerified = (savedResp && savedResp.is_pi_verified !== undefined)
+        ? Boolean(savedResp.is_pi_verified)
+        : (inPi || isAuth);
+      const savedAuthType = savedResp && savedResp.auth_provider
+        ? (savedResp.auth_provider === 'pi' ? 'pi-sdk' : savedResp.auth_provider)
+        : ((inPi || isAuth) ? 'pi-sdk' : 'web2');
+      const savedHandle = (savedResp && savedResp.username) ? cleanUsername(savedResp.username) : username;
 
-      if (isHokage) {
-        labelEl.textContent = '03 · Hokage';
-        labelEl.style.color = '#fb923c';
-        fillEl.style.width = '100%';
-        if (s1) s1.style.color = '#fbbf24';
-        if (s2) s2.style.color = '#c4b5fd';
-        if (s3) s3.style.color = '#fb923c';
-        if (hintEl) hintEl.innerHTML = '🔥 Nível máximo: integra <a href="monte" style="color:#fb923c;font-weight:700;text-decoration:none">O Monte Hokage ↗</a> por contribuição real.';
-      } else if (isConstrutor) {
-        labelEl.textContent = '02 · Construtor';
-        labelEl.style.color = '#c4b5fd';
-        fillEl.style.width = '68%';
-        if (s1) s1.style.color = '#fbbf24';
-        if (s2) s2.style.color = '#c4b5fd';
-        if (s3) s3.style.color = 'var(--text-muted)';
-        if (hintEl) hintEl.innerHTML = '⚡ Construtor ativo! Contribua na comunidade ou na API para alcançar <a href="monte" style="color:#fb923c;font-weight:700;text-decoration:none">O Monte Hokage →</a>';
+      setLoggedUser(savedHandle, savedUid, savedAuthType, null, { is_pi_verified: savedIsPiVerified });
+      currentPioneerUser = savedHandle;
+      if (currentProfileData) {
+        currentProfileData.avatar_url = finalAvatarUrl;
+      }
+      applyAvatarOnScreen(finalAvatarUrl, savedHandle);
+      window.history.replaceState(null, '', `?u=${encodeURIComponent(savedHandle.replace(/^@+/, ''))}`);
+
+      if (savedResp && savedResp._referralResult && savedResp._referralResult.awarded) {
+        showVitrineToast('🎉 Vitrine salva! Você ganhou +1 Crédito de Anúncio Bronze Grátis (0.314 π) no Mural!', 'success');
+      } else if (!savedIsPiVerified) {
+        showVitrineToast('✓ Passaporte Web publicado! Vincule no Pi Browser quando quiser ativar o selo ✓ Pi Verificado.', 'success');
       } else {
-        labelEl.textContent = '01 · Pioneiro';
-        labelEl.style.color = '#fbbf24';
-        fillEl.style.width = '34%';
-        if (s1) s1.style.color = '#fbbf24';
-        if (s2) s2.style.color = 'var(--text-muted)';
-        if (s3) s3.style.color = 'var(--text-muted)';
-        if (hintEl) hintEl.textContent = 'Adicione uma chave Pi válida e um produto/serviço (ou ative na Vila) para avançar para Construtor.';
+        showVitrineToast('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!', 'success');
       }
+      closeProfileEditModal();
+      loadPioneerProfile();
+    } else {
+      throw new Error('Banco de dados não disponível.');
     }
+  } catch (err) {
+    console.error('Erro ao salvar vitrine:', err);
+    const msg = (err && err.message) ? String(err.message) : 'Erro ao gravar dados no servidor.';
+    const isAuthErr = /401|sessão|token|expirad|autentic/i.test(msg);
+    if (fbEl) {
+      fbEl.style.display = 'block';
+      fbEl.style.background = 'rgba(239,68,68,0.14)';
+      fbEl.style.border = '1px solid rgba(239,68,68,0.45)';
+      fbEl.style.color = '#fca5a5';
+      fbEl.innerHTML = isAuthErr
+        ? `<div style="margin-bottom:8px">🔒 <strong>Sessão expirada ou não autenticada:</strong> ${escapeHtml(msg)}</div>
+               <button type="button" onclick="${inPi ? 'connectPiBrowserAndStart()' : 'if(window.HokagePi&&window.HokagePi.openPiConnectModal)window.HokagePi.openPiConnectModal()'}" class="btn btn-primary btn-sm" style="font-weight:700">${inPi ? '⚡ Reconectar Pi Agora' : '🔑 Entrar / Reconectar Agora'}</button>`
+        : `⚠️ ${escapeHtml(msg)}`;
+    }
+    showVitrineToast(msg, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = (!inPi && hasWeb2) ? '💾 Publicar Passaporte Web' : '💾 Salvar Oficialmente na Pi Network';
+  }
+}
 
-    // Reputação & Avaliações Verificadas + Programa de Afiliados em Pi (Zero-Trust)
-    async function loadPioneerReferralPanel(targetUsername, isOwner) {
-      const badgeEl = document.getElementById('pioneer-ambassador-badge');
-      const sectionEl = document.getElementById('pioneer-referral-section');
-      if (badgeEl) badgeEl.style.display = 'none';
-      if (sectionEl) sectionEl.style.display = 'none';
+// ==========================================
+// FOTO DE PERFIL: HELPER DO MODAL
+// ==========================================
+function setModalAvatar(dataUrl, username) {
+  const imgEl = document.getElementById('modal-avatar-img');
+  const phEl = document.getElementById('modal-avatar-placeholder');
+  const removeBtn = document.getElementById('btn-remove-avatar');
+  const hiddenInp = document.getElementById('prof-input-avatar');
 
-      if (!window.HokageReferral || !targetUsername) return;
-      let stats = null;
-      let affSummary = null;
-      if (!isSimulatorMode) {
-        try {
-          const affPromise = (isOwner && window.HokageReferral.fetchAffiliateSummary)
-            ? window.HokageReferral.fetchAffiliateSummary(targetUsername)
-            : Promise.resolve(null);
-          [stats, affSummary] = await Promise.all([
-            window.HokageReferral.fetchStats(targetUsername),
-            affPromise
-          ]);
-        } catch (_) {}
+  const safeDataUrl = sanitizeImageUrl(dataUrl);
+
+  if (hiddenInp) hiddenInp.value = safeDataUrl || '';
+
+  if (safeDataUrl) {
+    if (imgEl) {
+      imgEl.src = safeDataUrl;
+      imgEl.style.display = 'block';
+    }
+    if (phEl) phEl.style.display = 'none';
+    if (removeBtn) removeBtn.style.display = 'inline-block';
+  } else {
+    if (imgEl) {
+      imgEl.src = '';
+      imgEl.style.display = 'none';
+    }
+    if (phEl) {
+      const clean = cleanUsername(username || currentPioneerUser || '@p');
+      const initial = clean.replace('@', '').charAt(0).toUpperCase() || 'π';
+      phEl.textContent = initial;
+      phEl.style.display = 'flex';
+    }
+    if (removeBtn) removeBtn.style.display = 'none';
+  }
+}
+
+// ==========================================
+// CORTADOR DE FOTO DE PERFIL (HTML5 CANVAS INTERATIVO)
+// ==========================================
+let cropImg = new Image();
+let cropState = {
+  x: 0,
+  y: 0,
+  zoom: 1,
+  baseScale: 1,
+  minZoom: 0.1,
+  maxZoom: 5,
+  isDragging: false,
+  startX: 0,
+  startY: 0,
+  lastX: 0,
+  lastY: 0,
+  touchDist: 0
+};
+
+function triggerAvatarUpload() {
+  const input = document.getElementById('avatar-file-input');
+  if (input) {
+    input.value = '';
+    input.click();
+  }
+}
+
+function handleAvatarFileSelect(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const fileName = file.name || '';
+  const isImage = (file.type && file.type.startsWith('image/')) || /\.(jpe?g|png|webp|gif|bmp|heic|svg)$/i.test(fileName);
+  if (!isImage && file.type) {
+    alert('Por favor, selecione um arquivo de imagem válido (JPG, PNG ou WEBP).');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function (evt) {
+    const tempImg = new Image();
+    tempImg.onload = function () {
+      // Downscaling preventivo para fotos gigantes de smartphones (evita crash de memória no WebView)
+      const maxDim = 1200;
+      let w = tempImg.naturalWidth || tempImg.width;
+      let h = tempImg.naturalHeight || tempImg.height;
+
+      if (w > maxDim || h > maxDim) {
+        const scale = maxDim / Math.max(w, h);
+        const sw = Math.round(w * scale);
+        const sh = Math.round(h * scale);
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = sw;
+        tempCanvas.height = sh;
+        const tCtx = tempCanvas.getContext('2d');
+        tCtx.drawImage(tempImg, 0, 0, sw, sh);
+
+        cropImg = new Image();
+        cropImg.onload = function () {
+          openAvatarCropModal();
+        };
+        cropImg.src = tempCanvas.toDataURL('image/jpeg', 0.92);
+      } else {
+        cropImg = tempImg;
+        openAvatarCropModal();
       }
+    };
+    tempImg.onerror = function () {
+      alert('Não foi possível processar a imagem selecionada. Tente outra foto.');
+    };
+    tempImg.src = evt.target.result;
+  };
+  reader.onerror = function () {
+    alert('Erro ao ler arquivo do dispositivo.');
+  };
+  reader.readAsDataURL(file);
+}
 
-      const count = Number((stats && stats.referral_qualified_count) || 0);
-      const credits = Number((stats && stats.referral_credits) || 0);
-      const isAmb = Boolean((stats && stats.is_ambassador) || (affSummary && affSummary.is_ambassador) || count >= 5);
+function openAvatarCropModal() {
+  const modal = document.getElementById('avatar-crop-modal');
+  const canvas = document.getElementById('crop-canvas');
+  const zoomRange = document.getElementById('crop-zoom-range');
+  if (!modal || !canvas) return;
 
-      if (badgeEl && isAmb) {
-        badgeEl.style.display = 'inline-flex';
-        updatePassportJourneyBar({ is_ambassador: true, referral_qualified_count: count }, targetUsername);
-      }
+  const imgW = cropImg.naturalWidth || cropImg.width || 240;
+  const imgH = cropImg.naturalHeight || cropImg.height || 240;
 
-      if (!isOwner || isSimulatorMode || !sectionEl) {
-        if (sectionEl) sectionEl.style.display = 'none';
-        return;
-      }
+  // Calcula escala inicial para cobrir o círculo de 240x240 sem deformação
+  const side = Math.min(imgW, imgH);
+  const baseScale = 240 / side;
 
-      const formatPiMetric = function (val) {
-        const num = Number(val) || 0;
-        if (num > 0 && num < 0.01) return num.toFixed(4) + ' π';
-        return num.toFixed(2) + ' π';
-      };
+  cropState.baseScale = baseScale;
+  cropState.zoom = baseScale;
+  cropState.minZoom = baseScale * 0.7;
+  cropState.maxZoom = baseScale * 4.0;
+  cropState.x = (240 - imgW * cropState.zoom) / 2;
+  cropState.y = (240 - imgH * cropState.zoom) / 2;
+  cropState.isDragging = false;
+  cropState.touchDist = 0;
 
-      const pendingPi = Number((affSummary && affSummary.pending_pi) || 0);
-      const requestedPi = Number((affSummary && affSummary.requested_pi) || 0);
-      const paidPi = Number((affSummary && affSummary.paid_pi) || 0);
-      const totalEarnedPi = Number((affSummary && affSummary.total_earned_pi) || (pendingPi + requestedPi + paidPi));
-      const minPayoutPi = Number((affSummary && affSummary.min_payout_pi) || 0.20);
-      const ratePct = isAmb ? 25 : 20;
+  if (zoomRange) {
+    zoomRange.min = cropState.minZoom.toFixed(4);
+    zoomRange.max = cropState.maxZoom.toFixed(4);
+    zoomRange.step = ((cropState.maxZoom - cropState.minZoom) / 100).toFixed(4);
+    zoomRange.value = cropState.zoom.toFixed(4);
+  }
 
-      const countEl = document.getElementById('ref-count-value');
-      const creditsEl = document.getElementById('ref-credits-value');
-      const pendingPiEl = document.getElementById('ref-pending-pi-value');
-      const totalPiEl = document.getElementById('ref-total-pi-value');
-      const rateLabelEl = document.getElementById('ref-rate-label');
-      const statusEl = document.getElementById('ref-ambassador-status');
-      const useWrap = document.getElementById('ref-use-credit-wrap');
-      const payoutBox = document.getElementById('ref-payout-box');
-      const commListWrap = document.getElementById('ref-commissions-list-wrap');
+  setupCropCanvasEvents();
+  drawCropCanvas();
 
-      if (countEl) countEl.textContent = String(count);
-      if (creditsEl) creditsEl.textContent = String(credits);
-      if (pendingPiEl) pendingPiEl.textContent = formatPiMetric(pendingPi);
-      if (totalPiEl) totalPiEl.textContent = formatPiMetric(totalEarnedPi);
-      if (rateLabelEl) rateLabelEl.textContent = ratePct + '%';
+  modal.style.display = 'flex';
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+}
 
-      if (statusEl) {
-        statusEl.textContent = isAmb
-          ? '🏅 Embaixador Ativo (Comissão 25% π)'
-          : `${Math.min(count, 5)} / 5 para Embaixador (25% π)`;
-        if (isAmb) {
-          statusEl.style.background = 'rgba(245,158,11,0.18)';
-          statusEl.style.color = '#fcd34d';
+function closeAvatarCropModal() {
+  const modal = document.getElementById('avatar-crop-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function drawCropCanvas() {
+  const canvas = document.getElementById('crop-canvas');
+  if (!canvas || !cropImg.complete) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.save();
+  ctx.fillStyle = '#09090b';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const imgW = cropImg.naturalWidth || cropImg.width;
+  const imgH = cropImg.naturalHeight || cropImg.height;
+
+  ctx.drawImage(
+    cropImg,
+    cropState.x,
+    cropState.y,
+    imgW * cropState.zoom,
+    imgH * cropState.zoom
+  );
+  ctx.restore();
+}
+
+function onCropZoomChange(val) {
+  const newZoom = parseFloat(val);
+  const canvas = document.getElementById('crop-canvas');
+  if (!canvas || isNaN(newZoom)) return;
+
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+
+  const prevZoom = cropState.zoom;
+  cropState.x = centerX - ((centerX - cropState.x) / prevZoom) * newZoom;
+  cropState.y = centerY - ((centerY - cropState.y) / prevZoom) * newZoom;
+  cropState.zoom = newZoom;
+
+  drawCropCanvas();
+}
+
+function adjustCropZoom(delta) {
+  const zoomRange = document.getElementById('crop-zoom-range');
+  if (!zoomRange) return;
+  let next = parseFloat(zoomRange.value) + delta;
+  next = Math.max(parseFloat(zoomRange.min), Math.min(parseFloat(zoomRange.max), next));
+  zoomRange.value = next.toFixed(4);
+  onCropZoomChange(next);
+}
+
+let isCropEventsInitialized = false;
+function setupCropCanvasEvents() {
+  if (isCropEventsInitialized) return;
+  const viewport = document.getElementById('crop-viewport');
+  if (!viewport) return;
+
+  function getPointerPos(e) {
+    if (e.touches && e.touches.length > 0) {
+      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    return { x: e.clientX, y: e.clientY };
+  }
+
+  function getTouchDist(e) {
+    if (!e.touches || e.touches.length < 2) return 0;
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function onStart(e) {
+    if (e.touches && e.touches.length === 2) {
+      cropState.isDragging = false;
+      cropState.touchDist = getTouchDist(e);
+      return;
+    }
+    e.preventDefault();
+    cropState.isDragging = true;
+    viewport.style.cursor = 'grabbing';
+    const p = getPointerPos(e);
+    cropState.startX = p.x;
+    cropState.startY = p.y;
+    cropState.lastX = cropState.x;
+    cropState.lastY = cropState.y;
+  }
+
+  function onMove(e) {
+    // Pinch-to-zoom com 2 dedos no celular / Pi Browser
+    if (e.touches && e.touches.length === 2) {
+      e.preventDefault();
+      const curDist = getTouchDist(e);
+      if (cropState.touchDist > 0 && curDist > 0) {
+        const diff = curDist - cropState.touchDist;
+        if (Math.abs(diff) > 2) {
+          adjustCropZoom(diff * 0.006);
+          cropState.touchDist = curDist;
         }
       }
-      if (useWrap) {
-        useWrap.style.display = credits > 0 ? 'block' : 'none';
-      }
+      return;
+    }
 
-      if (payoutBox) {
-        let payoutHtml = '';
-        if (pendingPi + 1e-6 >= minPayoutPi) {
-          payoutHtml += `
+    if (!cropState.isDragging) return;
+    e.preventDefault();
+    const p = getPointerPos(e);
+    const dx = p.x - cropState.startX;
+    const dy = p.y - cropState.startY;
+    cropState.x = cropState.lastX + dx;
+    cropState.y = cropState.lastY + dy;
+    drawCropCanvas();
+  }
+
+  function onEnd(e) {
+    if (e.touches && e.touches.length > 0) {
+      cropState.touchDist = 0;
+      return;
+    }
+    if (!cropState.isDragging) return;
+    cropState.isDragging = false;
+    viewport.style.cursor = 'grab';
+  }
+
+  // Mouse events
+  viewport.addEventListener('mousedown', onStart);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onEnd);
+
+  // Touch events (Compatível com Mobile e Pi Browser)
+  viewport.addEventListener('touchstart', onStart, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onEnd);
+  window.addEventListener('touchcancel', onEnd);
+
+  // Mouse wheel zoom
+  viewport.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? (cropState.zoom * 0.08) : -(cropState.zoom * 0.08);
+    adjustCropZoom(delta);
+  }, { passive: false });
+
+  isCropEventsInitialized = true;
+}
+
+function confirmAvatarCrop() {
+  const canvas = document.getElementById('crop-canvas');
+  if (!canvas) return;
+
+  // Gera um canvas limpo 256x256 de alta resolução para salvar
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = 256;
+  outCanvas.height = 256;
+  const outCtx = outCanvas.getContext('2d');
+
+  // Desenha com proporção exata escalada de 240 para 256
+  outCtx.drawImage(
+    canvas,
+    0, 0, 240, 240,
+    0, 0, 256, 256
+  );
+
+  // Converte para JPEG com qualidade 0.85 (leve, ~15KB)
+  const croppedDataUrl = outCanvas.toDataURL('image/jpeg', 0.85);
+
+  // Atualiza formulário do modal
+  setModalAvatar(croppedDataUrl, currentPioneerUser);
+
+  // Aplica imediatamente na vitrine
+  applyAvatarOnScreen(croppedDataUrl, currentPioneerUser);
+  if (currentProfileData) {
+    currentProfileData.avatar_url = croppedDataUrl;
+  }
+
+  closeAvatarCropModal();
+
+  // Garante que o modal de edição continue aberto
+  const editModal = document.getElementById('edit-profile-modal');
+  if (editModal && !editModal.classList.contains('active')) {
+    openProfileEditModal();
+  }
+}
+
+function removeAvatar() {
+  setModalAvatar('', currentPioneerUser);
+  applyAvatarOnScreen('', currentPioneerUser);
+  if (currentProfileData) {
+    currentProfileData.avatar_url = '';
+  }
+}
+
+function applyAvatarOnScreen(avatarUrl, username) {
+  const avatarEl = document.getElementById('pioneer-avatar');
+  if (!avatarEl) return;
+
+  const safeUrl = sanitizeImageUrl(avatarUrl);
+  if (safeUrl) {
+    avatarEl.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = safeUrl;
+    img.alt = 'Avatar de ' + escapeHtml(cleanUsername(username || currentPioneerUser || 'Pioneiro'));
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
+    img.onerror = () => {
+      applyAvatarOnScreen('', username);
+    };
+    avatarEl.appendChild(img);
+  } else {
+    const clean = cleanUsername(username || currentPioneerUser || '@p');
+    const initial = clean.replace('@', '').charAt(0).toUpperCase() || 'π';
+    avatarEl.innerHTML = `<span style="font-size:2.4rem;font-weight:800;color:var(--accent-light)">${escapeHtml(initial)}</span>`;
+  }
+}
+
+// Copiar Chave Pública com Feedback Imediato e Proteção Anti-Clipper Guard
+function copyWalletKey() {
+  if (!currentPioneerWallet) {
+    alert('Chave pública não cadastrada para este pioneiro.');
+    return;
+  }
+  incrementProfileMetric('copies');
+  navigator.clipboard.writeText(currentPioneerWallet).then(() => {
+    const btn = document.getElementById('btn-copy-wallet');
+    if (btn) {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '✓ Copiada!';
+      btn.style.borderColor = '#10b981';
+      btn.style.color = '#34d399';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 3000);
+    }
+  }).catch(() => {
+    prompt('Copie a chave pública abaixo:', currentPioneerWallet);
+  });
+}
+
+// Barra de Evolução da Jornada no Passaporte (Pioneiro -> Construtor -> Hokage)
+function updatePassportJourneyBar(prof, rawUsername) {
+  const labelEl = document.getElementById('journey-current-label');
+  const fillEl = document.getElementById('journey-progress-fill');
+  const s1 = document.getElementById('journey-step-1');
+  const s2 = document.getElementById('journey-step-2');
+  const s3 = document.getElementById('journey-step-3');
+  const hintEl = document.getElementById('journey-next-hint');
+  if (!labelEl || !fillEl) return;
+
+  const uClean = String(rawUsername || prof.username || '').replace(/^@+/, '').toLowerCase();
+  const isHokage = Boolean(
+    prof.journey_tier === 'hokage' ||
+    prof.is_ambassador ||
+    Number(prof.referral_qualified_count || 0) >= 5 ||
+    uClean === 'hokage22b'
+  );
+  const hasWallet = Boolean(prof.wallet_address && isValidPiPublicKey(String(prof.wallet_address)));
+  const hasProducts = Array.isArray(prof.products) && prof.products.length > 0;
+  const isConstrutor = !isHokage && (
+    prof.journey_tier === 'construtor' ||
+    (hasWallet && (hasProducts || Number(prof.reputation_score || 0) >= 70))
+  );
+
+  if (isHokage) {
+    labelEl.textContent = '03 · Hokage';
+    labelEl.style.color = '#fb923c';
+    fillEl.style.width = '100%';
+    if (s1) s1.style.color = '#fbbf24';
+    if (s2) s2.style.color = '#c4b5fd';
+    if (s3) s3.style.color = '#fb923c';
+    if (hintEl) hintEl.innerHTML = '🔥 Nível máximo: integra <a href="monte" style="color:#fb923c;font-weight:700;text-decoration:none">O Monte Hokage ↗</a> por contribuição real.';
+  } else if (isConstrutor) {
+    labelEl.textContent = '02 · Construtor';
+    labelEl.style.color = '#c4b5fd';
+    fillEl.style.width = '68%';
+    if (s1) s1.style.color = '#fbbf24';
+    if (s2) s2.style.color = '#c4b5fd';
+    if (s3) s3.style.color = 'var(--text-muted)';
+    if (hintEl) hintEl.innerHTML = '⚡ Construtor ativo! Contribua na comunidade ou na API para alcançar <a href="monte" style="color:#fb923c;font-weight:700;text-decoration:none">O Monte Hokage →</a>';
+  } else {
+    labelEl.textContent = '01 · Pioneiro';
+    labelEl.style.color = '#fbbf24';
+    fillEl.style.width = '34%';
+    if (s1) s1.style.color = '#fbbf24';
+    if (s2) s2.style.color = 'var(--text-muted)';
+    if (s3) s3.style.color = 'var(--text-muted)';
+    if (hintEl) hintEl.textContent = 'Adicione uma chave Pi válida e um produto/serviço (ou ative na Vila) para avançar para Construtor.';
+  }
+}
+
+// Reputação & Avaliações Verificadas + Programa de Afiliados em Pi (Zero-Trust)
+async function loadPioneerReferralPanel(targetUsername, isOwner) {
+  const badgeEl = document.getElementById('pioneer-ambassador-badge');
+  const sectionEl = document.getElementById('pioneer-referral-section');
+  if (badgeEl) badgeEl.style.display = 'none';
+  if (sectionEl) sectionEl.style.display = 'none';
+
+  if (!window.HokageReferral || !targetUsername) return;
+  let stats = null;
+  let affSummary = null;
+  if (!isSimulatorMode) {
+    try {
+      const affPromise = (isOwner && window.HokageReferral.fetchAffiliateSummary)
+        ? window.HokageReferral.fetchAffiliateSummary(targetUsername)
+        : Promise.resolve(null);
+      [stats, affSummary] = await Promise.all([
+        window.HokageReferral.fetchStats(targetUsername),
+        affPromise
+      ]);
+    } catch (_) { }
+  }
+
+  const count = Number((stats && stats.referral_qualified_count) || 0);
+  const credits = Number((stats && stats.referral_credits) || 0);
+  const isAmb = Boolean((stats && stats.is_ambassador) || (affSummary && affSummary.is_ambassador) || count >= 5);
+
+  if (badgeEl && isAmb) {
+    badgeEl.style.display = 'inline-flex';
+    updatePassportJourneyBar({ is_ambassador: true, referral_qualified_count: count }, targetUsername);
+  }
+
+  if (!isOwner || isSimulatorMode || !sectionEl) {
+    if (sectionEl) sectionEl.style.display = 'none';
+    return;
+  }
+
+  const formatPiMetric = function (val) {
+    const num = Number(val) || 0;
+    if (num > 0 && num < 0.01) return num.toFixed(4) + ' π';
+    return num.toFixed(2) + ' π';
+  };
+
+  const pendingPi = Number((affSummary && affSummary.pending_pi) || 0);
+  const requestedPi = Number((affSummary && affSummary.requested_pi) || 0);
+  const paidPi = Number((affSummary && affSummary.paid_pi) || 0);
+  const totalEarnedPi = Number((affSummary && affSummary.total_earned_pi) || (pendingPi + requestedPi + paidPi));
+  const minPayoutPi = Number((affSummary && affSummary.min_payout_pi) || 0.20);
+  const ratePct = isAmb ? 25 : 20;
+
+  const countEl = document.getElementById('ref-count-value');
+  const creditsEl = document.getElementById('ref-credits-value');
+  const pendingPiEl = document.getElementById('ref-pending-pi-value');
+  const totalPiEl = document.getElementById('ref-total-pi-value');
+  const rateLabelEl = document.getElementById('ref-rate-label');
+  const statusEl = document.getElementById('ref-ambassador-status');
+  const useWrap = document.getElementById('ref-use-credit-wrap');
+  const payoutBox = document.getElementById('ref-payout-box');
+  const commListWrap = document.getElementById('ref-commissions-list-wrap');
+
+  if (countEl) countEl.textContent = String(count);
+  if (creditsEl) creditsEl.textContent = String(credits);
+  if (pendingPiEl) pendingPiEl.textContent = formatPiMetric(pendingPi);
+  if (totalPiEl) totalPiEl.textContent = formatPiMetric(totalEarnedPi);
+  if (rateLabelEl) rateLabelEl.textContent = ratePct + '%';
+
+  if (statusEl) {
+    statusEl.textContent = isAmb
+      ? '🏅 Embaixador Ativo (Comissão 25% π)'
+      : `${Math.min(count, 5)} / 5 para Embaixador (25% π)`;
+    if (isAmb) {
+      statusEl.style.background = 'rgba(245,158,11,0.18)';
+      statusEl.style.color = '#fcd34d';
+    }
+  }
+  if (useWrap) {
+    useWrap.style.display = credits > 0 ? 'block' : 'none';
+  }
+
+  if (payoutBox) {
+    let payoutHtml = '';
+    if (pendingPi + 1e-6 >= minPayoutPi) {
+      payoutHtml += `
             <button type="button" id="btn-request-affiliate-payout" onclick="requestAffiliatePayoutUi()" class="portal-btn portal-btn--sm" style="width:100%;justify-content:center;font-weight:800;background:linear-gradient(135deg,#10b981,#059669);color:#042f2e;padding:10px 14px;border-radius:10px;border:none;cursor:pointer">
               ⚡ Solicitar Saque de ${pendingPi.toFixed(4)} π para Minha Carteira Pi
             </button>
           `;
-        } else if (pendingPi > 0) {
-          payoutHtml += `
+    } else if (pendingPi > 0) {
+      payoutHtml += `
             <div style="font-size:0.75rem;color:var(--text-muted);background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;text-align:center">
               💡 Saldo acumulando: <strong>${pendingPi.toFixed(4)} π</strong> (saque liberado a partir de <strong>${minPayoutPi.toFixed(2)} π</strong>).
             </div>
           `;
-        }
-        if (requestedPi > 0) {
-          payoutHtml += `
+    }
+    if (requestedPi > 0) {
+      payoutHtml += `
             <div style="margin-top:6px;font-size:0.76rem;color:#fcd34d;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:8px;padding:8px 10px;text-align:center;font-weight:700">
               ⏳ Saque solicitado em processamento: ${requestedPi.toFixed(4)} π
             </div>
           `;
-        }
-        payoutBox.innerHTML = payoutHtml;
-        payoutBox.style.display = payoutHtml ? 'block' : 'none';
-      }
+    }
+    payoutBox.innerHTML = payoutHtml;
+    payoutBox.style.display = payoutHtml ? 'block' : 'none';
+  }
 
-      if (commListWrap) {
-        const comms = (affSummary && Array.isArray(affSummary.commissions)) ? affSummary.commissions : [];
-        if (comms.length > 0) {
-          commListWrap.innerHTML = `
+  if (commListWrap) {
+    const comms = (affSummary && Array.isArray(affSummary.commissions)) ? affSummary.commissions : [];
+    if (comms.length > 0) {
+      commListWrap.innerHTML = `
             <div style="font-size:0.75rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">
               📊 Histórico de Comissões em Pi (${comms.length})
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;max-height:190px;overflow-y:auto">
               ${comms.slice(0, 10).map(c => {
-                const st = String(c.status || 'pending').toLowerCase();
-                const badgeColor = st === 'paid' ? '#34d399' : (st === 'requested' ? '#fcd34d' : '#a78bfa');
-                const badgeText = st === 'paid' ? '✓ Pago' : (st === 'requested' ? '⏳ Solicitado' : '🟢 Disponível');
-                const pct = Math.round((Number(c.commission_rate) || 0.20) * 100);
-                return `
+        const st = String(c.status || 'pending').toLowerCase();
+        const badgeColor = st === 'paid' ? '#34d399' : (st === 'requested' ? '#fcd34d' : '#a78bfa');
+        const badgeText = st === 'paid' ? '✓ Pago' : (st === 'requested' ? '⏳ Solicitado' : '🟢 Disponível');
+        const pct = Math.round((Number(c.commission_rate) || 0.20) * 100);
+        return `
                   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:7px 10px;font-size:0.76rem">
                     <div style="min-width:0">
                       <strong style="color:#fff;display:block">${escapeHtml(c.source_description || 'Comissão')} · <span style="color:var(--accent-light)">${escapeHtml(c.referred_username || '@pioneiro')}</span></strong>
@@ -2963,108 +3054,108 @@
                     </div>
                   </div>
                 `;
-              }).join('')}
+      }).join('')}
             </div>
           `;
-          commListWrap.style.display = 'block';
-        } else {
-          commListWrap.style.display = 'none';
-        }
-      }
-
-      sectionEl.dataset.inviteUsername = targetUsername;
-      sectionEl.style.display = 'block';
+      commListWrap.style.display = 'block';
+    } else {
+      commListWrap.style.display = 'none';
     }
+  }
 
-    async function requestAffiliatePayoutUi() {
-      const btn = document.getElementById('btn-request-affiliate-payout');
-      const wallet = (currentProfileData && currentProfileData.wallet_address) || currentPioneerWallet || '';
-      if (!wallet || !isValidPiPublicKey(wallet)) {
-        alert('Cadastre sua Chave Pública da Pi Wallet (iniciada com G, 56 caracteres) clicando em "Editar Passaporte" antes de solicitar o saque.');
-        openProfileEditModal();
-        return;
-      }
+  sectionEl.dataset.inviteUsername = targetUsername;
+  sectionEl.style.display = 'block';
+}
+
+async function requestAffiliatePayoutUi() {
+  const btn = document.getElementById('btn-request-affiliate-payout');
+  const wallet = (currentProfileData && currentProfileData.wallet_address) || currentPioneerWallet || '';
+  if (!wallet || !isValidPiPublicKey(wallet)) {
+    alert('Cadastre sua Chave Pública da Pi Wallet (iniciada com G, 56 caracteres) clicando em "Editar Passaporte" antes de solicitar o saque.');
+    openProfileEditModal();
+    return;
+  }
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳ Solicitando saque...';
+  }
+  try {
+    let token = await ensurePiAccessToken();
+    if (!token && window.HokagePi && window.HokagePi.getAccessToken) {
+      token = window.HokagePi.getAccessToken();
+    }
+    const res = await window.HokageReferral.requestPayout(token, wallet);
+    alert(`✓ Saque de ${Number(res.requested_pi || 0).toFixed(4)} π solicitado com sucesso!\n\nSua transferência será enviada diretamente para sua carteira Pi:\n${wallet}`);
+    await loadPioneerReferralPanel(currentPioneerUser, true);
+  } catch (err) {
+    alert(err && err.message ? err.message : 'Erro ao solicitar saque.');
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '⚡ Solicitar Saque para Minha Carteira Pi';
+    }
+  }
+}
+
+function copyReferralInviteLink() {
+  const sectionEl = document.getElementById('pioneer-referral-section');
+  const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || '';
+  const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(function () {
+      const btn = document.getElementById('btn-copy-ref-link');
       if (btn) {
-        btn.disabled = true;
-        btn.textContent = '⏳ Solicitando saque...';
+        const orig = btn.textContent;
+        btn.textContent = '✅ Link Copiado!';
+        setTimeout(function () { btn.textContent = orig; }, 2200);
       }
-      try {
-        let token = await ensurePiAccessToken();
-        if (!token && window.HokagePi && window.HokagePi.getAccessToken) {
-          token = window.HokagePi.getAccessToken();
-        }
-        const res = await window.HokageReferral.requestPayout(token, wallet);
-        alert(`✓ Saque de ${Number(res.requested_pi || 0).toFixed(4)} π solicitado com sucesso!\n\nSua transferência será enviada diretamente para sua carteira Pi:\n${wallet}`);
-        await loadPioneerReferralPanel(currentPioneerUser, true);
-      } catch (err) {
-        alert(err && err.message ? err.message : 'Erro ao solicitar saque.');
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = '⚡ Solicitar Saque para Minha Carteira Pi';
-        }
-      }
-    }
+    }).catch(function () {
+      prompt('Copie seu link de convite:', url);
+    });
+  } else {
+    prompt('Copie seu link de convite:', url);
+  }
+}
 
-    function copyReferralInviteLink() {
-      const sectionEl = document.getElementById('pioneer-referral-section');
-      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || '';
-      const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(function () {
-          const btn = document.getElementById('btn-copy-ref-link');
-          if (btn) {
-            const orig = btn.textContent;
-            btn.textContent = '✅ Link Copiado!';
-            setTimeout(function () { btn.textContent = orig; }, 2200);
-          }
-        }).catch(function () {
-          prompt('Copie seu link de convite:', url);
-        });
-      } else {
-        prompt('Copie seu link de convite:', url);
-      }
-    }
+function shareReferralWhatsapp() {
+  const sectionEl = document.getElementById('pioneer-referral-section');
+  const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || '';
+  const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
+  const msg = '🎁 Crie sua Passaporte Web3 100% grátis na Pi Network pelo meu convite oficial e ganhe na hora 1 Anúncio Bronze Grátis (0.314 π) no Mural + comissões de 20% a 25% em Pi: ' + url;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
+}
 
-    function shareReferralWhatsapp() {
-      const sectionEl = document.getElementById('pioneer-referral-section');
-      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || '';
-      const url = window.HokageReferral ? window.HokageReferral.buildInviteUrl(username) : 'https://hokage22b.com/pioneiro';
-      const msg = '🎁 Crie sua Passaporte Web3 100% grátis na Pi Network pelo meu convite oficial e ganhe na hora 1 Anúncio Bronze Grátis (0.314 π) no Mural + comissões de 20% a 25% em Pi: ' + url;
-      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
-    }
+function previewReferralWelcomeScreen() {
+  const sectionEl = document.getElementById('pioneer-referral-section');
+  const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || 'hokage22b';
+  if (window.HokageReferral && typeof window.HokageReferral.openWelcomeModal === 'function') {
+    window.HokageReferral.openWelcomeModal(username);
+  }
+}
 
-    function previewReferralWelcomeScreen() {
-      const sectionEl = document.getElementById('pioneer-referral-section');
-      const username = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || 'hokage22b';
-      if (window.HokageReferral && typeof window.HokageReferral.openWelcomeModal === 'function') {
-        window.HokageReferral.openWelcomeModal(username);
-      }
-    }
+function closeInviteQrModal() {
+  const m = document.getElementById('hokage-invite-qr-modal');
+  if (m) m.remove();
+}
 
-    function closeInviteQrModal() {
-      const m = document.getElementById('hokage-invite-qr-modal');
-      if (m) m.remove();
-    }
+function openInviteQrModal() {
+  const sectionEl = document.getElementById('pioneer-referral-section');
+  const rawUser = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || 'hokage22b';
+  const clean = cleanUsername(rawUser).replace(/^@+/, '');
+  const inviteUrl = window.HokageReferral
+    ? window.HokageReferral.buildInviteUrl(clean)
+    : ('https://hokage22b.com/pioneiro?ref=' + encodeURIComponent(clean));
+  const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=' + encodeURIComponent(inviteUrl);
 
-    function openInviteQrModal() {
-      const sectionEl = document.getElementById('pioneer-referral-section');
-      const rawUser = (sectionEl && sectionEl.dataset.inviteUsername) || (currentProfileData && currentProfileData.username) || currentPioneerUser || 'hokage22b';
-      const clean = cleanUsername(rawUser).replace(/^@+/, '');
-      const inviteUrl = window.HokageReferral
-        ? window.HokageReferral.buildInviteUrl(clean)
-        : ('https://hokage22b.com/pioneiro?ref=' + encodeURIComponent(clean));
-      const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=' + encodeURIComponent(inviteUrl);
+  closeInviteQrModal();
+  const overlay = document.createElement('div');
+  overlay.id = 'hokage-invite-qr-modal';
+  overlay.className = 'pi-modal-overlay active';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:10060;background:rgba(5,5,10,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.addEventListener('click', function (ev) {
+    if (ev.target === overlay) closeInviteQrModal();
+  });
 
-      closeInviteQrModal();
-      const overlay = document.createElement('div');
-      overlay.id = 'hokage-invite-qr-modal';
-      overlay.className = 'pi-modal-overlay active';
-      overlay.style.cssText = 'position:fixed;inset:0;z-index:10060;background:rgba(5,5,10,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px';
-      overlay.addEventListener('click', function (ev) {
-        if (ev.target === overlay) closeInviteQrModal();
-      });
-
-      overlay.innerHTML = `
+  overlay.innerHTML = `
         <div class="pi-modal" style="max-width:380px;width:100%;text-align:center;padding:22px 18px;background:#11111a;border:1.5px solid rgba(139,92,246,0.45);border-radius:20px;position:relative">
           <button type="button" onclick="closeInviteQrModal()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer">✕</button>
           <div style="font-size:0.72rem;font-weight:800;color:#fbbf24;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px">
@@ -3090,29 +3181,29 @@
           </div>
         </div>
       `;
-      document.body.appendChild(overlay);
-    }
+  document.body.appendChild(overlay);
+}
 
-    async function loadPioneerReviews(targetUsername, isOwner) {
-      const section = document.getElementById('pioneer-reviews-section');
-      const listEl = document.getElementById('pioneer-reviews-list');
-      const summaryEl = document.getElementById('pioneer-reviews-summary');
-      const formBox = document.getElementById('pioneer-review-form-box');
-      if (!section || !listEl || !targetUsername) return;
+async function loadPioneerReviews(targetUsername, isOwner) {
+  const section = document.getElementById('pioneer-reviews-section');
+  const listEl = document.getElementById('pioneer-reviews-list');
+  const summaryEl = document.getElementById('pioneer-reviews-summary');
+  const formBox = document.getElementById('pioneer-review-form-box');
+  if (!section || !listEl || !targetUsername) return;
 
-      section.style.display = 'block';
-      const reviews = (window.IsarDB && window.IsarDB.getPioneerReviews)
-        ? await window.IsarDB.getPioneerReviews(targetUsername)
-        : [];
+  section.style.display = 'block';
+  const reviews = (window.IsarDB && window.IsarDB.getPioneerReviews)
+    ? await window.IsarDB.getPioneerReviews(targetUsername)
+    : [];
 
-      if (reviews.length > 0) {
-        const avg = (reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / reviews.length).toFixed(1);
-        if (summaryEl) summaryEl.textContent = `⭐ ${avg} · ${reviews.length} ${reviews.length === 1 ? 'recomendação' : 'recomendações'}`;
-        listEl.innerHTML = reviews.map(r => {
-          const stars = '★'.repeat(Math.min(5, Math.max(1, Number(r.rating) || 5)));
-          const author = escapeHtml(r.reviewer_username || '@pioneiro');
-          const msg = escapeHtml(r.comment || '');
-          return `
+  if (reviews.length > 0) {
+    const avg = (reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / reviews.length).toFixed(1);
+    if (summaryEl) summaryEl.textContent = `⭐ ${avg} · ${reviews.length} ${reviews.length === 1 ? 'recomendação' : 'recomendações'}`;
+    listEl.innerHTML = reviews.map(r => {
+      const stars = '★'.repeat(Math.min(5, Math.max(1, Number(r.rating) || 5)));
+      const author = escapeHtml(r.reviewer_username || '@pioneiro');
+      const msg = escapeHtml(r.comment || '');
+      return `
             <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px">
               <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px">
                 <a href="pioneiro?u=${encodeURIComponent(author.replace(/^@+/, ''))}" style="font-size:0.78rem;font-weight:700;color:var(--accent-light);text-decoration:none">${author}</a>
@@ -3121,22 +3212,22 @@
               <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.4;word-break:break-word">${msg}</div>
             </div>
           `;
-        }).join('');
-      } else {
-        if (summaryEl) summaryEl.textContent = 'Sem avaliações ainda';
-        listEl.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);padding:6px 0">Seja o primeiro pioneiro verificado a recomendar este Passaporte.</div>';
-      }
+    }).join('');
+  } else {
+    if (summaryEl) summaryEl.textContent = 'Sem avaliações ainda';
+    listEl.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);padding:6px 0">Seja o primeiro pioneiro verificado a recomendar este Passaporte.</div>';
+  }
 
-      if (!formBox) return;
-      if (isOwner) {
-        formBox.innerHTML = '';
-        return;
-      }
+  if (!formBox) return;
+  if (isOwner) {
+    formBox.innerHTML = '';
+    return;
+  }
 
-      const isPi = isPiBrowser() || Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
-      const piUser = getLoggedUser() || ((window.HokagePi && window.HokagePi.getUser) ? window.HokagePi.getUser() : null);
-      if (piUser && piUser.username && (isPi || piUser.authType === 'web2' || piUser.authType === 'hybrid')) {
-        formBox.innerHTML = `
+  const isPi = isPiBrowser() || Boolean(window.HokagePi && window.HokagePi.isPiBrowser && window.HokagePi.isPiBrowser());
+  const piUser = getLoggedUser() || ((window.HokagePi && window.HokagePi.getUser) ? window.HokagePi.getUser() : null);
+  if (piUser && piUser.username && (isPi || piUser.authType === 'web2' || piUser.authType === 'hybrid')) {
+    formBox.innerHTML = `
           <form id="pioneer-review-form" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.22);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
               <span style="font-size:0.78rem;color:#34d399;font-weight:700">✓ Avaliar como @${escapeHtml(String(piUser.username).replace(/^@+/, ''))}</span>
@@ -3152,14 +3243,14 @@
             <button type="submit" class="portal-btn portal-btn--sm" style="align-self:flex-end;background:#10b981;color:#052e16;font-weight:700;padding:7px 14px">Enviar Avaliação</button>
           </form>
         `;
-        const reviewFormEl = document.getElementById('pioneer-review-form');
-        if (reviewFormEl) {
-          reviewFormEl.addEventListener('submit', function (ev) {
-            handleReviewSubmit(ev, targetUsername);
-          });
-        }
-      } else if (isPi) {
-        formBox.innerHTML = `
+    const reviewFormEl = document.getElementById('pioneer-review-form');
+    if (reviewFormEl) {
+      reviewFormEl.addEventListener('submit', function (ev) {
+        handleReviewSubmit(ev, targetUsername);
+      });
+    }
+  } else if (isPi) {
+    formBox.innerHTML = `
           <div style="font-size:0.78rem;color:var(--text-secondary);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
             <span>🛡️ Conecte sua conta no <strong>Pi Browser</strong> para avaliar este Passaporte:</span>
             <button type="button" id="btn-connect-pi-review" class="portal-btn portal-btn--primary portal-btn--sm" style="padding:6px 12px;font-size:0.76rem;font-weight:800">
@@ -3167,89 +3258,88 @@
             </button>
           </div>
         `;
-        const reviewConnectBtn = document.getElementById('btn-connect-pi-review');
-        if (reviewConnectBtn) {
-          reviewConnectBtn.addEventListener('click', function () {
-            connectPiForReview(targetUsername);
-          });
-        }
-      } else {
-        formBox.innerHTML = `<div style="font-size:0.76rem;color:var(--text-muted);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>💬 Entre no <strong>Pi Browser</strong> ou com seu <strong>e-mail</strong> no Passaporte para recomendar este perfil.</span><a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm" style="text-decoration:none;border-color:rgba(56,189,248,0.45);color:#bae6fd">🔑 Entrar</a></div>`;
-      }
+    const reviewConnectBtn = document.getElementById('btn-connect-pi-review');
+    if (reviewConnectBtn) {
+      reviewConnectBtn.addEventListener('click', function () {
+        connectPiForReview(targetUsername);
+      });
     }
+  } else {
+    formBox.innerHTML = `<div style="font-size:0.76rem;color:var(--text-muted);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>💬 Entre no <strong>Pi Browser</strong> ou com seu <strong>e-mail</strong> no Passaporte para recomendar este perfil.</span><a href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm" style="text-decoration:none;border-color:rgba(56,189,248,0.45);color:#bae6fd">🔑 Entrar</a></div>`;
+  }
+}
 
-    async function connectPiForReview(targetUsername) {
-      await ensurePiAccessToken();
-      await loadPioneerReviews(targetUsername, false);
-    }
+async function connectPiForReview(targetUsername) {
+  await ensurePiAccessToken();
+  await loadPioneerReviews(targetUsername, false);
+}
 
-    async function handleReviewSubmit(event, targetUsername) {
-      if (event && event.preventDefault) event.preventDefault();
-      const ratingEl = document.getElementById('review-rating-select');
-      const commentEl = document.getElementById('review-comment-input');
-      if (!commentEl || commentEl.value.trim().length < 2) {
-        alert('Escreva um comentário com pelo menos 2 caracteres.');
-        return;
-      }
-      try {
-        await ensurePiAccessToken();
-        await window.IsarDB.submitPioneerReview({
-          target_username: targetUsername,
-          rating: ratingEl ? Number(ratingEl.value) : 5,
-          comment: commentEl.value.trim()
-        });
-        await loadPioneerReviews(targetUsername, false);
-        showVitrineToast('✓ Avaliação verificada registrada com sucesso!', 'success');
-      } catch (err) {
-        alert(err && err.message ? err.message : 'Não foi possível enviar a avaliação.');
-      }
-    }
-
-    // Compartilhar Passaporte (Link Curto Oficial)
-    function shareProfile() {
-      const cleanUser = currentPioneerUser ? currentPioneerUser.replace(/^@+/, '') : 'hokage22b';
-      const shareUrl = `https://hokage22b.com/@${cleanUser}`;
-      if (navigator.share) {
-        navigator.share({
-          title: `${cleanUsername(currentPioneerUser)} — Passaporte Oficial na Pi Network`,
-          text: `Confira meu Passaporte oficial, produtos e links na comunidade Pi Network:`,
-          url: shareUrl
-        }).catch(() => {});
-      } else {
-        navigator.clipboard.writeText(shareUrl).then(() => {
-          alert(`✓ Link do seu Passaporte copiado!\n\n${shareUrl}\n\nVocê pode colar este link na bio do Instagram, TikTok ou WhatsApp.`);
-        });
-      }
-    }
-
-    document.addEventListener('keydown', function (ev) {
-      if (ev.key !== 'Escape') return;
-      closeAvatarCropModal();
-      closeWalletQrModal();
-      closeExternalBrowserModal();
-      closeProfileEditModal();
+async function handleReviewSubmit(event, targetUsername) {
+  if (event && event.preventDefault) event.preventDefault();
+  const ratingEl = document.getElementById('review-rating-select');
+  const commentEl = document.getElementById('review-comment-input');
+  if (!commentEl || commentEl.value.trim().length < 2) {
+    alert('Escreva um comentário com pelo menos 2 caracteres.');
+    return;
+  }
+  try {
+    await ensurePiAccessToken();
+    await window.IsarDB.submitPioneerReview({
+      target_username: targetUsername,
+      rating: ratingEl ? Number(ratingEl.value) : 5,
+      comment: commentEl.value.trim()
     });
+    await loadPioneerReviews(targetUsername, false);
+    showVitrineToast('✓ Avaliação verificada registrada com sucesso!', 'success');
+  } catch (err) {
+    alert(err && err.message ? err.message : 'Não foi possível enviar a avaliação.');
+  }
+}
 
-    window.addEventListener('hokage:web2-auth-ready', function (ev) {
-      if (typeof syncOnboardingAuthBoxes === 'function') {
-        syncOnboardingAuthBoxes();
-      }
-      const detail = (ev && ev.detail) || {};
-      const u = detail.user;
-      const hasExplicitTarget = Boolean(getQueryParam('u') || getQueryParam('user') || getQueryParam('explorar') === '1' || getQueryParam('teste') === '1' || getQueryParam('simulador') === '1');
-      if (!isSimulatorMode && !hasExplicitTarget && u) {
-        if (u.username) {
-          const slug = cleanUsername(u.username).replace(/^@+/, '');
-          window.history.replaceState(null, '', '?u=' + encodeURIComponent(slug));
-          loadPioneerProfile();
-        } else if (u.needsHandle) {
-          const modal = document.getElementById('edit-profile-modal');
-          if (!modal || !modal.classList.contains('active')) {
-            openProfileEditModal();
-          }
-        }
-      }
+// Compartilhar Passaporte (Link Curto Oficial)
+function shareProfile() {
+  const cleanUser = currentPioneerUser ? currentPioneerUser.replace(/^@+/, '') : 'hokage22b';
+  const shareUrl = `https://hokage22b.com/@${cleanUser}`;
+  if (navigator.share) {
+    navigator.share({
+      title: `${cleanUsername(currentPioneerUser)} — Passaporte Oficial na Pi Network`,
+      text: `Confira meu Passaporte oficial, produtos e links na comunidade Pi Network:`,
+      url: shareUrl
+    }).catch(() => { });
+  } else {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      alert(`✓ Link do seu Passaporte copiado!\n\n${shareUrl}\n\nVocê pode colar este link na bio do Instagram, TikTok ou WhatsApp.`);
     });
+  }
+}
 
-    document.addEventListener('DOMContentLoaded', loadPioneerProfile);
-  
+document.addEventListener('keydown', function (ev) {
+  if (ev.key !== 'Escape') return;
+  closeAvatarCropModal();
+  closeWalletQrModal();
+  closeExternalBrowserModal();
+  closeProfileEditModal();
+});
+
+window.addEventListener('hokage:web2-auth-ready', function (ev) {
+  if (typeof syncOnboardingAuthBoxes === 'function') {
+    syncOnboardingAuthBoxes();
+  }
+  const detail = (ev && ev.detail) || {};
+  const u = detail.user;
+  const hasExplicitTarget = Boolean(getQueryParam('u') || getQueryParam('user') || getQueryParam('explorar') === '1' || getQueryParam('teste') === '1' || getQueryParam('simulador') === '1');
+  if (!isSimulatorMode && !hasExplicitTarget && u) {
+    if (u.username) {
+      const slug = cleanUsername(u.username).replace(/^@+/, '');
+      window.history.replaceState(null, '', '?u=' + encodeURIComponent(slug));
+      loadPioneerProfile();
+    } else if (u.needsHandle) {
+      const modal = document.getElementById('edit-profile-modal');
+      if (!modal || !modal.classList.contains('active')) {
+        openProfileEditModal();
+      }
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', loadPioneerProfile);

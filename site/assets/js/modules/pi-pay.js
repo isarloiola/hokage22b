@@ -233,11 +233,20 @@
         ${isWebGuestModal ? `
           <div id="diag-web2-box" style="background:rgba(56,189,248,0.09);border:1px solid rgba(56,189,248,0.32);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px">
             <div style="font-size:0.9rem;font-weight:800;color:#bae6fd;margin-bottom:6px">
-              ✉️ Criar Conta ou Entrar com E-mail (Link Mágico)
+              🌐 Criar Conta ou Entrar na Web (Grátis)
             </div>
             <p style="font-size:0.78rem;color:var(--text-secondary);margin:0 0 10px;line-height:1.45">
-              Sem senha e 100% grátis: crie seu Passaporte Web, comente e avalie agora no navegador comum. Quando quiser, vincule sua conta Pi para ganhar o selo <strong>✓ Pi Verificado</strong>!
+              Entre com 1 clique pelo Google ou receba um link sem senha no seu e-mail. Você pode vincular sua conta Pi depois para ganhar o selo <strong>✓ Pi Verificado</strong>!
             </p>
+            <button type="button" id="diag-web2-google-btn" class="portal-btn portal-btn--outline portal-btn--full" style="margin-bottom:10px;background:#fff;color:#111827;border-color:#e5e7eb;font-weight:800;justify-content:center;gap:8px;padding:10px 12px">
+              <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f3f4f6;color:#2563eb;font-weight:900;font-size:0.8rem">G</span>
+              <span>Continuar com Google</span>
+            </button>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:0.72rem;color:var(--text-muted)">
+              <span style="flex:1;height:1px;background:rgba(255,255,255,0.12)"></span>
+              <span>ou entre por e-mail</span>
+              <span style="flex:1;height:1px;background:rgba(255,255,255,0.12)"></span>
+            </div>
             <form id="diag-web2-magic-form" style="display:flex;gap:6px;flex-wrap:wrap">
               <input type="email" id="diag-web2-email" required placeholder="seu@email.com" style="flex:1;min-width:155px;padding:9px 11px;border-radius:8px;border:1px solid rgba(255,255,255,0.22);background:rgba(0,0,0,0.55);color:#fff;font-size:0.86rem;box-sizing:border-box" />
               <button type="submit" id="diag-web2-submit" class="portal-btn portal-btn--primary portal-btn--sm" style="white-space:nowrap;font-weight:800">
@@ -359,6 +368,36 @@
     `;
 
     modal.classList.add('active');
+
+    const googleBtn = document.getElementById('diag-web2-google-btn');
+    if (googleBtn) {
+      googleBtn.addEventListener('click', async function () {
+        const fbEl = document.getElementById('diag-web2-feedback');
+        if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.signInWithGoogle !== 'function') {
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fca5a5';
+            fbEl.textContent = 'Login Google indisponível nesta página. Use seu e-mail abaixo.';
+          }
+          return;
+        }
+        googleBtn.disabled = true;
+        const origHtml = googleBtn.innerHTML;
+        googleBtn.textContent = '⏳ Conectando ao Google...';
+        if (fbEl) fbEl.style.display = 'none';
+        try {
+          await window.HokageWeb2Auth.signInWithGoogle(window.location.origin + '/pioneiro');
+        } catch (err) {
+          googleBtn.disabled = false;
+          googleBtn.innerHTML = origHtml;
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fde68a';
+            fbEl.textContent = 'ℹ️ ' + ((err && err.message) || 'Login com Google em ativação — use seu e-mail abaixo!');
+          }
+        }
+      });
+    }
 
     const web2Form = document.getElementById('diag-web2-magic-form');
     if (web2Form) {
