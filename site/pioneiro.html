@@ -85,6 +85,11 @@
       font-size: 0.84rem;
       flex-shrink: 0;
     }
+    @media (max-width: 560px) {
+      .vitrine-topbar-nav {
+        display: none !important;
+      }
+    }
     @media (max-width: 480px) {
       .vitrine-topbar {
         padding: 5px 10px;
@@ -759,7 +764,7 @@
       <span>HOKAGE22B</span>
     </a>
 
-    <nav aria-label="Atalhos do ecossistema" style="display:flex;align-items:center;gap:12px">
+    <nav class="vitrine-topbar-nav" aria-label="Atalhos do ecossistema" style="display:flex;align-items:center;gap:12px">
       <a href="mural" style="font-size:0.78rem;font-weight:700;color:#fde68a;text-decoration:none;white-space:nowrap">🏘️ Vila</a>
       <a href="jornada" style="font-size:0.78rem;font-weight:700;color:#ddd6fe;text-decoration:none;white-space:nowrap">🚀 Jornada</a>
       <a href="pioneiro?explorar=1" style="font-size:0.78rem;font-weight:700;color:#a7f3d0;text-decoration:none;white-space:nowrap">🌐 Explorar</a>
