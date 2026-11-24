@@ -16,17 +16,18 @@
     {
       heading: 'Principal',
       items: [
+        { href: 'mural', match: ['mural'], label: '🏘️ A Vila (Classificados)', desktopLabel: 'A Vila', color: 'var(--amber-light)' },
+        { href: 'pioneiro', match: ['pioneiro'], label: '🪪 Hokage ID (Passaporte)', desktopLabel: 'Hokage ID', color: 'var(--accent-light)' },
         { href: 'explorar', match: ['explorar', 'diretorio'], label: '🌐 Explorar Pioneiros', desktopLabel: 'Explorar', color: '#34d399' },
-        { href: 'mural', match: ['mural'], label: '🏘️ Classificados (A Vila)', desktopLabel: 'Classificados', color: 'var(--amber-light)' },
-        { href: 'pioneiro', match: ['pioneiro'], label: '🪪 Passaporte (Meu Perfil)', desktopLabel: 'Passaporte', color: 'var(--accent-light)' },
         { href: 'zero', match: ['zero'], label: '📘 Aprender (Pi do Zero)', desktopLabel: 'Aprender', color: '#fde68a' }
       ]
     },
     {
-      heading: 'Trilha & Jornada',
+      heading: 'Trilha & Guias',
       items: [
+        { href: 'jornada', match: ['jornada'], label: '🧭 Jornada Guiada (30s)', desktopLabel: null },
         { href: 'um', match: ['um', 'alem-do-clique'], label: '🚀 Passo 1: Além do Clique', desktopLabel: null, color: 'var(--amber-light)' },
-        { href: 'jornada', match: ['jornada'], label: '🧭 Começar Jornada', desktopLabel: null }
+        { href: 'ebooks', match: ['ebooks'], label: '📚 E-books Oficiais', desktopLabel: null, color: '#fde68a' }
       ]
     },
     {
@@ -35,7 +36,8 @@
         { href: 'monte', match: ['monte'], label: '🏔️ Monte Hokage', desktopLabel: null, color: '#fb923c' },
         { href: 'ferramentas', match: ['ferramentas'], label: '🛠️ Ferramentas Web3', desktopLabel: null, color: '#6ee7b7' },
         { href: 'vender', match: ['vender'], label: '🏷️ Como Vender', desktopLabel: null },
-        { href: 'construir', match: ['construir', 'desenvolvedores'], label: '⚡ Construir (API & Devs)', desktopLabel: null }
+        { href: 'construir', match: ['construir', 'desenvolvedores'], label: '⚡ Construir (API & Devs)', desktopLabel: null },
+        { href: 'sobre', match: ['sobre'], label: '✦ Sobre & Parcerias', desktopLabel: null }
       ]
     }
   ];
@@ -257,12 +259,14 @@
     injectHeaderMoreStyles();
 
     const moreLinks = [
+      { href: 'jornada', match: ['jornada'], label: '🧭 Jornada Guiada (30s)' },
+      { href: 'ebooks', match: ['ebooks'], label: '📚 E-books Oficiais' },
       { href: 'um', match: ['um', 'alem-do-clique'], label: '🚀 Passo 1: Além do Clique' },
-      { href: 'jornada', match: ['jornada'], label: '🧭 Começar Jornada' },
       { href: 'monte', match: ['monte'], label: '🏔️ Monte Hokage' },
       { href: 'ferramentas', match: ['ferramentas'], label: '🛠️ Ferramentas Web3' },
       { href: 'vender', match: ['vender'], label: '🏷️ Como Vender' },
-      { href: 'construir', match: ['construir', 'desenvolvedores'], label: '⚡ Construir (API & Devs)' }
+      { href: 'construir', match: ['construir', 'desenvolvedores'], label: '⚡ Construir (API & Devs)' },
+      { href: 'sobre', match: ['sobre'], label: '✦ Sobre & Parcerias' }
     ].map(function (item) {
       const isActive = item.match.indexOf(current) !== -1;
       return '<a href="' + item.href + '"' + (isActive ? ' aria-current="page" style="background:rgba(139,92,246,0.18);color:#fff"' : '') + '>' + item.label + '</a>';

@@ -3553,6 +3553,8 @@
         const urlCat = (urlParams.get('cat') || '').toLowerCase();
         const urlCountry = (urlParams.get('country') || '').toUpperCase();
         const urlPillar = (urlParams.get('pillar') || '').toLowerCase();
+        const urlQ = (urlParams.get('q') || '').trim();
+        const urlPay = (urlParams.get('pay') || '').toLowerCase();
         const urlAction = (urlParams.get('action') || '').toLowerCase();
         const urlPublish = urlParams.get('publish') === '1' || urlAction === 'publish';
         if (urlTier === 'ouro' || urlTier === 'prata' || urlTier === 'bronze' || urlTier === 'gratis') {
@@ -3571,6 +3573,16 @@
         if (urlCountry) {
           if (countryFilterEl) countryFilterEl.value = urlCountry;
           if (typeof filterCountry === 'function') filterCountry(urlCountry);
+        }
+        if (urlQ) {
+          const searchInp = document.getElementById('mural-search-input');
+          if (searchInp) searchInp.value = urlQ;
+          if (typeof handleSearchInput === 'function') handleSearchInput(urlQ);
+        }
+        if (urlPay && ['pi', 'pi_fiat', 'fiat'].indexOf(urlPay) !== -1) {
+          const payFilterEl = document.getElementById('mural-payment-filter');
+          if (payFilterEl) payFilterEl.value = urlPay;
+          if (typeof filterPaymentMode === 'function') filterPaymentMode(urlPay);
         }
         if (urlPublish) {
           setTimeout(function () { openModal(); }, 150);

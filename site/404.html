@@ -33,7 +33,7 @@
       }
 
       // Páginas conhecidas da raiz do portal
-      var knownRootPages = ['zero', 'um', 'vender', 'mural', 'pioneiro', 'construir', 'hackathon', 'obrigado', 'admin', 'ferramentas', 'monte', 'jornada'];
+      var knownRootPages = ['zero', 'um', 'vender', 'mural', 'pioneiro', 'construir', 'hackathon', 'obrigado', 'admin', 'ferramentas', 'monte', 'jornada', 'ebooks', 'sobre'];
       if (segments.length === 1 && knownRootPages.indexOf(first.toLowerCase()) !== -1) {
         window.location.replace('/' + first.toLowerCase() + '.html' + window.location.search + window.location.hash);
         return;

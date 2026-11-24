@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://accounts.google.com https://sdk.minepi.com https://cdn.jsdelivr.net https://unpkg.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https: wss: https://cloudflareinsights.com; object-src 'none'; base-uri 'self';" />
+  <title>E-books &amp; Guias Oficiais — HOKAGE22B</title>
+  <meta name="description" content="Baixe gratuitamente o Manual Pi Network e conheça os guias práticos Pi para seu Negócio e IA na Prática." />
+  <link rel="canonical" href="https://hokage22b.com/ebooks" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hokage22b.com/ebooks" />
+  <meta property="og:title" content="E-books & Guias Oficiais — HOKAGE22B" />
+  <meta property="og:description" content="Materiais práticos sobre Pi Network, negócios Web3, IA aplicada e cibersegurança." />
+  <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png?v=2" />
+
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <link rel="icon" href="assets/img/brand/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
+  <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
+  <meta name="theme-color" content="#09090b" />
+  <link rel="stylesheet" href="assets/css/style.css?v=5.6" />
+  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.7" />
+
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+    try {
+      if (window.Pi) {
+        var _h = (location.hostname || '').toLowerCase();
+        var _prod = _h === 'hokage22b.com' || _h === 'www.hokage22b.com';
+        var isPiSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || _h === 'localhost' || _h === '127.0.0.1' || (!_prod && /[?&]sandbox=(1|true)/i.test(location.search));
+        window.Pi.init({ version: "2.0", sandbox: isPiSandbox });
+      }
+    } catch (_) { }
+  </script>
+</head>
+<body>
+  <div id="hk-site-header-root"></div>
+  <script src="assets/js/modules/site-header.js?v=1.6"></script>
+
+  <main>
+    <section class="portal-section" style="padding-top:96px;padding-bottom:28px;background:radial-gradient(circle at 20% 10%, rgba(139,92,246,0.16), transparent 50%),radial-gradient(circle at 80% 40%, rgba(245,158,11,0.12), transparent 55%)">
+      <div class="portal-container" style="text-align:center;max-width:760px">
+        <div class="section-tag section-tag--amber">📚 Biblioteca Oficial HOKAGE22B</div>
+        <h1 style="font-size:clamp(1.85rem,4vw,2.65rem);font-weight:900;line-height:1.15;margin:10px 0 12px;color:#fff">
+          E-books &amp; Guias Práticos (Web3, Negócios &amp; IA)
+        </h1>
+        <p style="font-size:0.98rem;color:var(--text-secondary);line-height:1.6;margin:0 0 22px">
+          Materiais diretos ao ponto para você aprender sem hype, proteger seus ativos e aplicar tecnologia no seu negócio — com liquidação na Pi Network (Mainnet) ou PIX/Cartão fora do Pi Browser.
+        </p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button type="button" onclick="HokagePortal.openModal('modal-manual-download')" class="portal-btn portal-btn--primary">
+            📘 Baixar Manual Pi Gratuito (PDF/EPUB)
+          </button>
+          <a href="mural" class="portal-btn portal-btn--outline">
+            🏘️ Ir para A Vila (Classificados) →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section" id="produtos" aria-labelledby="products-title" style="padding-top:24px">
+      <div class="portal-container">
+        <div class="section-heading-wrap">
+          <div class="section-tag section-tag--amber">Ativo Comercial</div>
+          <h2 class="section-title" id="products-title">Produtos Digitais</h2>
+          <p class="section-desc">
+            Materiais práticos e aprofundados desenvolvidos para quem busca ir além do básico e transformar conhecimento
+            em vantagem competitiva.
+          </p>
+          <div
+            style="margin-top:14px;display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:8px 14px">
+            <span style="font-size:0.8rem;color:#d4d4d8">📚 <strong>Já adquiriu algum E-book com Pi?</strong> Seu acesso
+              é vitalício:</span>
+            <button type="button"
+              onclick="if(window.HokagePi && window.HokagePi.restoreOwnedEbooks) window.HokagePi.restoreOwnedEbooks()"
+              class="portal-btn portal-btn--outline portal-btn--sm"
+              style="padding:5px 12px;font-size:0.76rem;font-weight:800;border-color:rgba(16,185,129,0.5);color:#34d399">
+              🔄 Restaurar Meus Downloads em Pi
+            </button>
+          </div>
+        </div>
+
+        <!-- MANUAL GRATUITO -->
+        <div class="product-showcase" style="margin-bottom:36px;border-color:rgba(16,185,129,0.35);background:linear-gradient(180deg, rgba(16,185,129,0.08), rgba(13,13,20,0.96))">
+          <div class="product-cover-wrap">
+            <img src="assets/img/ebook-cover.png" alt="Capa Oficial do Manual Pi Network — HOKAGE22B"
+              class="product-cover-img" loading="lazy"
+              style="box-shadow:0 12px 32px rgba(0,0,0,0.65);border-radius:10px" />
+          </div>
+          <div class="product-details">
+            <div class="product-headline" style="color:#34d399">Edição Gratuita · 23 Capítulos</div>
+            <h3 class="product-title">Manual Prático Pi Network: Do Zero à Segurança Web3</h3>
+            <p class="product-desc">
+              Guia introdutório gratuito e direto ao ponto para evitar golpes, proteger sua carteira de 24 palavras e separar fatos oficiais de especulação.
+            </p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+              <button type="button" onclick="HokagePortal.openModal('modal-manual-download')" class="portal-btn portal-btn--primary">
+                ⬇ Desbloquear Download Gratuito (PDF &amp; EPUB)
+              </button>
+              <a href="zero" class="portal-btn portal-btn--outline">📘 Ler Trilha Online</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUTO PRINCIPAL: PI PARA SEU NEGÓCIO -->
+        <div class="product-showcase">
+          <div class="product-cover-wrap">
+            <img src="assets/img/ebook-pago-negocios.jpg" alt="Capa do E-book Pi Network para seu Negócio — HOKAGE22B"
+              class="product-cover-img" loading="lazy"
+              style="box-shadow:0 12px 36px rgba(0,0,0,0.7);border-radius:10px" />
+          </div>
+
+          <div class="product-details">
+            <div class="product-headline">Pi para seu negócio</div>
+            <h3 class="product-title">O Guia Prático para Empreendedores e Comerciantes</h3>
+            <p class="product-desc">
+              Um guia objetivo e sem rodeios para lojistas, profissionais autônomos e empreendedores digitais que
+              desejam compreender a economia descentralizada e avaliar a aceitação da Pi Network em seus negócios de
+              forma estruturada e em conformidade legal.
+            </p>
+
+            <ul class="product-benefits">
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>Modelos práticos de precificação:</strong> Estratégias para precificar produtos combinando
+                  moeda fiduciária (Real) e criptoativos.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>Segurança jurídica e tributária:</strong> Diretrizes para emissão de notas fiscais,
+                  controle de caixa e declaração no Brasil.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>Protocolos contra fraudes:</strong> Como receber pagamentos diretos com liquidação
+                  confirmada na blockchain sem intermediários duvidosos.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>Modelos e avisos editáveis:</strong> Termos de compra e avisos ao consumidor prontos para
+                  imprimir e aplicar.</span>
+              </li>
+            </ul>
+
+            <div class="product-pricing-bar" data-product-id="pi-para-seu-negocio"
+              style="background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(139,92,246,0.12));border:1px solid rgba(245,158,11,0.35);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+
+              <div class="price-box" data-channel="pi">
+                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">⚡ Pi Network Mainnet</span> · Preço Comunitário</span>
+                <span class="price-val"
+                  style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">3.14
+                  π</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta P2P na Mainnet da Pi
+                  Network (Não aceita Test-Pi)</span>
+              </div>
+              <div class="product-actions" data-channel="pi">
+                <button type="button" class="portal-btn portal-btn--primary"
+                  onclick="HokagePortal.openModal('modal-pagamento-pi')"
+                  style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.35)">
+                  ⚡ Adquirir com Pi Mainnet (3.14 π) →
+                </button>
+              </div>
+
+              <div class="price-box" data-channel="web2" style="display:none">
+                <span class="price-label"><span style="color:#10b981;font-weight:700">⚡ Acesso Imediato</span> · PIX ou
+                  Cartão</span>
+                <span class="price-val"
+                  style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$
+                  19,90</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Pagamento facilitado via PIX ou Cartão de
+                  Crédito com entrega automática</span>
+              </div>
+              <div class="product-actions" data-channel="web2" style="display:none;flex-direction:column;align-items:stretch;gap:6px">
+                <a href="https://pay.hotmart.com/A108356534I" target="_blank" rel="noopener noreferrer"
+                  data-hotmart-link="pi-para-seu-negocio" class="portal-btn portal-btn--primary"
+                  style="font-weight:800;box-shadow:0 0 25px rgba(245,158,11,0.35);white-space:nowrap">
+                  🛒 Comprar Agora por R$ 19,90 →
+                </a>
+                <span style="font-size:0.74rem;color:#34d399;font-weight:700;text-align:center">🛡️ Garantia Incondicional de 7 Dias · Entrega Imediata</span>
+              </div>
+            </div>
+
+            <div id="pi-owned-library-pi-para-seu-negocio"
+              style="display:none;margin-top:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);border-radius:var(--radius-sm);padding:16px">
+              <div style="color:#34d399;font-weight:800;font-size:0.92rem;margin-bottom:8px">
+                ✓ Compra Verificada na sua Conta Pi — Acesso Vitalício Liberado
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button type="button" class="portal-btn portal-btn--amber portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('pi-para-seu-negocio', 'pdf')" style="font-weight:800">
+                  ⬇ Baixar PDF Oficial
+                </button>
+                <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('pi-para-seu-negocio', 'epub')" style="font-weight:700">
+                  ⬇ Baixar EPUB
+                </button>
+              </div>
+            </div>
+
+            <details
+              style="margin-top:14px;background:linear-gradient(135deg, rgba(245,158,11,0.08), rgba(20,15,30,0.85));border:1px solid rgba(245,158,11,0.32);border-radius:var(--radius-sm);padding:12px 16px;box-sizing:border-box">
+              <summary style="cursor:pointer;font-size:0.86rem;font-weight:800;color:var(--amber-light);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px">
+                <span>⚡ Possui Pi na Mainnet? Adquira via P2P por <code style="color:#fff;background:rgba(245,158,11,0.2);padding:1px 6px;border-radius:6px">3.14 π</code></span>
+                <span style="font-size:0.75rem;color:var(--text-secondary)">Ver opções P2P ▾</span>
+              </summary>
+              <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08)">
+                <p style="font-size:0.84rem;color:var(--text-secondary);line-height:1.5;margin:0 0 10px">
+                  Para pioneiros com saldo na <strong>Mainnet real</strong> (sem Test-Pi), fale diretamente com <strong>@hokage22b</strong> para transferência P2P e liberação imediata:
+                </p>
+                <div class="product-early-access-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+                  <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank"
+                    rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm"
+                    style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700">
+                    💬 Falar no WhatsApp ↗
+                  </a>
+                  <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer"
+                    class="portal-btn portal-btn--outline portal-btn--sm"
+                    style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700">
+                    𝕏 Mensagem no X (@hokage22b) ↗
+                  </a>
+                  <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--sm"
+                    style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
+                    🪪 Passaporte Oficial (@hokage22b) ↗
+                  </a>
+                </div>
+              </div>
+            </details>
+
+            <div class="guarantee-note"
+              style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:14px;padding:12px 16px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span style="color:#fff;font-size:0.85rem"><strong>Entrega Digital Imediata:</strong> Download liberado
+                  instantaneamente com registro da transação.</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <a href="https://affiliate.hotmart.com/affiliate-recruiting/view/9871P108356555" target="_blank"
+                  rel="noopener noreferrer"
+                  style="font-size:0.78rem;color:var(--amber-light);font-weight:700;text-decoration:none;border:1px solid rgba(245,158,11,0.35);background:rgba(245,158,11,0.1);padding:4px 10px;border-radius:999px">
+                  🤝 Seja Afiliado e lucre divulgando ↗
+                </a>
+                <span style="font-size:0.8rem;color:var(--accent-light);font-weight:700">
+                  ✦ Pi Network Mainnet Utility
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUTO LANÇAMENTO: IA NA PRÁTICA -->
+        <div class="product-showcase" id="produto-ia-na-pratica"
+          style="margin-top:36px;border-color:rgba(139,92,246,0.4);background:linear-gradient(180deg, rgba(20,16,36,0.92), rgba(13,13,20,0.98))">
+          <div class="product-cover-wrap">
+            <img src="assets/img/ebook-ia-na-pratica.png" alt="Capa do E-book IA na Prática — HOKAGE22B"
+              class="product-cover-img" loading="lazy"
+              style="box-shadow:0 14px 40px rgba(139,92,246,0.48);border:1px solid rgba(167,139,250,0.45);border-radius:10px" />
+          </div>
+
+          <div class="product-details">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+              <span
+                style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(245,158,11,0.16);border:1px solid rgba(245,158,11,0.45);color:var(--amber-light)">🚀
+                Lançamento Oficial</span>
+              <span
+                style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 10px;border-radius:999px;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.45);color:var(--accent-light)">✦
+                Edição Definitiva · 293 Páginas</span>
+              <span
+                style="font-size:0.72rem;font-weight:800;letter-spacing:0.02em;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#34d399">🛡️
+                Inclui Módulo Master de Cibersegurança &amp; 50 Prompts Prontos</span>
+            </div>
+
+            <div class="product-headline" style="color:var(--accent-light)">IA na Prática</div>
+            <h3 class="product-title">Transforme a Inteligência Artificial no Seu Assistente Pessoal</h3>
+            <p class="product-desc">
+              Manual completo de 293 páginas focado em produtividade real, automação de negócios e segurança digital.
+              <strong>Aprenda exatamente o Método C.O.P.I.L.O.T.O. e os protocolos de segurança digital aplicados na
+                construção deste próprio portal HOKAGE22B</strong>, com proteção de dados (LGPD) e boas práticas
+              alinhadas ao CERT.br.
+            </p>
+
+            <ul class="product-benefits">
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>Produtividade e Negócios:</strong> Fluxos práticos para atendimento, criação de conteúdo,
+                  análise e organização operacional.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>Módulo Master de Cibersegurança:</strong> Blindagem de contas, prevenção contra engenharia
+                  social, conformidade LGPD e diretrizes CERT.br.</span>
+              </li>
+              <li class="product-benefit-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span><strong>50 Prompts Prontos para Copiar e Colar:</strong> Estruturas testadas para acelerar
+                  resultados imediatos sem curva de aprendizado longa.</span>
+              </li>
+            </ul>
+
+            <div class="product-pricing-bar" data-product-id="ia-na-pratica"
+              style="background:linear-gradient(135deg, rgba(139,92,246,0.16), rgba(245,158,11,0.12));border:1px solid rgba(139,92,246,0.45);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+
+              <div class="price-box" data-channel="pi">
+                <span class="price-label"><span style="color:var(--amber-light);font-weight:700">⚡ Pi Network Mainnet</span> · Preço Comunitário</span>
+                <span class="price-val"
+                  style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">7.50
+                  π</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Liquidação direta P2P na Mainnet da Pi
+                  Network (Não aceita Test-Pi)</span>
+              </div>
+              <div class="product-actions" data-channel="pi">
+                <button type="button" class="portal-btn portal-btn--primary"
+                  onclick="HokagePortal.openModal('modal-pagamento-pi')"
+                  style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.4)">
+                  ⚡ Adquirir com Pi Mainnet (7.50 π) →
+                </button>
+              </div>
+
+              <div class="price-box" data-channel="web2" style="display:none">
+                <span class="price-label"><span style="color:#10b981;font-weight:700">🔥 Oferta de Lançamento</span> ·
+                  PIX ou Cartão</span>
+                <span class="price-val"
+                  style="color:var(--amber-light);font-size:2.4rem;font-weight:900;font-family:var(--font-mono);display:block;margin:4px 0">R$
+                  47,00</span>
+                <span class="price-sub" style="color:var(--text-secondary)">Acesso imediato ao PDF completo (293
+                  páginas) + 50 Prompts Prontos</span>
+              </div>
+              <div class="product-actions" data-channel="web2" style="display:none;flex-direction:column;align-items:stretch;gap:6px">
+                <a href="https://pay.hotmart.com/J108469065H" target="_blank" rel="noopener noreferrer"
+                  data-hotmart-link="ia-na-pratica" class="portal-btn portal-btn--primary"
+                  style="font-weight:800;box-shadow:0 0 25px rgba(139,92,246,0.4);white-space:nowrap">
+                  🚀 Comprar Agora por R$ 47,00 →
+                </a>
+                <span style="font-size:0.74rem;color:#34d399;font-weight:700;text-align:center">🛡️ Garantia Incondicional de 7 Dias · 293 Páginas + 50 Prompts</span>
+              </div>
+            </div>
+
+            <div id="pi-owned-library-ia-na-pratica"
+              style="display:none;margin-top:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);border-radius:var(--radius-sm);padding:16px">
+              <div style="color:#34d399;font-weight:800;font-size:0.92rem;margin-bottom:8px">
+                ✓ Compra Verificada na sua Conta Pi — Acesso Vitalício Liberado
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button type="button" class="portal-btn portal-btn--amber portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('ia-na-pratica', 'pdf')" style="font-weight:800">
+                  ⬇ Baixar PDF Completo (293 págs)
+                </button>
+                <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('ia-na-pratica', 'epub')" style="font-weight:700">
+                  ⬇ Baixar EPUB (Kindle/Mobile)
+                </button>
+                <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+                  onclick="HokagePi.downloadOwnedEbook('ia-na-pratica', 'bonus')"
+                  style="border-color:rgba(16,185,129,0.5);color:#34d399;font-weight:700">
+                  🎁 Baixar Bônus Checklist (PDF)
+                </button>
+              </div>
+            </div>
+
+            <details
+              style="margin-top:14px;background:linear-gradient(135deg, rgba(245,158,11,0.08), rgba(20,15,30,0.85));border:1px solid rgba(245,158,11,0.32);border-radius:var(--radius-sm);padding:12px 16px;box-sizing:border-box">
+              <summary style="cursor:pointer;font-size:0.86rem;font-weight:800;color:var(--amber-light);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px">
+                <span>⚡ Possui Pi na Mainnet? Adquira via P2P por <code style="color:#fff;background:rgba(245,158,11,0.2);padding:1px 6px;border-radius:6px">7.50 π</code></span>
+                <span style="font-size:0.75rem;color:var(--text-secondary)">Ver opções P2P ▾</span>
+              </summary>
+              <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08)">
+                <p style="font-size:0.84rem;color:var(--text-secondary);line-height:1.5;margin:0 0 10px">
+                  Para pioneiros com saldo na <strong>Mainnet real</strong> (sem Test-Pi), fale diretamente com <strong>@hokage22b</strong> para transferência P2P e liberação imediata:
+                </p>
+                <div class="product-early-access-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+                  <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank"
+                    rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--sm"
+                    style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700">
+                    💬 Falar no WhatsApp ↗
+                  </a>
+                  <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer"
+                    class="portal-btn portal-btn--outline portal-btn--sm"
+                    style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700">
+                    𝕏 Mensagem no X (@hokage22b) ↗
+                  </a>
+                  <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--sm"
+                    style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700">
+                    🪪 Passaporte Oficial (@hokage22b) ↗
+                  </a>
+                </div>
+              </div>
+            </details>
+
+            <div class="guarantee-note"
+              style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:14px;padding:12px 16px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span style="color:#fff;font-size:0.85rem"><strong>Entrega Digital Imediata:</strong> Download liberado
+                  logo após confirmação do pagamento.</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <a href="https://affiliate.hotmart.com/affiliate-recruiting/view/1605I108469086" target="_blank"
+                  rel="noopener noreferrer"
+                  style="font-size:0.78rem;color:var(--amber-light);font-weight:700;text-decoration:none;border:1px solid rgba(245,158,11,0.35);background:rgba(245,158,11,0.1);padding:4px 10px;border-radius:999px">
+                  🤝 Seja Afiliado e lucre divulgando ↗
+                </a>
+                <span style="font-size:0.8rem;color:var(--accent-light);font-weight:700">✦ 293 Páginas · Edição
+                  Definitiva</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="portal-footer" style="margin-top:32px">
+    <div class="portal-container">
+      <div class="footer-bottom" style="padding-top:18px">
+        <span>© 2026 HOKAGE22B (hokage22b.com).</span>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <a href="./" style="color:var(--text-secondary);text-decoration:none">Início</a>
+          <a href="mural" style="color:var(--text-secondary);text-decoration:none">A Vila</a>
+          <a href="pioneiro" style="color:var(--text-secondary);text-decoration:none">Hokage ID</a>
+          <a href="sobre" style="color:var(--text-secondary);text-decoration:none">Sobre</a>
+          <a href="legal/politica-de-privacidade" style="color:var(--text-secondary);text-decoration:none">Privacidade</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal 1: Download do Manual Mediante Cadastro de E-mail -->
+  <div class="portal-modal-overlay" id="modal-manual-download" role="dialog" aria-modal="true"
+    aria-labelledby="manual-modal-title" aria-hidden="true">
+    <div class="portal-modal">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag">Acesso Gratuito Oficial</div>
+      <h3 id="manual-modal-title" style="font-size:1.35rem;margin-bottom:10px">Manual Pi Network — Edição Oficial</h3>
+      <div id="manual-lead-box">
+        <div
+          style="display:flex;gap:18px;align-items:center;margin-bottom:18px;background:rgba(255,255,255,0.03);border:1px solid var(--border-subtle);padding:14px;border-radius:var(--radius-sm)">
+          <img src="assets/img/ebook-cover.png" alt="Capa Oficial do Manual Pi Network"
+            style="width:72px;height:auto;border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,0.5);flex-shrink:0" />
+          <div>
+            <strong style="color:#fff;font-size:0.95rem;display:block">Manual Prático Pi Network (Edição Oficial)</strong>
+            <span style="font-size:0.8rem;color:var(--text-secondary);display:block;margin-top:4px">23 capítulos
+              completos · Formatos PDF e EPUB · Acesso 100% Gratuito</span>
+          </div>
+        </div>
+        <p style="font-size:0.92rem;margin-bottom:18px;color:var(--text-secondary)">
+          Informe seu e-mail abaixo para <strong>desbloquear o download imediato</strong> em PDF e EPUB e receber as
+          atualizações trimestrais gratuitas.
+        </p>
+        <form id="manual-lead-form" novalidate style="display:flex;flex-direction:column;gap:14px">
+          <div>
+            <label for="manual-lead-name"
+              style="font-size:0.85rem;color:var(--text-secondary);display:block;margin-bottom:6px">Seu nome (opcional)</label>
+            <input type="text" id="manual-lead-name" class="newsletter-input" style="width:100%"
+              placeholder="Ex: Lucas Pioneiro" maxlength="60" />
+          </div>
+          <div>
+            <label for="manual-lead-email"
+              style="font-size:0.85rem;color:var(--text-secondary);display:block;margin-bottom:6px">Seu melhor e-mail *</label>
+            <input type="email" id="manual-lead-email" required class="newsletter-input" style="width:100%"
+              placeholder="seu@email.com" maxlength="80" />
+          </div>
+          <label class="newsletter-consent" style="margin-top:4px">
+            <input type="checkbox" id="manual-lead-consent" required />
+            <span>Concordo em receber o manual e comunicados editoriais do portal HOKAGE22B. Dados protegidos conforme a LGPD; cancelamento a qualquer momento.</span>
+          </label>
+          <button type="submit" class="portal-btn portal-btn--primary portal-btn--full" id="manual-lead-btn" style="margin-top:6px">
+            Desbloquear Download Gratuito →
+          </button>
+          <div class="newsletter-feedback" id="manual-lead-feedback" role="alert"></div>
+        </form>
+      </div>
+      <div id="manual-download-links" style="display:none">
+        <div
+          style="background:rgba(16, 185, 129, 0.1);border:1px solid rgba(16, 185, 129, 0.3);border-radius:var(--radius-sm);padding:14px;margin-bottom:18px;text-align:center">
+          <span style="font-size:1.2rem">✓</span> <strong style="color:var(--success)">Acesso liberado com sucesso!</strong>
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px">Escolha o formato ideal para seu dispositivo:</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+          <a href="downloads/Manual-Pi-Network.pdf" download id="btn-dl-pdf"
+            class="portal-btn portal-btn--primary portal-btn--full">
+            ⬇ Baixar em PDF (Recomendado para PC e Celular)
+          </a>
+          <a href="downloads/Manual-Pi-Network.epub" download id="btn-dl-epub"
+            class="portal-btn portal-btn--outline portal-btn--full">
+            ⬇ Baixar em EPUB (Kindle e Leitores Digitais)
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Pagamento com Pi Mainnet -->
+  <div class="portal-modal-overlay" id="modal-pagamento-pi" role="dialog" aria-modal="true"
+    aria-labelledby="pi-pay-title" aria-hidden="true">
+    <div class="portal-modal" id="pi-modal-content-area">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag section-tag--amber">⚡ Pagamento em Pi (Mainnet P2P)</div>
+      <h3 id="pi-pay-title" style="font-size:1.35rem;margin-bottom:10px">E-books Oficiais com Pi na Mainnet</h3>
+      <p style="font-size:0.92rem;margin-bottom:16px;color:var(--text-secondary);line-height:1.55">
+        Os e-books em Pi Network são liquidados exclusivamente na <strong>Mainnet real</strong> via transferência P2P direta com
+        <strong>@hokage22b</strong>, evitando transações acidentais com Test-Pi (Testnet).
+      </p>
+      <div style="margin-bottom:20px">
+        <button type="button" class="portal-btn portal-btn--primary portal-btn--full"
+          onclick="HokagePortal.closeModal('modal-pagamento-pi');HokagePortal.openModal('modal-waitlist-comunidade')"
+          style="padding:14px;font-size:0.98rem;font-weight:700">
+          🔔 Entrar na Lista VIP da Comunidade →
+        </button>
+      </div>
+      <div style="border-top:1px solid var(--border-subtle);padding-top:16px;margin-top:16px">
+        <div style="font-size:0.88rem;color:#fff;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+          <span>⚡</span> Deseja Acesso Antecipado com Pi na Mainnet?
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+          <a href="https://chat.whatsapp.com/JR6vrB10rCfGYCg3E3BRrE?s=cl&p=a&iam=2" target="_blank"
+            rel="noopener noreferrer" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm"
+            style="border-color:rgba(37,211,102,0.4);color:#25d366;font-weight:700;justify-content:center">
+            💬 Conversar com Hokage22b no WhatsApp ↗
+          </a>
+          <a href="https://x.com/hokage22b" target="_blank" rel="noopener noreferrer"
+            class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm"
+            style="border-color:rgba(255,255,255,0.25);color:#fff;font-weight:700;justify-content:center">
+            𝕏 Mensagem Direta no X (@hokage22b) ↗
+          </a>
+          <a href="pioneiro?u=@hokage22b" class="portal-btn portal-btn--outline portal-btn--full portal-btn--sm"
+            style="border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;justify-content:center">
+            🪪 Ver Carteira no Passaporte Oficial (@hokage22b) ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Lista VIP -->
+  <div class="portal-modal-overlay" id="modal-waitlist-comunidade" role="dialog" aria-modal="true"
+    aria-labelledby="wait-title" aria-hidden="true">
+    <div class="portal-modal">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag">Plataforma Própria</div>
+      <h3 id="wait-title" style="font-size:1.35rem;margin-bottom:10px">Lista de Espera da Comunidade HOKAGE22B</h3>
+      <p style="font-size:0.9rem;margin-bottom:20px;color:var(--text-secondary)">
+        Cadastre-se para ser notificado sobre novos lançamentos e materiais exclusivos.
+      </p>
+      <form id="community-waitlist-form" novalidate style="display:flex;flex-direction:column;gap:14px">
+        <input type="email" id="community-email" required class="newsletter-input" style="width:100%"
+          placeholder="Seu melhor e-mail *" />
+        <button type="submit" class="portal-btn portal-btn--primary portal-btn--full" id="community-waitlist-btn">
+          Garantir Minha Vaga na Lista
+        </button>
+        <div class="newsletter-feedback" id="community-waitlist-feedback" role="alert"></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"
+    integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil"
+    crossorigin="anonymous"></script>
+  <script src="assets/js/modules/i18n.js?v=4.7"></script>
+  <script src="assets/js/config.js?v=7.3"></script>
+  <script src="assets/js/modules/db.js?v=6.2"></script>
+  <script src="assets/js/modules/web2-auth.js?v=1.4"></script>
+  <script src="assets/js/modules/pi-pay.js?v=8.3"></script>
+  <script src="assets/js/modules/portal.js?v=3.7"></script>
+  <script src="assets/js/modules/referral.js?v=2.7"></script>
+  <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
+  <script>
+    (function () {
+      function syncProductPricingChannels() {
+        var inPi = (window.HokagePi && typeof window.HokagePi.isPiBrowser === 'function')
+          ? window.HokagePi.isPiBrowser()
+          : /PiBrowser|PiNetwork|minepi/i.test(navigator.userAgent || '');
+
+        document.querySelectorAll('.product-pricing-bar [data-channel="pi"]').forEach(function (el) {
+          el.style.display = inPi ? '' : 'none';
+        });
+        document.querySelectorAll('.product-pricing-bar [data-channel="web2"]').forEach(function (el) {
+          el.style.display = inPi ? 'none' : '';
+        });
+
+        var productsCfg = window.HOKAGE_CONFIG && window.HOKAGE_CONFIG.products;
+        if (productsCfg) {
+          document.querySelectorAll('[data-hotmart-link]').forEach(function (link) {
+            var id = link.getAttribute('data-hotmart-link');
+            if (productsCfg[id] && productsCfg[id].hotmartUrl) {
+              link.href = productsCfg[id].hotmartUrl;
+            }
+          });
+        }
+      }
+
+      window.syncProductPricingChannels = syncProductPricingChannels;
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', syncProductPricingChannels);
+      } else {
+        syncProductPricingChannels();
+      }
+    })();
+  </script>
+</body>
+</html>

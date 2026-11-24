@@ -34,7 +34,8 @@
   function initMobileDrawer() {
     const burger = document.getElementById('portal-burger-btn');
     const drawer = document.getElementById('portal-drawer');
-    if (!burger || !drawer) return;
+    if (!burger || !drawer || burger.dataset.hkBound) return;
+    burger.dataset.hkBound = '1';
 
     burger.addEventListener('click', function () {
       const isOpen = drawer.classList.contains('active');
@@ -478,7 +479,7 @@
     }
 
     try {
-      const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/vila?limit=4');
+      const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/vila?limit=6');
       const json = await res.json().catch(function () { return {}; });
       const items = (json && json.data && Array.isArray(json.data.items))
         ? json.data.items
@@ -495,7 +496,7 @@
         return;
       }
 
-      grid.innerHTML = items.slice(0, 4).map(function (ad) {
+      grid.innerHTML = items.slice(0, 6).map(function (ad) {
         const rawTier = String(ad.plan_tier || ad.tier || ad.plan || 'bronze').toLowerCase();
         const tier = ['ouro', 'prata', 'bronze', 'gratis'].includes(rawTier) ? rawTier : 'bronze';
         const rawAuthorObj = (ad.author && typeof ad.author === 'object')
@@ -505,11 +506,36 @@
         const badgeLabel = tier === 'ouro' ? '👑 Destaque Ouro VIP'
           : tier === 'prata' ? '🥈 Destaque Prata'
           : tier === 'gratis' ? '🌱 Comunidade' : '🥉 Classificado Bronze';
-        const itemPriceText = (ad.item_price && Number(ad.item_price) > 0)
-          ? esc(ad.item_price + ' ' + (ad.item_currency || 'PI'))
-          : (tier === 'gratis' || Number(ad.price_pi) === 0 ? 'Grátis'
+
+        const rawPay = String(ad.payment_modes || 'pi').toLowerCase();
+        const payBadgeHtml = (rawPay === 'pi_fiat' || rawPay === 'pi_reais')
+          ? '<span style="font-size:0.68rem;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.32);color:#fcd34d;padding:2px 7px;border-radius:999px;font-weight:700">⚡💵 Pi + Moeda</span>'
+          : ((rawPay === 'fiat' || rawPay === 'reais')
+            ? '<span style="font-size:0.68rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.32);color:#6ee7b7;padding:2px 7px;border-radius:999px;font-weight:700">💵 Só Moeda</span>'
+            : '<span style="font-size:0.68rem;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.32);color:#ddd6fe;padding:2px 7px;border-radius:999px;font-weight:700">⚡ Somente Pi</span>');
+
+        const rawPriceStr = ad.item_price != null ? String(ad.item_price).trim() : '';
+        let itemPriceText = '';
+        if (rawPriceStr) {
+          if (rawPriceStr.indexOf('π') !== -1 || rawPriceStr.indexOf('+') !== -1) {
+            itemPriceText = esc(rawPriceStr);
+          } else {
+            const n = parseFloat(rawPriceStr.replace(',', '.'));
+            const curr = String(ad.item_currency || 'PI').toUpperCase();
+            if (Number.isFinite(n) && n > 0) {
+              itemPriceText = curr === 'PI'
+                ? esc(Number(n.toFixed(4)).toString() + ' π')
+                : (curr === 'BRL' ? esc('R$ ' + n.toFixed(2).replace('.', ',')) : esc((curr === 'USD' ? 'US$ ' : (curr === 'EUR' ? '€ ' : curr + ' ')) + n.toFixed(2)));
+            }
+          }
+        }
+        if (!itemPriceText) {
+          itemPriceText = (tier === 'gratis' || Number(ad.price_pi) === 0)
+            ? 'Grátis'
             : (ad.price_pi && Number(ad.price_pi) > 0 ? esc(Number(ad.price_pi) + ' π')
-              : (tier === 'ouro' ? '3.14 π' : tier === 'prata' ? '1.00 π' : '0.314 π')));
+              : (tier === 'ouro' ? '3.14 π' : tier === 'prata' ? '1.00 π' : '0.314 π'));
+        }
+
         const targetHref = 'mural?ad=' + encodeURIComponent(ad.id || '');
         const safeImg = (ad.image_url && /^https?:\/\//i.test(ad.image_url)) ? esc(ad.image_url) : '';
         const bannerHtml = safeImg
@@ -524,6 +550,9 @@
             '</div>' +
             '<h3 class="pioneer-card__title">' + esc(ad.title || '') + '</h3>' +
             '<p class="pioneer-card__desc">' + esc(String(ad.description || '').slice(0, 140)) + '</p>' +
+            '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px">' +
+              payBadgeHtml +
+            '</div>' +
             '<div class="pioneer-card__footer">' +
               '<a href="' + targetHref + '" class="pioneer-card__link">Ver Oferta na Vila →</a>' +
               '<span class="pioneer-card__price-tag">' + itemPriceText + '</span>' +
@@ -586,7 +615,7 @@
                 '<p style="font-size:0.8rem;color:var(--text-secondary);margin:4px 0 0;line-height:1.4">' + bio + '</p>' +
               '</div>' +
             '</div>' +
-            '<a href="pioneiro?u=' + encodeURIComponent(cleanHandle) + '" class="portal-btn portal-btn--outline portal-btn--sm" style="justify-content:center;text-decoration:none">Ver Passaporte ↗</a>' +
+            '<a href="pioneiro?u=' + encodeURIComponent(cleanHandle) + '" class="portal-btn portal-btn--outline portal-btn--sm" style="justify-content:center;text-decoration:none">Ver Hokage ID ↗</a>' +
           '</article>'
         );
       }).join('');
@@ -594,10 +623,10 @@
       const ctaCardHtml =
         '<article style="background:linear-gradient(155deg,rgba(16,185,129,0.12),rgba(139,92,246,0.14));border:1px dashed rgba(16,185,129,0.48);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px">' +
           '<div>' +
-            '<strong style="color:#34d399;font-size:0.95rem;display:block;margin-bottom:4px">+ Seu negócio aceita Pi na Mainnet?</strong>' +
-            '<p style="font-size:0.8rem;color:var(--text-secondary);margin:0;line-height:1.45">Apareça nas buscas de pioneiros verificados, receba direto na Pi Wallet sem taxas e ganhe seu link curto.</p>' +
+            '<strong style="color:#34d399;font-size:0.95rem;display:block;margin-bottom:4px">+ Quer vender ou aparecer com confiança?</strong>' +
+            '<p style="font-size:0.8rem;color:var(--text-secondary);margin:0;line-height:1.45">Ative seu Passaporte (futuro Hokage ID), monte sua vitrine e conecte suas ofertas da Vila sem taxas abusivas.</p>' +
           '</div>' +
-          '<a href="pioneiro" class="portal-btn portal-btn--primary portal-btn--sm" style="justify-content:center;text-decoration:none">⚡ Ativar Meu Passaporte Grátis →</a>' +
+          '<a href="pioneiro?criar=1" class="portal-btn portal-btn--primary portal-btn--sm" style="justify-content:center;text-decoration:none">⚡ Ativar Meu Hokage ID Grátis →</a>' +
         '</article>';
 
       grid.innerHTML = (cardsHtml || '') + ctaCardHtml;
