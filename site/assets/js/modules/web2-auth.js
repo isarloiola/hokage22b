@@ -346,15 +346,22 @@
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
         throw new Error('Informe um e-mail válido para validar o código.');
       }
-      const { data, error } = await sb.auth.verifyOtp({
+      let verifyRes = await sb.auth.verifyOtp({
         email: cleanEmail,
         token: raw,
         type: 'email'
       });
-      if (error) {
-        throw new Error(error.message || 'Código inválido ou expirado.');
+      if (verifyRes.error) {
+        verifyRes = await sb.auth.verifyOtp({
+          email: cleanEmail,
+          token: raw,
+          type: 'magiclink'
+        });
       }
-      sess = data && data.session ? data.session : null;
+      if (verifyRes.error) {
+        throw new Error(verifyRes.error.message || 'Código inválido ou expirado.');
+      }
+      sess = verifyRes.data && verifyRes.data.session ? verifyRes.data.session : null;
     } else {
       let accessToken = '';
       let refreshToken = '';

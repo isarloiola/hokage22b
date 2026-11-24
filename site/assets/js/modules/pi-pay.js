@@ -200,6 +200,40 @@
     }
   }
 
+  const PENDING_LINK_EMAIL_KEY = 'hokage_pending_link_email';
+
+  function getPendingLinkEmail() {
+    try {
+      const raw = localStorage.getItem(PENDING_LINK_EMAIL_KEY);
+      if (!raw) return '';
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.email || !parsed.at) {
+        localStorage.removeItem(PENDING_LINK_EMAIL_KEY);
+        return '';
+      }
+      if (Date.now() - Number(parsed.at) > 20 * 60 * 1000) {
+        localStorage.removeItem(PENDING_LINK_EMAIL_KEY);
+        return '';
+      }
+      return String(parsed.email).trim().toLowerCase();
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function setPendingLinkEmail(email) {
+    try {
+      const clean = String(email || '').trim().toLowerCase();
+      if (clean) {
+        localStorage.setItem(PENDING_LINK_EMAIL_KEY, JSON.stringify({ email: clean, at: Date.now() }));
+      }
+    } catch (_) {}
+  }
+
+  function clearPendingLinkEmail() {
+    try { localStorage.removeItem(PENDING_LINK_EMAIL_KEY); } catch (_) {}
+  }
+
   // 5. Modal Web3 de Diagnóstico e Conexão Pi
   function openPiConnectModal(options) {
     let modal = document.getElementById('modal-pi-connect-diag');
@@ -215,6 +249,7 @@
     const inPi = isPiBrowser();
     const hasSdk = Boolean(window.Pi);
     const isSandbox = isSandboxMode();
+    const pendingLinkEmail = getPendingLinkEmail();
     const netTag = isSandbox ? '🧪 Ambiente Pi Testnet (Sandbox)' : '⚡ Ambiente Oficial Pi Mainnet';
     const modalHeading = isSandbox ? 'Conectar Pi Wallet (Testnet)' : 'Conectar Pi Wallet (Pi Browser)';
     const netLabel = isSandbox ? '🧪 Pi Testnet (Sandbox)' : '⚡ Pi Network (Produção)';
@@ -349,9 +384,9 @@
                 </div>
               ` : `
                 <button type="button" id="diag-toggle-link-email-btn" class="portal-btn portal-btn--outline portal-btn--full" style="border-color:rgba(56,189,248,0.45);color:#7dd3fc;font-weight:700;font-size:0.86rem;padding:10px 12px">
-                  ✉️ Adicionar / Vincular E-mail (acesso fora do Pi Browser)
+                  ${pendingLinkEmail ? ('🔑 Inserir código enviado para ' + escapeHtml(pendingLinkEmail)) : '✉️ Adicionar / Vincular E-mail (acesso fora do Pi Browser)'}
                 </button>
-                <div id="diag-link-email-box" style="display:none;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);border-radius:var(--radius-sm);padding:12px">
+                <div id="diag-link-email-box" style="display:${pendingLinkEmail ? 'block' : 'none'};background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);border-radius:var(--radius-sm);padding:12px">
                   <div style="font-size:0.8rem;font-weight:700;color:#bae6fd;margin-bottom:4px">
                     Vincular e-mail à sua conta Pi (@${escapeHtml(formatUserHandle(authenticatedUser.username))})
                   </div>
@@ -359,19 +394,24 @@
                     Assim você também consegue entrar no Chrome/Safari usando seu e-mail sem precisar abrir o Pi Browser.
                   </p>
                   <form id="diag-link-email-form" style="display:flex;gap:6px;flex-wrap:wrap">
-                    <input type="email" id="diag-link-email-input" required placeholder="seu@email.com" style="flex:1;min-width:155px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.22);background:rgba(0,0,0,0.55);color:#fff;font-size:0.84rem;box-sizing:border-box" />
+                    <input type="email" id="diag-link-email-input" required value="${escapeHtml(pendingLinkEmail)}" placeholder="seu@email.com" style="flex:1;min-width:155px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.22);background:rgba(0,0,0,0.55);color:#fff;font-size:0.84rem;box-sizing:border-box" />
                     <button type="submit" id="diag-link-email-submit" class="portal-btn portal-btn--primary portal-btn--sm" style="white-space:nowrap;font-weight:700">
-                      Enviar link de confirmação
+                      ${pendingLinkEmail ? 'Reenviar código' : 'Enviar link de confirmação'}
                     </button>
                   </form>
-                  <div id="diag-link-step2" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.12)">
+                  <div id="diag-link-step2" style="display:${pendingLinkEmail ? 'block' : 'none'};margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.12)">
                     <p style="font-size:0.75rem;color:#fde68a;margin:0 0 6px;line-height:1.4">
-                      ✉️ <strong>Link enviado!</strong> Abra seu e-mail, <strong>copie o link do botão</strong> (ou o código de 6 dígitos) e cole aqui embaixo para concluir no Pi Browser:
+                      ✉️ <strong>Quase lá!</strong> Digite abaixo o <strong>código de 6 dígitos</strong> do e-mail (ou cole o link completo):
                     </p>
-                    <input type="text" id="diag-link-confirm-input" placeholder="Cole o link do e-mail ou código de 6 dígitos" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.22);background:rgba(0,0,0,0.55);color:#fff;font-size:0.82rem;box-sizing:border-box;margin-bottom:8px" />
+                    <input type="text" id="diag-link-confirm-input" autocomplete="one-time-code" inputmode="text" placeholder="Digite o código de 6 dígitos (ou cole o link)" style="width:100%;padding:9px 10px;border-radius:8px;border:1px solid rgba(245,158,11,0.45);background:rgba(0,0,0,0.65);color:#fff;font-size:0.86rem;box-sizing:border-box;margin-bottom:8px" />
                     <button type="button" id="diag-link-confirm-btn" class="portal-btn portal-btn--primary portal-btn--full portal-btn--sm" style="font-weight:800">
                       ✓ Confirmar e Vincular à minha conta Pi
                     </button>
+                    <div style="text-align:center;margin-top:6px">
+                      <button type="button" id="diag-link-cancel-btn" style="background:none;border:none;color:#a1a1aa;font-size:0.73rem;cursor:pointer;text-decoration:underline">
+                        ✕ Cancelar / trocar e-mail
+                      </button>
+                    </div>
                   </div>
                   <div id="diag-link-email-feedback" style="display:none;margin-top:8px;font-size:0.77rem;line-height:1.4"></div>
                 </div>
@@ -538,11 +578,12 @@
             ? (window.location.origin + '/pioneiro?u=' + encodeURIComponent(handleSlug))
             : (window.location.origin + '/pioneiro');
           await window.HokageWeb2Auth.sendMagicLink(emailVal, redirectTarget);
+          setPendingLinkEmail(emailVal);
           if (step2) step2.style.display = 'block';
           if (fbEl) {
             fbEl.style.display = 'block';
             fbEl.style.color = '#6ee7b7';
-            fbEl.textContent = '✓ Enviado para ' + emailVal + '. Confira sua caixa de entrada ou spam.';
+            fbEl.textContent = '✓ Enviado para ' + emailVal + '. Se o Pi Browser recarregar ao voltar do e-mail, este campo reabrirá pronto!';
           }
         } catch (err) {
           if (fbEl) {
@@ -553,9 +594,17 @@
         } finally {
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Reenviar link';
+            submitBtn.textContent = 'Reenviar código';
           }
         }
+      });
+    }
+
+    const linkCancelBtn = document.getElementById('diag-link-cancel-btn');
+    if (linkCancelBtn) {
+      linkCancelBtn.addEventListener('click', function () {
+        clearPendingLinkEmail();
+        openPiConnectModal({ noAutoAuth: true });
       });
     }
 
@@ -572,7 +621,7 @@
           if (fbEl) {
             fbEl.style.display = 'block';
             fbEl.style.color = '#fde68a';
-            fbEl.textContent = '⚠️ Cole o link do e-mail ou digite o código de 6 dígitos.';
+            fbEl.textContent = '⚠️ Digite o código de 6 dígitos (ou cole o link do e-mail).';
           }
           if (confirmInp) confirmInp.focus();
           return;
@@ -592,6 +641,7 @@
         try {
           const piTok = getAuthTokenForServer() || '';
           const linkedProf = await window.HokageWeb2Auth.confirmAndLinkEmail(emailVal, confirmVal, piTok);
+          clearPendingLinkEmail();
           authenticatedUser = Object.assign({}, authenticatedUser || {}, {
             username: (linkedProf && linkedProf.username) || (authenticatedUser && authenticatedUser.username) || '',
             uid: (linkedProf && linkedProf.uid) || (authenticatedUser && authenticatedUser.uid) || '',
@@ -735,7 +785,7 @@
 
       setTimeout(function () {
         const modal = document.getElementById('modal-pi-connect-diag');
-        if (modal) modal.classList.remove('active');
+        if (modal && !getPendingLinkEmail()) modal.classList.remove('active');
       }, 1600);
 
       return auth.user;
@@ -1596,6 +1646,15 @@
             }, 450);
           } else {
             syncOwnedEbooksUi();
+          }
+
+          if (getPendingLinkEmail() && authenticatedUser && authenticatedUser.username && !authenticatedUser.email && authenticatedUser.authType !== 'hybrid') {
+            setTimeout(function () {
+              const existingDiagModal = document.getElementById('modal-pi-connect-diag');
+              if (getPendingLinkEmail() && (!existingDiagModal || !existingDiagModal.classList.contains('active'))) {
+                openPiConnectModal({ noAutoAuth: true });
+              }
+            }, 700);
           }
         }
       }
