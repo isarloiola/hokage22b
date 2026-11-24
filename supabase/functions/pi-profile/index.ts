@@ -89,6 +89,66 @@ function decodeProfileImageDataUrl(raw: unknown): { bytes: Uint8Array; ext: stri
   throw new HttpPayloadError("INVALID_IMAGE_BYTES", "Assinatura binária da imagem inválida.", 400);
 }
 
+function isWeb2SquatterRow(
+  row: { uid?: string | null; auth_provider?: string | null; is_pi_verified?: boolean | null; auth_user_id?: string | null } | null | undefined,
+  verifiedUid: string,
+  excludeAuthUserId?: string
+): boolean {
+  if (!row || String(row.uid || "") === String(verifiedUid)) return false;
+  if (excludeAuthUserId && String(row.auth_user_id || "") === String(excludeAuthUserId)) return false;
+  return (
+    row.auth_provider === "web2" ||
+    row.is_pi_verified === false ||
+    String(row.uid || "").startsWith("web2_") ||
+    Boolean(row.auth_user_id)
+  );
+}
+
+async function reclaimWeb2SquattedHandle(
+  supabase: ReturnType<typeof createClient>,
+  row: { uid?: string | null; username?: string | null },
+  cleanHandle: string
+): Promise<string | null> {
+  if (!row || !row.uid) return null;
+  const base = normalizeHandle(cleanHandle) || "pioneiro";
+  const candidates: string[] = [
+    `@${base.slice(0, 19)}_web`,
+    ...Array.from({ length: 8 }, (_, idx) => `@${base.slice(0, 18)}_web${idx + 2}`),
+    `@${base.slice(0, 15)}_w${Date.now().toString(36).slice(-5)}`,
+  ];
+
+  let freeHandle: string | null = null;
+  for (const candidate of candidates) {
+    const escaped = normalizeHandle(candidate).replace(/[\\%_]/g, "\\$&");
+    const { data: clash } = await supabase
+      .from("pioneiros")
+      .select("uid")
+      .or(`username.ilike.@${escaped},username.ilike.${escaped}`)
+      .neq("uid", String(row.uid))
+      .limit(1)
+      .maybeSingle();
+    if (!clash) {
+      freeHandle = candidate;
+      break;
+    }
+  }
+
+  if (!freeHandle) {
+    freeHandle = `@web_${Date.now().toString(36).slice(-8)}`;
+  }
+
+  const nowIso = new Date().toISOString();
+  const { error: updErr } = await supabase
+    .from("pioneiros")
+    .update({ username: freeHandle, updated_at: nowIso })
+    .eq("uid", row.uid);
+  if (updErr) {
+    throw updErr;
+  }
+
+  return freeHandle;
+}
+
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req, true);
 
@@ -145,7 +205,17 @@ serve(async (req) => {
           .maybeSingle(),
       ]);
 
-      const piRow = piRowByUid || piRowByUser || null;
+      if (piRowByUser && isWeb2SquatterRow(piRowByUser, piUser.uid, web2.authUserId)) {
+        await reclaimWeb2SquattedHandle(supabase, piRowByUser, normalizeHandle(piUser.username));
+      }
+      const usablePiByUser = (
+        piRowByUser &&
+        String(piRowByUser.uid || "") !== String(web2Row?.uid || "") &&
+        !isWeb2SquatterRow(piRowByUser, piUser.uid, web2.authUserId)
+      )
+        ? piRowByUser
+        : null;
+      const piRow = piRowByUid || usablePiByUser || null;
       if (piRow && piRow.auth_user_id && String(piRow.auth_user_id) !== web2.authUserId) {
         return jsonError(
           "PI_ALREADY_LINKED",
@@ -293,8 +363,13 @@ serve(async (req) => {
       .eq("uid", verifiedUid)
       .maybeSingle();
 
-    const existingFlags = existingByUid || existingByUser || null;
-    const isBrandNewPioneer = !existingByUser && !existingByUid;
+    const squatterByUser = (actor.kind === "pi" && existingByUser && isWeb2SquatterRow(existingByUser, verifiedUid))
+      ? existingByUser
+      : null;
+    const existingFlags = actor.kind === "pi"
+      ? (existingByUid || (!squatterByUser ? existingByUser : null) || null)
+      : (existingByUid || existingByUser || null);
+    const isBrandNewPioneer = !existingFlags;
 
     const { data: activeAds } = await supabase
       .from("anuncios")
@@ -370,7 +445,9 @@ serve(async (req) => {
       ? "hokage"
       : (Boolean(cleanWallet) && (cleanProducts.length > 0 || repScore >= 70) ? "construtor" : "pioneiro");
 
-    const resolvedAuthUserId = actor.authUserId ?? existingFlags?.auth_user_id ?? null;
+    const resolvedAuthUserId = actor.kind === "pi"
+      ? (existingByUid?.auth_user_id ?? null)
+      : (actor.authUserId ?? existingFlags?.auth_user_id ?? null);
     const resolvedAuthProvider = actor.kind === "pi"
       ? (resolvedAuthUserId ? "hybrid" : "pi")
       : (actor.isPiVerified ? "hybrid" : "web2");
@@ -471,12 +548,16 @@ serve(async (req) => {
       }
     }
 
-    // 4. GRAVAÇÃO SEGURA NO SUPABASE (Com migração automática apenas quando autenticado via Pi SDK)
+    // 4. GRAVAÇÃO SEGURA NO SUPABASE (Recupera @ usurpado por Web2 sem vincular auth_user_id de terceiros)
     if (actor.kind === "pi" && existingByUser && existingByUser.uid && existingByUser.uid !== verifiedUid) {
-      await supabase
-        .from("pioneiros")
-        .update({ uid: verifiedUid })
-        .eq("uid", existingByUser.uid);
+      if (squatterByUser) {
+        await reclaimWeb2SquattedHandle(supabase, squatterByUser, cleanHandle);
+      } else if (!existingByUid) {
+        await supabase
+          .from("pioneiros")
+          .update({ uid: verifiedUid })
+          .eq("uid", existingByUser.uid);
+      }
     }
 
     const { data, error } = await supabase
