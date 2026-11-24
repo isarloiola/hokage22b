@@ -166,6 +166,24 @@ function projectPassport(row: Record<string, unknown>) {
     };
   });
 
+  const rawSocialLinks = Array.isArray(row.social_links)
+    ? row.social_links
+    : (row.checklist_state && typeof row.checklist_state === "object" && !Array.isArray(row.checklist_state) && Array.isArray((row.checklist_state as Record<string, unknown>).social_links)
+      ? ((row.checklist_state as Record<string, unknown>).social_links as unknown[])
+      : []);
+  let mapOfPiUrl: string | null = null;
+  for (const s of rawSocialLinks) {
+    if (!s || typeof s !== "object") continue;
+    const sObj = s as Record<string, unknown>;
+    if (String(sObj.network || "").toLowerCase() === "map_of_pi" && typeof sObj.url === "string") {
+      const u = sObj.url.trim();
+      if (/^https?:\/\//i.test(u)) {
+        mapOfPiUrl = u.slice(0, 300);
+        break;
+      }
+    }
+  }
+
   return {
     username,
     handle: `@${username}`,
@@ -176,6 +194,7 @@ function projectPassport(row: Record<string, unknown>) {
     bio: row.bio || null,
     avatar_url: row.avatar_url || null,
     wallet_address: row.wallet_address || null,
+    map_of_pi_url: mapOfPiUrl,
     socials: {
       whatsapp_url: row.whatsapp_url || null,
       youtube_url: row.youtube_url || null,
@@ -287,7 +306,7 @@ function resolveRoute(url: URL): string {
 }
 
 const PUBLIC_PIONEER_SELECT =
-  "username, bio, avatar_url, wallet_address, whatsapp_url, youtube_url, twitter_url, instagram_url, products, reputation_score, level_name, is_ambassador, referral_qualified_count, updated_at";
+  "username, bio, avatar_url, wallet_address, whatsapp_url, youtube_url, twitter_url, instagram_url, checklist_state, products, reputation_score, level_name, is_ambassador, referral_qualified_count, auth_provider, is_pi_verified, updated_at";
 
 const PUBLIC_VILA_SELECT =
   "id, title, description, category, plan_tier, country_code, payment_modes, item_price, item_currency, link_url, image_url, pioneer_username, pioneer_name, created_at";
@@ -364,7 +383,7 @@ serve(async (req: Request) => {
 
     // 3. Passaporte(s) do Pioneiro
     if (route === "/passaportes") {
-      const rawU = url.searchParams.get("u");
+      const rawU = url.searchParams.get("u") ?? url.searchParams.get("username");
       if (rawU !== null && rawU.trim() !== "") {
         const cleanU = rawU.trim().replace(/^@+/, "").toLowerCase();
         if (!/^[a-z0-9_.-]{2,32}$/.test(cleanU)) {
@@ -391,6 +410,7 @@ serve(async (req: Request) => {
       const limit = clampLimit(url.searchParams.get("limit"));
       const offset = clampOffset(url.searchParams.get("offset"));
       const tierFilter = String(url.searchParams.get("tier") || "").trim().toLowerCase();
+      const hasMapOfPi = url.searchParams.get("has_map_of_pi") === "1";
 
       const { data, error } = await supabase
         .from("pioneiros")
@@ -403,6 +423,9 @@ serve(async (req: Request) => {
       let deduped = dedupePassports((data || []).map(projectPassport));
       if (tierFilter === "hokage" || tierFilter === "construtor" || tierFilter === "pioneiro") {
         deduped = deduped.filter((item) => item.journey_tier === tierFilter);
+      }
+      if (hasMapOfPi) {
+        deduped = deduped.filter((item) => Boolean(item.map_of_pi_url));
       }
       const items = deduped.slice(offset, offset + limit);
 

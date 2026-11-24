@@ -560,118 +560,74 @@ function isPiBrowser() {
   return false;
 }
 
-    async function triggerWeb2GoogleLogin(btnEl, fbEl) {
-      if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.signInWithGoogle !== 'function') {
-        if (fbEl) {
-          fbEl.style.display = 'block';
-          fbEl.style.color = '#fca5a5';
-          fbEl.textContent = 'Login Google indisponível no momento. Use seu e-mail abaixo.';
-        }
-        return;
-      }
-      const origHtml = btnEl ? btnEl.innerHTML : '';
-      if (btnEl) {
-        btnEl.disabled = true;
-        btnEl.textContent = '⏳ Conectando ao Google...';
-      }
-      if (fbEl) fbEl.style.display = 'none';
-      try {
-        await window.HokageWeb2Auth.signInWithGoogle(window.location.origin + '/pioneiro');
-      } catch (err) {
-        if (btnEl) {
-          btnEl.disabled = false;
-          btnEl.innerHTML = origHtml;
-        }
-        if (fbEl) {
-          fbEl.style.display = 'block';
-          fbEl.style.color = '#fde68a';
-          fbEl.textContent = 'ℹ️ ' + ((err && err.message) || 'Login com Google em ativação — use seu e-mail abaixo!');
-        }
-      }
+async function triggerWeb2GoogleLogin(btnEl, fbEl) {
+  if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.signInWithGoogle !== 'function') {
+    if (fbEl) {
+      fbEl.style.display = 'block';
+      fbEl.style.color = '#fca5a5';
+      fbEl.textContent = 'Login Google indisponível no momento. Use seu e-mail abaixo.';
     }
+    return;
+  }
+  const origHtml = btnEl ? btnEl.innerHTML : '';
+  if (btnEl) {
+    btnEl.disabled = true;
+    btnEl.textContent = '⏳ Conectando ao Google...';
+  }
+  if (fbEl) fbEl.style.display = 'none';
+  try {
+    await window.HokageWeb2Auth.signInWithGoogle(window.location.origin + '/pioneiro');
+  } catch (err) {
+    if (btnEl) {
+      btnEl.disabled = false;
+      btnEl.innerHTML = origHtml;
+    }
+    if (fbEl) {
+      fbEl.style.display = 'block';
+      fbEl.style.color = '#fde68a';
+      fbEl.textContent = 'ℹ️ ' + ((err && err.message) || 'Login com Google em ativação — use seu e-mail abaixo!');
+    }
+  }
+}
 
-    function openExternalBrowserModal() {
-      const modal = document.getElementById('external-browser-modal');
-      if (modal) {
-        const extGoogleSlot = document.getElementById('ext-modal-google-slot');
-        if (!isPiBrowser() && extGoogleSlot && window.HokageWeb2Auth && typeof window.HokageWeb2Auth.renderGoogleButton === 'function') {
-          window.HokageWeb2Auth.renderGoogleButton(extGoogleSlot, {
-            onSuccess: function () {
-              closeExternalBrowserModal();
-              showVitrineToast('✓ Conectado com Google!', 'success');
-            },
-            onError: function (err) {
-              const fbEl = document.getElementById('ext-modal-web2-feedback');
-              if (fbEl) {
-                fbEl.style.display = 'block';
-                fbEl.style.color = '#fde68a';
-                fbEl.textContent = 'ℹ️ ' + ((err && err.message) || 'Use seu e-mail abaixo caso prefira.');
-              }
-            }
-          });
+function openExternalBrowserModal() {
+  const modal = document.getElementById('external-browser-modal');
+  if (modal) {
+    const extGoogleSlot = document.getElementById('ext-modal-google-slot');
+    if (!isPiBrowser() && extGoogleSlot && window.HokageWeb2Auth && typeof window.HokageWeb2Auth.renderGoogleButton === 'function') {
+      window.HokageWeb2Auth.renderGoogleButton(extGoogleSlot, {
+        onSuccess: function () {
+          closeExternalBrowserModal();
+          showVitrineToast('✓ Conectado com Google!', 'success');
+        },
+        onError: function (err) {
+          const fbEl = document.getElementById('ext-modal-web2-feedback');
+          if (fbEl) {
+            fbEl.style.display = 'block';
+            fbEl.style.color = '#fde68a';
+            fbEl.textContent = 'ℹ️ ' + ((err && err.message) || 'Use seu e-mail abaixo caso prefira.');
+          }
         }
-        const extGoogleBtn = document.getElementById('ext-modal-google-btn');
-        if (extGoogleBtn && !extGoogleBtn.dataset.bound) {
-          extGoogleBtn.dataset.bound = '1';
-          extGoogleBtn.addEventListener('click', function () {
-            triggerWeb2GoogleLogin(extGoogleBtn, document.getElementById('ext-modal-web2-feedback'));
-          });
-        }
-        const extForm = document.getElementById('ext-modal-web2-form');
-        if (extForm && !extForm.dataset.bound) {
-          extForm.dataset.bound = '1';
-          extForm.addEventListener('submit', async function (ev) {
-            ev.preventDefault();
-            const emailInp = document.getElementById('ext-modal-web2-email');
-            const submitBtn = document.getElementById('ext-modal-web2-btn');
-            const fbEl = document.getElementById('ext-modal-web2-feedback');
-            const emailVal = emailInp ? emailInp.value.trim() : '';
-            if (!window.HokageWeb2Auth || typeof window.HokageWeb2Auth.sendMagicLink !== 'function') {
-              if (fbEl) {
-                fbEl.style.display = 'block';
-                fbEl.style.color = '#fca5a5';
-                fbEl.textContent = 'Autenticação por e-mail indisponível no momento.';
-              }
-              return;
-            }
-            if (submitBtn) {
-              submitBtn.disabled = true;
-              submitBtn.textContent = 'Enviando link...';
-            }
-            if (fbEl) fbEl.style.display = 'none';
-            try {
-              await window.HokageWeb2Auth.sendMagicLink(emailVal, window.location.origin + '/pioneiro');
-              if (fbEl) {
-                fbEl.style.display = 'block';
-                fbEl.style.color = '#6ee7b7';
-                fbEl.innerHTML = '✉️ <strong>Link enviado!</strong> Abra seu e-mail e toque no link para escolher seu @usuário.';
-              }
-              if (emailInp) emailInp.value = '';
-            } catch (err) {
-              if (fbEl) {
-                fbEl.style.display = 'block';
-                fbEl.style.color = '#fca5a5';
-                fbEl.textContent = '⚠️ ' + ((err && err.message) || 'Erro ao enviar link de acesso.');
-              }
-            } finally {
-              if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = '✉️ Enviar Link Mágico para Criar Conta';
-              }
-            }
-          });
-        }
-        modal.style.display = 'flex';
-        modal.classList.add('active');
-        modal.setAttribute('aria-hidden', 'false');
-        const extEmail = document.getElementById('ext-modal-web2-email');
-        if (extEmail) {
-          setTimeout(function () {
-            try { extEmail.focus(); } catch (_) { }
-          }, 120);
-        }
-      }
+      });
     }
+    const extGoogleBtn = document.getElementById('ext-modal-google-btn');
+    if (extGoogleBtn && !extGoogleBtn.dataset.bound) {
+      extGoogleBtn.dataset.bound = '1';
+      extGoogleBtn.addEventListener('click', function () {
+        triggerWeb2GoogleLogin(extGoogleBtn, document.getElementById('ext-modal-web2-feedback'));
+      });
+    }
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    const extEmail = document.getElementById('ext-modal-web2-email');
+    if (extEmail) {
+      setTimeout(function () {
+        try { extEmail.focus(); } catch (_) { }
+      }, 120);
+    }
+  }
+}
 
 function closeExternalBrowserModal() {
   const modal = document.getElementById('external-browser-modal');
@@ -1027,37 +983,37 @@ async function loadPioneerProfile() {
       }
     }
 
-        // Mostra atalho de 1 clique caso já esteja logado (e login Web2 fora do Pi Browser)
-        syncOnboardingAuthBoxes();
-        loadPioneersDirectory();
-        if (getQueryParam('setup') === 'web2' && loggedUser && loggedUser.authType === 'web2' && loggedUser.needsHandle) {
-          setTimeout(function () {
-            openProfileEditModal();
-          }, 200);
-        } else if (isCreateFlow && !isPiBrowser()) {
-          setTimeout(function () {
-            const emailInp = document.getElementById('web2-onboarding-email');
-            if (emailInp) {
-              try { emailInp.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (_) {}
-              try { emailInp.focus(); } catch (_) {}
-            }
-          }, 180);
-        } else if (isExploreFlow) {
-          setTimeout(function () {
-            const dirSec = document.getElementById('pioneer-directory-section');
-            if (dirSec) dirSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            const searchInp = document.getElementById('dir-search-input');
-            if (searchInp && !getQueryParam('q')) {
-              try { searchInp.focus({ preventScroll: true }); } catch (_) {}
-            }
-          }, 180);
-        } else if (getQueryParam('autostart') === '1') {
-          setTimeout(function () {
-            connectPiBrowserAndStart();
-          }, 250);
+    // Mostra atalho de 1 clique caso já esteja logado (e login Web2 fora do Pi Browser)
+    syncOnboardingAuthBoxes();
+    loadPioneersDirectory();
+    if (getQueryParam('setup') === 'web2' && loggedUser && loggedUser.authType === 'web2' && loggedUser.needsHandle) {
+      setTimeout(function () {
+        openProfileEditModal();
+      }, 200);
+    } else if (isCreateFlow && !isPiBrowser()) {
+      setTimeout(function () {
+        const emailInp = document.getElementById('web2-onboarding-email');
+        if (emailInp) {
+          try { emailInp.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (_) { }
+          try { emailInp.focus(); } catch (_) { }
         }
-        return;
-      }
+      }, 180);
+    } else if (isExploreFlow) {
+      setTimeout(function () {
+        const dirSec = document.getElementById('pioneer-directory-section');
+        if (dirSec) dirSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const searchInp = document.getElementById('dir-search-input');
+        if (searchInp && !getQueryParam('q')) {
+          try { searchInp.focus({ preventScroll: true }); } catch (_) { }
+        }
+      }, 180);
+    } else if (getQueryParam('autostart') === '1') {
+      setTimeout(function () {
+        connectPiBrowserAndStart();
+      }, 250);
+    }
+    return;
+  }
 
   loadPioneersDirectory();
 
@@ -1470,6 +1426,30 @@ function renderShowcaseData(prof, ads) {
         `;
   }
 
+  let mapOfPiUrl = (!prof._notFound && prof.map_of_pi_url) ? prof.map_of_pi_url : '';
+  if (!prof._notFound && !mapOfPiUrl && Array.isArray(prof.social_links)) {
+    const foundMap = prof.social_links.find(item => item && String(item.network || '').toLowerCase() === 'map_of_pi' && item.url);
+    if (foundMap) mapOfPiUrl = foundMap.url;
+  }
+  const safeMapOfPiUrl = sanitizeUrl(mapOfPiUrl);
+  if (safeMapOfPiUrl && safeMapOfPiUrl !== '#') {
+    linksHtml = `
+          <a href="${escapeHtml(safeMapOfPiUrl)}" target="_blank" rel="noopener noreferrer" class="pioneer-link-btn pioneer-link-btn--featured" style="border-color:rgba(16,185,129,0.5);background:linear-gradient(135deg,rgba(16,185,129,0.14),rgba(13,148,136,0.1))">
+            <div class="pioneer-link-icon-wrap" style="background:rgba(16,185,129,0.2)">
+              <span style="font-size:1.35rem">📍</span>
+            </div>
+            <div class="pioneer-link-content">
+              <span class="pioneer-link-heading">
+                Loja Verificada no Map of Pi
+                <span style="font-size:0.68rem;background:rgba(16,185,129,0.25);border:1px solid rgba(16,185,129,0.5);color:#6ee7b7;padding:2px 8px;border-radius:10px;font-weight:700">Map of Pi</span>
+              </span>
+              <span class="pioneer-link-caption">Ver localização e avaliações desta loja no mapa oficial da comunidade Pi</span>
+            </div>
+            <span class="pioneer-link-chevron">↗</span>
+          </a>
+        ` + linksHtml;
+  }
+
   // 2. Barra Compacta de Ícones Pequenos para Redes Sociais (Principais + Extras Dinâmicos, Anti-XSS)
   const socialBar = document.getElementById('pioneer-social-bar');
   if (socialBar) {
@@ -1493,7 +1473,9 @@ function renderShowcaseData(prof, ads) {
 
     if (Array.isArray(prof.social_links)) {
       prof.social_links.forEach(item => {
-        if (item && item.url) pushSocialEntry(item.network || 'auto', item.url);
+        if (item && item.url && String(item.network || '').toLowerCase() !== 'map_of_pi') {
+          pushSocialEntry(item.network || 'auto', item.url);
+        }
       });
     }
 
@@ -1832,6 +1814,7 @@ function openProfileEditModal() {
   const existingAvatar = (currentProfileData && currentProfileData.avatar_url) ? currentProfileData.avatar_url : '';
   setModalAvatar(existingAvatar, activeUser);
 
+  const mapOfPiInp = document.getElementById('prof-input-map-of-pi');
   if (currentProfileData) {
     document.getElementById('prof-input-bio').value = currentProfileData.bio || '';
     document.getElementById('prof-input-wallet').value = currentProfileData.wallet_address || '';
@@ -1839,6 +1822,14 @@ function openProfileEditModal() {
     document.getElementById('prof-input-social').value = currentProfileData.youtube_url || '';
     document.getElementById('prof-input-instagram').value = currentProfileData.instagram_url || '';
     document.getElementById('prof-input-twitter').value = currentProfileData.twitter_url || '';
+    let existingMapUrl = currentProfileData.map_of_pi_url || '';
+    if (!existingMapUrl && Array.isArray(currentProfileData.social_links)) {
+      const mEntry = currentProfileData.social_links.find(item => item && String(item.network || '').toLowerCase() === 'map_of_pi' && item.url);
+      if (mEntry) existingMapUrl = mEntry.url;
+    }
+    if (mapOfPiInp) mapOfPiInp.value = existingMapUrl || '';
+  } else if (mapOfPiInp) {
+    mapOfPiInp.value = '';
   }
 
   // Checkboxes de Destaque da Comunidade (Qualquer Pioneiro pode ativar/desativar)
@@ -1853,6 +1844,7 @@ function openProfileEditModal() {
     extraSocialsContainer.innerHTML = '';
     if (currentProfileData && Array.isArray(currentProfileData.social_links) && currentProfileData.social_links.length > 0) {
       currentProfileData.social_links.forEach(item => {
+        if (item && String(item.network || '').toLowerCase() === 'map_of_pi') return;
         addExtraSocialRow(item.network || 'auto', item.url || '');
       });
     }
@@ -2270,12 +2262,23 @@ function handleProductPhotoUpload(e, inputEl) {
 }
 
 function collectSocialFieldsFromForm() {
+  const extraLinks = collectExtraSocialsFromForm().filter(item => {
+    return item && String(item.network || '').toLowerCase() !== 'map_of_pi';
+  });
+  const mapEl = document.getElementById('prof-input-map-of-pi');
+  const rawMap = mapEl ? mapEl.value.trim() : '';
+  if (rawMap) {
+    const normalizedMap = /^https?:\/\//i.test(rawMap) ? rawMap : ('https://' + rawMap.replace(/^\/+/, ''));
+    if (/^https?:\/\//i.test(normalizedMap)) {
+      extraLinks.push({ network: 'map_of_pi', url: normalizedMap.slice(0, 300) });
+    }
+  }
   return {
     whatsapp_url: normalizeSocialUrl('whatsapp', document.getElementById('prof-input-whatsapp').value),
     youtube_url: normalizeSocialUrl('youtube', document.getElementById('prof-input-social').value),
     instagram_url: normalizeSocialUrl('instagram', document.getElementById('prof-input-instagram').value),
     twitter_url: normalizeSocialUrl('twitter', document.getElementById('prof-input-twitter').value),
-    social_links: collectExtraSocialsFromForm()
+    social_links: extraLinks
   };
 }
 
