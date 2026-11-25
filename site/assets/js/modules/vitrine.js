@@ -1564,8 +1564,18 @@ function renderShowcaseData(prof, ads) {
             </div>
           `;
     }).join('');
+    const vilaStoreLink = document.getElementById('pioneer-products-vila-link');
+    if (vilaStoreLink) {
+      const cleanStoreHandle = String(prof.username || '').replace(/^@+/, '');
+      if (cleanStoreHandle) {
+        vilaStoreLink.href = 'mural?seller=' + encodeURIComponent(cleanStoreHandle);
+        vilaStoreLink.style.display = 'inline-flex';
+      }
+    }
     productsSection.style.display = 'block';
   } else {
+    const vilaStoreLink = document.getElementById('pioneer-products-vila-link');
+    if (vilaStoreLink) vilaStoreLink.style.display = 'none';
     productsSection.style.display = 'none';
   }
 

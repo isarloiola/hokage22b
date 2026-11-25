@@ -524,11 +524,64 @@
     }
 
     try {
-      const res = await fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/vila?limit=6');
-      const json = await res.json().catch(function () { return {}; });
-      const items = (json && json.data && Array.isArray(json.data.items))
+      const [vilaRes, passRes] = await Promise.all([
+        fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/vila?limit=6'),
+        fetch('https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/public-api/v1/passaportes?limit=15').catch(function () { return null; })
+      ]);
+      const json = await vilaRes.json().catch(function () { return {}; });
+      const vilaItems = (json && json.data && Array.isArray(json.data.items))
         ? json.data.items
         : (Array.isArray(json.items) ? json.items : []);
+
+      let passItems = [];
+      if (passRes && passRes.ok) {
+        const passJson = await passRes.json().catch(function () { return {}; });
+        passItems = (passJson && passJson.data && Array.isArray(passJson.data.items))
+          ? passJson.data.items
+          : (Array.isArray(passJson.items) ? passJson.items : []);
+      }
+
+      const seenTitles = new Set();
+      vilaItems.forEach(function (ad) {
+        const rawAuthor = (ad.author && typeof ad.author === 'object')
+          ? (ad.author.handle || ad.author.username || '')
+          : (ad.author || ad.author_username || '');
+        const s = String(rawAuthor).replace(/^@+/, '').toLowerCase();
+        const t = String(ad.title || '').trim().toLowerCase();
+        if (s && t) seenTitles.add(s + '::' + t);
+      });
+
+      const vitrineItems = [];
+      passItems.forEach(function (prof) {
+        const handle = String((prof && prof.username) || '').replace(/^@+/, '').toLowerCase();
+        if (!handle || !Array.isArray(prof.products)) return;
+        let countForSeller = 0;
+        prof.products.forEach(function (prod) {
+          if (countForSeller >= 4) return;
+          const title = String((prod && prod.title) || '').trim();
+          if (!title || seenTitles.has(handle + '::' + title.toLowerCase())) return;
+          const price = String((prod && prod.price) || '').trim();
+          const priceFiat = String((prod && prod.price_fiat) || '').trim();
+          const hasPi = /π|\bpi\b/i.test(price);
+          const hasFiat = Boolean(priceFiat) || /^(R\$|\$|€|USD|EUR|BRL)/i.test(price);
+          const payMode = (hasPi && hasFiat) ? 'pi_fiat' : (hasFiat ? 'fiat' : 'pi');
+          const combinedPrice = (price && priceFiat) ? (price + ' + ' + priceFiat) : (price || priceFiat || '');
+          vitrineItems.push({
+            id: 'vitrine_' + handle + '_' + countForSeller,
+            is_vitrine_product: true,
+            plan_tier: 'vitrine',
+            author: handle,
+            title: title,
+            description: (prod && prod.description) || ((prod && prod.badge ? prod.badge + ' · ' : '') + 'Disponível na vitrine de @' + handle),
+            payment_modes: payMode,
+            item_price: combinedPrice,
+            image_url: (prod && prod.image_url) || ''
+          });
+          countForSeller++;
+        });
+      });
+
+      const items = vilaItems.concat(vitrineItems);
 
       if (!items.length) {
         grid.innerHTML =
@@ -542,15 +595,17 @@
       }
 
       grid.innerHTML = items.slice(0, 6).map(function (ad) {
+        const isVitrine = Boolean(ad.is_vitrine_product);
         const rawTier = String(ad.plan_tier || ad.tier || ad.plan || 'bronze').toLowerCase();
-        const tier = ['ouro', 'prata', 'bronze', 'gratis'].includes(rawTier) ? rawTier : 'bronze';
+        const tier = isVitrine ? 'vitrine' : (['ouro', 'prata', 'bronze', 'gratis'].includes(rawTier) ? rawTier : 'bronze');
         const rawAuthorObj = (ad.author && typeof ad.author === 'object')
           ? (ad.author.handle || ad.author.username || '@pioneiro')
           : (ad.author || ad.author_username || '@pioneiro');
         const authorRaw = String(rawAuthorObj).replace(/^@+/, '') || 'pioneiro';
-        const badgeLabel = tier === 'ouro' ? '👑 Destaque Ouro VIP'
-          : tier === 'prata' ? '🥈 Destaque Prata'
-          : tier === 'gratis' ? '🌱 Comunidade' : '🥉 Classificado Bronze';
+        const badgeLabel = isVitrine ? '🪪 Vitrine do Passaporte'
+          : (tier === 'ouro' ? '👑 Destaque Ouro VIP'
+            : tier === 'prata' ? '🥈 Destaque Prata'
+            : tier === 'gratis' ? '🌱 Comunidade' : '🥉 Classificado Bronze');
 
         const rawPay = String(ad.payment_modes || 'pi').toLowerCase();
         const payBadgeHtml = (rawPay === 'pi_fiat' || rawPay === 'pi_reais')
@@ -562,7 +617,7 @@
         const rawPriceStr = ad.item_price != null ? String(ad.item_price).trim() : '';
         let itemPriceText = '';
         if (rawPriceStr) {
-          if (rawPriceStr.indexOf('π') !== -1 || rawPriceStr.indexOf('+') !== -1) {
+          if (rawPriceStr.indexOf('π') !== -1 || rawPriceStr.indexOf('+') !== -1 || /^(R\$|\$|€|USD|EUR|BRL)/i.test(rawPriceStr)) {
             itemPriceText = esc(rawPriceStr);
           } else {
             const n = parseFloat(rawPriceStr.replace(',', '.'));
@@ -575,13 +630,17 @@
           }
         }
         if (!itemPriceText) {
-          itemPriceText = (tier === 'gratis' || Number(ad.price_pi) === 0)
-            ? 'Grátis'
-            : (ad.price_pi && Number(ad.price_pi) > 0 ? esc(Number(ad.price_pi) + ' π')
-              : (tier === 'ouro' ? '3.14 π' : tier === 'prata' ? '1.00 π' : '0.314 π'));
+          itemPriceText = isVitrine ? 'Vitrine'
+            : ((tier === 'gratis' || Number(ad.price_pi) === 0)
+              ? 'Grátis'
+              : (ad.price_pi && Number(ad.price_pi) > 0 ? esc(Number(ad.price_pi) + ' π')
+                : (tier === 'ouro' ? '3.14 π' : tier === 'prata' ? '1.00 π' : '0.314 π')));
         }
 
-        const targetHref = 'mural?ad=' + encodeURIComponent(ad.id || '');
+        const targetHref = isVitrine
+          ? ('mural?seller=' + encodeURIComponent(authorRaw))
+          : ('mural?ad=' + encodeURIComponent(ad.id || ''));
+        const ctaLabel = isVitrine ? 'Ver na Vila →' : 'Ver Oferta na Vila →';
         const safeImg = (ad.image_url && /^https?:\/\//i.test(ad.image_url)) ? esc(ad.image_url) : '';
         const bannerHtml = safeImg
           ? '<div class="pioneer-card__banner"><img src="' + safeImg + '" alt="' + esc(ad.title || '') + '" loading="lazy" /></div>'
@@ -599,7 +658,7 @@
               payBadgeHtml +
             '</div>' +
             '<div class="pioneer-card__footer">' +
-              '<a href="' + targetHref + '" class="pioneer-card__link">Ver Oferta na Vila →</a>' +
+              '<a href="' + targetHref + '" class="pioneer-card__link">' + ctaLabel + '</a>' +
               '<span class="pioneer-card__price-tag">' + itemPriceText + '</span>' +
             '</div>' +
           '</article>'

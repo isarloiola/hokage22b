@@ -320,9 +320,25 @@
     return arr.slice(offset).concat(arr.slice(0, offset));
   }
 
+  const vitrineProductsCache = {};
+
+  function normalizeSellerHandle(raw) {
+    return String(raw || '').trim().replace(/^@+/, '').toLowerCase();
+  }
+
+  function inferVitrineCategory(prod) {
+    const hay = (String((prod && prod.badge) || '') + ' ' + String((prod && prod.title) || '')).toLowerCase();
+    if (/servi[cç]o|consultoria|mentoria|design|dev|manuten|freela|corte|barba/i.test(hay)) return 'servico';
+    if (/e-?book|pdf|epub|curso|guia|digital/i.test(hay)) return 'digital';
+    return 'produto';
+  }
+
   function buildAdCardHtml(ad) {
+    const isVitrineProduct = Boolean(ad.is_vitrine_product);
     const isFounderDemo = Boolean(ad.is_founder_demo || ad.status === 'demonstracao');
-    const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata' || ad.plan_tier === 'gratis') ? ad.plan_tier : 'bronze';
+    const tier = isVitrineProduct
+      ? 'vitrine'
+      : ((ad.plan_tier === 'ouro' || ad.plan_tier === 'prata' || ad.plan_tier === 'gratis') ? ad.plan_tier : 'bronze');
     const tierBadgeClass = 'pioneer-badge--' + tier;
 
     const CAT_LABELS = {
@@ -347,7 +363,11 @@
     let overlayLabel = '';
     let priceHtml = '';
 
-    if (isFounderDemo) {
+    if (isVitrineProduct) {
+      tierLabel = '🪪 Vitrine do Passaporte';
+      overlayLabel = '🪪 VITRINE DO PASSAPORTE';
+      priceHtml = '<span class="pioneer-card__price-tag" style="background:rgba(16,185,129,0.14);border-color:rgba(16,185,129,0.35);color:#6ee7b7">Vitrine</span>';
+    } else if (isFounderDemo) {
       tierLabel = '👑 Ouro Fundador · Demonstração';
       overlayLabel = '👑 OURO FUNDADOR · EXEMPLAR';
       priceHtml = '<span class="pioneer-card__price-tag" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.35);color:var(--amber-light)" title="Exemplar institucional">Exemplar Oficial</span>';
@@ -373,7 +393,7 @@
     const rawPriceStr = ad.item_price != null ? String(ad.item_price).trim() : '';
     if (rawPriceStr) {
       let formattedVal = '';
-      if (rawPriceStr.indexOf('π') !== -1 || rawPriceStr.indexOf('+') !== -1) {
+      if (rawPriceStr.indexOf('π') !== -1 || rawPriceStr.indexOf('+') !== -1 || /^(R\$|\$|€|USD|EUR|BRL|gr[aá]tis)/i.test(rawPriceStr)) {
         formattedVal = rawPriceStr;
       } else {
         const rawItemPrice = parseFloat(rawPriceStr.replace(',', '.'));
@@ -391,12 +411,31 @@
     const safeAuthor = escapeHtml(author);
     const safeTitle = escapeHtml(ad.title || '');
     const safeDesc = escapeHtml(ad.description || '');
-    const cleanUrl = (tier === 'ouro' || tier === 'prata') ? safeUrl(ad.link_url) : '';
+    const cleanUrl = (tier === 'ouro' || tier === 'prata' || isVitrineProduct) ? safeUrl(ad.link_url) : '';
     const category = escapeHtml(ad.category || 'geral');
     const cardId = escapeHtml(ad.id || ('ad_' + Math.random().toString(36).substring(2, 7)));
+    const cleanAuthorSlug = String(author || '').replace(/^@+/, '');
+    const sellerAttr = escapeHtml(cleanAuthorSlug.toLowerCase());
+    const sourceAttr = isVitrineProduct ? 'vitrine' : 'anuncio';
+
+    let loggedHandle = '';
+    try {
+      const rawLogged = localStorage.getItem('hokage_pi_user') || '';
+      const parsedLogged = rawLogged ? JSON.parse(rawLogged) : null;
+      if (parsedLogged && parsedLogged.username) loggedHandle = normalizeSellerHandle(parsedLogged.username);
+    } catch (_) {}
+    const isVitrineOwner = Boolean(isVitrineProduct && loggedHandle && loggedHandle === sellerAttr);
 
     let linkHtml = '';
-    if (tier === 'ouro' && cleanUrl) {
+    if (isVitrineProduct) {
+      linkHtml = `
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <a href="pioneiro?u=${encodeURIComponent(cleanAuthorSlug)}#pioneer-products-section" data-mural-action="track-profile" data-ad-id="${cardId}" class="pioneer-card__link" style="background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(139,92,246,0.22));border:1px solid rgba(16,185,129,0.45);color:#ecfdf5;padding:7px 12px;border-radius:8px;font-weight:800;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px">🪪 Ver na Vitrine / Negociar →</a>
+          ${cleanUrl ? `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="btn btn-outline btn-sm" style="padding:6px 10px;font-size:0.75rem;text-decoration:none;border-color:rgba(255,255,255,0.2);color:#e4e4e7">🔗 Abrir Oferta ↗</a>` : ''}
+          ${isVitrineOwner ? `<button type="button" data-mural-action="promote-vitrine" data-ad-id="${cardId}" class="btn btn-outline btn-sm" style="padding:6px 10px;font-size:0.75rem;border-color:rgba(245,158,11,0.5);color:var(--amber-light);font-weight:700">⚡ Impulsionar na Vila</button>` : ''}
+        </div>
+      `;
+    } else if (tier === 'ouro' && cleanUrl) {
       linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" data-mural-action="track-click" data-ad-id="${cardId}" class="pioneer-card__link pioneer-card__link--ouro" style="background:var(--amber);color:#000;font-weight:900;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(245,158,11,0.35)">⚡ Acessar Canal Oficial →</a>`;
     } else if (tier === 'prata' && cleanUrl) {
       linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" data-mural-action="track-click" data-ad-id="${cardId}" class="pioneer-card__link">Acessar Oferta →</a>`;
@@ -481,28 +520,18 @@
       ? '⚡💵 Pi + Moeda'
       : (normalizedPayMode === 'fiat' ? '💵 Somente Moeda' : '⚡ Somente Pi');
     const safeLocation = escapeHtml((ad.location && String(ad.location).trim()) || 'Online');
-    const cleanAuthorSlug = String(author || '').replace(/^@+/, '');
-
     const createdAttr = escapeHtml(String(ad.created_at || ''));
 
-    return `
-      <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" data-payment-mode="${normalizedPayMode}" data-country="${countryCode}" data-tier="${tier}" data-created="${createdAttr}" data-likes="${likes}" id="card-${cardId}">
-        ${bannerHtml}
-        <div class="pioneer-card__top">
-          <span class="pioneer-card__badge ${tierBadgeClass}">${topBadgeText}</span>
-          <a href="pioneiro?u=${encodeURIComponent(cleanAuthorSlug)}" data-mural-action="track-profile" data-ad-id="${cardId}" class="pioneer-card__author" style="text-decoration:none" title="Ver Passaporte do pioneiro">${safeAuthor} ↗</a>
+    const cardMetricsFooterHtml = isVitrineProduct
+      ? `
+        <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:8px">
+          <button type="button" data-mural-action="filter-seller" data-seller="${sellerAttr}" data-ad-id="${cardId}" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);color:#fde68a;padding:3px 9px;border-radius:999px;cursor:pointer;font-size:0.73rem;font-weight:700">
+            🏪 Loja de @${escapeHtml(cleanAuthorSlug)}
+          </button>
+          <a href="pioneiro?u=${encodeURIComponent(cleanAuthorSlug)}" data-mural-action="track-profile" data-ad-id="${cardId}" style="color:var(--accent-light);text-decoration:none;font-weight:700" title="Ver Passaporte do vendedor">Perfil ↗</a>
         </div>
-        <h3 class="pioneer-card__title">${safeTitle}</h3>
-        <p class="pioneer-card__desc">${safeDesc}</p>
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-size:0.72rem">
-          <span style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:var(--text-secondary);padding:2px 8px;border-radius:999px">${countryLabel} · ${safeLocation}</span>
-          <span style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--amber-light);padding:2px 8px;border-radius:999px;font-weight:600">${payModeLabel}</span>
-          ${itemPricePillHtml}
-        </div>
-        <div class="pioneer-card__footer">
-          ${linkHtml}
-          ${priceHtml}
-        </div>
+      `
+      : `
         <div class="pioneer-card__metrics" style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap;gap:8px">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
             ${metricsDetailsHtml}
@@ -524,6 +553,27 @@
           </div>
         </div>
         <div class="ad-comments-drawer" id="comments-drawer-${cardId}" style="display:none"></div>
+      `;
+
+    return `
+      <article class="pioneer-card pioneer-card--${tier}" data-category="${category}" data-payment-mode="${normalizedPayMode}" data-country="${countryCode}" data-tier="${tier}" data-seller="${sellerAttr}" data-source="${sourceAttr}" data-created="${createdAttr}" data-likes="${likes}" id="card-${cardId}">
+        ${bannerHtml}
+        <div class="pioneer-card__top">
+          <span class="pioneer-card__badge ${tierBadgeClass}">${topBadgeText}</span>
+          <a href="pioneiro?u=${encodeURIComponent(cleanAuthorSlug)}" data-mural-action="track-profile" data-ad-id="${cardId}" class="pioneer-card__author" style="text-decoration:none" title="Ver Passaporte do pioneiro">${safeAuthor} ↗</a>
+        </div>
+        <h3 class="pioneer-card__title">${safeTitle}</h3>
+        <p class="pioneer-card__desc">${safeDesc}</p>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-size:0.72rem">
+          <span style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:var(--text-secondary);padding:2px 8px;border-radius:999px">${countryLabel} · ${safeLocation}</span>
+          <span style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--amber-light);padding:2px 8px;border-radius:999px;font-weight:600">${payModeLabel}</span>
+          ${itemPricePillHtml}
+        </div>
+        <div class="pioneer-card__footer">
+          ${linkHtml}
+          ${priceHtml}
+        </div>
+        ${cardMetricsFooterHtml}
       </article>
     `;
   }
@@ -534,7 +584,7 @@
     const cardId = 'card-' + ad.id;
     if (document.getElementById(cardId)) return;
 
-    const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata' || ad.plan_tier === 'gratis') ? ad.plan_tier : 'bronze';
+    const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata' || ad.plan_tier === 'vitrine' || ad.plan_tier === 'gratis') ? ad.plan_tier : 'bronze';
     const html = buildAdCardHtml(ad);
 
     const unifiedGrid = getFeaturedGrid();
@@ -545,11 +595,14 @@
     } else if (tier === 'prata') {
       const firstPrata = unifiedGrid.querySelector('.pioneer-card--prata');
       const firstBronze = unifiedGrid.querySelector('.pioneer-card--bronze');
+      const firstVitrine = unifiedGrid.querySelector('.pioneer-card--vitrine');
       const firstGratis = unifiedGrid.querySelector('.pioneer-card--gratis');
       if (firstPrata) {
         firstPrata.insertAdjacentHTML('beforebegin', html);
       } else if (firstBronze) {
         firstBronze.insertAdjacentHTML('beforebegin', html);
+      } else if (firstVitrine) {
+        firstVitrine.insertAdjacentHTML('beforebegin', html);
       } else if (firstGratis) {
         firstGratis.insertAdjacentHTML('beforebegin', html);
       } else {
@@ -557,10 +610,20 @@
       }
     } else if (tier === 'bronze') {
       const firstBronze = unifiedGrid.querySelector('.pioneer-card--bronze');
+      const firstVitrine = unifiedGrid.querySelector('.pioneer-card--vitrine');
       const firstGratis = unifiedGrid.querySelector('.pioneer-card--gratis');
       if (firstBronze) {
         firstBronze.insertAdjacentHTML('beforebegin', html);
+      } else if (firstVitrine) {
+        firstVitrine.insertAdjacentHTML('beforebegin', html);
       } else if (firstGratis) {
+        firstGratis.insertAdjacentHTML('beforebegin', html);
+      } else {
+        unifiedGrid.insertAdjacentHTML('beforeend', html);
+      }
+    } else if (tier === 'vitrine') {
+      const firstGratis = unifiedGrid.querySelector('.pioneer-card--gratis');
+      if (firstGratis) {
         firstGratis.insertAdjacentHTML('beforebegin', html);
       } else {
         unifiedGrid.insertAdjacentHTML('beforeend', html);
@@ -577,6 +640,12 @@
   let currentRegionFilter = '';
   let currentLangFilter = 'todos';
   let currentSortOrder = 'destaque';
+  let currentSellerFilter = '';
+
+  function filterSeller(sellerHandle) {
+    currentSellerFilter = normalizeSellerHandle(sellerHandle);
+    applyFilters();
+  }
 
   function filterPaymentMode(mode) {
     currentPaymentFilter = mode || 'todos';
@@ -617,6 +686,16 @@
     currentRegionFilter = '';
     currentLangFilter = 'todos';
     currentSortOrder = 'destaque';
+    currentSellerFilter = '';
+    try {
+      const urlObj = new URL(window.location.href);
+      if (urlObj.searchParams.has('seller') || urlObj.searchParams.has('vendedor') || urlObj.searchParams.has('loja')) {
+        urlObj.searchParams.delete('seller');
+        urlObj.searchParams.delete('vendedor');
+        urlObj.searchParams.delete('loja');
+        window.history.replaceState(null, '', urlObj.pathname + urlObj.search + urlObj.hash);
+      }
+    } catch (_) {}
 
     const ids = {
       'mural-search-input': '',
@@ -642,6 +721,7 @@
   function detectCardTier(card) {
     if (card.classList.contains('pioneer-card--ouro')) return 'ouro';
     if (card.classList.contains('pioneer-card--prata')) return 'prata';
+    if (card.classList.contains('pioneer-card--vitrine')) return 'vitrine';
     if (card.classList.contains('pioneer-card--gratis')) return 'gratis';
     return 'bronze';
   }
@@ -685,7 +765,7 @@
       cards.forEach(function (c) { grid.appendChild(c); });
       return;
     }
-    const weight = { ouro: 0, prata: 1, bronze: 2, gratis: 3 };
+    const weight = { ouro: 0, prata: 1, bronze: 2, vitrine: 3, gratis: 4 };
     cards.sort(function (a, b) {
       const diff = (weight[detectCardTier(a)] ?? 3) - (weight[detectCardTier(b)] ?? 3);
       if (diff !== 0) return diff;
@@ -878,6 +958,29 @@
     let totalVisible = 0;
     let featuredVisible = 0;
     let communityVisible = 0;
+    const vitrineCountBySeller = {};
+
+    const sellerBanner = document.getElementById('mural-seller-banner');
+    if (sellerBanner) {
+      if (currentSellerFilter) {
+        const safeSeller = escapeHtml(currentSellerFilter);
+        sellerBanner.style.display = 'flex';
+        sellerBanner.innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;background:linear-gradient(135deg,rgba(16,185,129,0.14),rgba(139,92,246,0.14));border:1px solid rgba(16,185,129,0.4);border-radius:14px;padding:12px 16px">' +
+            '<div>' +
+              '<strong style="color:#6ee7b7;font-size:0.95rem;display:block">🏪 Loja de @' + safeSeller + ' na Vila</strong>' +
+              '<span style="font-size:0.8rem;color:#d4d4d8">Exibindo todos os produtos, serviços e anúncios vinculados a este vendedor.</span>' +
+            '</div>' +
+            '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+              '<a href="pioneiro?u=' + encodeURIComponent(currentSellerFilter) + '" class="btn btn-outline btn-sm" style="text-decoration:none;border-color:rgba(139,92,246,0.45);color:#ddd6fe">🪪 Abrir Passaporte</a>' +
+              '<button type="button" onclick="window.IsarMural && window.IsarMural.filterSeller(\'\')" class="btn btn-outline btn-sm" style="border-color:rgba(245,158,11,0.5);color:#fde68a">✕ Ver toda a Vila</button>' +
+            '</div>' +
+          '</div>';
+      } else {
+        sellerBanner.style.display = 'none';
+        sellerBanner.innerHTML = '';
+      }
+    }
 
     allCards.forEach(function (card) {
       if (card.closest('.pi-modal') || card.closest('.ad-preview-wrapper')) return;
@@ -888,6 +991,9 @@
 
       const cardTier = detectCardTier(card);
       const matchesTier = (currentTierFilter === 'todos' || cardTier === currentTierFilter);
+
+      const cardSeller = card.getAttribute('data-seller') || '';
+      const matchesSeller = !currentSellerFilter || (cardSeller === currentSellerFilter);
 
       const cardPayMode = card.getAttribute('data-payment-mode') || 'pi';
       const matchesPay = (currentPaymentFilter === 'todos' || cardPayMode === currentPaymentFilter);
@@ -903,7 +1009,15 @@
 
       const matchesSearch = !query || textContent.includes(query);
 
-      const matches = matchesPillar && matchesCat && matchesTier && matchesPay && matchesCountry && matchesRegion && matchesLang && matchesSearch;
+      let matches = matchesPillar && matchesCat && matchesTier && matchesSeller && matchesPay && matchesCountry && matchesRegion && matchesLang && matchesSearch;
+      if (matches && !currentSellerFilter && !query && card.getAttribute('data-source') === 'vitrine') {
+        const count = vitrineCountBySeller[cardSeller] || 0;
+        if (count >= 4) {
+          matches = false;
+        } else {
+          vitrineCountBySeller[cardSeller] = count + 1;
+        }
+      }
 
       if (matches) {
         card.classList.remove('pioneer-card--hidden', 'ad-card--hidden');
@@ -942,7 +1056,8 @@
       currentCountryFilter !== 'todos' ||
       currentTierFilter !== 'todos' ||
       currentLangFilter !== 'todos' ||
-      currentSortOrder !== 'destaque'
+      currentSortOrder !== 'destaque' ||
+      Boolean(currentSellerFilter)
     );
     const resetBtn = document.getElementById('mural-reset-filters-btn');
     if (resetBtn) {
@@ -1060,13 +1175,16 @@
     const ouroDemo = [];
     const prataAds = [];
     const bronzeAds = [];
+    const vitrineAds = [];
     const gratisAds = [];
 
     remoteAds.forEach(function (ad) {
       if (!ad || !ad.id) return;
       if (document.getElementById('card-' + ad.id)) return;
 
-      const tier = (ad.plan_tier === 'ouro' || ad.plan_tier === 'prata' || ad.plan_tier === 'gratis') ? ad.plan_tier : 'bronze';
+      const tier = ad.is_vitrine_product
+        ? 'vitrine'
+        : ((ad.plan_tier === 'ouro' || ad.plan_tier === 'prata' || ad.plan_tier === 'gratis') ? ad.plan_tier : 'bronze');
       if (tier === 'ouro') {
         if (ad.is_founder_demo || ad.status === 'demonstracao') {
           ouroDemo.push(ad);
@@ -1075,6 +1193,8 @@
         }
       } else if (tier === 'prata') {
         prataAds.push(ad);
+      } else if (tier === 'vitrine') {
+        vitrineAds.push(ad);
       } else if (tier === 'gratis') {
         gratisAds.push(ad);
       } else {
@@ -1091,7 +1211,7 @@
       return (b.created_at ? new Date(b.created_at).getTime() : 0) - (a.created_at ? new Date(a.created_at).getTime() : 0);
     });
 
-    rotatedOuro.concat(rotatedPrata, bronzeAds, gratisAds).forEach(function (ad) {
+    rotatedOuro.concat(rotatedPrata, bronzeAds, vitrineAds, gratisAds).forEach(function (ad) {
       insertAdCard(ad);
     });
 
@@ -1114,7 +1234,74 @@
     } catch (_) {}
   }
 
-  // Sincroniza anúncios remotos em background
+  function buildVitrineProductAds(profiles, existingAds) {
+    if (!Array.isArray(profiles) || !profiles.length) return [];
+    const seenTitleBySeller = new Set();
+    (existingAds || []).forEach(function (ad) {
+      const s = normalizeSellerHandle(ad && (ad.pioneer_username || ad.pioneer_name));
+      const t = String((ad && ad.title) || '').trim().toLowerCase();
+      if (s && t) seenTitleBySeller.add(s + '::' + t);
+    });
+
+    const virtualAds = [];
+    profiles.forEach(function (prof) {
+      if (!prof || !Array.isArray(prof.products) || !prof.products.length) return;
+      const cleanSeller = normalizeSellerHandle(prof.username);
+      if (!cleanSeller) return;
+      prof.products.forEach(function (prod, idx) {
+        const title = String((prod && prod.title) || '').trim();
+        if (!title) return;
+        const dedupKey = cleanSeller + '::' + title.toLowerCase();
+        if (seenTitleBySeller.has(dedupKey)) return;
+
+        const price = String((prod && prod.price) || '').trim();
+        const priceFiat = String((prod && prod.price_fiat) || '').trim();
+        const badge = String((prod && prod.badge) || '').trim();
+        const hasPi = /π|\bpi\b/i.test(price);
+        const hasFiat = Boolean(priceFiat) || /^(R\$|\$|€|USD|EUR|BRL)/i.test(price);
+        const paymentModes = (hasPi && hasFiat) ? 'pi_fiat' : (hasFiat ? 'fiat' : 'pi');
+        const combinedPrice = (price && priceFiat) ? (price + ' + ' + priceFiat) : (price || priceFiat || '');
+        const desc = String((prod && prod.description) || '').trim() ||
+          ((badge ? badge + ' · ' : '') + 'Produto/serviço oficial da vitrine de @' + cleanSeller + '.');
+        const cardId = 'vitrine_' + cleanSeller + '_' + idx;
+        const link = String((prod && prod.link) || '').trim();
+        const img = String((prod && prod.image_url) || '').trim();
+        const cat = inferVitrineCategory(prod);
+
+        vitrineProductsCache[cardId] = {
+          title: title,
+          desc: desc,
+          link: link,
+          img: img,
+          cat: cat,
+          price: price || priceFiat,
+          payment_modes: paymentModes
+        };
+
+        virtualAds.push({
+          id: cardId,
+          title: title,
+          description: desc,
+          link_url: link,
+          image_url: img,
+          category: cat,
+          location: 'Vitrine @' + cleanSeller,
+          country_code: 'GLOBAL',
+          payment_modes: paymentModes,
+          item_price: combinedPrice || null,
+          item_currency: hasFiat && !hasPi ? 'BRL' : 'PI',
+          pioneer_username: '@' + cleanSeller,
+          pioneer_name: cleanSeller,
+          plan_tier: 'vitrine',
+          is_vitrine_product: true,
+          created_at: prof.updated_at || new Date(0).toISOString()
+        });
+      });
+    });
+    return virtualAds;
+  }
+
+  // Sincroniza anúncios aprovados e produtos das Vitrines salvos no Supabase
   async function syncRemoteAds() {
     const featuredGrid = getFeaturedGrid();
     if (!window.IsarDB || !window.IsarDB.getAnuncios) {
@@ -1126,13 +1313,21 @@
       const timeoutPromise = new Promise(function (_, reject) {
         setTimeout(function () { reject(new Error('timeout')); }, 12000);
       });
-      const remoteAds = await Promise.race([
-        window.IsarDB.getAnuncios('todos', { limit: 150 }),
+      const profilesPromise = (window.IsarDB.getPioneersDirectory
+        ? window.IsarDB.getPioneersDirectory({ limit: 80 }).catch(function () { return []; })
+        : Promise.resolve([]));
+      const results = await Promise.race([
+        Promise.all([window.IsarDB.getAnuncios('todos', { limit: 150 }), profilesPromise]),
         timeoutPromise
       ]);
+      const remoteAds = Array.isArray(results && results[0]) ? results[0] : [];
+      const profiles = Array.isArray(results && results[1]) ? results[1] : [];
+      const vitrineAds = buildVitrineProductAds(profiles, remoteAds);
+      const combinedAds = remoteAds.concat(vitrineAds);
+
       removeLoadingSkeleton();
-      if (Array.isArray(remoteAds) && remoteAds.length > 0) {
-        renderRemoteAdsHierarchy(remoteAds);
+      if (combinedAds.length > 0) {
+        renderRemoteAdsHierarchy(combinedAds);
       } else {
         applyFilters();
       }
@@ -3432,6 +3627,29 @@
       } else if (action === 'upgrade-ad') {
         ev.preventDefault();
         upgradeBronzeAd(adId);
+      } else if (action === 'filter-seller') {
+        ev.preventDefault();
+        filterSeller(target.getAttribute('data-seller') || '');
+        const featuredSec = document.getElementById('section-destaques');
+        if (featuredSec) featuredSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (action === 'promote-vitrine') {
+        ev.preventDefault();
+        const item = vitrineProductsCache[adId];
+        selectTier('prata');
+        openModal();
+        if (item) {
+          const tEl = document.getElementById('ad-input-title');
+          const dEl = document.getElementById('ad-input-desc');
+          const lEl = document.getElementById('ad-input-link');
+          const iEl = document.getElementById('ad-input-image');
+          const cEl = document.getElementById('ad-input-cat');
+          if (tEl && item.title) tEl.value = item.title;
+          if (dEl && item.desc) dEl.value = item.desc;
+          if (lEl && item.link) lEl.value = item.link;
+          if (iEl && item.img) iEl.value = item.img;
+          if (cEl && item.cat) cEl.value = item.cat;
+          updateLivePreview();
+        }
       } else if (action === 'login-comment') {
         ev.preventDefault();
         if (window.HokagePi && window.HokagePi.loginWithPi) {
@@ -3546,6 +3764,7 @@
         const urlPillar = (urlParams.get('pillar') || '').toLowerCase();
         const urlQ = (urlParams.get('q') || '').trim();
         const urlPay = (urlParams.get('pay') || '').toLowerCase();
+        const urlSeller = (urlParams.get('seller') || urlParams.get('vendedor') || urlParams.get('loja') || '').trim();
         const urlAction = (urlParams.get('action') || '').toLowerCase();
         const urlPublish = urlParams.get('publish') === '1' || urlAction === 'publish';
         if (urlTier === 'ouro' || urlTier === 'prata' || urlTier === 'bronze' || urlTier === 'gratis') {
@@ -3574,6 +3793,9 @@
           const payFilterEl = document.getElementById('mural-payment-filter');
           if (payFilterEl) payFilterEl.value = urlPay;
           if (typeof filterPaymentMode === 'function') filterPaymentMode(urlPay);
+        }
+        if (urlSeller) {
+          filterSeller(urlSeller);
         }
         if (urlPublish) {
           setTimeout(function () { openModal(); }, 150);
@@ -3627,6 +3849,7 @@
     },
     filterCategory: filterCategory,
     setPillar: setPillar,
+    filterSeller: filterSeller,
     filterCommunity: filterCommunity,
     filterPaymentMode: filterPaymentMode,
     filterCountry: filterCountry,
