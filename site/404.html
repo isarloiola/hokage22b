@@ -25,7 +25,9 @@
         'explorar': '/pioneiro.html?explorar=1',
         'explorar.html': '/pioneiro.html?explorar=1',
         'diretorio': '/pioneiro.html?explorar=1',
-        'diretorio.html': '/pioneiro.html?explorar=1'
+        'diretorio.html': '/pioneiro.html?explorar=1',
+        'empresas': '/business.html',
+        'empresas.html': '/business.html'
       };
       if (segments.length === 1 && REDIRECT_MAP[first.toLowerCase()]) {
         window.location.replace(REDIRECT_MAP[first.toLowerCase()] + window.location.search + window.location.hash);
@@ -33,7 +35,7 @@
       }
 
       // Páginas conhecidas da raiz do portal
-      var knownRootPages = ['zero', 'um', 'vender', 'mural', 'pioneiro', 'construir', 'hackathon', 'obrigado', 'admin', 'ferramentas', 'monte', 'jornada', 'ebooks', 'sobre'];
+      var knownRootPages = ['zero', 'um', 'vender', 'mural', 'pioneiro', 'construir', 'business', 'hackathon', 'obrigado', 'admin', 'ferramentas', 'monte', 'jornada', 'ebooks', 'sobre'];
       if (segments.length === 1 && knownRootPages.indexOf(first.toLowerCase()) !== -1) {
         window.location.replace('/' + first.toLowerCase() + '.html' + window.location.search + window.location.hash);
         return;

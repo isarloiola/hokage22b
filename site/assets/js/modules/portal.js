@@ -40,6 +40,7 @@
     burger.addEventListener('click', function () {
       const isOpen = drawer.classList.contains('active');
       drawer.classList.toggle('active', !isOpen);
+      if (!isOpen) drawer.scrollTop = 0;
       burger.setAttribute('aria-expanded', !isOpen);
       burger.innerHTML = isOpen ? '☰' : '✕';
       // Controla a rolagem no body de forma segura
@@ -58,6 +59,22 @@
         closeMobileDrawer();
       }
     });
+
+    // Fecha dropdown "Mais" do header na home ao clicar fora ou pressionar Escape
+    const homeMore = document.querySelector('details.hk-home-more');
+    if (homeMore && !homeMore.dataset.hkMoreBound) {
+      homeMore.dataset.hkMoreBound = '1';
+      document.addEventListener('click', function (e) {
+        if (homeMore.open && !homeMore.contains(e.target)) {
+          homeMore.open = false;
+        }
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && homeMore.open) {
+          homeMore.open = false;
+        }
+      });
+    }
   }
 
   // ─── 2. Modais (Manual, Proposta Comercial, Parceria) ─────

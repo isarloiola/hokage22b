@@ -100,6 +100,12 @@
       piWalletAddress: 'GA5FXF675WIQ47TQJP7X7ZK44ADLTKTKVYECRCVST6V3H5Z2MLB5XPUR'
     },
 
+    businessApiUrl: 'https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/business-api',
+    piHorizon: {
+      testnet: 'https://api.testnet.minepi.com',
+      mainnet: 'https://api.mainnet.minepi.com'
+    },
+
     social: {
       youtube: 'https://www.youtube.com/@justhokage22b',
       instagram: 'https://instagram.com/hokage22b',

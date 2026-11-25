@@ -812,14 +812,11 @@
       else if (currentPillar === 'mercado') catSel.value = 'produto';
     }
 
-    const overviewEl = document.getElementById('vila-overview-pillars');
     const bannerEl = document.getElementById('vila-pillar-banner');
     const searchWrap = document.querySelector('.mural-search-filter-wrapper');
     const featuredSec = document.getElementById('section-destaques');
     const communitySec = document.getElementById('section-comunidade');
     const communityHub = document.getElementById('vila-community-hub');
-
-    if (overviewEl) overviewEl.style.display = currentPillar === 'inicio' ? 'block' : 'none';
 
     if (bannerEl) {
       const banners = {
@@ -2591,19 +2588,6 @@
     }
   }
 
-  function syncProfileButton() {
-    try {
-      const piUser = JSON.parse(localStorage.getItem('hokage_pi_user') || 'null');
-      const profileBtn = document.getElementById('nav-btn-profile');
-      if (profileBtn && piUser && piUser.username) {
-        const u = piUser.username.startsWith('@') ? piUser.username : '@' + piUser.username;
-        profileBtn.href = `pioneiro?u=${encodeURIComponent(u)}`;
-        const textSpan = profileBtn.querySelector('.profile-btn-full');
-        if (textSpan) textSpan.textContent = `👤 ${u}`;
-      }
-    } catch (_) {}
-  }
-
   // --- PAINEL DO ANUNCIANTE (MEUS ANÚNCIOS SAAS — BLINDADO) ---
   let myCachedAds = [];
 
@@ -3471,7 +3455,6 @@
       setTimeout(hydrateCommentCounts, 1200);
       selectTier('prata');
       initFileUpload();
-      syncProfileButton();
 
       const closeBtn = document.getElementById('ad-modal-close');
       if (closeBtn) closeBtn.addEventListener('click', closeModal);

@@ -54,7 +54,7 @@
   <meta name="theme-color" content="#09090b" />
 
   <!-- Stylesheets com Cache Buster -->
-  <link rel="stylesheet" href="assets/css/style.css?v=5.6" />
+  <link rel="stylesheet" href="assets/css/style.css?v=5.8" />
   <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.7" />
 
   <style>
@@ -254,12 +254,13 @@
             <ul class="portal-nav-desktop">
               <li><a href="mural" style="color:var(--amber-light);font-weight:700">A Vila</a></li>
               <li><a href="pioneiro" style="color:var(--accent-light);font-weight:700">Hokage ID</a></li>
-              <li><a href="explorar" style="color:#34d399;font-weight:700">Explorar</a></li>
+              <li><a href="business" style="color:#34d399;font-weight:700">Business</a></li>
               <li><a href="zero" style="color:#fde68a;font-weight:700">Aprender</a></li>
               <li>
                 <details class="hk-home-more">
-                  <summary>Mais ▾</summary>
+                  <summary aria-label="Mais páginas">Mais ▾</summary>
                   <div class="hk-home-more__menu">
+                    <a href="explorar">🌐 Explorar Pioneiros</a>
                     <a href="jornada">🧭 Jornada Guiada (30s)</a>
                     <a href="ebooks">📚 E-books Oficiais</a>
                     <a href="um">🚀 Passo 1: Além do Clique</a>
@@ -312,16 +313,35 @@
     </div>
 
     <div class="portal-drawer__nav">
-      <a href="mural" style="color:var(--amber-light);font-weight:700">🏘️ A Vila (Classificados)</a>
-      <a href="pioneiro" style="color:var(--accent-light);font-weight:700">🪪 Hokage ID (Passaporte)</a>
-      <a href="explorar" style="color:#34d399;font-weight:700">🌐 Explorar Pioneiros</a>
-      <a href="jornada" style="color:#fbbf24;font-weight:700">🧭 Jornada Guiada (30s)</a>
-      <a href="zero">📘 Aprender (Pi do Zero)</a>
-      <a href="ebooks">📚 E-books Oficiais</a>
-      <a href="ferramentas">🛠️ Ferramentas Web3</a>
-      <a href="monte">🏔️ Monte Hokage</a>
-      <a href="construir">⚡ Construir (API &amp; Devs)</a>
-      <a href="sobre">✦ Sobre &amp; Parcerias</a>
+      <div class="hk-drawer-group">
+        <div class="hk-drawer-heading">Principal</div>
+        <a href="mural" style="color:var(--amber-light);font-weight:700">🏘️ A Vila (Classificados)</a>
+        <a href="pioneiro" style="color:var(--accent-light);font-weight:700">🪪 Hokage ID (Passaporte)</a>
+        <a href="business" style="color:#34d399;font-weight:700">🏢 Hokage Business (Pi DEX)</a>
+        <a href="zero" style="color:#fde68a;font-weight:700">📘 Aprender (Pi do Zero)</a>
+        <a href="explorar" style="color:#a7f3d0;font-weight:700">🌐 Explorar Pioneiros</a>
+      </div>
+      <div class="hk-drawer-group">
+        <div class="hk-drawer-heading">Trilha &amp; Guias</div>
+        <a href="jornada" style="color:#fbbf24;font-weight:700">🧭 Jornada Guiada (30s)</a>
+        <a href="um" style="color:var(--amber-light);font-weight:700">🚀 Passo 1: Além do Clique</a>
+        <a href="ebooks" style="color:#fde68a;font-weight:700">📚 E-books Oficiais</a>
+      </div>
+      <div class="hk-drawer-group">
+        <div class="hk-drawer-heading">Ecossistema &amp; Devs</div>
+        <a href="monte" style="color:#fb923c;font-weight:700">🏔️ Monte Hokage</a>
+        <a href="ferramentas" style="color:#6ee7b7;font-weight:700">🛠️ Ferramentas Web3</a>
+        <a href="vender" style="font-weight:700">🏷️ Como Vender</a>
+        <a href="construir" style="font-weight:700">⚡ Construir (API &amp; Devs)</a>
+        <a href="sobre" style="font-weight:700">✦ Sobre &amp; Parcerias</a>
+      </div>
+    </div>
+
+    <div style="padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);margin-top:8px">
+      <a href="jornada" class="portal-btn portal-btn--primary portal-btn--full"
+        style="display:flex;align-items:center;justify-content:center;width:100%;padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);color:#09090b">
+        🚀 Começar Minha Jornada
+      </a>
     </div>
   </div>
 
@@ -394,7 +414,6 @@
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm">Ver Tudo na Vila →</a>
-            <a href="mural?publish=1" class="portal-btn portal-btn--outline portal-btn--sm">📢 Publicar Grátis</a>
           </div>
         </div>
 
@@ -424,7 +443,6 @@
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <a href="explorar" class="portal-btn portal-btn--primary portal-btn--sm">Diretório Completo →</a>
-            <a href="pioneiro?criar=1" class="portal-btn portal-btn--outline portal-btn--sm">🪪 Ativar Meu Hokage ID</a>
           </div>
         </div>
 
@@ -483,6 +501,10 @@
         <div class="section-tag section-tag--purple">Explore o restante do portal</div>
         <h2 class="section-title" id="eco-title" style="margin-bottom:6px">Guias, Ferramentas &amp; Comunidade</h2>
         <div class="hk-eco-grid">
+          <a href="business" class="hk-eco-card">
+            <strong>🏢 Hokage Business (Pi DEX)</strong>
+            <span>Tokens de utilidade comercial, vouchers, clube VIP e selo verificado para negócios na rede Pi.</span>
+          </a>
           <a href="jornada" class="hk-eco-card">
             <strong>🧭 Jornada Guiada (30s)</strong>
             <span>Responda 2 perguntas rápidas, entenda A Vila + Hokage ID e saia logado pronto para negociar.</span>
@@ -523,6 +545,7 @@
         <div style="display:flex;gap:14px;flex-wrap:wrap">
           <a href="mural" style="color:var(--text-secondary);text-decoration:none">A Vila</a>
           <a href="pioneiro" style="color:var(--text-secondary);text-decoration:none">Hokage ID</a>
+          <a href="business" style="color:var(--text-secondary);text-decoration:none">Business</a>
           <a href="ebooks" style="color:var(--text-secondary);text-decoration:none">E-books</a>
           <a href="sobre" style="color:var(--text-secondary);text-decoration:none">Sobre &amp; Parcerias</a>
           <a href="legal/politica-de-privacidade" style="color:var(--text-secondary);text-decoration:none">Privacidade</a>
@@ -537,11 +560,11 @@
     integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil"
     crossorigin="anonymous"></script>
   <script src="assets/js/modules/i18n.js?v=4.7"></script>
-  <script src="assets/js/config.js?v=7.3"></script>
+  <script src="assets/js/config.js?v=7.4"></script>
   <script src="assets/js/modules/db.js?v=6.2"></script>
   <script src="assets/js/modules/web2-auth.js?v=1.5"></script>
   <script src="assets/js/modules/pi-pay.js?v=8.4"></script>
-  <script src="assets/js/modules/portal.js?v=3.7"></script>
+  <script src="assets/js/modules/portal.js?v=3.9"></script>
   <script src="assets/js/modules/referral.js?v=2.7"></script>
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>

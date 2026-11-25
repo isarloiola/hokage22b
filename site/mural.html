@@ -39,7 +39,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
   <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
   <meta name="theme-color" content="#09090b" />
-  <link rel="stylesheet" href="assets/css/style.css?v=5.4" />
+  <link rel="stylesheet" href="assets/css/style.css?v=5.8" />
   <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.7" />
   <!-- Pi Network SDK Oficial v2.0 (Produção no Pi Browser / Sandbox automático) -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -61,18 +61,12 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
       padding: 10px 0 !important;
     }
-    .testnet-alert-banner {
-      margin-top: 68px !important;
-      position: relative !important;
-      z-index: 90 !important;
-    }
     .mural-main {
-      padding-top: 24px !important;
+      padding-top: 84px;
       min-height: 90vh;
     }
     .ad-btn-short,
-    .pi-btn-short,
-    .profile-btn-short {
+    .pi-btn-short {
       display: none;
     }
     .ad-tier-selector button.ad-tier-option {
@@ -94,11 +88,8 @@
       .navbar__logo .brand-sub {
         display: none !important;
       }
-      .testnet-alert-banner {
-        margin-top: 56px !important;
-      }
       .mural-main {
-        padding-top: 16px !important;
+        padding-top: 72px;
       }
       .navbar__actions {
         display: flex !important;
@@ -123,21 +114,12 @@
         display: inline !important;
         font-weight: 700 !important;
       }
-      .nav-btn-home {
-        display: none !important;
-      }
       .ad-btn-full {
         display: none !important;
       }
       .ad-btn-short {
         display: inline !important;
         font-weight: 800 !important;
-      }
-      .profile-btn-full {
-        display: none !important;
-      }
-      .profile-btn-short {
-        display: inline !important;
       }
       .nav-btn-ad {
         flex-shrink: 0 !important;
@@ -211,11 +193,6 @@
       border-color: #f59e0b !important;
       box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18) !important;
     }
-    @media (max-width: 640px) {
-      #vila-overview-pillars {
-        display: none !important;
-      }
-    }
   </style>
 </head>
 <body class="vila-theme">
@@ -240,25 +217,12 @@
             <span class="pi-btn-full">⚡ Conectar Pi</span>
             <span class="pi-btn-short">⚡ Pi</span>
           </button>
-          <a href="pioneiro" class="btn btn-outline btn-sm nav-btn-profile" id="nav-btn-profile" title="Meu Passaporte do Pioneiro" style="border-color:rgba(139,92,246,0.35);color:var(--text-primary)">
-            <span class="profile-btn-full">👤 Meu Perfil</span>
-            <span class="profile-btn-short">👤</span>
-          </a>
-          <a href="./" class="btn btn-outline btn-sm nav-btn-home">← Início</a>
           <button type="button" class="hk-burger-btn" id="portal-burger-btn" aria-label="Abrir Menu" aria-expanded="false">☰</button>
         </div>
       </div>
     </div>
   </nav>
   <div id="hk-site-drawer-root"></div>
-
-  <!-- Faixa de Conversão e Boas-Vindas da Vila -->
-  <div class="testnet-alert-banner" id="testnet-alert-banner" style="margin-top:68px;background:linear-gradient(90deg, rgba(16,185,129,0.16) 0%, rgba(217,119,6,0.22) 50%, rgba(139,92,246,0.18) 100%);border-bottom:1px solid rgba(245,158,11,0.35);padding:9px 16px;color:#fef3c7;font-size:0.84rem;display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;flex-wrap:wrap;position:relative;z-index:90;">
-    <span>🌱 <strong>A Vila · Central P2P:</strong> Publique seu 1º anúncio <strong>Grátis (0 π)</strong> ou destaque seu negócio para pioneiros verificados da Pi Network.</span>
-    <button type="button" class="btn btn-outline btn-sm" onclick="window.HokagePi && window.HokagePi.openTestnetInfoModal()" style="border-color:rgba(251,191,36,0.45);color:#fff;font-size:0.75rem;padding:3px 11px;border-radius:20px;font-weight:700;cursor:pointer;background:rgba(245,158,11,0.15)">
-      ℹ️ Como funciona?
-    </button>
-  </div>
 
   <!-- Cabeçalho Estilo Jornal Gazeta -->
   <main class="mural-main">
@@ -275,6 +239,12 @@
           <p style="color:#e7dccf;font-size:0.96rem;margin:6px 0 0;line-height:1.45">
             Uma vila construída por pioneiros, para pioneiros. Negócios, oportunidades de trabalho, mural comunitário e conexões no ecossistema Pi Network.
           </p>
+          <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:0.76rem;color:#fcd34d;font-weight:700">🌱 1º anúncio Grátis (0 π)</span>
+            <button type="button" class="btn btn-outline btn-sm" onclick="window.HokagePi && window.HokagePi.openTestnetInfoModal()" style="border-color:rgba(251,191,36,0.4);color:#fef3c7;font-size:0.74rem;padding:3px 10px;border-radius:999px;font-weight:700;cursor:pointer;background:rgba(245,158,11,0.12)">
+              ℹ️ Como funciona?
+            </button>
+          </div>
         </div>
         <div class="gazeta-top-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:relative;z-index:1">
           <button type="button" class="btn btn-outline" onclick="window.IsarMural && window.IsarMural.openMyAdsModal()" style="white-space:nowrap;padding:11px 16px;font-weight:700;border-color:rgba(245,158,11,0.5);color:var(--amber-light)">
@@ -304,35 +274,6 @@
           🤝 Comunidade
         </button>
       </nav>
-
-      <!-- Visão Geral da Vila (4 Áreas Integradas) -->
-      <section id="vila-overview-pillars" aria-label="Áreas da Vila HOKAGE22B" style="margin-bottom:22px">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
-          <button type="button" onclick="window.IsarMural && window.IsarMural.setPillar('mercado')" style="text-align:left;background:linear-gradient(155deg,rgba(249,115,22,0.12),rgba(17,17,22,0.95));border:1px solid rgba(249,115,22,0.35);border-radius:16px;padding:16px;cursor:pointer;color:#fff;transition:transform 0.18s ease">
-            <div style="font-size:1.35rem;margin-bottom:6px">🛒</div>
-            <strong style="display:block;font-size:0.98rem;color:#fbbf24;margin-bottom:4px">Mercado</strong>
-            <span style="font-size:0.8rem;color:#a1a1aa;line-height:1.45;display:block">Produtos físicos e digitais, serviços, negócios e lojas que aceitam Pi.</span>
-          </button>
-
-          <button type="button" onclick="window.IsarMural && window.IsarMural.setPillar('mural')" style="text-align:left;background:linear-gradient(155deg,rgba(139,92,246,0.12),rgba(17,17,22,0.95));border:1px solid rgba(139,92,246,0.35);border-radius:16px;padding:16px;cursor:pointer;color:#fff;transition:transform 0.18s ease">
-            <div style="font-size:1.35rem;margin-bottom:6px">📌</div>
-            <strong style="display:block;font-size:0.98rem;color:#c4b5fd;margin-bottom:4px">Mural</strong>
-            <span style="font-size:0.8rem;color:#a1a1aa;line-height:1.45;display:block">Avisos, eventos, ofertas rápidas, procura-se, projetos e notícias.</span>
-          </button>
-
-          <button type="button" onclick="window.IsarMural && window.IsarMural.setPillar('trabalho')" style="text-align:left;background:linear-gradient(155deg,rgba(16,185,129,0.12),rgba(17,17,22,0.95));border:1px solid rgba(16,185,129,0.35);border-radius:16px;padding:16px;cursor:pointer;color:#fff;transition:transform 0.18s ease">
-            <div style="font-size:1.35rem;margin-bottom:6px">💼</div>
-            <strong style="display:block;font-size:0.98rem;color:#34d399;margin-bottom:4px">Trabalho</strong>
-            <span style="font-size:0.8rem;color:#a1a1aa;line-height:1.45;display:block">Vagas, freelancers, colaboração e contratação direta de profissionais.</span>
-          </button>
-
-          <button type="button" onclick="window.IsarMural && window.IsarMural.setPillar('comunidade')" style="text-align:left;background:linear-gradient(155deg,rgba(59,130,246,0.12),rgba(17,17,22,0.95));border:1px solid rgba(59,130,246,0.35);border-radius:16px;padding:16px;cursor:pointer;color:#fff;transition:transform 0.18s ease">
-            <div style="font-size:1.35rem;margin-bottom:6px">🤝</div>
-            <strong style="display:block;font-size:0.98rem;color:#93c5fd;margin-bottom:4px">Comunidade</strong>
-            <span style="font-size:0.8rem;color:#a1a1aa;line-height:1.45;display:block">Perfis de pioneiros, reputação verificada, networking e conexões.</span>
-          </button>
-        </div>
-      </section>
 
       <!-- Banner Contextual da Área Ativa (Trabalho / Comunidade) -->
       <section id="vila-pillar-banner" style="display:none;margin-bottom:20px;background:rgba(17,17,22,0.9);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:18px"></section>
@@ -1071,12 +1012,27 @@
     <span id="toast-text">Notificação</span>
   </div>
 
+  <footer class="portal-footer" style="margin-top:40px">
+    <div class="portal-container">
+      <div class="footer-bottom">
+        <span>© 2026 HOKAGE22B (hokage22b.com) · A Vila P2P</span>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <a href="./" style="color:var(--text-secondary);text-decoration:none">Início</a>
+          <a href="pioneiro" style="color:var(--text-secondary);text-decoration:none">Hokage ID</a>
+          <a href="explorar" style="color:var(--text-secondary);text-decoration:none">Explorar</a>
+          <a href="legal/politica-de-privacidade" style="color:var(--text-secondary);text-decoration:none">Privacidade</a>
+          <a href="legal/termos-de-uso" style="color:var(--text-secondary);text-decoration:none">Termos</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
 
   <!-- Modular Scripts com Arquitetura v4 Bulletproof -->
-  <script src="assets/js/config.js?v=7.3"></script>
-  <script src="assets/js/modules/site-header.js?v=1.5"></script>
+  <script src="assets/js/config.js?v=7.4"></script>
+  <script src="assets/js/modules/site-header.js?v=1.8"></script>
   <script src="assets/js/modules/i18n.js?v=4.7"></script>
   <script src="assets/js/modules/ui.js?v=4.7"></script>
   <script src="assets/js/modules/db.js?v=6.2"></script>
@@ -1085,19 +1041,17 @@
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=8.4"></script>
-  <script src="assets/js/modules/mural.v4.js?v=9.4"></script>
+  <script src="assets/js/modules/mural.v4.js?v=9.5"></script>
   <script src="assets/js/modules/mural-chatbot.js?v=1.2"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');
-      const banner = document.getElementById('testnet-alert-banner');
-      if (nav && banner) {
+      const main = document.querySelector('.mural-main');
+      if (nav && main) {
         const h = nav.offsetHeight || 68;
-        banner.style.marginTop = h + 'px';
+        main.style.paddingTop = (h + 14) + 'px';
       }
     }
-
-    window.addEventListener('resize', syncMuralOffset);
 
     document.addEventListener('DOMContentLoaded', function () {
       syncMuralOffset();

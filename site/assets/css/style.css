@@ -6,30 +6,21 @@
 /* --- 1. Tokens & Base --- */
 @import url('./tokens.css?v=4.7');
 @import url('./base.css?v=4.7');
-@import url('./portal.css?v=5.6');
+@import url('./portal.css?v=5.8');
 
 /* --- 2. Components --- */
 @import url('./components/navbar.css');
-@import url('./components/drawer.css');
 @import url('./components/modals.css');
 @import url('./components/toast.css');
 @import url('./components/cookie.css');
 @import url('./components/forms.css');
 @import url('./components/checklist.css');
-@import url('./components/reputation.css');
 @import url('./components/ebooks.css');
-@import url('./components/members.css');
-@import url('./components/donation.css');
 @import url('./components/onboarding.css');
 @import url('./components/mural.css?v=5.3');
 @import url('./components/i18n.css?v=4.7');
 
 /* --- 3. Sections --- */
-@import url('./sections/hero.css');
-@import url('./sections/features.css');
-@import url('./sections/blockchain-web3.css');
-@import url('./sections/pi-browser.css');
-@import url('./sections/youtube.css');
 @import url('./sections/referral.css');
 @import url('./sections/footer.css');
 

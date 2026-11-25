@@ -912,7 +912,7 @@ async function loadPioneerProfile() {
       username = lastSeg;
     } else if (pathSegments.length === 2 && pathSegments[0].toLowerCase() === 'pioneiro') {
       username = '@' + lastSeg;
-    } else if (pathSegments.length === 1 && !['zero', 'um', 'vender', 'mural', 'pioneiro', 'explorar', 'diretorio', 'ferramentas', 'monte', 'jornada', 'legal', 'index', 'construir', 'hackathon', 'obrigado', 'admin', 'alem-do-clique', 'desenvolvedores'].includes(pathSegments[0].toLowerCase()) && !pathSegments[0].includes('.')) {
+    } else if (pathSegments.length === 1 && !['zero', 'um', 'vender', 'mural', 'pioneiro', 'explorar', 'diretorio', 'ferramentas', 'monte', 'jornada', 'legal', 'index', 'construir', 'business', 'empresas', 'ebooks', 'sobre', 'hackathon', 'obrigado', 'admin', 'alem-do-clique', 'desenvolvedores'].includes(pathSegments[0].toLowerCase()) && !pathSegments[0].includes('.')) {
       username = '@' + pathSegments[0];
     }
   }

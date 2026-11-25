@@ -30,6 +30,8 @@ export const RESERVED_HANDLES = new Set<string>([
   "um",
   "vender",
   "construir",
+  "business",
+  "empresas",
   "legal",
   "hackathon",
   "obrigado",

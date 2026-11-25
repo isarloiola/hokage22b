@@ -18,8 +18,9 @@
       items: [
         { href: 'mural', match: ['mural'], label: '🏘️ A Vila (Classificados)', desktopLabel: 'A Vila', color: 'var(--amber-light)' },
         { href: 'pioneiro', match: ['pioneiro'], label: '🪪 Hokage ID (Passaporte)', desktopLabel: 'Hokage ID', color: 'var(--accent-light)' },
-        { href: 'explorar', match: ['explorar', 'diretorio'], label: '🌐 Explorar Pioneiros', desktopLabel: 'Explorar', color: '#34d399' },
-        { href: 'zero', match: ['zero'], label: '📘 Aprender (Pi do Zero)', desktopLabel: 'Aprender', color: '#fde68a' }
+        { href: 'business', match: ['business', 'empresas'], label: '🏢 Hokage Business (Pi DEX)', desktopLabel: 'Business', color: '#34d399' },
+        { href: 'zero', match: ['zero'], label: '📘 Aprender (Pi do Zero)', desktopLabel: 'Aprender', color: '#fde68a' },
+        { href: 'explorar', match: ['explorar', 'diretorio'], label: '🌐 Explorar Pioneiros', desktopLabel: null, color: '#a7f3d0' }
       ]
     },
     {
@@ -79,13 +80,12 @@
       const links = group.items.map(function (item) {
         const isActive = item.match.indexOf(current) !== -1;
         const colorStyle = item.color ? ('color:' + item.color + ';') : '';
-        const activeBg = isActive ? 'background:rgba(139,92,246,0.14);border-radius:10px;padding-left:8px;padding-right:8px;' : '';
-        return '<a href="' + item.href + '" style="' + colorStyle + 'font-weight:700;' + activeBg + '"' +
+        return '<a href="' + item.href + '" style="' + colorStyle + 'font-weight:700;"' +
           (isActive ? ' aria-current="page"' : '') + '>' + item.label + '</a>';
       }).join('');
       return (
-        '<div style="margin-bottom:10px">' +
-          '<div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#71717a;font-weight:800;padding:4px 6px">' + group.heading + '</div>' +
+        '<div class="hk-drawer-group">' +
+          '<div class="hk-drawer-heading">' + group.heading + '</div>' +
           links +
         '</div>'
       );
@@ -134,38 +134,65 @@
     const style = document.createElement('style');
     style.id = 'hk-standalone-drawer-css';
     style.textContent =
+      '@keyframes hkDrawerSlideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}' +
       '.hk-burger-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;min-width:36px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.16);border-radius:10px;color:#f4f4f5;font-size:1.15rem;line-height:1;cursor:pointer;padding:0;margin:0;flex-shrink:0;transition:all 0.2s ease}' +
       '.hk-burger-btn:hover,.hk-burger-btn:focus-visible{border-color:#8b5cf6;background:rgba(139,92,246,0.18);color:#fff}' +
-      '.hk-drawer-standalone .portal-drawer{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;width:100vw;max-width:100vw;box-sizing:border-box;height:calc(100dvh - 64px);overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;background:rgba(9,9,11,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.08);padding:16px 20px 80px;z-index:9999}' +
+      '.hk-drawer-standalone .portal-drawer{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;width:100%;max-width:100%;box-sizing:border-box;height:calc(100dvh - 64px);max-height:calc(100dvh - 64px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:rgba(139,92,246,0.6) rgba(255,255,255,0.04);-webkit-overflow-scrolling:touch;touch-action:pan-y;background:rgba(10,10,14,0.97);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1px solid rgba(255,255,255,0.08);padding:16px 18px calc(36px + env(safe-area-inset-bottom,20px));box-shadow:0 20px 60px rgba(0,0,0,0.75);z-index:9999}' +
+      '.hk-drawer-standalone .portal-drawer::-webkit-scrollbar{width:7px}' +
+      '.hk-drawer-standalone .portal-drawer::-webkit-scrollbar-track{background:rgba(255,255,255,0.03);border-radius:999px}' +
+      '.hk-drawer-standalone .portal-drawer::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(139,92,246,0.72),rgba(245,158,11,0.55));border-radius:999px;border:1px solid rgba(9,9,11,0.4)}' +
+      '.hk-drawer-standalone .portal-drawer::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,rgba(167,139,250,0.95),rgba(251,191,36,0.8))}' +
+      '@media (min-width:540px){.hk-drawer-standalone .portal-drawer{left:auto;width:min(420px,92vw);border-left:1px solid rgba(139,92,246,0.28)}}' +
       '.hk-drawer-standalone .portal-drawer *{box-sizing:border-box;max-width:100%}' +
-      '.hk-drawer-standalone .portal-drawer.active{display:block}' +
-      '.hk-drawer-standalone .portal-drawer__nav{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}' +
-      '.hk-drawer-standalone .portal-drawer__nav a{font-size:0.98rem;font-weight:700;color:#f4f4f5;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;text-decoration:none}';
+      '.hk-drawer-standalone .portal-drawer.active{display:block;animation:hkDrawerSlideIn 0.18s ease-out}' +
+      '.hk-drawer-standalone .portal-drawer__nav{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}' +
+      '.hk-drawer-standalone .hk-drawer-group{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}' +
+      '.hk-drawer-standalone .hk-drawer-heading{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:#71717a;font-weight:800;padding:4px 6px 2px}' +
+      '.hk-drawer-standalone .portal-drawer__nav a{font-size:0.96rem;font-weight:700;color:#f4f4f5;padding:11px 14px;border-radius:12px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;text-decoration:none;transition:background 0.18s ease,border-color 0.18s ease,transform 0.15s ease}' +
+      '.hk-drawer-standalone .portal-drawer__nav a:hover,.hk-drawer-standalone .portal-drawer__nav a:focus-visible{background:rgba(139,92,246,0.14);border-color:rgba(139,92,246,0.38);transform:translateX(2px)}' +
+      '.hk-drawer-standalone .portal-drawer__nav a[aria-current="page"]{background:rgba(139,92,246,0.18);border-color:rgba(139,92,246,0.5);box-shadow:inset 3px 0 0 #8b5cf6}';
     document.head.appendChild(style);
   }
 
   function bindDrawerEvents() {
-    const burger = document.getElementById('portal-burger-btn');
+    const burgers = Array.prototype.slice.call(
+      document.querySelectorAll('#portal-burger-btn, .hk-burger-btn[data-drawer-toggle="1"]')
+    );
     const drawer = document.getElementById('portal-drawer');
-    if (burger && drawer && !burger.dataset.hkBound) {
-      burger.dataset.hkBound = '1';
-      function closeDrawer() {
-        drawer.classList.remove('active');
-        burger.setAttribute('aria-expanded', 'false');
-        burger.textContent = '☰';
-        document.body.style.overflow = '';
-      }
-      burger.addEventListener('click', function () {
+    if (!burgers.length || !drawer) return;
+
+    function syncBurgers(isOpen) {
+      burgers.forEach(function (btn) {
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        btn.textContent = isOpen ? '✕' : '☰';
+      });
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      syncBurgers(false);
+      document.body.style.overflow = '';
+    }
+
+    burgers.forEach(function (btn) {
+      if (btn.dataset.hkBound) return;
+      btn.dataset.hkBound = '1';
+      btn.addEventListener('click', function () {
         const isOpen = drawer.classList.toggle('active');
-        burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        burger.textContent = isOpen ? '✕' : '☰';
+        if (isOpen) drawer.scrollTop = 0;
+        syncBurgers(isOpen);
         document.body.style.overflow = isOpen ? 'hidden' : '';
       });
+    });
+
+    if (!drawer.dataset.hkDrawerBound) {
+      drawer.dataset.hkDrawerBound = '1';
       drawer.querySelectorAll('a').forEach(function (a) {
         a.addEventListener('click', closeDrawer);
       });
       document.addEventListener('click', function (ev) {
-        if (drawer.classList.contains('active') && !drawer.contains(ev.target) && !burger.contains(ev.target)) {
+        const clickedBurger = burgers.some(function (btn) { return btn.contains(ev.target); });
+        if (drawer.classList.contains('active') && !drawer.contains(ev.target) && !clickedBurger) {
           closeDrawer();
         }
       });
@@ -259,6 +286,7 @@
     injectHeaderMoreStyles();
 
     const moreLinks = [
+      { href: 'explorar', match: ['explorar', 'diretorio'], label: '🌐 Explorar Pioneiros' },
       { href: 'jornada', match: ['jornada'], label: '🧭 Jornada Guiada (30s)' },
       { href: 'ebooks', match: ['ebooks'], label: '📚 E-books Oficiais' },
       { href: 'um', match: ['um', 'alem-do-clique'], label: '🚀 Passo 1: Além do Clique' },

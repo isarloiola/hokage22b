@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://accounts.google.com https://sdk.minepi.com https://cdn.jsdelivr.net https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; frame-src 'self' https://accounts.google.com https://translate.google.com https://*.minepi.com; connect-src 'self' https://yhzoehwkuxteihsnagcj.supabase.co https://api.testnet.minepi.com https://api.mainnet.minepi.com https://api.minepi.com https://accounts.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://cloudflareinsights.com; object-src 'none'; base-uri 'self';" />
+  <title>Hokage Business · Empresas Tokenizadas &amp; Pi DEX | HOKAGE22B</title>
+  <meta name="description"
+    content="Camada de confiança, utilidade comercial e transparência para negócios reais na Pi DEX. 100% não-custodial: vouchers, créditos pré-pagos e clube VIP." />
+  <link rel="canonical" href="https://hokage22b.com/business" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hokage22b.com/business" />
+  <meta property="og:title" content="Hokage Business · Empresas Tokenizadas &amp; Pi DEX" />
+  <meta property="og:description"
+    content="Conecte seu negócio real à economia da Pi DEX com tokens de utilidade comercial, 3 níveis de confiança e resgates on-chain." />
+  <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png?v=2" />
+
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      var clean = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      window.history.replaceState(null, '', (clean || '/') + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <link rel="icon" href="assets/img/brand/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/hokage22b-logo.svg" />
+  <link rel="apple-touch-icon" href="assets/img/brand/hokage22b-logo-192.png" />
+  <meta name="theme-color" content="#09090b" />
+
+  <link rel="stylesheet" href="assets/css/style.css?v=5.8" />
+  <link rel="stylesheet" href="assets/css/components/i18n.css?v=4.7" />
+
+  <style>
+    .hb-hero {
+      padding: clamp(92px, 12vh, 124px) 0 42px;
+      background:
+        radial-gradient(circle at 18% 15%, rgba(16, 185, 129, 0.14) 0%, transparent 50%),
+        radial-gradient(circle at 82% 25%, rgba(139, 92, 246, 0.14) 0%, transparent 52%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      text-align: center;
+    }
+    .hb-hero-inner { max-width: 780px; margin: 0 auto; }
+    .hb-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin: 22px 0 18px;
+      background: rgba(20, 20, 28, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .hb-search {
+      flex: 1;
+      min-width: 210px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .hb-filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .hb-pill {
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.03);
+      color: #d4d4d8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .hb-pill:hover, .hb-pill.active {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.16);
+      color: #6ee7b7;
+    }
+    .hb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+      gap: 18px;
+    }
+    .hb-card {
+      background: linear-gradient(160deg, rgba(20, 20, 28, 0.96), rgba(11, 11, 16, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .hb-card--featured {
+      border-color: rgba(16, 185, 129, 0.45);
+      box-shadow: 0 10px 32px rgba(16, 185, 129, 0.09);
+    }
+    .hb-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .hb-level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+    .hb-level-1 { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+    .hb-level-2 { background: rgba(16, 185, 129, 0.16); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .hb-level-3 { background: rgba(245, 158, 11, 0.18); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.45); }
+    .hb-token-box {
+      background: rgba(139, 92, 246, 0.08);
+      border: 1px solid rgba(139, 92, 246, 0.28);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .hb-benefits-list { display: flex; flex-direction: column; gap: 10px; }
+    .hb-benefit-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .hb-trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .hb-trust-card {
+      background: rgba(17, 17, 24, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .hb-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .hb-field label { font-size: 0.78rem; font-weight: 700; color: #d4d4d8; }
+    .hb-field input, .hb-field select, .hb-field textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+      font-size: 0.88rem;
+      font-family: inherit;
+    }
+    .hb-code-box {
+      background: #09090b;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #fcd34d;
+      word-break: break-all;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .hb-feedback {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+    .hb-feedback--ok { display: block; background: rgba(16, 185, 129, 0.14); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7; }
+    .hb-feedback--err { display: block; background: rgba(239, 68, 68, 0.14); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
+  </style>
+
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+    try {
+      if (window.Pi && typeof window.Pi.init === 'function') {
+        var _h = (location.hostname || '').toLowerCase();
+        var _prod = _h === 'hokage22b.com' || _h === 'www.hokage22b.com';
+        var isPiSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || _h === 'localhost' || _h === '127.0.0.1' || (!_prod && /[?&]sandbox=(1|true)/i.test(location.search));
+        window.Pi.init({ version: '2.0', sandbox: isPiSandbox });
+      }
+    } catch (_) { }
+  </script>
+</head>
+
+<body>
+  <div id="hk-site-header-root"></div>
+  <script src="assets/js/modules/site-header.js?v=1.8"></script>
+
+  <main>
+    <!-- 1. HERO -->
+    <section class="hb-hero" aria-labelledby="hb-hero-title">
+      <div class="portal-container">
+        <div class="hb-hero-inner">
+          <div class="section-tag" style="background:rgba(16,185,129,0.14);border-color:rgba(16,185,129,0.4);color:#6ee7b7">
+            🏢 Hokage Business · Pronto para Pi DEX (Testnet → Mainnet 2027)
+          </div>
+          <h1 id="hb-hero-title" style="font-size:clamp(1.85rem,4.4vw,2.85rem);font-weight:900;line-height:1.14;letter-spacing:-0.025em;margin:12px 0;color:#fff">
+            Negócios reais com tokens de utilidade comercial na rede Pi.
+          </h1>
+          <p style="font-size:clamp(0.95rem,2vw,1.06rem);color:var(--text-secondary);line-height:1.6;margin:0 0 24px">
+            Camada <strong>100% não-custodial</strong> que conecta empresas reais ao seu <strong>Hokage ID</strong>: gere créditos pré-pagos, vouchers e clubes VIP validados direto na blockchain Pi.
+          </p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button type="button" class="portal-btn portal-btn--amber" id="hb-open-create-btn" style="font-weight:900">
+              🏢 Cadastrar Minha Empresa (Grátis)
+            </button>
+            <a href="#hb-directory" class="portal-btn portal-btn--outline" style="border-color:rgba(16,185,129,0.5);color:#6ee7b7;font-weight:800">
+              🧪 Testar Empresa #01 (HOKAGE22B) ↓
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. DIRETÓRIO DE EMPRESAS TOKENIZADAS -->
+    <section class="portal-section" id="hb-directory" aria-labelledby="hb-dir-title" style="padding-top:42px;padding-bottom:42px">
+      <div class="portal-container">
+        <div class="section-heading-wrap">
+          <div class="section-tag section-tag--purple">Vitrine de Utilidade Comercial</div>
+          <h2 class="section-title" id="hb-dir-title">Empresas &amp; Tokens Ativos</h2>
+          <p class="section-desc">
+            Cada negócio exibe seu nível de verificação, utilidade do token e resgates auditáveis via Pi Horizon API.
+          </p>
+        </div>
+
+        <div id="hb-status-banner" style="display:none;margin-bottom:14px;padding:10px 14px;border-radius:12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);color:#fde68a;font-size:0.84rem"></div>
+
+        <div class="hb-toolbar">
+          <input type="search" id="hb-search-input" class="hb-search" maxlength="60"
+            placeholder="🔍 Buscar empresa, $TOKEN, cidade ou @dono..." aria-label="Buscar empresas no Hokage Business" />
+          <div class="hb-filter-pills" role="group" aria-label="Filtros do diretório">
+            <button type="button" class="hb-pill active" data-filter="all">Todos</button>
+            <button type="button" class="hb-pill" data-filter="verified">✓ Nível 2+ Verificado</button>
+            <button type="button" class="hb-pill" data-filter="testnet">🧪 Testnet</button>
+            <button type="button" class="hb-pill" data-filter="mainnet">⚡ Mainnet</button>
+          </div>
+        </div>
+
+        <div id="hb-directory-grid" class="hb-grid" aria-live="polite">
+          <div style="grid-column:1/-1;text-align:center;padding:28px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted)">
+            ⏳ Carregando empresas do Hokage Business...
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 3 NÍVEIS DE CONFIANÇA + TRANSPARÊNCIA -->
+    <section class="portal-section" aria-labelledby="hb-trust-title"
+      style="padding-top:36px;padding-bottom:56px;background:linear-gradient(180deg,rgba(139,92,246,0.04) 0%, rgba(9,9,11,0.85) 100%)">
+      <div class="portal-container">
+        <div class="section-heading-wrap">
+          <div class="section-tag">Selo Anti-Golpe · 3 Níveis</div>
+          <h2 class="section-title" id="hb-trust-title">Como protegemos clientes e empresas na Pi DEX</h2>
+        </div>
+
+        <div class="hb-trust-grid">
+          <article class="hb-trust-card">
+            <span class="hb-level-badge hb-level-1">Nível 1 · Cadastrado (Grátis)</span>
+            <h3 style="font-size:1.05rem;color:#fff;margin:10px 0 6px">Identidade &amp; Carteira</h3>
+            <p style="font-size:0.86rem;color:var(--text-secondary);line-height:1.5;margin:0">
+              Empresa vinculada a um <strong>Hokage ID</strong> real com chave pública Pi (<code>G...</code>) validada e até 3 benefícios comerciais ativos.
+            </p>
+          </article>
+          <article class="hb-trust-card" style="border-color:rgba(16,185,129,0.35)">
+            <span class="hb-level-badge hb-level-2">Nível 2 · Business Verificado (Pro)</span>
+            <h3 style="font-size:1.05rem;color:#fff;margin:10px 0 6px">Negócio Confirmado</h3>
+            <p style="font-size:0.86rem;color:var(--text-secondary);line-height:1.5;margin:0">
+              Auditoria de CNPJ/operação real e canais oficiais, benefícios ilimitados, métricas de resgate e destaque integrado na <strong>A Vila</strong>.
+            </p>
+          </article>
+          <article class="hb-trust-card" style="border-color:rgba(245,158,11,0.35)">
+            <span class="hb-level-badge hb-level-3">Nível 3 · Auditado Pi DEX</span>
+            <h3 style="font-size:1.05rem;color:#fff;margin:10px 0 6px">Métricas On-Chain Reais</h3>
+            <p style="font-size:0.86rem;color:var(--text-secondary);line-height:1.5;margin:0">
+              Score contínuo baseado em histórico real de resgates confirmados na blockchain e liquidez verificada no par <code>TOKEN / Pi</code>.
+            </p>
+          </article>
+        </div>
+
+        <div style="margin-top:22px;padding:16px 18px;border-radius:14px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.28);font-size:0.85rem;color:#d1fae5;line-height:1.55">
+          🛡️ <strong>Transparência Regulatória &amp; Custódia Zero:</strong> O Hokage Business não custodia fundos nem chaves privadas de terceiros. Os tokens listados destinam-se exclusivamente à <strong>utilidade comercial</strong> (créditos pré-pagos, vouchers, descontos e acesso VIP em produtos/serviços), sem promessa de retorno financeiro, dividendos ou oferta pública de valores mobiliários.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL 1: CADASTRAR EMPRESA + TOKEN + 1º BENEFÍCIO -->
+  <div class="portal-modal-overlay" id="hb-modal-create" role="dialog" aria-modal="true" aria-labelledby="hb-create-title" aria-hidden="true">
+    <div class="portal-modal" style="max-width:560px;max-height:90dvh;overflow-y:auto">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag section-tag--amber">Nível 1 · Cadastro Gratuito</div>
+      <h3 id="hb-create-title" style="font-size:1.3rem;margin:8px 0 6px">Cadastrar Minha Empresa</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);margin:0 0 16px;line-height:1.45">
+        Conecte seu <strong>Hokage ID</strong> (Pi Browser ou E-mail/Google) para vincular sua empresa, seu token comercial e o 1º benefício.
+      </p>
+
+      <form id="hb-create-form" novalidate>
+        <div class="hb-field">
+          <label for="hb-biz-name">Nome da Empresa *</label>
+          <input type="text" id="hb-biz-name" required maxlength="80" placeholder="Ex: Café do Pioneiro" />
+        </div>
+        <div class="hb-field">
+          <label for="hb-biz-slug">Identificador curto (slug) *</label>
+          <input type="text" id="hb-biz-slug" required maxlength="40" placeholder="Ex: cafe-do-pioneiro" />
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="hb-field">
+            <label for="hb-biz-cat">Categoria</label>
+            <select id="hb-biz-cat">
+              <option value="servicos">Serviços</option>
+              <option value="alimentacao">Alimentação</option>
+              <option value="comercio">Comércio / Loja</option>
+              <option value="tecnologia">Tecnologia &amp; Apps</option>
+              <option value="educacao">Educação &amp; Conteúdo</option>
+            </select>
+          </div>
+          <div class="hb-field">
+            <label for="hb-biz-city">Cidade / Região</label>
+            <input type="text" id="hb-biz-city" maxlength="80" placeholder="Ex: São Paulo, BR" />
+          </div>
+        </div>
+        <div class="hb-field">
+          <label for="hb-biz-wallet">Carteira Pi de Recebimento (G...) *</label>
+          <input type="text" id="hb-biz-wallet" required maxlength="56" placeholder="G..." />
+        </div>
+        <div class="hb-field">
+          <label for="hb-biz-tagline">Resumo curto</label>
+          <input type="text" id="hb-biz-tagline" maxlength="140" placeholder="Ex: Créditos de consumo e clube VIP em Pi" />
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.1);margin:14px 0;padding-top:14px">
+          <strong style="display:block;font-size:0.86rem;color:#c4b5fd;margin-bottom:10px">🪙 Token Comercial (Opcional agora)</strong>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="hb-field">
+              <label for="hb-tok-code">Código do Token</label>
+              <input type="text" id="hb-tok-code" maxlength="12" placeholder="Ex: CAFEPI" style="text-transform:uppercase" />
+            </div>
+            <div class="hb-field">
+              <label for="hb-tok-net">Rede</label>
+              <select id="hb-tok-net">
+                <option value="testnet">Pi Testnet (Piloto)</option>
+                <option value="mainnet">Pi Mainnet</option>
+              </select>
+            </div>
+          </div>
+          <div class="hb-field">
+            <label for="hb-tok-issuer">Carteira Emissora do Token (G...)</label>
+            <input type="text" id="hb-tok-issuer" maxlength="56" placeholder="Mesma carteira ou emissora dedicada (G...)" />
+          </div>
+          <div class="hb-field">
+            <label for="hb-tok-util">Utilidade Comercial</label>
+            <input type="text" id="hb-tok-util" maxlength="250" placeholder="Ex: Troque por cafés, descontos e acesso VIP na loja" />
+          </div>
+        </div>
+
+        <button type="submit" class="portal-btn portal-btn--amber portal-btn--full" id="hb-create-submit" style="font-weight:800">
+          Salvar Empresa no Hokage Business →
+        </button>
+        <div id="hb-create-feedback" class="hb-feedback" role="alert"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: TRANSFER-TO-REDEEM -->
+  <div class="portal-modal-overlay" id="hb-modal-redeem" role="dialog" aria-modal="true" aria-labelledby="hb-redeem-title" aria-hidden="true">
+    <div class="portal-modal" style="max-width:500px;max-height:90dvh;overflow-y:auto">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag section-tag--amber">🎟️ Resgate On-Chain (Não-Custodial)</div>
+      <h3 id="hb-redeem-title" style="font-size:1.25rem;margin:8px 0 6px">Resgatar Benefício</h3>
+      <p id="hb-redeem-desc" style="font-size:0.86rem;color:var(--text-secondary);margin:0 0 14px;line-height:1.45"></p>
+
+      <div id="hb-redeem-step1">
+        <button type="button" id="hb-generate-intent-btn" class="portal-btn portal-btn--primary portal-btn--full" style="font-weight:800">
+          1. Gerar Código Memo de Resgate →
+        </button>
+      </div>
+
+      <div id="hb-redeem-step2" style="display:none;margin-top:14px">
+        <div class="hb-field">
+          <label>Envie exatamente para a carteira da empresa:</label>
+          <div class="hb-code-box">
+            <span id="hb-intent-wallet"></span>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" data-copy-target="hb-intent-wallet">Copiar</button>
+          </div>
+        </div>
+        <div class="hb-field">
+          <label>Memo obrigatório (identificador do seu resgate):</label>
+          <div class="hb-code-box">
+            <span id="hb-intent-memo" style="font-size:1rem;font-weight:800"></span>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" data-copy-target="hb-intent-memo">Copiar</button>
+          </div>
+        </div>
+        <p id="hb-intent-summary" style="font-size:0.8rem;color:#d4d4d8;margin:0 0 12px"></p>
+
+        <div class="hb-field">
+          <label for="hb-tx-hash-input">2. Cole o Hash da Transação (tx_hash de 64 caracteres):</label>
+          <input type="text" id="hb-tx-hash-input" maxlength="64" placeholder="Ex: a1b2c3..." />
+        </div>
+        <button type="button" id="hb-confirm-tx-btn" class="portal-btn portal-btn--amber portal-btn--full" style="font-weight:800">
+          ✓ Validar na Blockchain Pi &amp; Liberar Voucher
+        </button>
+      </div>
+
+      <div id="hb-redeem-feedback" class="hb-feedback" role="alert"></div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: HOLD-TO-UNLOCK -->
+  <div class="portal-modal-overlay" id="hb-modal-hold" role="dialog" aria-modal="true" aria-labelledby="hb-hold-title" aria-hidden="true">
+    <div class="portal-modal" style="max-width:480px">
+      <button type="button" class="portal-modal-close" aria-label="Fechar modal">✕</button>
+      <div class="section-tag" style="background:rgba(16,185,129,0.14);border-color:rgba(16,185,129,0.4);color:#6ee7b7">🔓 Clube VIP (Hold-to-Unlock)</div>
+      <h3 id="hb-hold-title" style="font-size:1.25rem;margin:8px 0 6px">Verificar Elegibilidade na Carteira</h3>
+      <p id="hb-hold-desc" style="font-size:0.86rem;color:var(--text-secondary);margin:0 0 14px;line-height:1.45"></p>
+
+      <div class="hb-field">
+        <label for="hb-hold-wallet-input">Sua Chave Pública Pi (G...):</label>
+        <input type="text" id="hb-hold-wallet-input" maxlength="56" placeholder="G..." />
+      </div>
+      <button type="button" id="hb-check-hold-btn" class="portal-btn portal-btn--primary portal-btn--full" style="font-weight:800">
+        🔍 Consultar Saldo na Pi Horizon API
+      </button>
+      <div id="hb-hold-feedback" class="hb-feedback" role="alert"></div>
+    </div>
+  </div>
+
+  <footer class="portal-footer">
+    <div class="portal-container">
+      <div class="footer-disclaimer-box">
+        <strong>Transparência e Independência Editorial:</strong>
+        HOKAGE22B é um projeto independente sob responsabilidade de Isar Loiola, sem vínculo societário com a Pi Core Team ou SocialChain Inc.
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 HOKAGE22B (hokage22b.com) · Hokage Business</span>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <a href="./" style="color:var(--text-secondary);text-decoration:none">Início</a>
+          <a href="mural" style="color:var(--text-secondary);text-decoration:none">A Vila</a>
+          <a href="pioneiro" style="color:var(--text-secondary);text-decoration:none">Hokage ID</a>
+          <a href="construir" style="color:var(--text-secondary);text-decoration:none">Devs &amp; API</a>
+          <a href="legal/politica-de-privacidade" style="color:var(--text-secondary);text-decoration:none">Privacidade</a>
+          <a href="legal/termos-de-uso" style="color:var(--text-secondary);text-decoration:none">Termos</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"
+    integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil"
+    crossorigin="anonymous"></script>
+  <script src="assets/js/modules/i18n.js?v=4.7"></script>
+  <script src="assets/js/config.js?v=7.4"></script>
+  <script src="assets/js/modules/db.js?v=6.2"></script>
+  <script src="assets/js/modules/web2-auth.js?v=1.5"></script>
+  <script src="assets/js/modules/pi-pay.js?v=8.4"></script>
+  <script src="assets/js/modules/referral.js?v=2.7"></script>
+  <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
+  <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
+  <script src="assets/js/modules/business.js?v=1.0"></script>
+</body>
+
+</html>
