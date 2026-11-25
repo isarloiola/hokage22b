@@ -148,8 +148,7 @@
     }
     body.vila-theme .pioneer-card,
     body.vila-theme .ad-card,
-    body.vila-theme .pi-modal,
-    body.vila-theme #vila-pillar-banner {
+    body.vila-theme .pi-modal {
       background: linear-gradient(160deg, rgba(35, 25, 18, 0.96), rgba(22, 16, 12, 0.98)) !important;
       border-color: rgba(217, 119, 6, 0.28) !important;
       box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(251, 191, 36, 0.1) !important;
@@ -157,41 +156,6 @@
     body.vila-theme .pioneer-card--ouro {
       background: linear-gradient(155deg, rgba(52, 33, 18, 0.96), rgba(24, 16, 11, 0.98)) !important;
       border-color: rgba(245, 158, 11, 0.55) !important;
-    }
-    body.vila-theme .mural-filter-btn,
-    body.vila-theme .vila-pillar-btn {
-      background: rgba(34, 24, 17, 0.9) !important;
-      border: 1px solid rgba(217, 119, 6, 0.28) !important;
-      color: #e7dccf !important;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-      cursor: pointer;
-      transition: all 0.18s ease;
-    }
-    body.vila-theme .mural-filter-btn:hover,
-    body.vila-theme .vila-pillar-btn:hover {
-      border-color: rgba(245, 158, 11, 0.6) !important;
-      color: #fff !important;
-    }
-    body.vila-theme .mural-filter-btn.active,
-    body.vila-theme .vila-pillar-btn.active {
-      background: linear-gradient(135deg, #d97706, #f59e0b) !important;
-      border-color: #fbbf24 !important;
-      color: #140e0a !important;
-      font-weight: 800 !important;
-      box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35) !important;
-    }
-    body.vila-theme .mural-search-input,
-    body.vila-theme #vila-community-search {
-      background: #0f0a07 !important;
-      border-color: rgba(217, 119, 6, 0.32) !important;
-      color: #fef3c7 !important;
-    }
-    body.vila-theme .mural-search-input:focus,
-    body.vila-theme #vila-community-search:focus {
-      border-color: #f59e0b !important;
-      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18) !important;
     }
     .pioneer-card--vitrine {
       border-color: rgba(16, 185, 129, 0.35) !important;
@@ -201,6 +165,313 @@
       background: rgba(16, 185, 129, 0.15) !important;
       border-color: rgba(16, 185, 129, 0.38) !important;
       color: #6ee7b7 !important;
+    }
+    /* === A VILA · LAYOUT MINIMALISTA SEARCH-FIRST === */
+    .vila-hero-minimal {
+      max-width: 780px;
+      margin: 0 auto 14px;
+      text-align: center;
+      padding: 10px 0 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .vila-hero-minimal h1 {
+      font-size: clamp(1.75rem, 3.8vw, 2.35rem);
+      font-weight: 900;
+      color: #fff;
+      margin: 0 0 6px;
+      letter-spacing: -0.025em;
+      line-height: 1.12;
+    }
+    .vila-hero-minimal p {
+      color: #dfd3c3;
+      font-size: 0.94rem;
+      margin: 0 auto 12px;
+      line-height: 1.45;
+      max-width: 600px;
+    }
+    .vila-top-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .vila-command-dock {
+      max-width: 820px;
+      margin: 0 auto 14px;
+      position: sticky;
+      top: var(--vila-nav-h, 66px);
+      z-index: 40;
+      padding: 8px 0 6px;
+    }
+    .vila-search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px 6px 14px;
+      border-radius: 16px;
+      background: rgba(15, 10, 7, 0.94);
+      border: 1.5px solid rgba(245, 158, 11, 0.42);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.48);
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .vila-search-bar:focus-within {
+      border-color: #f59e0b;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(245, 158, 11, 0.18);
+    }
+    .vila-search-input {
+      flex: 1;
+      min-width: 0;
+      background: transparent !important;
+      border: none !important;
+      color: #fef3c7 !important;
+      font-size: 0.96rem;
+      padding: 9px 4px;
+      outline: none;
+      box-shadow: none !important;
+    }
+    .vila-search-input::placeholder {
+      color: #a89984;
+    }
+    .vila-search-clear {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #e7dccf;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .vila-search-clear:hover {
+      background: rgba(239, 68, 68, 0.22);
+      color: #fca5a5;
+    }
+    .vila-filter-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 13px;
+      border-radius: 12px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.34);
+      color: #fde68a;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.16s ease;
+    }
+    .vila-filter-trigger:hover,
+    .vila-filter-trigger.active {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      border-color: #fbbf24;
+      color: #140e0a;
+    }
+    .vila-filter-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: #140e0a;
+      color: #fbbf24;
+      font-size: 0.7rem;
+      font-weight: 900;
+    }
+    .vila-scope-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin: 10px auto 0;
+      padding-bottom: 2px;
+    }
+    .vila-scope-tabs::-webkit-scrollbar,
+    .vila-smart-chips::-webkit-scrollbar {
+      display: none;
+    }
+    body.vila-theme .vila-pillar-btn {
+      background: rgba(34, 24, 17, 0.86) !important;
+      border: 1px solid rgba(217, 119, 6, 0.26) !important;
+      color: #e7dccf !important;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.16s ease;
+    }
+    body.vila-theme .vila-pillar-btn:hover {
+      border-color: rgba(245, 158, 11, 0.6) !important;
+      color: #fff !important;
+    }
+    body.vila-theme .vila-pillar-btn.active {
+      background: linear-gradient(135deg, #d97706, #f59e0b) !important;
+      border-color: #fbbf24 !important;
+      color: #140e0a !important;
+      font-weight: 800 !important;
+      box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35) !important;
+    }
+    .vila-smart-chips {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 6px;
+      justify-content: center;
+      margin: 8px auto 0;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .vila-smart-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      color: #d6cbc0;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .vila-smart-chip:hover {
+      border-color: rgba(245, 158, 11, 0.55);
+      color: #fff;
+    }
+    .vila-smart-chip.active {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: rgba(245, 158, 11, 0.65);
+      color: #fde68a;
+    }
+    .vila-smart-chip__count {
+      opacity: 0.72;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .vila-filters-panel {
+      margin: 10px auto 0;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(20, 14, 10, 0.97);
+      border: 1px solid rgba(245, 158, 11, 0.34);
+      box-shadow: 0 22px 54px rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(16px);
+    }
+    .vila-pay-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .vila-pay-pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #e4e4e7;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .vila-pay-pill.active {
+      background: rgba(245, 158, 11, 0.22);
+      border-color: #f59e0b;
+      color: #fde68a;
+    }
+    .vila-filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+    }
+    .vila-results-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 8px 0 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(217, 119, 6, 0.22);
+    }
+    .vila-active-chips {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .vila-active-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.42);
+      color: #fde68a;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .vila-active-chip:hover {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #fecaca;
+    }
+    #section-destaques.mural-section {
+      padding: 8px 0 34px !important;
+      background: transparent !important;
+      border: none !important;
+    }
+    .vila-plans-details {
+      margin-top: 40px;
+      background: linear-gradient(160deg, rgba(35, 25, 18, 0.92), rgba(22, 16, 12, 0.96));
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+    }
+    .vila-plans-summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.98rem;
+    }
+    .vila-plans-summary::-webkit-details-marker {
+      display: none;
+    }
+    @media (max-width: 640px) {
+      .vila-scope-tabs,
+      .vila-smart-chips {
+        justify-content: flex-start;
+      }
+      .vila-search-bar {
+        padding: 5px 6px 5px 12px;
+      }
+      .vila-filter-trigger span {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -233,216 +504,193 @@
   </nav>
   <div id="hk-site-drawer-root"></div>
 
-  <!-- Cabeçalho Estilo Jornal Gazeta -->
   <main class="mural-main">
     <div class="container" style="max-width:1240px;margin:0 auto;padding-top:4px">
-      
-      <!-- Topo Institucional da Vila -->
-      <div style="position:relative;overflow:hidden;border-bottom:1px solid rgba(217,119,6,0.42);padding:16px 18px;margin-bottom:18px;border-radius:18px;background:linear-gradient(155deg,rgba(42,28,18,0.88),rgba(21,15,11,0.95));border:1px solid rgba(217,119,6,0.3);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
-        <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true" style="position:absolute;right:-18px;top:-22px;width:180px;height:180px;opacity:0.075;pointer-events:none;z-index:0" />
-        <div style="max-width:680px;position:relative;z-index:1">
-          <span style="display:inline-block;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--amber-light);font-weight:800;margin-bottom:4px">HOKAGE22B · A VILA · Onde oportunidades encontram pessoas</span>
-          <h1 style="font-size:clamp(2rem, 4.5vw, 2.7rem);font-weight:900;color:#fff;margin:0;font-family:var(--font-head);letter-spacing:-0.02em;line-height:1.12">
-            A Vila
-          </h1>
-          <p style="color:#e7dccf;font-size:0.96rem;margin:6px 0 0;line-height:1.45">
-            Uma vila construída por pioneiros, para pioneiros. Negócios, oportunidades de trabalho, mural comunitário e conexões no ecossistema Pi Network.
-          </p>
-          <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <span style="font-size:0.76rem;color:#fcd34d;font-weight:700">🌱 1º anúncio Grátis (0 π)</span>
-            <button type="button" class="btn btn-outline btn-sm" onclick="window.HokagePi && window.HokagePi.openTestnetInfoModal()" style="border-color:rgba(251,191,36,0.4);color:#fef3c7;font-size:0.74rem;padding:3px 10px;border-radius:999px;font-weight:700;cursor:pointer;background:rgba(245,158,11,0.12)">
-              ℹ️ Como funciona?
+
+      <!-- Topo Minimalista Centralizado -->
+      <header class="vila-hero-minimal">
+        <h1>🏘️ A Vila</h1>
+        <p>Produtos, serviços, vagas e negócios reais da comunidade — em Pi ou moeda local.</p>
+        <div class="vila-top-actions">
+          <button type="button" class="btn btn-primary btn-sm" onclick="window.HokageMuralChatbot ? window.HokageMuralChatbot.open() : (window.IsarMural && window.IsarMural.openModal())" style="padding:9px 16px;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);border:none;color:#09090b">
+            📢 Publicar Grátis
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="window.IsarMural && window.IsarMural.openMyAdsModal()" style="padding:8px 14px;font-weight:700;border-color:rgba(245,158,11,0.45);color:var(--amber-light)">
+            📊 Meus Anúncios
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="window.HokagePi && window.HokagePi.openTestnetInfoModal()" style="padding:8px 12px;font-weight:700;border-color:rgba(255,255,255,0.16);color:#e7dccf">
+            ℹ️ Como funciona
+          </button>
+        </div>
+      </header>
+
+      <!-- Barra de Comando Centralizada e Sticky (Busca + Escopo + Filtros Inteligentes) -->
+      <section id="vila-command-dock" class="vila-command-dock" aria-label="Busca e filtros da Vila">
+        <div class="vila-search-bar" role="search">
+          <span aria-hidden="true" style="font-size:1rem;opacity:0.85">🔍</span>
+          <input
+            type="search"
+            id="mural-search-input"
+            class="vila-search-input"
+            placeholder="Buscar produtos, serviços, @vendedor, cidade ou Pi..."
+            autocomplete="off"
+            aria-label="Buscar na Vila"
+            oninput="window.IsarMural && window.IsarMural.handleSearchInput(this.value)"
+          />
+          <button
+            type="button"
+            id="mural-search-clear-btn"
+            class="vila-search-clear"
+            style="display:none"
+            onclick="window.IsarMural && window.IsarMural.clearSearch()"
+            aria-label="Limpar busca">✕</button>
+          <button
+            type="button"
+            id="vila-filters-toggle-btn"
+            class="vila-filter-trigger"
+            aria-expanded="false"
+            aria-controls="vila-filters-panel"
+            onclick="window.IsarMural && window.IsarMural.toggleFiltersPanel()"
+          >
+            🎛️ <span>Filtros</span>
+            <span id="vila-active-filters-badge" class="vila-filter-badge" style="display:none">0</span>
+          </button>
+        </div>
+
+        <nav id="vila-pillar-nav" class="vila-scope-tabs" aria-label="Áreas da Vila">
+          <button type="button" class="vila-pillar-btn active" data-pillar="inicio" onclick="window.IsarMural && window.IsarMural.setPillar('inicio', this)">✨ Tudo</button>
+          <button type="button" class="vila-pillar-btn" data-pillar="mercado" onclick="window.IsarMural && window.IsarMural.setPillar('mercado', this)">🛒 Mercado</button>
+          <button type="button" class="vila-pillar-btn" data-pillar="trabalho" onclick="window.IsarMural && window.IsarMural.setPillar('trabalho', this)">💼 Trabalho</button>
+          <button type="button" class="vila-pillar-btn" data-pillar="mural" onclick="window.IsarMural && window.IsarMural.setPillar('mural', this)">📌 Mural</button>
+          <button type="button" class="vila-pillar-btn" data-pillar="comunidade" onclick="window.IsarMural && window.IsarMural.setPillar('comunidade', this)">🤝 Pessoas</button>
+        </nav>
+
+        <div id="vila-smart-cat-chips" class="vila-smart-chips" role="group" aria-label="Categorias com anúncios ativos"></div>
+
+        <!-- Painel Profissional de Filtros Avançados -->
+        <div id="vila-filters-panel" class="vila-filters-panel" style="display:none" aria-label="Filtros avançados">
+          <div style="margin-bottom:10px">
+            <span style="display:block;font-size:0.74rem;text-transform:uppercase;letter-spacing:0.06em;color:#a89984;font-weight:800;margin-bottom:6px">Forma de pagamento</span>
+            <div class="vila-pay-pills" role="group" aria-label="Filtrar por pagamento">
+              <button type="button" class="vila-pay-pill active" data-pay="todos" onclick="window.IsarMural && window.IsarMural.filterPaymentMode('todos')">💰 Todos</button>
+              <button type="button" class="vila-pay-pill" data-pay="pi" onclick="window.IsarMural && window.IsarMural.filterPaymentMode('pi')">⚡ Somente Pi</button>
+              <button type="button" class="vila-pay-pill" data-pay="pi_fiat" onclick="window.IsarMural && window.IsarMural.filterPaymentMode('pi_fiat')">⚡💵 Pi + Moeda</button>
+              <button type="button" class="vila-pay-pill" data-pay="fiat" onclick="window.IsarMural && window.IsarMural.filterPaymentMode('fiat')">💵 Somente Moeda</button>
+            </div>
+            <select id="mural-payment-filter" onchange="window.IsarMural && window.IsarMural.filterPaymentMode(this.value)" aria-hidden="true" tabindex="-1" style="display:none">
+              <option value="todos">Todos</option>
+              <option value="pi">Pi</option>
+              <option value="pi_fiat">Pi + Moeda</option>
+              <option value="fiat">Moeda</option>
+            </select>
+          </div>
+
+          <div class="vila-filters-grid">
+            <select id="mural-category-filter" onchange="window.IsarMural && window.IsarMural.filterCategory(this.value)" aria-label="Filtrar por categoria" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#fff;font-size:0.8rem;font-weight:600">
+              <option value="todos">📂 Todas as Categorias</option>
+              <option value="produto">🛍️ Produtos &amp; Lojas</option>
+              <option value="digital">📦 Digitais</option>
+              <option value="servico">🛠️ Serviços</option>
+              <option value="tecnologia">💻 Tech &amp; Apps</option>
+              <option value="educacao">🎓 Educação</option>
+              <option value="alimentacao">🍔 Alimentação</option>
+              <option value="vaga">💼 Vagas</option>
+              <option value="freelancer">🧑‍💻 Freelancer</option>
+              <option value="aviso">📢 Avisos &amp; Eventos</option>
+              <option value="procura">🔎 Procura-se</option>
+              <option value="youtube">▶ YouTube &amp; Projetos</option>
+              <option value="mensagem">💬 Recados</option>
+            </select>
+
+            <select id="mural-tier-filter" onchange="window.IsarMural && window.IsarMural.filterTier(this.value)" aria-label="Filtrar por nível ou origem" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fde68a;font-size:0.8rem;font-weight:700">
+              <option value="todos">🏅 Todos os Níveis</option>
+              <option value="ouro">🥇 Ouro · Boost VIP (3.14 π)</option>
+              <option value="prata">🥈 Prata · Destaque (1.0 π)</option>
+              <option value="bronze">🥉 Bronze (0.314 π)</option>
+              <option value="vitrine">🪪 Vitrine do Passaporte</option>
+              <option value="gratis">🌱 Grátis · Comunidade (0 π)</option>
+            </select>
+
+            <select id="mural-country-filter" onchange="window.IsarMural && window.IsarMural.filterCountry(this.value)" aria-label="Filtrar por país" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(139,92,246,0.38);color:#c4b5fd;font-size:0.8rem;font-weight:700">
+              <option value="todos">🌎 Todos Países</option>
+              <option value="GLOBAL">🌐 Global / Online</option>
+              <option value="BR">🇧🇷 Brasil</option>
+              <option value="US">🇺🇸 USA</option>
+              <option value="PT">🇵🇹 Portugal</option>
+              <option value="ES">🇪🇸 España</option>
+              <option value="NG">🇳🇬 Nigeria</option>
+              <option value="PH">🇵🇭 Philippines</option>
+              <option value="VN">🇻🇳 Vietnam</option>
+              <option value="IN">🇮🇳 India</option>
+              <option value="EU">🇪🇺 Europe</option>
+              <option value="OTHER">🌍 Outro</option>
+            </select>
+
+            <input type="text" id="mural-region-filter" oninput="window.IsarMural && window.IsarMural.filterRegion(this.value)" placeholder="📍 Cidade / Região..." aria-label="Filtrar por cidade ou região" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#fff;font-size:0.8rem;box-sizing:border-box" />
+
+            <select id="mural-lang-filter" onchange="window.IsarMural && window.IsarMural.filterLang(this.value)" aria-label="Filtrar por idioma" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#e4e4e7;font-size:0.8rem;font-weight:600">
+              <option value="todos">🗣️ Todos Idiomas</option>
+              <option value="pt">🇧🇷 Português</option>
+              <option value="en">🇺🇸 English</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="other">🌐 Outros</option>
+            </select>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08)">
+            <button type="button" onclick="window.IsarMural && window.IsarMural.clearAllFilters()" style="background:none;border:none;color:#fca5a5;font-size:0.78rem;font-weight:700;cursor:pointer;padding:4px 0">
+              ✕ Limpar todos os filtros
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.IsarMural && (window.IsarMural.toggleFiltersPanel(false), window.IsarMural.scrollToResults())" style="padding:7px 14px;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);border:none;color:#09090b">
+              ✓ Ver Resultados
             </button>
           </div>
         </div>
-        <div class="gazeta-top-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:relative;z-index:1">
-          <button type="button" class="btn btn-outline" onclick="window.IsarMural && window.IsarMural.openMyAdsModal()" style="white-space:nowrap;padding:11px 16px;font-weight:700;border-color:rgba(245,158,11,0.5);color:var(--amber-light)">
-            📊 Meus Anúncios &amp; Métricas
-          </button>
-          <button type="button" class="btn btn-primary" onclick="window.HokageMuralChatbot ? window.HokageMuralChatbot.open() : (window.IsarMural && window.IsarMural.openModal())" style="white-space:nowrap;padding:11px 18px;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);border:none;color:#09090b">
-            📢 Publicar na Vila
-          </button>
-        </div>
-      </div>
+      </section>
 
-      <!-- Navegação Principal dos 4 Pilares da Vila -->
-      <nav id="vila-pillar-nav" aria-label="Áreas da Vila" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:18px;scrollbar-width:none">
-        <button type="button" class="vila-pillar-btn active" data-pillar="inicio" onclick="window.IsarMural && window.IsarMural.setPillar('inicio', this)" style="white-space:nowrap;font-weight:800">
-          🏛️ Início da Vila
-        </button>
-        <button type="button" class="vila-pillar-btn" data-pillar="mercado" onclick="window.IsarMural && window.IsarMural.setPillar('mercado', this)" style="white-space:nowrap;font-weight:800">
-          🛒 Mercado
-        </button>
-        <button type="button" class="vila-pillar-btn" data-pillar="mural" onclick="window.IsarMural && window.IsarMural.setPillar('mural', this)" style="white-space:nowrap;font-weight:800">
-          📌 Mural
-        </button>
-        <button type="button" class="vila-pillar-btn" data-pillar="trabalho" onclick="window.IsarMural && window.IsarMural.setPillar('trabalho', this)" style="white-space:nowrap;font-weight:800">
-          💼 Trabalho
-        </button>
-        <button type="button" class="vila-pillar-btn" data-pillar="comunidade" onclick="window.IsarMural && window.IsarMural.setPillar('comunidade', this)" style="white-space:nowrap;font-weight:800">
-          🤝 Comunidade
-        </button>
-      </nav>
-
-      <!-- Banner Contextual da Área Ativa (Trabalho / Comunidade) -->
-      <section id="vila-pillar-banner" style="display:none;margin-bottom:20px;background:rgba(17,17,22,0.9);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:18px"></section>
-
-      <!-- Espaço Comunidade Integrado (Perfis Reais de Pioneiros) -->
+      <!-- Espaço Pessoas / Comunidade Integrado (Sincronizado com a Busca Central) -->
       <section id="vila-community-hub" style="display:none;margin-bottom:32px">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(59,130,246,0.28)">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(217,119,6,0.28)">
           <div>
-            <h2 style="font-size:1.3rem;font-weight:800;color:#fff;margin:0">🤝 Comunidade da Vila</h2>
-            <p style="font-size:0.84rem;color:var(--text-muted);margin:4px 0 0">
-              Pioneiros conectados pelo Passaporte Web3. Explore perfis públicos ou ative seu Passaporte para participar.
-            </p>
+            <h2 style="font-size:1.2rem;font-weight:800;color:#fff;margin:0">🤝 Pessoas &amp; Lojas Verificadas</h2>
+            <p style="font-size:0.82rem;color:#d6cbc0;margin:3px 0 0">Use a busca acima para localizar pioneiros por @usuário, bio ou produto.</p>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <a href="explorar" class="btn btn-outline btn-sm" style="text-decoration:none;font-weight:700;border-color:rgba(16,185,129,0.45);color:#34d399">
-              🌐 Busca Avançada de Passaportes →
+              🌐 Diretório Completo →
             </a>
             <a href="pioneiro" class="btn btn-primary btn-sm" style="text-decoration:none;font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);color:#09090b;border:none">
-              🪪 Criar / Abrir Meu Passaporte →
+              🪪 Meu Hokage ID →
             </a>
           </div>
-        </div>
-        <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.25);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:0.8rem;color:#d1fae5;line-height:1.45">
-          🛡️ <strong>Identidade &amp; Acesso:</strong> Visitantes podem explorar perfis livremente. Para publicar, comentar ou interagir na Vila, é necessário autenticar sua conta Pi Network. O selo <strong>KYC Verificado</strong> é exibido apenas quando confirmado.
-        </div>
-        <div style="margin-bottom:16px">
-          <input type="search" id="vila-community-search" oninput="window.IsarMural && window.IsarMural.filterCommunity(this.value)" placeholder="🔍 Buscar pioneiro por @usuário, habilidade ou bio..." aria-label="Buscar pioneiros na comunidade" style="width:100%;padding:10px 14px;border-radius:12px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#fff;font-size:0.86rem;box-sizing:border-box" />
         </div>
         <div id="vila-community-profiles-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
           <div style="color:var(--text-muted);font-size:0.86rem;padding:16px 0">Carregando pioneiros da comunidade...</div>
         </div>
       </section>
 
-      <!-- Barra de Pesquisa e Filtros -->
-      <div class="mural-search-filter-wrapper" style="margin-bottom:20px">
-        <div class="mural-search-wrapper">
-          <input 
-            type="search" 
-            id="mural-search-input" 
-            class="mural-search-input" 
-            placeholder="🔍 Buscar por título, cidade/região, @usuário, produto..." 
-            autocomplete="off"
-            aria-label="Buscar anúncios no mural"
-            oninput="window.IsarMural && window.IsarMural.handleSearchInput(this.value)"
-          />
-          <button 
-            type="button" 
-            id="mural-search-clear-btn" 
-            class="mural-search-clear" 
-            style="display:none" 
-            onclick="window.IsarMural && window.IsarMural.clearSearch()" 
-            aria-label="Limpar busca">✕</button>
+      <div id="vila-results-anchor"></div>
+
+      <!-- Barra Fina de Resultados, Chips Ativos e Ordenação -->
+      <div class="vila-results-bar" id="vila-results-bar">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span id="mural-results-count" style="font-size:0.82rem;color:#e7dccf;font-weight:700">Carregando classificados...</span>
+          <div id="vila-active-chips" class="vila-active-chips"></div>
+          <button type="button" id="mural-reset-filters-btn" onclick="window.IsarMural && window.IsarMural.clearAllFilters()" style="display:none;padding:4px 10px;border-radius:999px;border:1px solid rgba(239,68,68,0.45);background:rgba(239,68,68,0.12);color:#fca5a5;font-size:0.74rem;font-weight:700;cursor:pointer">
+            ✕ Limpar Tudo
+          </button>
         </div>
-
-        <div class="mural-filters-bar" role="group" aria-label="Filtro de categorias de anúncios" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-          <button class="mural-filter-btn active" data-category="todos" data-pillars="inicio,mercado,mural,trabalho" type="button">📰 Todos</button>
-          <button class="mural-filter-btn" data-category="produto" data-pillars="inicio,mercado" type="button">🛍️ Produtos &amp; Lojas</button>
-          <button class="mural-filter-btn" data-category="digital" data-pillars="inicio,mercado" type="button">📦 Digitais</button>
-          <button class="mural-filter-btn" data-category="servico" data-pillars="inicio,mercado,trabalho" type="button">🛠️ Serviços</button>
-          <button class="mural-filter-btn" data-category="tecnologia" data-pillars="inicio,mercado" type="button">💻 Tech &amp; Apps</button>
-          <button class="mural-filter-btn" data-category="educacao" data-pillars="inicio,mercado" type="button">🎓 Educação</button>
-          <button class="mural-filter-btn" data-category="alimentacao" data-pillars="inicio,mercado" type="button">🍔 Alimentação</button>
-          <button class="mural-filter-btn" data-category="vaga" data-pillars="inicio,trabalho" type="button">💼 Vagas</button>
-          <button class="mural-filter-btn" data-category="freelancer" data-pillars="inicio,trabalho" type="button">🧑‍💻 Freelancer</button>
-          <button class="mural-filter-btn" data-category="aviso" data-pillars="inicio,mural" type="button">📢 Avisos &amp; Eventos</button>
-          <button class="mural-filter-btn" data-category="procura" data-pillars="inicio,mural" type="button">🔎 Procura-se</button>
-          <button class="mural-filter-btn" data-category="youtube" data-pillars="inicio,mural" type="button">▶ YouTube &amp; Projetos</button>
-          <button class="mural-filter-btn" data-category="mensagem" data-pillars="inicio,mural" type="button">💬 Recados</button>
-        </div>
-
-        <!-- Filtros Avançados Colapsáveis (Mantém o Feed de Anúncios na 1ª Dobra Mobile) -->
-        <details id="mural-adv-filters-details" style="margin-top:10px;border-radius:14px;background:rgba(15,23,42,0.55);border:1px solid rgba(255,255,255,0.08);padding:10px 12px">
-          <summary style="cursor:pointer;font-size:0.82rem;font-weight:700;color:#fbbf24;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px">
-            <span>⚙️ Filtros Avançados (País, Cidade, Idioma, Nível e Ordenação)</span>
-            <span style="font-size:0.75rem;color:var(--text-muted)">Abrir / Fechar ▾</span>
-          </summary>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin-top:10px">
-          <select id="mural-tier-filter" onchange="window.IsarMural && window.IsarMural.filterTier(this.value)" aria-label="Filtrar por alcance na Vila" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fde68a;font-size:0.8rem;font-weight:700">
-            <option value="todos">🏅 Todos os Níveis</option>
-            <option value="ouro">🥇 Ouro · Boost VIP (3.14 π)</option>
-            <option value="prata">🥈 Prata · Boost Destaque (1.0 π)</option>
-            <option value="bronze">🥉 Bronze · Compromisso (0.314 π)</option>
-            <option value="gratis">🌱 Grátis · Comunidade (0 π)</option>
-          </select>
-
-          <select id="mural-country-filter" onchange="window.IsarMural && window.IsarMural.filterCountry(this.value)" aria-label="Filtrar por país ou alcance global" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(139,92,246,0.38);color:#c4b5fd;font-size:0.8rem;font-weight:700">
-            <option value="todos">🌎 Todos Países</option>
-            <option value="GLOBAL">🌐 Global / Online</option>
-            <option value="BR">🇧🇷 Brasil</option>
-            <option value="US">🇺🇸 USA</option>
-            <option value="PT">🇵🇹 Portugal</option>
-            <option value="ES">🇪🇸 España</option>
-            <option value="NG">🇳🇬 Nigeria</option>
-            <option value="PH">🇵🇭 Philippines</option>
-            <option value="VN">🇻🇳 Vietnam</option>
-            <option value="IN">🇮🇳 India</option>
-            <option value="EU">🇪🇺 Europe</option>
-            <option value="OTHER">🌍 Outro</option>
-          </select>
-
-          <input type="text" id="mural-region-filter" oninput="window.IsarMural && window.IsarMural.filterRegion(this.value)" placeholder="📍 Cidade / Região..." aria-label="Filtrar por cidade ou região" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#fff;font-size:0.8rem;box-sizing:border-box" />
-
-          <select id="mural-lang-filter" onchange="window.IsarMural && window.IsarMural.filterLang(this.value)" aria-label="Filtrar por idioma do anúncio" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#e4e4e7;font-size:0.8rem;font-weight:600">
-            <option value="todos">🗣️ Todos Idiomas</option>
-            <option value="pt">🇧🇷 Português</option>
-            <option value="en">🇺🇸 English</option>
-            <option value="es">🇪🇸 Español</option>
-            <option value="other">🌐 Outros</option>
-          </select>
-
-          <select id="mural-payment-filter" onchange="window.IsarMural && window.IsarMural.filterPaymentMode(this.value)" aria-label="Filtrar por formato de pagamento" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(245,158,11,0.35);color:#fcd34d;font-size:0.8rem;font-weight:600">
-            <option value="todos">💰 Todos os Pagamentos</option>
-            <option value="pi">⚡ Somente Pi</option>
-            <option value="pi_fiat">⚡💵 Pi + Moeda</option>
-            <option value="fiat">💵 Somente Moeda</option>
-          </select>
-
-          <select id="mural-sort-filter" onchange="window.IsarMural && window.IsarMural.sortAds(this.value)" aria-label="Ordenar anúncios" style="padding:8px 10px;border-radius:10px;background:#09090b;border:1px solid rgba(255,255,255,0.16);color:#e4e4e7;font-size:0.8rem;font-weight:600">
-            <option value="destaque">👑 Destaques (Ouro→Bronze)</option>
-            <option value="recentes">🕒 Mais Recentes</option>
-            <option value="curtidos">❤️ Mais Curtidos</option>
-          </select>
-          </div>
-        </details>
-
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px">
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-            <span id="mural-results-count" style="font-size:0.8rem;color:var(--text-muted);font-weight:600">Carregando classificados...</span>
-            <button type="button" id="mural-reset-filters-btn" onclick="window.IsarMural && window.IsarMural.clearAllFilters()" style="display:none;padding:4px 10px;border-radius:999px;border:1px solid rgba(239,68,68,0.45);background:rgba(239,68,68,0.12);color:#fca5a5;font-size:0.75rem;font-weight:700;cursor:pointer">
-              ✕ Limpar Filtros
-            </button>
-          </div>
-        </div>
+        <select id="mural-sort-filter" onchange="window.IsarMural && window.IsarMural.sortAds(this.value)" aria-label="Ordenar anúncios" style="padding:6px 10px;border-radius:10px;background:#0f0a07;border:1px solid rgba(217,119,6,0.34);color:#fde68a;font-size:0.78rem;font-weight:700">
+          <option value="destaque">👑 Destaques</option>
+          <option value="recentes">🕒 Mais Recentes</option>
+          <option value="curtidos">❤️ Mais Curtidos</option>
+        </select>
       </div>
 
       <div id="mural-seller-banner" style="display:none;margin-bottom:14px"></div>
 
-      <!-- FEED UNIFICADO DA VILA (ORDENADO POR ALCANCE: BOOST VIP -> BOOST DESTAQUE -> NORMAL) -->
-      <section class="mural-section mural-section--featured" id="section-destaques" style="margin-bottom:48px">
-        <div class="mural-section__header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(217,119,6,0.35);flex-wrap:wrap;gap:12px">
-          <div style="display:flex;align-items:center;gap:12px">
-            <span style="font-size:1.6rem">🏘️</span>
-            <div>
-              <h2 style="font-size:1.35rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:10px">
-                Feed da Vila
-                <span style="font-size:0.7rem;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.3));color:var(--amber-light);border:1px solid rgba(245,158,11,0.5);padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700">Unificado</span>
-              </h2>
-              <p style="font-size:0.82rem;color:#e7dccf;margin:3px 0 0">
-                Ofertas, vagas, serviços e comunicados em um só lugar · Ordenado por alcance (Boost VIP → Boost Destaque → Normal)
-              </p>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:0.74rem;color:var(--text-muted);flex-wrap:wrap">
-            <span style="background:rgba(245,158,11,0.12);color:var(--amber-light);padding:4px 9px;border-radius:6px;border:1px solid rgba(245,158,11,0.3);font-weight:600">🥇 Ouro VIP</span>
-            <span style="background:rgba(148,163,184,0.1);color:#e2e8f0;padding:4px 9px;border-radius:6px;border:1px solid rgba(148,163,184,0.25);font-weight:600">🥈 Prata</span>
-            <span style="background:rgba(255,255,255,0.04);color:#e7dccf;padding:4px 9px;border-radius:6px;border:1px solid rgba(217,119,6,0.25);font-weight:600">🥉 Bronze</span>
-            <span style="background:rgba(16,185,129,0.1);color:#34d399;padding:4px 9px;border-radius:6px;border:1px solid rgba(16,185,129,0.28);font-weight:600">🌱 Grátis</span>
-          </div>
-        </div>
-
+      <!-- FEED UNIFICADO DA VILA -->
+      <section class="mural-section mural-section--featured" id="section-destaques" style="margin-bottom:28px">
         <div class="mural-grid" id="mural-featured-grid">
           <div id="mural-loading-skeleton" style="grid-column:1/-1;text-align:center;padding:42px 20px;border-radius:16px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);color:var(--text-secondary)">
             <div style="font-size:1.8rem;margin-bottom:8px">⏳</div>
@@ -452,19 +700,15 @@
         </div>
       </section>
 
-        <!-- Tabela de Publicação Normal & Boosts de Alcance -->
-        <div style="margin-top:64px;background:linear-gradient(160deg,rgba(35,25,18,0.96),rgba(22,16,12,0.98));border:1px solid rgba(217,119,6,0.3);border-radius:var(--radius-lg);padding:32px">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:12px">
-            <div>
-              <span style="font-size:0.75rem;text-transform:uppercase;color:var(--amber-light);font-weight:700;letter-spacing:0.08em">Confiança, Compromisso &amp; Alcance na Vila</span>
-              <h3 style="color:#fff;font-size:1.4rem;margin:4px 0 8px">⚡ Níveis de Confiança &amp; Boosts de Alcance</h3>
-            </div>
-            <span style="font-size:0.8rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--amber-light);padding:4px 12px;border-radius:12px;font-weight:700">
-              Compromisso Real em Pi Network
-            </span>
-          </div>
-          <p style="color:#e7dccf;font-size:0.92rem;line-height:1.6;margin-bottom:24px">
-            Quem entra gratuitamente ou com bônus começa no nível <strong>Bronze</strong>. Já quem investe Pi real para destacar sua oferta (<strong>Prata</strong> ou <strong>Ouro</strong>) demonstra compromisso real com a comunidade — reduzindo spam, elevando a confiança do comprador e ganhando posições privilegiadas no grid.
+      <!-- Tabela de Publicação Normal & Boosts de Alcance (Colapsável para manter foco na busca) -->
+      <details class="vila-plans-details">
+        <summary class="vila-plans-summary">
+          <span>⚡ Quer destacar uma oferta na Vila? Veja os níveis (Grátis a VIP Ouro)</span>
+          <span style="font-size:0.78rem;color:#fbbf24">Abrir / Fechar ▾</span>
+        </summary>
+        <div style="margin-top:16px">
+          <p style="color:#e7dccf;font-size:0.88rem;line-height:1.55;margin-bottom:18px">
+            Quem entra gratuitamente começa com 1 anúncio ativo a cada 7 dias. Já quem impulsiona com Pi (<strong>Bronze</strong>, <strong>Prata</strong> ou <strong>Ouro</strong>) ganha visibilidade prioritária, foto/link e selo de compromisso real.
           </p>
 
           <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));gap:16px">
@@ -537,14 +781,8 @@
               </button>
             </div>
           </div>
-
-        <div style="margin-top:24px;text-align:center;font-size:0.85rem;color:var(--gray-light)">
-          Dúvidas sobre o mural ou parcerias institucionais? Fale conosco: <a href="mailto:contato@hokage22b.com" style="color:var(--amber-light);font-weight:700">contato@hokage22b.com</a>
-          <div style="margin-top:10px;font-size:0.75rem;color:rgba(255,255,255,0.25)">
-            © 2026 HOKAGE22B · A Vila (Central P2P)
-          </div>
         </div>
-      </div>
+      </details>
     </div>
   </main>
 
@@ -1052,15 +1290,16 @@
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
   <script src="assets/js/modules/pi-pay.js?v=8.5"></script>
-  <script src="assets/js/modules/mural.v4.js?v=9.7"></script>
+  <script src="assets/js/modules/mural.v4.js?v=9.8"></script>
   <script src="assets/js/modules/mural-chatbot.js?v=1.2"></script>
   <script>
     function syncMuralOffset() {
       const nav = document.getElementById('navbar');
       const main = document.querySelector('.mural-main');
       if (nav && main) {
-        const h = nav.offsetHeight || 68;
-        main.style.paddingTop = (h + 14) + 'px';
+        const h = nav.offsetHeight || 64;
+        main.style.paddingTop = (h + 10) + 'px';
+        document.documentElement.style.setProperty('--vila-nav-h', h + 'px');
       }
     }
 

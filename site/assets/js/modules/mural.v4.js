@@ -641,6 +641,80 @@
   let currentLangFilter = 'todos';
   let currentSortOrder = 'destaque';
   let currentSellerFilter = '';
+  let searchDebounceTimer = null;
+  let hasAutoScrolledForSearch = false;
+
+  const CATEGORY_META = {
+    produto: { label: '🛍️ Produtos', pillars: ['inicio', 'mercado'] },
+    digital: { label: '📦 Digitais', pillars: ['inicio', 'mercado'] },
+    servico: { label: '🛠️ Serviços', pillars: ['inicio', 'mercado', 'trabalho'] },
+    tecnologia: { label: '💻 Tech', pillars: ['inicio', 'mercado'] },
+    educacao: { label: '🎓 Educação', pillars: ['inicio', 'mercado'] },
+    alimentacao: { label: '🍔 Alimentação', pillars: ['inicio', 'mercado'] },
+    vaga: { label: '💼 Vagas', pillars: ['inicio', 'trabalho'] },
+    freelancer: { label: '🧑‍💻 Freelancer', pillars: ['inicio', 'trabalho'] },
+    aviso: { label: '📢 Avisos', pillars: ['inicio', 'mural'] },
+    procura: { label: '🔎 Procura-se', pillars: ['inicio', 'mural'] },
+    youtube: { label: '▶ YouTube', pillars: ['inicio', 'mural'] },
+    mensagem: { label: '💬 Recados', pillars: ['inicio', 'mural'] }
+  };
+
+  function normalizeSearchText(str) {
+    try {
+      return String(str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    } catch (_) {
+      return String(str || '').toLowerCase();
+    }
+  }
+
+  function getCommandDockOffset() {
+    const nav = document.getElementById('navbar');
+    const dock = document.getElementById('vila-command-dock');
+    const navH = nav ? nav.offsetHeight : 64;
+    const dockH = dock ? dock.offsetHeight : 100;
+    return navH + dockH + 10;
+  }
+
+  function scrollToResults(force) {
+    const target = currentPillar === 'comunidade'
+      ? document.getElementById('vila-community-hub')
+      : document.getElementById('vila-results-anchor');
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    const minTop = getCommandDockOffset();
+    if (!force && rect.top <= minTop + 40) return;
+    const targetTop = Math.max(0, window.scrollY + rect.top - minTop);
+    window.scrollTo({ top: targetTop, behavior: 'smooth' });
+  }
+
+  function toggleFiltersPanel(forceState) {
+    const panel = document.getElementById('vila-filters-panel');
+    const btn = document.getElementById('vila-filters-toggle-btn');
+    if (!panel) return;
+    const isOpen = panel.style.display !== 'none';
+    const nextOpen = typeof forceState === 'boolean' ? forceState : !isOpen;
+    panel.style.display = nextOpen ? 'block' : 'none';
+    if (btn) {
+      btn.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+      btn.classList.toggle('active', nextOpen);
+    }
+  }
+
+  function syncPaymentPillsUi() {
+    document.querySelectorAll('.vila-pay-pill').forEach(function (pill) {
+      pill.classList.toggle('active', pill.getAttribute('data-pay') === currentPaymentFilter);
+    });
+    const sel = document.getElementById('mural-payment-filter');
+    if (sel) sel.value = currentPaymentFilter;
+  }
+
+  function syncCategorySelectAndChips() {
+    const sel = document.getElementById('mural-category-filter');
+    if (sel) sel.value = currentCategory;
+    document.querySelectorAll('#vila-smart-cat-chips .vila-smart-chip').forEach(function (chip) {
+      chip.classList.toggle('active', chip.getAttribute('data-category') === currentCategory);
+    });
+  }
 
   function filterSeller(sellerHandle) {
     currentSellerFilter = normalizeSellerHandle(sellerHandle);
@@ -649,6 +723,7 @@
 
   function filterPaymentMode(mode) {
     currentPaymentFilter = mode || 'todos';
+    syncPaymentPillsUi();
     applyFilters();
   }
 
@@ -687,6 +762,7 @@
     currentLangFilter = 'todos';
     currentSortOrder = 'destaque';
     currentSellerFilter = '';
+    hasAutoScrolledForSearch = false;
     try {
       const urlObj = new URL(window.location.href);
       if (urlObj.searchParams.has('seller') || urlObj.searchParams.has('vendedor') || urlObj.searchParams.has('loja')) {
@@ -699,6 +775,7 @@
 
     const ids = {
       'mural-search-input': '',
+      'mural-category-filter': 'todos',
       'mural-payment-filter': 'todos',
       'mural-country-filter': 'todos',
       'mural-tier-filter': 'todos',
@@ -712,9 +789,8 @@
     });
     const clearBtn = document.getElementById('mural-search-clear-btn');
     if (clearBtn) clearBtn.style.display = 'none';
-    document.querySelectorAll('.mural-filter-btn').forEach(function (btn) {
-      btn.classList.toggle('active', btn.getAttribute('data-category') === 'todos');
-    });
+    syncPaymentPillsUi();
+    syncCategorySelectAndChips();
     applyFilters();
   }
 
@@ -867,22 +943,14 @@
       btn.classList.toggle('active', btn.getAttribute('data-pillar') === currentPillar);
     });
 
-    // Filtra as pílulas de categoria visíveis de acordo com a área ativa
-    let activeCatStillVisible = false;
-    document.querySelectorAll('.mural-filters-bar .mural-filter-btn').forEach(function (btn) {
-      const allowed = (btn.getAttribute('data-pillars') || 'inicio,mercado,mural,trabalho').split(',');
-      const show = allowed.indexOf(currentPillar) !== -1;
-      btn.style.display = show ? 'inline-flex' : 'none';
-      if (show && btn.getAttribute('data-category') === currentCategory) {
-        activeCatStillVisible = true;
+    if (currentCategory !== 'todos') {
+      const meta = CATEGORY_META[currentCategory];
+      const allowed = meta ? meta.pillars : ['inicio', 'mercado', 'mural', 'trabalho'];
+      if (allowed.indexOf(currentPillar) === -1) {
+        currentCategory = 'todos';
       }
-    });
-    if (!activeCatStillVisible) {
-      currentCategory = 'todos';
-      document.querySelectorAll('.mural-filters-bar .mural-filter-btn').forEach(function (btn) {
-        btn.classList.toggle('active', btn.getAttribute('data-category') === 'todos');
-      });
     }
+    syncCategorySelectAndChips();
 
     // Pré-seleciona uma categoria coerente ao abrir publicação dentro de uma área
     const catSel = document.getElementById('ad-input-cat');
@@ -892,63 +960,174 @@
       else if (currentPillar === 'mercado') catSel.value = 'produto';
     }
 
-    const bannerEl = document.getElementById('vila-pillar-banner');
-    const searchWrap = document.querySelector('.mural-search-filter-wrapper');
+    const searchInp = document.getElementById('mural-search-input');
+    const smartChips = document.getElementById('vila-smart-cat-chips');
+    const filterToggleBtn = document.getElementById('vila-filters-toggle-btn');
+    const resultsBar = document.getElementById('vila-results-bar');
+    const sellerBanner = document.getElementById('mural-seller-banner');
+    const emptyNotice = document.getElementById('mural-empty-notice');
     const featuredSec = document.getElementById('section-destaques');
     const communitySec = document.getElementById('section-comunidade');
     const communityHub = document.getElementById('vila-community-hub');
 
-    if (bannerEl) {
-      const banners = {
-        mercado: {
-          title: '🛒 Mercado da Vila',
-          desc: 'Produtos físicos e digitais, serviços, negócios e lojas que aceitam Pi. Negocie diretamente pelo Passaporte do anunciante.'
-        },
-        mural: {
-          title: '📌 Mural da Comunidade',
-          desc: 'Avisos, comunicados, eventos, ofertas rápidas, procura-se, projetos e notícias dos pioneiros.'
-        },
-        trabalho: {
-          title: '💼 Trabalho & Oportunidades',
-          desc: 'Vagas, projetos freelancer, colaboração e serviços profissionais pagos em Pi ou híbrido.'
-        }
-      };
-      if (banners[currentPillar]) {
-        bannerEl.innerHTML =
-          '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">' +
-            '<div>' +
-              '<strong style="color:#fff;font-size:1.05rem;display:block;margin-bottom:4px">' + banners[currentPillar].title + '</strong>' +
-              '<span style="color:#a1a1aa;font-size:0.85rem;line-height:1.45;display:block">' + banners[currentPillar].desc + '</span>' +
-            '</div>' +
-            '<button type="button" class="btn btn-primary btn-sm" onclick="window.HokageMuralChatbot ? window.HokageMuralChatbot.open() : (window.IsarMural && window.IsarMural.openModal())" style="font-weight:800;background:linear-gradient(135deg,#f97316,#f59e0b);border:none;color:#09090b">' +
-              '+ Publicar em ' + currentPillar.charAt(0).toUpperCase() + currentPillar.slice(1) +
-            '</button>' +
-          '</div>';
-        bannerEl.style.display = 'block';
-      } else {
-        bannerEl.style.display = 'none';
-      }
-    }
-
     if (currentPillar === 'comunidade') {
-      if (searchWrap) searchWrap.style.display = 'none';
+      if (searchInp) searchInp.placeholder = 'Buscar pioneiro por @usuário, habilidade ou bio...';
+      if (smartChips) smartChips.style.display = 'none';
+      if (filterToggleBtn) filterToggleBtn.style.display = 'none';
+      toggleFiltersPanel(false);
+      if (resultsBar) resultsBar.style.display = 'none';
+      if (sellerBanner) sellerBanner.style.display = 'none';
+      if (emptyNotice) emptyNotice.style.display = 'none';
       if (featuredSec) featuredSec.style.display = 'none';
       if (communitySec) communitySec.style.display = 'none';
       if (communityHub) communityHub.style.display = 'block';
-      loadCommunityDirectory();
+      loadCommunityDirectory().then(function () {
+        if (currentSearchQuery) filterCommunity(currentSearchQuery);
+      });
       return;
     }
 
+    if (searchInp) searchInp.placeholder = 'Buscar produtos, serviços, @vendedor, cidade ou Pi...';
+    if (smartChips) smartChips.style.display = 'flex';
+    if (filterToggleBtn) filterToggleBtn.style.display = 'inline-flex';
+    if (resultsBar) resultsBar.style.display = 'flex';
     if (communityHub) communityHub.style.display = 'none';
-    if (searchWrap) searchWrap.style.display = 'block';
     applyFilters();
   }
 
-  // Filtragem combinada em tempo real por Categoria, Nível, Moeda, País, Região, Idioma e Busca Textual
+  function renderSmartCategoryChips(counts, totalEligible) {
+    const container = document.getElementById('vila-smart-cat-chips');
+    const sel = document.getElementById('mural-category-filter');
+
+    if (sel) {
+      Array.from(sel.options).forEach(function (opt) {
+        const val = opt.value;
+        if (!opt.dataset.baseLabel) opt.dataset.baseLabel = opt.textContent;
+        if (val === 'todos') {
+          opt.textContent = opt.dataset.baseLabel + ' (' + totalEligible + ')';
+        } else {
+          const n = counts[val] || 0;
+          opt.textContent = opt.dataset.baseLabel + (n > 0 ? ' (' + n + ')' : '');
+        }
+      });
+    }
+
+    if (!container) return;
+    const entries = Object.keys(counts)
+      .filter(function (cat) { return counts[cat] > 0 && CATEGORY_META[cat]; })
+      .sort(function (a, b) { return counts[b] - counts[a]; })
+      .slice(0, 6);
+
+    if (!entries.length) {
+      container.innerHTML = '';
+      return;
+    }
+
+    const todosHtml =
+      '<button type="button" class="vila-smart-chip ' + (currentCategory === 'todos' ? 'active' : '') + '" data-category="todos">' +
+        'Todos <span class="vila-smart-chip__count">' + totalEligible + '</span>' +
+      '</button>';
+
+    const catsHtml = entries.map(function (cat) {
+      const activeClass = currentCategory === cat ? ' active' : '';
+      return (
+        '<button type="button" class="vila-smart-chip' + activeClass + '" data-category="' + escapeHtml(cat) + '">' +
+          escapeHtml(CATEGORY_META[cat].label) +
+          ' <span class="vila-smart-chip__count">' + counts[cat] + '</span>' +
+        '</button>'
+      );
+    }).join('');
+
+    container.innerHTML = todosHtml + catsHtml;
+    container.querySelectorAll('.vila-smart-chip').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        filterCategory(btn.getAttribute('data-category') || 'todos');
+      });
+    });
+  }
+
+  function renderActiveFilterChips(regionQuery) {
+    const badge = document.getElementById('vila-active-filters-badge');
+    const chipsWrap = document.getElementById('vila-active-chips');
+    const active = [];
+
+    if (currentCategory !== 'todos') {
+      active.push({
+        key: 'category',
+        label: (CATEGORY_META[currentCategory] && CATEGORY_META[currentCategory].label) || currentCategory
+      });
+    }
+    if (currentPaymentFilter !== 'todos') {
+      const payLabels = { pi: '⚡ Somente Pi', pi_fiat: '⚡💵 Pi + Moeda', fiat: '💵 Só Moeda' };
+      active.push({ key: 'payment', label: payLabels[currentPaymentFilter] || currentPaymentFilter });
+    }
+    if (currentTierFilter !== 'todos') {
+      const tierLabels = { ouro: '🥇 Ouro', prata: '🥈 Prata', bronze: '🥉 Bronze', vitrine: '🪪 Vitrine', gratis: '🌱 Grátis' };
+      active.push({ key: 'tier', label: tierLabels[currentTierFilter] || currentTierFilter });
+    }
+    if (currentCountryFilter !== 'todos') {
+      active.push({ key: 'country', label: '🌎 ' + currentCountryFilter });
+    }
+    if (regionQuery) {
+      active.push({ key: 'region', label: '📍 ' + regionQuery });
+    }
+    if (currentLangFilter !== 'todos') {
+      active.push({ key: 'lang', label: '🗣️ ' + currentLangFilter.toUpperCase() });
+    }
+    if (currentSellerFilter) {
+      active.push({ key: 'seller', label: '🏪 @' + currentSellerFilter });
+    }
+
+    if (badge) {
+      badge.textContent = String(active.length);
+      badge.style.display = active.length > 0 ? 'inline-flex' : 'none';
+    }
+
+    if (!chipsWrap) return;
+    if (!active.length) {
+      chipsWrap.innerHTML = '';
+      return;
+    }
+
+    chipsWrap.innerHTML = active.map(function (item) {
+      return '<button type="button" class="vila-active-chip" data-clear-filter="' + escapeHtml(item.key) + '">' + escapeHtml(item.label) + ' <span aria-hidden="true">✕</span></button>';
+    }).join('');
+
+    chipsWrap.querySelectorAll('[data-clear-filter]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const k = btn.getAttribute('data-clear-filter');
+        if (k === 'category') filterCategory('todos');
+        else if (k === 'payment') filterPaymentMode('todos');
+        else if (k === 'tier') {
+          const el = document.getElementById('mural-tier-filter');
+          if (el) el.value = 'todos';
+          filterTier('todos');
+        } else if (k === 'country') {
+          const el = document.getElementById('mural-country-filter');
+          if (el) el.value = 'todos';
+          filterCountry('todos');
+        } else if (k === 'region') {
+          const el = document.getElementById('mural-region-filter');
+          if (el) el.value = '';
+          filterRegion('');
+        } else if (k === 'lang') {
+          const el = document.getElementById('mural-lang-filter');
+          if (el) el.value = 'todos';
+          filterLang('todos');
+        } else if (k === 'seller') {
+          filterSeller('');
+        }
+      });
+    });
+  }
+
+  // Filtragem combinada em tempo real por Categoria, Nível, Moeda, País, Região, Idioma e Busca Multi-Token
   function applyFilters() {
     if (currentPillar === 'comunidade') return;
-    const query = (currentSearchQuery || '').trim().toLowerCase();
-    const regionQuery = (currentRegionFilter || '').trim().toLowerCase();
+    const rawQuery = (currentSearchQuery || '').trim();
+    const normQuery = normalizeSearchText(rawQuery);
+    const searchTokens = normQuery ? normQuery.split(/\s+/).filter(Boolean) : [];
+    const regionQuery = normalizeSearchText((currentRegionFilter || '').trim());
     const featuredSec = document.getElementById('section-destaques');
     const communitySec = document.getElementById('section-comunidade');
     const featuredGrid = document.getElementById('mural-featured-grid');
@@ -958,6 +1137,8 @@
     let totalVisible = 0;
     let featuredVisible = 0;
     let communityVisible = 0;
+    let totalEligibleForChips = 0;
+    const catCounts = {};
     const vitrineCountBySeller = {};
 
     const sellerBanner = document.getElementById('mural-seller-banner');
@@ -1001,16 +1182,27 @@
       const cardCountry = card.getAttribute('data-country') || 'GLOBAL';
       const matchesCountry = (currentCountryFilter === 'todos' || cardCountry === currentCountryFilter);
 
-      const textContent = (card.textContent || '').toLowerCase();
-      const matchesRegion = !regionQuery || textContent.includes(regionQuery);
+      const haystack = normalizeSearchText(
+        (card.textContent || '') + ' ' + cardSeller + ' ' + cardCat + ' ' + cardCountry + ' ' + cardPayMode
+      );
+      const matchesRegion = !regionQuery || haystack.includes(regionQuery);
 
       const cardLang = detectCardLang(card, cardCountry);
       const matchesLang = (currentLangFilter === 'todos' || cardLang === currentLangFilter);
 
-      const matchesSearch = !query || textContent.includes(query);
+      const matchesSearch = searchTokens.length === 0 || searchTokens.every(function (tok) {
+        const cleanTok = tok.charAt(0) === '@' ? tok.slice(1) : tok;
+        return haystack.includes(tok) || (cleanTok && haystack.includes(cleanTok));
+      });
 
-      let matches = matchesPillar && matchesCat && matchesTier && matchesSeller && matchesPay && matchesCountry && matchesRegion && matchesLang && matchesSearch;
-      if (matches && !currentSellerFilter && !query && card.getAttribute('data-source') === 'vitrine') {
+      const matchesNonCat = matchesPillar && matchesTier && matchesSeller && matchesPay && matchesCountry && matchesRegion && matchesLang && matchesSearch;
+      if (matchesNonCat) {
+        totalEligibleForChips++;
+        catCounts[cardCat] = (catCounts[cardCat] || 0) + 1;
+      }
+
+      let matches = matchesNonCat && matchesCat;
+      if (matches && !currentSellerFilter && !normQuery && card.getAttribute('data-source') === 'vitrine') {
         const count = vitrineCountBySeller[cardSeller] || 0;
         if (count >= 4) {
           matches = false;
@@ -1031,6 +1223,9 @@
       }
     });
 
+    renderSmartCategoryChips(catCounts, totalEligibleForChips);
+    renderActiveFilterChips((currentRegionFilter || '').trim());
+
     reorderGridCards(featuredGrid, currentSortOrder);
     reorderGridCards(communityGrid, currentSortOrder);
 
@@ -1044,13 +1239,13 @@
     const countEl = document.getElementById('mural-results-count');
     if (countEl) {
       countEl.textContent = totalVisible === 1
-        ? '1 anúncio encontrado na Vila'
-        : totalVisible + ' anúncios encontrados na Vila';
+        ? '1 resultado na Vila'
+        : totalVisible + ' resultados na Vila';
     }
 
     const hasActiveFilters = Boolean(
       currentCategory !== 'todos' ||
-      query ||
+      rawQuery ||
       regionQuery ||
       currentPaymentFilter !== 'todos' ||
       currentCountryFilter !== 'todos' ||
@@ -1076,23 +1271,24 @@
           (document.querySelector('.mural-main .container') || document.body).appendChild(emptyNotice);
         }
       }
-      if (query) {
+      if (rawQuery) {
         emptyNotice.innerHTML = `
           <div style="font-size:2.4rem;margin-bottom:12px">🔍</div>
-          <h4 style="color:#fff;margin-bottom:6px;font-size:1.15rem">Nenhum anúncio encontrado para "${escapeHtml(query)}"</h4>
-          <p style="font-size:0.88rem;max-width:500px;margin:0 auto">Tente outras palavras-chave ou limpe a busca para ver todos os classificados.</p>
-          <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="window.IsarMural && window.IsarMural.clearSearch()" style="margin-top:16px;padding:8px 18px;font-weight:700">
-            ✕ Limpar Busca
+          <h4 style="color:#fff;margin-bottom:6px;font-size:1.15rem">Nenhum anúncio encontrado para "${escapeHtml(rawQuery)}"</h4>
+          <p style="font-size:0.88rem;max-width:500px;margin:0 auto">Tente outras palavras-chave ou limpe os filtros para ver todos os classificados.</p>
+          <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" onclick="window.IsarMural && window.IsarMural.clearAllFilters()" style="margin-top:16px;padding:8px 18px;font-weight:700">
+            ✕ Limpar Busca e Filtros
           </button>
         `;
       } else {
         emptyNotice.innerHTML = `
           <div style="font-size:2.8rem;margin-bottom:12px">📢</div>
-          <h4 style="color:#fff;margin-bottom:6px;font-size:1.2rem">Nenhum anúncio nesta categoria ainda</h4>
-          <p style="font-size:0.9rem;max-width:500px;margin:0 auto">Seja o primeiro pioneiro a anunciar aqui com micro-taxa simbólica na Pi Network!</p>
-          <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="window.IsarMural && window.IsarMural.openModal()" style="margin-top:16px">
-            + Publicar Meu Anúncio
-          </button>
+          <h4 style="color:#fff;margin-bottom:6px;font-size:1.2rem">Nenhum anúncio com estes filtros</h4>
+          <p style="font-size:0.9rem;max-width:500px;margin:0 auto">Limpe os filtros ativos ou seja o primeiro pioneiro a publicar aqui na Pi Network!</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="window.IsarMural && window.IsarMural.clearAllFilters()">✕ Limpar Filtros</button>
+            <button type="button" class="portal-btn portal-btn--primary portal-btn--sm" onclick="window.IsarMural && window.IsarMural.openModal()">+ Publicar na Vila</button>
+          </div>
         `;
       }
       emptyNotice.style.display = 'block';
@@ -1103,20 +1299,38 @@
 
   function filterCategory(cat) {
     currentCategory = cat || 'todos';
+    syncCategorySelectAndChips();
     applyFilters();
   }
 
   function handleSearchInput(value) {
     currentSearchQuery = value || '';
+    const trimmed = currentSearchQuery.trim();
     const clearBtn = document.getElementById('mural-search-clear-btn');
     if (clearBtn) {
-      clearBtn.style.display = currentSearchQuery.length > 0 ? 'block' : 'none';
+      clearBtn.style.display = currentSearchQuery.length > 0 ? 'inline-flex' : 'none';
     }
-    applyFilters();
+
+    if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(function () {
+      if (currentPillar === 'comunidade') {
+        filterCommunity(currentSearchQuery);
+      } else {
+        applyFilters();
+      }
+      if (trimmed.length >= 2 && !hasAutoScrolledForSearch) {
+        hasAutoScrolledForSearch = true;
+        scrollToResults(false);
+      } else if (trimmed.length === 0) {
+        hasAutoScrolledForSearch = false;
+      }
+    }, 90);
   }
 
   function clearSearch() {
     currentSearchQuery = '';
+    hasAutoScrolledForSearch = false;
+    if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
     const input = document.getElementById('mural-search-input');
     if (input) {
       input.value = '';
@@ -1124,19 +1338,37 @@
     }
     const clearBtn = document.getElementById('mural-search-clear-btn');
     if (clearBtn) clearBtn.style.display = 'none';
-    applyFilters();
+    if (currentPillar === 'comunidade') {
+      filterCommunity('');
+    } else {
+      applyFilters();
+    }
   }
 
   function initFilters() {
-    const filterBtns = document.querySelectorAll('.mural-filter-btn');
-    filterBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        filterBtns.forEach(function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        const cat = btn.getAttribute('data-category') || 'todos';
-        filterCategory(cat);
+    const searchInput = document.getElementById('mural-search-input');
+    if (searchInput && !searchInput.dataset.hkKeyBound) {
+      searchInput.dataset.hkKeyBound = '1';
+      searchInput.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter') {
+          ev.preventDefault();
+          if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+          currentSearchQuery = searchInput.value || '';
+          if (currentPillar === 'comunidade') {
+            filterCommunity(currentSearchQuery);
+          } else {
+            applyFilters();
+          }
+          scrollToResults(true);
+        } else if (ev.key === 'Escape') {
+          if (searchInput.value) {
+            clearSearch();
+          } else {
+            toggleFiltersPanel(false);
+          }
+        }
       });
-    });
+    }
   }
 
   function loadSavedLocalAds() {
@@ -3738,6 +3970,7 @@
 
       document.addEventListener('keydown', function (ev) {
         if (ev.key !== 'Escape') return;
+        toggleFiltersPanel(false);
         closeReportModal();
         closeEditModal();
         closeMyAdsModal();
@@ -3774,9 +4007,6 @@
           setPillar(urlPillar);
         }
         if (urlCat && typeof filterCategory === 'function') {
-          document.querySelectorAll('.mural-filters-bar .mural-filter-btn').forEach(function (b) {
-            b.classList.toggle('active', b.getAttribute('data-category') === urlCat);
-          });
           filterCategory(urlCat);
         }
         const countryFilterEl = document.getElementById('mural-country-filter');
@@ -3787,11 +4017,12 @@
         if (urlQ) {
           const searchInp = document.getElementById('mural-search-input');
           if (searchInp) searchInp.value = urlQ;
-          if (typeof handleSearchInput === 'function') handleSearchInput(urlQ);
+          currentSearchQuery = urlQ;
+          const clearBtn = document.getElementById('mural-search-clear-btn');
+          if (clearBtn) clearBtn.style.display = 'inline-flex';
+          applyFilters();
         }
         if (urlPay && ['pi', 'pi_fiat', 'fiat'].indexOf(urlPay) !== -1) {
-          const payFilterEl = document.getElementById('mural-payment-filter');
-          if (payFilterEl) payFilterEl.value = urlPay;
           if (typeof filterPaymentMode === 'function') filterPaymentMode(urlPay);
         }
         if (urlSeller) {
@@ -3858,6 +4089,8 @@
     filterLang: filterLang,
     sortAds: sortAds,
     clearAllFilters: clearAllFilters,
+    toggleFiltersPanel: toggleFiltersPanel,
+    scrollToResults: scrollToResults,
     handleSearchInput: handleSearchInput,
     clearSearch: clearSearch,
     applyFilters: applyFilters,
