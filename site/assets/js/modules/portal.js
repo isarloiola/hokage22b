@@ -477,12 +477,40 @@
   }
 
   // ─── 7. Pagamento do E-book via Pi Browser ────────────────
-  function payEbookWithPi() {
-    closeModal('modal-pagamento-pi');
-    openModal('modal-waitlist-comunidade');
-    if (window.HokageUi && typeof window.HokageUi.showToast === 'function') {
-      window.HokageUi.showToast('Cadastre seu e-mail na lista VIP para liberar acesso antecipado em Pi Mainnet.', 'info');
+  function payEbookWithPi(productId) {
+    const prodKey = productId === 'ia-na-pratica' ? 'ia-na-pratica' : 'pi-para-seu-negocio';
+    const productsCfg = (window.HOKAGE_CONFIG && window.HOKAGE_CONFIG.products) || {};
+    const prod = productsCfg[prodKey] || {
+      pricePiValue: prodKey === 'ia-na-pratica' ? 7.5 : 3.14,
+      title: prodKey === 'ia-na-pratica' ? 'IA na Prática' : 'Pi para seu negócio'
+    };
+
+    if (
+      window.HokagePi &&
+      typeof window.HokagePi.requestPiPayment === 'function' &&
+      typeof window.HokagePi.isPiBrowser === 'function' &&
+      window.HokagePi.isPiBrowser()
+    ) {
+      window.HokagePi.requestPiPayment({
+        amount: prod.pricePiValue,
+        memo: 'HOKAGE22B E-book: ' + prod.title,
+        metadata: { type: 'ebook', productId: prodKey },
+        onSuccess: function () {
+          if (typeof window.HokagePi.syncOwnedEbooksUi === 'function') {
+            window.HokagePi.syncOwnedEbooksUi();
+          }
+          const box = document.getElementById('pi-owned-library-' + prodKey);
+          if (box) {
+            box.style.display = 'block';
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        },
+        onError: function () {}
+      });
+      return;
     }
+
+    openModal('modal-pagamento-pi');
   }
 
   // ─── 8. Prévia Ao Vivo da Vila na Home (Zero Anúncios Fake) ─

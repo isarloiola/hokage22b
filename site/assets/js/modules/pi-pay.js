@@ -1144,7 +1144,7 @@
     }
   }
 
-  // 10. Modal Explicativo de Escopo e Sandbox do Pi Developer Portal
+  // 10. Modal Explicativo de Escopo e Autorização de Pagamentos Pi
   function showScopeNoticeModal(data) {
     data = data || {};
     let modal = document.getElementById('pi-scope-notice-modal');
@@ -1155,6 +1155,69 @@
       modal.setAttribute('role', 'dialog');
       modal.setAttribute('aria-modal', 'true');
       document.body.appendChild(modal);
+    }
+
+    const inSandbox = isSandboxMode();
+
+    if (!inSandbox) {
+      modal.innerHTML = `
+        <div class="portal-modal" style="max-width:460px">
+          <button type="button" class="portal-modal-close" id="scope-notice-close-btn">✕</button>
+          <div class="section-tag section-tag--amber">Pi Browser &amp; Pi Wallet</div>
+          <h3 style="font-size:1.35rem;margin-bottom:12px;color:#fff">Autorização de Pagamentos Pi</h3>
+
+          <div style="background:rgba(139, 92, 246, 0.12);border:1px solid rgba(139, 92, 246, 0.35);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.86rem;color:var(--text-secondary);line-height:1.5">
+            ℹ️ <strong>Por que este aviso apareceu?</strong><br>
+            Para assinar transações em Pi, a sua sessão no <strong>Pi Browser oficial</strong> precisa estar conectada com a permissão de <em>pagamentos (payments)</em> autorizada.
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <button type="button" class="portal-btn portal-btn--amber portal-btn--full" id="scope-btn-reauth" style="padding:14px;font-weight:800">
+              ⚡ Reconectar e Autorizar Pagamentos
+            </button>
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm portal-btn--full" id="scope-btn-open-diag">
+              ⚙️ Abrir Diagnóstico da Conta
+            </button>
+          </div>
+        </div>
+      `;
+
+      const closeBtnProd = modal.querySelector('#scope-notice-close-btn');
+      if (closeBtnProd) closeBtnProd.onclick = function () { modal.classList.remove('active'); };
+
+      const reauthBtn = modal.querySelector('#scope-btn-reauth');
+      if (reauthBtn) {
+        reauthBtn.onclick = async function () {
+          modal.classList.remove('active');
+          showToast('Reconectando sua Pi Wallet com permissão de pagamentos...', 'info');
+          initPiSdk(false);
+          isSdkSessionAuthenticated = false;
+          try {
+            const logged = await triggerAuthFlow(false);
+            if (logged) {
+              authenticatedUser = logged;
+              isSdkSessionAuthenticated = true;
+              showToast('✓ Sessão Pi autorizada! Repetindo pagamento...', 'success');
+              setTimeout(function () {
+                requestPiPayment(data);
+              }, 450);
+            }
+          } catch (err) {
+            showToast('Abra pelo Pi Browser oficial para concluir a autorização.', 'warning');
+          }
+        };
+      }
+
+      const diagBtnProd = modal.querySelector('#scope-btn-open-diag');
+      if (diagBtnProd) {
+        diagBtnProd.onclick = function () {
+          modal.classList.remove('active');
+          openPiConnectModal();
+        };
+      }
+
+      modal.classList.add('active');
+      return;
     }
 
     modal.innerHTML = `

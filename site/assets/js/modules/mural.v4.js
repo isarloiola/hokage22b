@@ -2050,7 +2050,9 @@
 
     const founderPayBtn = document.getElementById('founder-test-pay-btn');
     if (founderPayBtn) {
-      founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${info.pi} π)`;
+      founderPayBtn.textContent = isSandbox
+        ? `💳 Pagar com Pi Wallet (${info.pi} π Testnet)`
+        : `💳 Pagar com Pi Wallet (${info.pi} π)`;
     }
 
     updateReferralButtonVisibility();
@@ -2305,13 +2307,19 @@
 
     function resetSubmitButtons() {
       isAdSubmitInProgress = false;
+      const isSandboxEnv = Boolean(
+        window.HOKAGE_CONFIG &&
+        window.HOKAGE_CONFIG.piNetwork &&
+        window.HOKAGE_CONFIG.piNetwork.sandbox === true
+      );
+      const suffix = isSandboxEnv ? ' Testnet' : '';
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π Testnet)`;
+        submitBtn.textContent = `🚀 Pagar e Publicar com Pi Wallet (${priceInfo.pi} π${suffix})`;
       }
       if (founderPayBtn) {
         founderPayBtn.disabled = false;
-        founderPayBtn.textContent = `💳 Testar Pagamento Real na Pi Wallet (${priceInfo.pi} π Testnet)`;
+        founderPayBtn.textContent = `💳 Pagar com Pi Wallet (${priceInfo.pi} π${suffix})`;
       }
     }
 

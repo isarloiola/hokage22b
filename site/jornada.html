@@ -635,11 +635,21 @@
 
   <!-- Pi Browser SDK + Supabase + Módulos -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+    try {
+      if (window.Pi && typeof window.Pi.init === 'function') {
+        var _h = (location.hostname || '').toLowerCase();
+        var _prod = _h === 'hokage22b.com' || _h === 'www.hokage22b.com';
+        var isPiSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || _h === 'localhost' || _h === '127.0.0.1' || (!_prod && /[?&]sandbox=(1|true)/i.test(location.search));
+        window.Pi.init({ version: '2.0', sandbox: isPiSandbox });
+      }
+    } catch (_) { }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
   <script src="assets/js/config.js?v=7.4"></script>
   <script src="assets/js/modules/db.js?v=6.2"></script>
   <script src="assets/js/modules/web2-auth.js?v=1.5"></script>
-  <script src="assets/js/modules/pi-pay.js?v=8.4"></script>
+  <script src="assets/js/modules/pi-pay.js?v=8.5"></script>
   <script src="assets/js/modules/jornada-quiz.js?v=2.0"></script>
   <script src="assets/js/modules/referral.js?v=2.7"></script>
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
