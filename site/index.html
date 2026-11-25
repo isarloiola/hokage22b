@@ -8,10 +8,10 @@
 
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://accounts.google.com https://sdk.minepi.com https://cdn.jsdelivr.net https://unpkg.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https: wss: https://cloudflareinsights.com; object-src 'none'; base-uri 'self';" />
-  <title>HOKAGE22B — A Vila P2P &amp; Hokage ID (Passaporte Web3)</title>
+  <title>HOKAGE22B — Hub do Ecossistema: A Vila P2P, Hokage ID &amp; Business</title>
 
   <meta name="description"
-    content="Compre, venda e negocie com pessoas reais em Pi ou moeda local. Classificados da Vila ligados ao seu Passaporte (futuro Hokage ID)." />
+    content="Um único hub para negociar em A Vila P2P, provar identidade com o Hokage ID e gerar utilidade comercial no Hokage Business — em Pi ou moeda local." />
   <meta name="author" content="Isar Loiola (@hokage22b)" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://hokage22b.com/" />
@@ -31,9 +31,9 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hokage22b.com/" />
-  <meta property="og:title" content="HOKAGE22B — A Vila P2P & Hokage ID" />
+  <meta property="og:title" content="HOKAGE22B — Hub do Ecossistema: A Vila P2P, Hokage ID & Business" />
   <meta property="og:description"
-    content="Compre, venda e negocie com pessoas reais em Pi ou moeda local. Classificados ligados à sua identidade verificada." />
+    content="Um único hub para negociar na Vila P2P, provar identidade com o Hokage ID e explorar utilidade comercial no Hokage Business." />
   <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png?v=2" />
   <meta property="og:site_name" content="HOKAGE22B" />
   <meta property="og:locale" content="pt_BR" />
@@ -42,9 +42,9 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@hokage22b" />
   <meta name="twitter:creator" content="@hokage22b" />
-  <meta name="twitter:title" content="HOKAGE22B — A Vila P2P & Hokage ID" />
+  <meta name="twitter:title" content="HOKAGE22B — Hub do Ecossistema: A Vila P2P, Hokage ID & Business" />
   <meta name="twitter:description"
-    content="Classificados comunitários e identidade verificada Web3 + Web2 em Pi ou moeda local." />
+    content="A Vila P2P, Hokage ID e Hokage Business em um hub enxuto para Pi Network e Web2." />
   <meta name="twitter:image" content="https://hokage22b.com/assets/img/og-image.png?v=2" />
 
   <!-- Favicon -->
@@ -61,7 +61,7 @@
     .hk-pl-hero {
       position: relative;
       overflow: hidden;
-      padding: 88px 0 38px;
+      padding: 76px 0 36px;
       background:
         radial-gradient(circle at 14% 16%, rgba(139, 92, 246, 0.16), transparent 48%),
         radial-gradient(circle at 86% 24%, rgba(245, 158, 11, 0.14), transparent 46%),
@@ -71,7 +71,7 @@
     .hk-pl-inner {
       position: relative;
       z-index: 1;
-      max-width: 820px;
+      max-width: 980px;
       margin: 0 auto;
       text-align: center;
     }
@@ -88,77 +88,99 @@
       margin: 0 auto 18px;
       text-align: left;
     }
-    .hk-search-bar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-      background: rgba(20, 20, 28, 0.92);
-      border: 1px solid rgba(245, 158, 11, 0.42);
-      border-radius: 16px;
-      padding: 8px 10px;
-      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
-      margin: 20px auto 12px;
-    }
-    .hk-search-bar input {
-      flex: 1;
-      min-width: 200px;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 0.95rem;
-      padding: 8px 10px;
-    }
-    .hk-search-bar input:focus { outline: none; }
-    .hk-quick-pills {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-    .hk-quick-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(255, 255, 255, 0.04);
-      color: #e4e4e7;
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all 0.15s ease;
-    }
-    .hk-quick-pill:hover {
-      border-color: #f59e0b;
-      color: #fde68a;
-      background: rgba(245, 158, 11, 0.1);
-    }
-    .hk-diff-grid {
+    .hk-hub-pillars {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 265px), 1fr));
       gap: 14px;
-      margin-top: 18px;
+      margin-top: 22px;
+      text-align: left;
     }
-    .hk-diff-card {
-      background: rgba(18, 18, 26, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
+    .hk-pillar-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
       padding: 18px;
+      border-radius: 16px;
+      background: rgba(18, 18, 26, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      text-decoration: none;
+      color: #fafafa;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
     }
-    .hk-diff-card h3 {
-      font-size: 1rem;
+    .hk-pillar-card:hover {
+      transform: translateY(-2px);
+      background: rgba(24, 24, 36, 0.96);
+    }
+    .hk-pillar-card--vila {
+      border-color: rgba(245, 158, 11, 0.34);
+      background: linear-gradient(160deg, rgba(245, 158, 11, 0.08), rgba(18, 18, 26, 0.92));
+    }
+    .hk-pillar-card--vila:hover { border-color: rgba(245, 158, 11, 0.72); }
+    .hk-pillar-card--id {
+      border-color: rgba(139, 92, 246, 0.38);
+      background: linear-gradient(160deg, rgba(139, 92, 246, 0.09), rgba(18, 18, 26, 0.92));
+    }
+    .hk-pillar-card--id:hover { border-color: rgba(139, 92, 246, 0.78); }
+    .hk-pillar-card--business {
+      border-color: rgba(16, 185, 129, 0.38);
+      background: linear-gradient(160deg, rgba(16, 185, 129, 0.08), rgba(18, 18, 26, 0.92));
+    }
+    .hk-pillar-card--business:hover { border-color: rgba(16, 185, 129, 0.78); }
+    .hk-pillar-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.07);
+      color: #e4e4e7;
+    }
+    .hk-pillar-card--vila .hk-pillar-badge { background: rgba(245, 158, 11, 0.16); color: #fde68a; }
+    .hk-pillar-card--id .hk-pillar-badge { background: rgba(139, 92, 246, 0.18); color: #ddd6fe; }
+    .hk-pillar-card--business .hk-pillar-badge { background: rgba(16, 185, 129, 0.16); color: #6ee7b7; }
+    .hk-pillar-title {
+      font-size: 1.12rem;
       font-weight: 800;
       color: #fff;
-      margin: 8px 0 6px;
+      margin: 0 0 6px;
     }
-    .hk-diff-card p {
-      font-size: 0.85rem;
+    .hk-pillar-desc {
+      font-size: 0.84rem;
       color: var(--text-secondary);
       line-height: 1.5;
       margin: 0;
+    }
+    .hk-pillar-cta {
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+    .hk-pillar-card--vila .hk-pillar-cta { color: #fbbf24; }
+    .hk-pillar-card--id .hk-pillar-cta { color: #c4b5fd; }
+    .hk-pillar-card--business .hk-pillar-cta { color: #34d399; }
+    .hk-live-block {
+      margin-top: 28px;
+    }
+    .hk-live-block + .hk-live-block {
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .hk-live-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .hk-live-head h3 {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: #fff;
     }
     .hk-eco-grid {
       display: grid;
@@ -211,7 +233,7 @@
         "@id": "https://hokage22b.com/#website",
         "url": "https://hokage22b.com/",
         "name": "HOKAGE22B",
-        "description": "A Vila P2P e Hokage ID: compre, venda e negocie com pessoas reais em Pi ou moeda local.",
+        "description": "Hub do ecossistema HOKAGE22B: A Vila P2P, Hokage ID e Hokage Business para Pi Network e Web2.",
         "publisher": { "@id": "https://hokage22b.com/#organization" }
       },
       {
@@ -347,7 +369,7 @@
 
   <main>
     <!-- ============================================================
-         1. HERO ENXUTO ORIENTADO AO PRODUTO
+         1. HERO — HOKAGE HUB (3 PILARES DO ECOSSISTEMA)
     ============================================================ -->
     <section class="hk-pl-hero" id="hero" aria-labelledby="hero-title">
       <div class="portal-container">
@@ -358,41 +380,59 @@
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
               <a id="hero-logged-passport-link" href="pioneiro" class="portal-btn portal-btn--outline portal-btn--sm" style="padding:5px 11px;font-size:0.78rem">🪪 Meu Hokage ID</a>
-              <a href="mural?publish=1" class="portal-btn portal-btn--amber portal-btn--sm" style="padding:5px 11px;font-size:0.78rem">🏷️ Publicar</a>
-              <a href="mural" class="portal-btn portal-btn--outline portal-btn--sm" style="padding:5px 11px;font-size:0.78rem">🏘️ A Vila</a>
+              <a href="mural?publish=1" class="portal-btn portal-btn--amber portal-btn--sm" style="padding:5px 11px;font-size:0.78rem">🏷️ Anunciar na Vila</a>
+              <a href="business" class="portal-btn portal-btn--outline portal-btn--sm" style="padding:5px 11px;font-size:0.78rem;border-color:rgba(16,185,129,0.45);color:#6ee7b7">🏢 Hokage Business</a>
             </div>
           </div>
 
           <div class="section-tag section-tag--amber" style="margin-bottom:12px">
-            🏘️ A Vila P2P · 🪪 Passaporte (futuro Hokage ID)
+            ⚡ Ecossistema HOKAGE22B · Pi Network + Web2
           </div>
-          <h1 id="hero-title" style="font-size:clamp(1.9rem,4.6vw,3rem);font-weight:900;line-height:1.12;letter-spacing:-0.025em;margin:0 0 12px;color:#fff">
-            Compre, venda e negocie com pessoas reais — em Pi ou moeda local.
+          <h1 id="hero-title" style="font-size:clamp(1.85rem,4.4vw,2.85rem);font-weight:900;line-height:1.12;letter-spacing:-0.025em;margin:0 0 12px;color:#fff">
+            Um único hub para negociar, provar identidade e gerar utilidade real em Pi.
           </h1>
-          <p style="font-size:clamp(0.95rem,2vw,1.08rem);color:var(--text-secondary);line-height:1.55;margin:0 auto">
-            Classificados da comunidade ligados à sua identidade verificada. Entre com Google, E-mail ou Pi Browser.
+          <p style="font-size:clamp(0.95rem,2vw,1.06rem);color:var(--text-secondary);line-height:1.55;max-width:680px;margin:0 auto">
+            Entre com Google, E-mail ou Pi Browser e acesse o módulo certo sem atrito.
           </p>
 
-          <form action="mural" method="get" class="hk-search-bar" role="search" aria-label="Buscar na Vila">
-            <input type="search" name="q" maxlength="60" placeholder="🔍 Buscar produtos, serviços, lojas ou negócios na Vila..." aria-label="Buscar na Vila" />
-            <button type="submit" class="portal-btn portal-btn--amber portal-btn--sm" style="white-space:nowrap;font-weight:800">
-              Buscar na Vila →
-            </button>
-          </form>
-
-          <div class="hk-quick-pills">
-            <a href="mural?cat=produto" class="hk-quick-pill">🛍️ Produtos</a>
-            <a href="mural?cat=servico" class="hk-quick-pill">💼 Serviços</a>
-            <a href="mural?pay=pi" class="hk-quick-pill">⚡ Somente Pi</a>
-            <a href="mural?pay=fiat" class="hk-quick-pill">💵 Moeda Local</a>
+          <div id="hero-visitor-cta" style="display:flex;justify-content:center;margin-top:16px">
+            <a href="jornada" class="portal-btn portal-btn--amber" style="font-weight:900">
+              🧭 Novo aqui? Começar em 30s →
+            </a>
           </div>
 
-          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-            <a href="mural?publish=1" class="portal-btn portal-btn--amber" style="font-weight:900">
-              🏷️ Anunciar Grátis na Vila →
+          <div class="hk-hub-pillars" role="navigation" aria-label="Pilares do Ecossistema">
+            <a href="mural" class="hk-pillar-card hk-pillar-card--vila">
+              <div>
+                <span class="hk-pillar-badge">Classificados P2P</span>
+                <h2 class="hk-pillar-title">🏘️ A Vila</h2>
+                <p class="hk-pillar-desc">
+                  Compre, venda e anuncie grátis aceitando Pi, Pi + Moeda ou Só Moeda — cada oferta ligada a um perfil real.
+                </p>
+              </div>
+              <span class="hk-pillar-cta">Explorar A Vila →</span>
             </a>
-            <a href="jornada" class="portal-btn portal-btn--outline" style="border-color:rgba(139,92,246,0.55);color:#ddd6fe;font-weight:800">
-              🧭 Novo aqui? Começar em 30s
+
+            <a href="pioneiro" class="hk-pillar-card hk-pillar-card--id">
+              <div>
+                <span class="hk-pillar-badge">Identidade &amp; Vitrine</span>
+                <h2 class="hk-pillar-title">🪪 Hokage ID</h2>
+                <p class="hk-pillar-desc">
+                  Seu passaporte verificável Web2 + Pi com vitrine de produtos, histórico de confiança e selo ✓ Pi Verificado.
+                </p>
+              </div>
+              <span class="hk-pillar-cta">Abrir Hokage ID →</span>
+            </a>
+
+            <a href="business" class="hk-pillar-card hk-pillar-card--business">
+              <div>
+                <span class="hk-pillar-badge">Pi DEX &amp; Utilidade</span>
+                <h2 class="hk-pillar-title">🏢 Hokage Business</h2>
+                <p class="hk-pillar-desc">
+                  Tokens de utilidade comercial, vouchers não-custodiais e clubes VIP para negócios reais na rede Pi.
+                </p>
+              </div>
+              <span class="hk-pillar-cta">Explorar Business →</span>
             </a>
           </div>
         </div>
@@ -400,115 +440,66 @@
     </section>
 
     <!-- ============================================================
-         2. A VILA · OFERTAS AO VIVO
+         2. VITRINE UNIFICADA DO ECOSSISTEMA (AO VIVO)
     ============================================================ -->
-    <section class="portal-section" id="mural" aria-labelledby="mural-section-title" style="padding-top:38px;padding-bottom:38px">
+    <section class="portal-section" id="ao-vivo" aria-labelledby="live-hub-title" style="padding-top:38px;padding-bottom:42px">
       <div class="portal-container">
-        <div class="section-heading-wrap" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px">
-          <div>
-            <div class="section-tag section-tag--amber">Mercado Comunitário Ao Vivo</div>
-            <h2 class="section-title" id="mural-section-title">🏘️ A Vila · Ofertas Recentes</h2>
-            <p class="section-desc">
-              Ofertas reais da comunidade em Pi, Pi + Moeda ou Só Moeda — ligadas direto ao perfil de quem publica.
-            </p>
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="section-heading-wrap" style="margin-bottom:20px">
+          <div class="section-tag section-tag--amber">Pulso do Ecossistema</div>
+          <h2 class="section-title" id="live-hub-title">Ao Vivo no HOKAGE22B</h2>
+          <p class="section-desc">
+            Recorte em tempo real das ofertas, negócios e passaportes ativos agora.
+          </p>
+        </div>
+
+        <div class="hk-live-block" id="mural">
+          <div class="hk-live-head">
+            <h3>🏘️ A Vila · Ofertas Recentes</h3>
             <a href="mural" class="portal-btn portal-btn--amber portal-btn--sm">Ver Tudo na Vila →</a>
           </div>
-        </div>
-
-        <div class="mural-grid" id="home-vila-live-grid" style="margin-top:24px" aria-live="polite">
-          <div style="grid-column:1/-1;text-align:center;padding:26px 16px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);font-size:0.9rem">
-            ⏳ Carregando anúncios reais da Vila...
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================
-         3. PASSAPORTES VERIFICADOS (FUTURO HOKAGE ID)
-    ============================================================ -->
-    <section class="portal-section" id="explorar-passaportes" aria-labelledby="explore-passports-title"
-      style="padding-top:36px;padding-bottom:38px;background:linear-gradient(180deg, rgba(16,185,129,0.04) 0%, rgba(9,9,11,0.75) 100%)">
-      <div class="portal-container">
-        <div class="section-heading-wrap" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px">
-          <div>
-            <div class="section-tag" style="background:rgba(139,92,246,0.14);border-color:rgba(139,92,246,0.38);color:#c4b5fd">
-              Identidade &amp; Reputação · em breve Hokage ID
+          <div class="mural-grid" id="home-vila-live-grid" data-limit="3" style="margin-top:14px" aria-live="polite">
+            <div style="grid-column:1/-1;text-align:center;padding:22px 16px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);font-size:0.9rem">
+              ⏳ Carregando ofertas recentes da Vila...
             </div>
-            <h2 class="section-title" id="explore-passports-title">🪪 Passaportes Verificados (Hokage ID)</h2>
-            <p class="section-desc">
-              Confira perfis reais, lojas e prestadores verificados antes de negociar.
-            </p>
           </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
+        </div>
+
+        <div class="hk-live-block" id="destaque-business">
+          <div class="hk-live-head">
+            <h3>🏢 Hokage Business · Negócios em Destaque</h3>
+            <a href="business" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(16,185,129,0.45);color:#6ee7b7">Ver Hokage Business →</a>
+          </div>
+          <div id="home-business-live-grid" aria-live="polite"
+            style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin-top:14px">
+            <div style="grid-column:1/-1;text-align:center;padding:22px 16px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);font-size:0.88rem">
+              ⏳ Carregando negócios do Hokage Business...
+            </div>
+          </div>
+        </div>
+
+        <div class="hk-live-block" id="explorar-passaportes">
+          <div class="hk-live-head">
+            <h3>🪪 Hokage ID · Passaportes Verificados</h3>
             <a href="explorar" class="portal-btn portal-btn--primary portal-btn--sm">Diretório Completo →</a>
           </div>
-        </div>
-
-        <form id="home-pioneer-search-form" action="pioneiro" method="get"
-          style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:rgba(20,20,28,0.85);border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:10px">
-          <input type="hidden" name="explorar" value="1" />
-          <input type="search" id="home-pioneer-search-input" name="q" maxlength="60"
-            class="newsletter-input" aria-label="Buscar @usuário ou negócio"
-            placeholder="🔍 Buscar @usuário, produto, serviço ou loja..." style="flex:1;min-width:210px" />
-          <button type="submit" class="portal-btn portal-btn--amber portal-btn--sm" style="white-space:nowrap">
-            Buscar no Diretório →
-          </button>
-        </form>
-
-        <div id="home-pioneers-live-grid" aria-live="polite"
-          style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px;margin-top:18px">
-          <div style="grid-column:1/-1;text-align:center;padding:24px 16px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);font-size:0.88rem">
-            ⏳ Carregando Passaportes verificados...
+          <div id="home-pioneers-live-grid" data-limit="3" aria-live="polite"
+            style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px;margin-top:14px">
+            <div style="grid-column:1/-1;text-align:center;padding:22px 16px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);font-size:0.88rem">
+              ⏳ Carregando Passaportes verificados...
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ============================================================
-         4. POR QUE O HOKAGE22B É DIFERENTE (3 CARDS)
+         3. CONTINUE EXPLORANDO (4 ATALHOS ESSENCIAIS)
     ============================================================ -->
-    <section class="portal-section" id="diferenciais" aria-labelledby="diff-title" style="padding-top:34px;padding-bottom:34px">
+    <section class="portal-section" id="ecossistema" aria-labelledby="eco-title" style="padding-top:32px;padding-bottom:44px">
       <div class="portal-container">
-        <div class="section-tag">Por que usar A Vila + Hokage ID</div>
-        <h2 class="section-title" id="diff-title" style="margin-bottom:6px">Menos atrito para quem chega. Mais confiança para quem negocia.</h2>
-        <div class="hk-diff-grid">
-          <div class="hk-diff-card">
-            <span style="font-size:1.5rem">🪪</span>
-            <h3>Confiança antes do negócio</h3>
-            <p>Nada de negociar com perfil anônimo: cada anúncio aponta para um Passaporte (futuro Hokage ID) com vitrine, histórico e selo ✓ Pi Verificado.</p>
-          </div>
-          <div class="hk-diff-card">
-            <span style="font-size:1.5rem">🌐</span>
-            <h3>Web2 + Pi Network sem barreiras</h3>
-            <p>Entre com Google ou E-mail de qualquer navegador, ou conecte nativo no Pi Browser — com a mesma conta híbrida sincronizada.</p>
-          </div>
-          <div class="hk-diff-card">
-            <span style="font-size:1.5rem">⚡💵</span>
-            <h3>Pi, Pi + Moeda ou Só Moeda</h3>
-            <p>Anuncie gratuitamente aceitando 100% Pi, combinando Pi + moeda local ou apenas sua moeda tradicional, sem taxas abusivas.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================
-         5. HUB DO ECOSSISTEMA (6 ATALHOS RÁPIDOS)
-    ============================================================ -->
-    <section class="portal-section" id="ecossistema" aria-labelledby="eco-title" style="padding-top:26px;padding-bottom:46px">
-      <div class="portal-container">
-        <div class="section-tag section-tag--purple">Explore o restante do portal</div>
-        <h2 class="section-title" id="eco-title" style="margin-bottom:6px">Guias, Ferramentas &amp; Comunidade</h2>
+        <div class="section-tag section-tag--purple">Guias, Ferramentas &amp; Devs</div>
+        <h2 class="section-title" id="eco-title" style="margin-bottom:6px">Continue Explorando</h2>
         <div class="hk-eco-grid">
-          <a href="business" class="hk-eco-card">
-            <strong>🏢 Hokage Business (Pi DEX)</strong>
-            <span>Tokens de utilidade comercial, vouchers, clube VIP e selo verificado para negócios na rede Pi.</span>
-          </a>
-          <a href="jornada" class="hk-eco-card">
-            <strong>🧭 Jornada Guiada (30s)</strong>
-            <span>Responda 2 perguntas rápidas, entenda A Vila + Hokage ID e saia logado pronto para negociar.</span>
-          </a>
           <a href="zero" class="hk-eco-card">
             <strong>📘 Aprender Pi do Zero</strong>
             <span>Fundamentos sem hype, autocustódia de 24 palavras e prevenção contra golpes comuns.</span>
@@ -521,12 +512,8 @@
             <strong>🛠️ Ferramentas Anti-Golpe</strong>
             <span>Validador criptográfico de chaves G..., links oficiais e utilitários Web3 para o dia a dia.</span>
           </a>
-          <a href="monte" class="hk-eco-card">
-            <strong>🏔️ Monte Hokage</strong>
-            <span>Trilha de mérito transparente: como comércio honesto, indicações e código geram reconhecimento.</span>
-          </a>
           <a href="construir" class="hk-eco-card">
-            <strong>⚡ API Aberta &amp; Devs</strong>
+            <strong>⚡ Construir &amp; API Aberta</strong>
             <span>Consuma Passaportes e ofertas da Vila via API pública ou incorpore widgets em outros sites.</span>
           </a>
         </div>
@@ -564,7 +551,7 @@
   <script src="assets/js/modules/db.js?v=6.2"></script>
   <script src="assets/js/modules/web2-auth.js?v=1.5"></script>
   <script src="assets/js/modules/pi-pay.js?v=8.5"></script>
-  <script src="assets/js/modules/portal.js?v=4.1"></script>
+  <script src="assets/js/modules/portal.js?v=4.2"></script>
   <script src="assets/js/modules/referral.js?v=2.7"></script>
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
@@ -575,11 +562,13 @@
           var bar = document.getElementById('hero-logged-bar');
           var stEl = document.getElementById('hero-logged-status');
           var passLink = document.getElementById('hero-logged-passport-link');
+          var visitorCta = document.getElementById('hero-visitor-cta');
           if (!bar || !stEl || !passLink) return;
           var raw = localStorage.getItem('hokage_pi_user') || localStorage.getItem('isar_pi_user');
           var user = raw ? JSON.parse(raw) : null;
           if (!user || (!user.username && user.authType !== 'web2')) {
             bar.style.display = 'none';
+            if (visitorCta) visitorCta.style.display = 'flex';
             return;
           }
           if (user.username) {
@@ -593,6 +582,7 @@
             passLink.textContent = '✨ Ativar Hokage ID';
           }
           bar.style.display = 'flex';
+          if (visitorCta) visitorCta.style.display = 'none';
         } catch (_) {}
       }
       hydrate();

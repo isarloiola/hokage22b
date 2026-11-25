@@ -594,7 +594,8 @@
         return;
       }
 
-      grid.innerHTML = items.slice(0, 6).map(function (ad) {
+      const maxItems = Math.max(1, parseInt(grid.getAttribute('data-limit') || '6', 10) || 6);
+      grid.innerHTML = items.slice(0, maxItems).map(function (ad) {
         const isVitrine = Boolean(ad.is_vitrine_product);
         const rawTier = String(ad.plan_tier || ad.tier || ad.plan || 'bronze').toLowerCase();
         const tier = isVitrine ? 'vitrine' : (['ouro', 'prata', 'bronze', 'gratis'].includes(rawTier) ? rawTier : 'bronze');
@@ -673,7 +674,85 @@
     }
   }
 
-  // ─── 8B. Prévia Ao Vivo de Passaportes & Diretório na Home ─
+  // ─── 8B. Prévia Ao Vivo do Hokage Business na Home ────────
+  async function initHomeBusinessPreview() {
+    const grid = document.getElementById('home-business-live-grid');
+    if (!grid) return;
+
+    const apiUrl = (cfg.businessApiUrl || 'https://yhzoehwkuxteihsnagcj.supabase.co/functions/v1/business-api') + '?action=list';
+    const fallbackRows = [
+      {
+        name: 'HOKAGE22B Oficial',
+        tagline: 'Empresa #01 Piloto · Ecossistema Web3, E-books & A Vila',
+        asset_code: 'HKG22B',
+        token_network: 'testnet',
+        verification_level: 2,
+        owner_username: '@hokage22b',
+        benefits: [
+          { id: 'pilot-benefit-redeem' },
+          { id: 'pilot-benefit-hold' }
+        ]
+      }
+    ];
+
+    let rows = [];
+    try {
+      const res = await fetch(apiUrl, { headers: { Accept: 'application/json' } });
+      if (res.ok) {
+        const json = await res.json().catch(function () { return {}; });
+        rows = (json && json.data && Array.isArray(json.data.businesses)) ? json.data.businesses : [];
+      }
+    } catch (_) {}
+
+    if (!rows.length) rows = fallbackRows;
+
+    const cardsHtml = rows.slice(0, 2).map(function (b) {
+      const name = escapeHtml(String(b.name || 'Negócio Hokage Business'));
+      const tagline = escapeHtml(String(b.tagline || b.utility_summary || 'Negócio com utilidade comercial verificada na rede Pi.').slice(0, 120));
+      const assetCode = escapeHtml(String(b.asset_code || 'TOKEN').toUpperCase());
+      const netLabel = String(b.token_network || 'testnet').toLowerCase() === 'mainnet' ? 'Mainnet' : 'Testnet';
+      const level = Number(b.verification_level || 1);
+      const levelBadge = level >= 3
+        ? '<span style="font-size:0.66rem;background:rgba(245,158,11,0.16);border:1px solid rgba(245,158,11,0.42);color:#fde68a;padding:2px 8px;border-radius:999px;font-weight:700">🏆 Nível 3 · Auditado</span>'
+        : (level === 2
+          ? '<span style="font-size:0.66rem;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.38);color:#34d399;padding:2px 8px;border-radius:999px;font-weight:700">✓ Verificado</span>'
+          : '<span style="font-size:0.66rem;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.38);color:#c4b5fd;padding:2px 8px;border-radius:999px;font-weight:700">● Ativo</span>');
+      const rawOwner = String(b.owner_username || '@hokage22b').replace(/^@+/, '');
+      const ownerEsc = escapeHtml(rawOwner);
+      const benefitsCount = Array.isArray(b.benefits) ? b.benefits.length : Number(b.benefitsCount || 0);
+      const benefitsLabel = benefitsCount === 1 ? '1 benefício ativo' : (benefitsCount > 1 ? benefitsCount + ' benefícios ativos' : 'Utilidade comercial');
+
+      return (
+        '<article style="background:rgba(18,22,26,0.92);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:10px">' +
+          '<div>' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">' +
+              levelBadge +
+              '<span style="font-size:0.7rem;font-weight:800;color:#6ee7b7;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.28);padding:2px 8px;border-radius:999px">$' + assetCode + ' · ' + escapeHtml(netLabel) + '</span>' +
+            '</div>' +
+            '<h4 style="margin:0 0 4px;font-size:1rem;font-weight:800;color:#fff">' + name + '</h4>' +
+            '<p style="font-size:0.8rem;color:var(--text-secondary);margin:0;line-height:1.45">' + tagline + '</p>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07)">' +
+            '<span style="font-size:0.76rem;color:#a1a1aa">@' + ownerEsc + ' · ' + escapeHtml(benefitsLabel) + '</span>' +
+            '<a href="business" class="portal-btn portal-btn--outline portal-btn--sm" style="border-color:rgba(16,185,129,0.45);color:#6ee7b7;text-decoration:none">Ver Benefícios →</a>' +
+          '</div>' +
+        '</article>'
+      );
+    }).join('');
+
+    const ctaCardHtml =
+      '<article style="background:linear-gradient(155deg,rgba(16,185,129,0.12),rgba(20,20,28,0.92));border:1px dashed rgba(16,185,129,0.45);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px">' +
+        '<div>' +
+          '<strong style="color:#34d399;font-size:0.95rem;display:block;margin-bottom:4px">🏢 Tem uma loja, barbearia ou serviço?</strong>' +
+          '<p style="font-size:0.8rem;color:var(--text-secondary);margin:0;line-height:1.45">Cadastre seu negócio, crie vouchers não-custodiais e fidelize clientes com tokens na rede Pi.</p>' +
+        '</div>' +
+        '<a href="business" class="portal-btn portal-btn--outline portal-btn--sm" style="justify-content:center;text-decoration:none;border-color:rgba(16,185,129,0.55);color:#6ee7b7">Cadastrar no Hokage Business →</a>' +
+      '</article>';
+
+    grid.innerHTML = cardsHtml + ctaCardHtml;
+  }
+
+  // ─── 8C. Prévia Ao Vivo de Passaportes & Diretório na Home ─
   async function initHomePioneersPreview() {
     const grid = document.getElementById('home-pioneers-live-grid');
     if (!grid) return;
@@ -690,7 +769,8 @@
         ? json.data.items
         : (Array.isArray(json.items) ? json.items : []);
 
-      const cardsHtml = items.slice(0, 5).map(function (p) {
+      const maxItems = Math.max(1, parseInt(grid.getAttribute('data-limit') || '5', 10) || 5);
+      const cardsHtml = items.slice(0, maxItems).map(function (p) {
         const cleanHandle = String(p.username || p.handle || 'pioneiro').replace(/^@+/, '');
         const initial = esc(cleanHandle.charAt(0).toUpperCase() || 'P');
         const safeAvatar = (p.avatar_url && /^https?:\/\//i.test(p.avatar_url)) ? esc(p.avatar_url) : '';
@@ -752,6 +832,7 @@
     initCommunityWaitlist();
     initManualLeadUnlock();
     initHomeVilaLivePreview();
+    initHomeBusinessPreview();
     initHomePioneersPreview();
   }
 
