@@ -361,35 +361,30 @@
 
     let tierLabel = '';
     let overlayLabel = '';
-    let priceHtml = '';
+    const priceHtmlDefault = '';
+    let priceHtml = priceHtmlDefault;
 
     if (isVitrineProduct) {
       tierLabel = '🪪 Vitrine do Passaporte';
       overlayLabel = '🪪 VITRINE DO PASSAPORTE';
-      priceHtml = '<span class="pioneer-card__price-tag" style="background:rgba(16,185,129,0.14);border-color:rgba(16,185,129,0.35);color:#6ee7b7">Vitrine</span>';
     } else if (isFounderDemo) {
       tierLabel = '👑 Ouro Fundador · Demonstração';
       overlayLabel = '👑 OURO FUNDADOR · EXEMPLAR';
-      priceHtml = '<span class="pioneer-card__price-tag" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.35);color:var(--amber-light)" title="Exemplar institucional">Exemplar Oficial</span>';
     } else if (tier === 'ouro') {
       tierLabel = '🚀 Boost VIP · Topo';
       overlayLabel = '🚀 BOOST VIP · TOPO';
-      priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '3.14 π'}</span>`;
     } else if (tier === 'prata') {
       tierLabel = '⚡ Boost · Destaque';
       overlayLabel = '⚡ BOOST · DESTAQUE';
-      priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '1.00 π'}</span>`;
     } else if (tier === 'gratis') {
       tierLabel = '🌱 Comunidade · Grátis';
       overlayLabel = '';
-      priceHtml = '<span class="pioneer-card__price-tag" style="background:rgba(16,185,129,0.14);border-color:rgba(16,185,129,0.35);color:#34d399">Grátis</span>';
     } else {
       tierLabel = '🥉 Bronze · Compromisso';
       overlayLabel = '';
-      priceHtml = `<span class="pioneer-card__price-tag">${ad.price_pi ? escapeHtml(String(ad.price_pi)) + ' π' : '0.314 π'}</span>`;
     }
 
-    let itemPricePillHtml = '';
+    const itemPricePillHtml = '';
     const rawPriceStr = ad.item_price != null ? String(ad.item_price).trim() : '';
     if (rawPriceStr) {
       let formattedVal = '';
@@ -402,7 +397,6 @@
         }
       }
       if (formattedVal) {
-        itemPricePillHtml = `<span style="background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#6ee7b7;padding:2px 8px;border-radius:999px;font-weight:800">🏷️ ${escapeHtml(formattedVal)}</span>`;
         priceHtml = `<span class="pioneer-card__price-tag" title="Preço informado da oferta">${escapeHtml(formattedVal)}</span>`;
       }
     }

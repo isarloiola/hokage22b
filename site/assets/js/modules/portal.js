@@ -630,14 +630,6 @@
             }
           }
         }
-        if (!itemPriceText) {
-          itemPriceText = isVitrine ? 'Vitrine'
-            : ((tier === 'gratis' || Number(ad.price_pi) === 0)
-              ? 'Grátis'
-              : (ad.price_pi && Number(ad.price_pi) > 0 ? esc(Number(ad.price_pi) + ' π')
-                : (tier === 'ouro' ? '3.14 π' : tier === 'prata' ? '1.00 π' : '0.314 π')));
-        }
-
         const targetHref = isVitrine
           ? ('mural?seller=' + encodeURIComponent(authorRaw))
           : ('mural?ad=' + encodeURIComponent(ad.id || ''));
@@ -660,7 +652,7 @@
             '</div>' +
             '<div class="pioneer-card__footer">' +
               '<a href="' + targetHref + '" class="pioneer-card__link">' + ctaLabel + '</a>' +
-              '<span class="pioneer-card__price-tag">' + itemPriceText + '</span>' +
+              (itemPriceText ? '<span class="pioneer-card__price-tag">' + itemPriceText + '</span>' : '') +
             '</div>' +
           '</article>'
         );

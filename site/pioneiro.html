@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://accounts.google.com https://sdk.minepi.com https://cdn.jsdelivr.net https://unpkg.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https: wss: https://cloudflareinsights.com; object-src 'none'; base-uri 'self';" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://accounts.google.com https://sdk.minepi.com https://cdn.jsdelivr.net https://unpkg.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://accounts.google.com https://fonts.googleapis.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; connect-src 'self' https: wss: https://cloudflareinsights.com; object-src 'none'; base-uri 'self';" />
   <title>Passaporte do Pioneiro — Pi Network | HOKAGE22B</title>
-  <meta name="description" content="Passaporte Web3 oficial do Pioneiro no ecossistema Pi Network: identidade verificada via Pi KYC, chave pública da Pi Wallet, catálogo, redes e selos de contribuição." />
+  <meta name="description"
+    content="Passaporte Web3 oficial do Pioneiro no ecossistema Pi Network: identidade verificada via Pi KYC, chave pública da Pi Wallet, catálogo, redes e selos de contribuição." />
   <link rel="canonical" href="https://hokage22b.com/pioneiro" />
 
   <!-- Open Graph / WhatsApp / Facebook -->
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://hokage22b.com/pioneiro" />
   <meta property="og:title" content="Passaporte do Pioneiro — Pi Network | HOKAGE22B" />
-  <meta property="og:description" content="Confira o Passaporte do Pioneiro oficial, catálogo, links de contato e chave pública para transferências na Pi Network." />
+  <meta property="og:description"
+    content="Confira o Passaporte do Pioneiro oficial, catálogo, links de contato e chave pública para transferências na Pi Network." />
   <meta property="og:image" content="https://hokage22b.com/assets/img/og-image.png?v=2" />
   <meta property="og:site_name" content="HOKAGE22B" />
 
@@ -21,7 +25,8 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@hokage22b" />
   <meta name="twitter:title" content="Passaporte do Pioneiro — Pi Network" />
-  <meta name="twitter:description" content="Passaporte Web3 oficial, catálogo de serviços/produtos e chave pública verificada na Pi Network." />
+  <meta name="twitter:description"
+    content="Passaporte Web3 oficial, catálogo de serviços/produtos e chave pública verificada na Pi Network." />
   <meta name="twitter:image" content="https://hokage22b.com/assets/img/og-image.png?v=2" />
 
   <!-- Security Hardening -->
@@ -54,7 +59,7 @@
         var isPiSandbox = /sandbox\.minepi\.com/i.test(document.referrer || '') || _h === 'localhost' || _h === '127.0.0.1' || (!_prod && /[?&]sandbox=(1|true)/i.test(location.search));
         window.Pi.init({ version: "2.0", sandbox: isPiSandbox });
       }
-    } catch (_) {}
+    } catch (_) { }
   </script>
 
   <style>
@@ -75,6 +80,7 @@
       justify-content: space-between;
       gap: 10px;
     }
+
     .vitrine-brand-link {
       display: flex;
       align-items: center;
@@ -85,17 +91,20 @@
       font-size: 0.84rem;
       flex-shrink: 0;
     }
+
     @media (max-width: 560px) {
       .vitrine-topbar-nav {
         display: none !important;
       }
     }
+
     @media (max-width: 480px) {
       .vitrine-topbar {
         padding: 5px 10px;
         min-height: 40px;
         gap: 6px;
       }
+
       .vitrine-brand-link {
         font-size: 0.78rem;
         gap: 5px;
@@ -143,6 +152,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .pioneer-avatar {
       width: 96px;
       height: 96px;
@@ -160,6 +170,7 @@
       background-size: cover;
       background-position: center;
     }
+
     .pioneer-handle {
       font-size: 1.65rem;
       font-weight: 800;
@@ -171,6 +182,7 @@
       flex-wrap: wrap;
       margin: 0 0 6px;
     }
+
     .pioneer-badge-verified {
       display: inline-flex;
       align-items: center;
@@ -201,6 +213,7 @@
       box-sizing: border-box;
       overflow: hidden;
     }
+
     .short-link-pill #pioneer-short-url {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -227,12 +240,14 @@
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
+
     .pioneer-link-btn:hover {
       background: rgba(139, 92, 246, 0.18);
       border-color: var(--accent);
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
     }
+
     .pioneer-link-icon-wrap {
       width: 42px;
       height: 42px;
@@ -244,14 +259,17 @@
       background: rgba(255, 255, 255, 0.06);
       transition: transform 0.2s ease;
     }
+
     .pioneer-link-btn:hover .pioneer-link-icon-wrap {
       transform: scale(1.08);
     }
+
     .pioneer-link-content {
       flex: 1;
       min-width: 0;
       text-align: left;
     }
+
     .pioneer-link-heading {
       font-size: 0.92rem;
       font-weight: 700;
@@ -263,6 +281,7 @@
       margin-bottom: 2px;
       flex-wrap: wrap;
     }
+
     .pioneer-link-caption {
       font-size: 0.75rem;
       color: var(--text-muted);
@@ -272,12 +291,14 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .pioneer-link-chevron {
       color: var(--text-muted);
       font-size: 1.1rem;
       transition: transform 0.2s ease, color 0.2s ease;
       flex-shrink: 0;
     }
+
     .pioneer-link-btn:hover .pioneer-link-chevron {
       color: #fff;
       transform: translate(2px, -2px);
@@ -287,9 +308,11 @@
     .pioneer-link-btn--whatsapp {
       border-color: rgba(37, 211, 102, 0.35);
     }
+
     .pioneer-link-btn--whatsapp .pioneer-link-icon-wrap {
       background: rgba(37, 211, 102, 0.15);
     }
+
     .pioneer-link-btn--whatsapp:hover {
       background: rgba(37, 211, 102, 0.16);
       border-color: #25d366;
@@ -299,9 +322,11 @@
     .pioneer-link-btn--youtube {
       border-color: rgba(239, 68, 68, 0.35);
     }
+
     .pioneer-link-btn--youtube .pioneer-link-icon-wrap {
       background: rgba(239, 68, 68, 0.15);
     }
+
     .pioneer-link-btn--youtube:hover {
       background: rgba(239, 68, 68, 0.16);
       border-color: #ef4444;
@@ -311,9 +336,11 @@
     .pioneer-link-btn--instagram {
       border-color: rgba(225, 48, 108, 0.35);
     }
+
     .pioneer-link-btn--instagram .pioneer-link-icon-wrap {
       background: linear-gradient(135deg, rgba(225, 48, 108, 0.2), rgba(139, 92, 246, 0.2));
     }
+
     .pioneer-link-btn--instagram:hover {
       background: rgba(225, 48, 108, 0.16);
       border-color: #e1306c;
@@ -323,9 +350,11 @@
     .pioneer-link-btn--twitter {
       border-color: rgba(255, 255, 255, 0.2);
     }
+
     .pioneer-link-btn--twitter .pioneer-link-icon-wrap {
       background: rgba(255, 255, 255, 0.08);
     }
+
     .pioneer-link-btn--twitter:hover {
       background: rgba(255, 255, 255, 0.1);
       border-color: #fff;
@@ -337,10 +366,12 @@
       border: 1px solid rgba(245, 158, 11, 0.45);
       box-shadow: 0 6px 20px rgba(245, 158, 11, 0.12);
     }
+
     .pioneer-link-btn--featured .pioneer-link-icon-wrap {
       background: rgba(245, 158, 11, 0.22);
       border: 1px solid rgba(245, 158, 11, 0.4);
     }
+
     .pioneer-link-btn--featured:hover {
       background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(139, 92, 246, 0.25));
       border-color: var(--amber);
@@ -361,12 +392,14 @@
       transition: all 0.25s ease;
       text-align: left;
     }
+
     .product-mini-card:hover {
       border-color: rgba(245, 158, 11, 0.5);
       background: rgba(245, 158, 11, 0.08);
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
     }
+
     .product-card-top {
       display: flex;
       align-items: center;
@@ -374,6 +407,7 @@
       width: 100%;
       min-width: 0;
     }
+
     .product-thumb {
       width: 60px;
       height: 60px;
@@ -383,6 +417,7 @@
       border: 1px solid rgba(255, 255, 255, 0.15);
       flex-shrink: 0;
     }
+
     .product-thumb-fallback {
       width: 60px;
       height: 60px;
@@ -395,10 +430,12 @@
       font-size: 1.8rem;
       flex-shrink: 0;
     }
+
     .product-info {
       flex: 1 1 0%;
       min-width: 0;
     }
+
     .product-mini-card .product-title,
     .product-title {
       color: #fff;
@@ -411,18 +448,21 @@
       white-space: normal !important;
       margin-bottom: 4px !important;
     }
+
     .product-meta-row {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
+
     .product-price {
       color: var(--amber-light);
       font-size: 0.88rem;
       font-weight: 800;
       font-family: var(--font-mono, monospace);
     }
+
     .product-badge-pill {
       font-size: 0.7rem;
       background: rgba(139, 92, 246, 0.2);
@@ -432,6 +472,7 @@
       border-radius: 10px;
       font-weight: 600;
     }
+
     .product-action-btn {
       flex-shrink: 0;
       white-space: nowrap;
@@ -448,36 +489,45 @@
         padding: 12px;
         gap: 10px;
       }
+
       .product-card-top {
         gap: 12px;
         width: 100%;
       }
-      .product-thumb, .product-thumb-fallback {
+
+      .product-thumb,
+      .product-thumb-fallback {
         width: 50px;
         height: 50px;
         font-size: 1.4rem;
       }
+
       .product-title {
         font-size: 0.88rem;
         line-height: 1.3;
       }
+
       .product-action-btn {
         width: 100%;
         padding: 9px 12px;
         font-size: 0.82rem;
         text-align: center;
       }
+
       .pioneer-link-btn {
         padding: 12px 14px;
         gap: 12px;
       }
+
       .pioneer-link-icon-wrap {
         width: 38px;
         height: 38px;
       }
+
       .pioneer-link-heading {
         font-size: 0.86rem;
       }
+
       .pioneer-link-caption {
         font-size: 0.72rem;
       }
@@ -504,6 +554,7 @@
       gap: 10px;
       margin: 16px auto 0;
     }
+
     .social-icon-pill {
       width: 42px;
       height: 42px;
@@ -517,33 +568,131 @@
       transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
       flex-shrink: 0;
     }
+
     .social-icon-pill:hover {
       transform: translateY(-2px);
     }
-    .social-icon-pill--whatsapp { border-color: rgba(37, 211, 102, 0.4); background: rgba(37, 211, 102, 0.12); }
-    .social-icon-pill--whatsapp:hover { border-color: #25d366; box-shadow: 0 6px 18px rgba(37, 211, 102, 0.25); }
-    .social-icon-pill--youtube { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.12); }
-    .social-icon-pill--youtube:hover { border-color: #ef4444; box-shadow: 0 6px 18px rgba(239, 68, 68, 0.25); }
-    .social-icon-pill--instagram { border-color: rgba(225, 48, 108, 0.4); background: rgba(225, 48, 108, 0.12); }
-    .social-icon-pill--instagram:hover { border-color: #e1306c; box-shadow: 0 6px 18px rgba(225, 48, 108, 0.25); }
-    .social-icon-pill--twitter { border-color: rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.08); }
-    .social-icon-pill--twitter:hover { border-color: #fff; box-shadow: 0 6px 18px rgba(255, 255, 255, 0.2); }
-    .social-icon-pill--telegram { border-color: rgba(36, 161, 222, 0.45); background: rgba(36, 161, 222, 0.12); }
-    .social-icon-pill--telegram:hover { border-color: #24a1de; box-shadow: 0 6px 18px rgba(36, 161, 222, 0.25); }
-    .social-icon-pill--tiktok { border-color: rgba(254, 44, 85, 0.4); background: rgba(254, 44, 85, 0.1); }
-    .social-icon-pill--tiktok:hover { border-color: #fe2c55; box-shadow: 0 6px 18px rgba(254, 44, 85, 0.25); }
-    .social-icon-pill--linkedin { border-color: rgba(10, 102, 194, 0.45); background: rgba(10, 102, 194, 0.14); }
-    .social-icon-pill--linkedin:hover { border-color: #0a66c2; box-shadow: 0 6px 18px rgba(10, 102, 194, 0.25); }
-    .social-icon-pill--facebook { border-color: rgba(24, 119, 242, 0.45); background: rgba(24, 119, 242, 0.12); }
-    .social-icon-pill--facebook:hover { border-color: #1877f2; box-shadow: 0 6px 18px rgba(24, 119, 242, 0.25); }
-    .social-icon-pill--discord { border-color: rgba(88, 101, 242, 0.45); background: rgba(88, 101, 242, 0.14); }
-    .social-icon-pill--discord:hover { border-color: #5865f2; box-shadow: 0 6px 18px rgba(88, 101, 242, 0.25); }
-    .social-icon-pill--github { border-color: rgba(255, 255, 255, 0.28); background: rgba(255, 255, 255, 0.08); }
-    .social-icon-pill--github:hover { border-color: #e5e7eb; box-shadow: 0 6px 18px rgba(255, 255, 255, 0.18); }
-    .social-icon-pill--kwai { border-color: rgba(255, 119, 0, 0.45); background: rgba(255, 119, 0, 0.12); }
-    .social-icon-pill--kwai:hover { border-color: #ff7700; box-shadow: 0 6px 18px rgba(255, 119, 0, 0.25); }
-    .social-icon-pill--website { border-color: rgba(139, 92, 246, 0.45); background: rgba(139, 92, 246, 0.12); }
-    .social-icon-pill--website:hover { border-color: var(--accent-light); box-shadow: 0 6px 18px rgba(139, 92, 246, 0.25); }
+
+    .social-icon-pill--whatsapp {
+      border-color: rgba(37, 211, 102, 0.4);
+      background: rgba(37, 211, 102, 0.12);
+    }
+
+    .social-icon-pill--whatsapp:hover {
+      border-color: #25d366;
+      box-shadow: 0 6px 18px rgba(37, 211, 102, 0.25);
+    }
+
+    .social-icon-pill--youtube {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    .social-icon-pill--youtube:hover {
+      border-color: #ef4444;
+      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.25);
+    }
+
+    .social-icon-pill--instagram {
+      border-color: rgba(225, 48, 108, 0.4);
+      background: rgba(225, 48, 108, 0.12);
+    }
+
+    .social-icon-pill--instagram:hover {
+      border-color: #e1306c;
+      box-shadow: 0 6px 18px rgba(225, 48, 108, 0.25);
+    }
+
+    .social-icon-pill--twitter {
+      border-color: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .social-icon-pill--twitter:hover {
+      border-color: #fff;
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.2);
+    }
+
+    .social-icon-pill--telegram {
+      border-color: rgba(36, 161, 222, 0.45);
+      background: rgba(36, 161, 222, 0.12);
+    }
+
+    .social-icon-pill--telegram:hover {
+      border-color: #24a1de;
+      box-shadow: 0 6px 18px rgba(36, 161, 222, 0.25);
+    }
+
+    .social-icon-pill--tiktok {
+      border-color: rgba(254, 44, 85, 0.4);
+      background: rgba(254, 44, 85, 0.1);
+    }
+
+    .social-icon-pill--tiktok:hover {
+      border-color: #fe2c55;
+      box-shadow: 0 6px 18px rgba(254, 44, 85, 0.25);
+    }
+
+    .social-icon-pill--linkedin {
+      border-color: rgba(10, 102, 194, 0.45);
+      background: rgba(10, 102, 194, 0.14);
+    }
+
+    .social-icon-pill--linkedin:hover {
+      border-color: #0a66c2;
+      box-shadow: 0 6px 18px rgba(10, 102, 194, 0.25);
+    }
+
+    .social-icon-pill--facebook {
+      border-color: rgba(24, 119, 242, 0.45);
+      background: rgba(24, 119, 242, 0.12);
+    }
+
+    .social-icon-pill--facebook:hover {
+      border-color: #1877f2;
+      box-shadow: 0 6px 18px rgba(24, 119, 242, 0.25);
+    }
+
+    .social-icon-pill--discord {
+      border-color: rgba(88, 101, 242, 0.45);
+      background: rgba(88, 101, 242, 0.14);
+    }
+
+    .social-icon-pill--discord:hover {
+      border-color: #5865f2;
+      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.25);
+    }
+
+    .social-icon-pill--github {
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .social-icon-pill--github:hover {
+      border-color: #e5e7eb;
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.18);
+    }
+
+    .social-icon-pill--kwai {
+      border-color: rgba(255, 119, 0, 0.45);
+      background: rgba(255, 119, 0, 0.12);
+    }
+
+    .social-icon-pill--kwai:hover {
+      border-color: #ff7700;
+      box-shadow: 0 6px 18px rgba(255, 119, 0, 0.25);
+    }
+
+    .social-icon-pill--website {
+      border-color: rgba(139, 92, 246, 0.45);
+      background: rgba(139, 92, 246, 0.12);
+    }
+
+    .social-icon-pill--website:hover {
+      border-color: var(--accent-light);
+      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.25);
+    }
+
     .extra-social-row {
       display: grid;
       grid-template-columns: 122px 1fr 32px;
@@ -551,10 +700,12 @@
       align-items: center;
       margin-bottom: 8px;
     }
+
     @media (max-width: 480px) {
       .extra-social-row {
         grid-template-columns: 1fr 32px;
       }
+
       .extra-social-row .extra-social-net {
         grid-column: 1 / -1;
       }
@@ -568,6 +719,7 @@
       padding: 2px 8px;
       border-radius: 8px;
     }
+
     .product-price--pi {
       color: var(--amber-light);
       background: rgba(245, 158, 11, 0.14);
@@ -587,6 +739,7 @@
       padding: 4px;
       margin-bottom: 16px;
     }
+
     .edit-tab-btn {
       background: transparent;
       border: none;
@@ -600,66 +753,87 @@
       text-align: center;
       line-height: 1.2;
     }
+
     .edit-tab-btn.active {
       background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(245, 158, 11, 0.22));
       color: #fff;
       border: 1px solid rgba(139, 92, 246, 0.45);
     }
-    .edit-tab-panel { display: none; }
-    .edit-tab-panel.active { display: block; }
+
+    .edit-tab-panel {
+      display: none;
+    }
+
+    .edit-tab-panel.active {
+      display: block;
+    }
+
     .edit-social-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 14px;
     }
+
     .product-edit-row-grid {
       display: grid;
       grid-template-columns: 96px 1fr;
       gap: 6px;
       margin-bottom: 6px;
     }
+
     @media (max-width: 520px) {
       .edit-social-grid {
         grid-template-columns: 1fr;
       }
+
       .product-edit-row-grid {
         grid-template-columns: 1fr;
       }
+
       .edit-tab-btn {
         font-size: 0.7rem;
         padding: 7px 4px;
       }
     }
+
     @media (max-width: 380px) {
+
       .pioneer-hero-card,
       .onboarding-hero {
         padding: 22px 14px;
         border-radius: 18px;
       }
+
       .pioneer-handle {
         font-size: 1.35rem;
         word-break: break-word;
       }
+
       .short-link-pill {
         max-width: 100%;
         padding: 5px 10px;
         font-size: 0.72rem;
       }
+
       .short-link-pill #pioneer-short-url {
         max-width: 135px;
       }
+
       #pioneer-wallet-box {
         flex-direction: column;
         align-items: stretch !important;
       }
-      #pioneer-wallet-box > div:last-of-type {
+
+      #pioneer-wallet-box>div:last-of-type {
         width: 100%;
         justify-content: space-between;
       }
+
       .pi-modal.ad-modal {
         padding: 20px 14px !important;
       }
+
       #prof-analytics-card {
         padding: 10px 8px !important;
         gap: 4px !important;
@@ -678,10 +852,12 @@
       gap: 12px;
       transition: all 0.2s ease;
     }
+
     .dir-card:hover {
       border-color: rgba(139, 92, 246, 0.35);
       background: rgba(139, 92, 246, 0.05);
     }
+
     .dir-card-main {
       display: flex;
       align-items: center;
@@ -689,6 +865,7 @@
       min-width: 0;
       flex: 1;
     }
+
     .dir-card-cta {
       flex-shrink: 0;
       padding: 6px 12px;
@@ -699,6 +876,7 @@
       text-decoration: none;
       white-space: nowrap;
     }
+
     .onboarding-logged-card {
       background: rgba(139, 92, 246, 0.12);
       border: 1px solid rgba(139, 92, 246, 0.35);
@@ -712,6 +890,7 @@
       gap: 12px;
       text-align: left;
     }
+
     @media (max-width: 460px) {
       .dir-card {
         flex-direction: column;
@@ -719,26 +898,31 @@
         gap: 10px;
         padding: 12px;
       }
+
       .dir-card-cta {
         width: 100%;
         text-align: center;
         box-sizing: border-box;
       }
+
       .onboarding-logged-card a {
         width: 100%;
         text-align: center;
         box-sizing: border-box;
       }
     }
+
     @media (max-width: 400px) {
       #onboarding-navbar .brand-sub {
         display: none;
       }
+
       #onboarding-navbar .btn-sm {
         padding: 5px 8px;
         font-size: 0.72rem;
       }
     }
+
     .tag-free-badge {
       display: inline-block;
       background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(139, 92, 246, 0.2));
@@ -754,8 +938,10 @@
     }
   </style>
 </head>
+
 <body>
-  <div id="particles-bg" class="particles-bg" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden"></div>
+  <div id="particles-bg" class="particles-bg" aria-hidden="true"
+    style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden"></div>
 
   <!-- BARRA DE TOPO DA VITRINE (LIMPA & PROFISSIONAL) -->
   <header class="vitrine-topbar" id="vitrine-topbar" style="display:none">
@@ -764,10 +950,14 @@
       <span>HOKAGE22B</span>
     </a>
 
-    <nav class="vitrine-topbar-nav" aria-label="Atalhos do ecossistema" style="display:flex;align-items:center;gap:12px">
-      <a href="mural" style="font-size:0.78rem;font-weight:700;color:#fde68a;text-decoration:none;white-space:nowrap">🏘️ Vila</a>
-      <a href="jornada" style="font-size:0.78rem;font-weight:700;color:#ddd6fe;text-decoration:none;white-space:nowrap">🚀 Jornada</a>
-      <a href="pioneiro?explorar=1" style="font-size:0.78rem;font-weight:700;color:#a7f3d0;text-decoration:none;white-space:nowrap">🌐 Explorar</a>
+    <nav class="vitrine-topbar-nav" aria-label="Atalhos do ecossistema"
+      style="display:flex;align-items:center;gap:12px">
+      <a href="mural"
+        style="font-size:0.78rem;font-weight:700;color:#fde68a;text-decoration:none;white-space:nowrap">🏘️ Vila</a>
+      <a href="jornada"
+        style="font-size:0.78rem;font-weight:700;color:#ddd6fe;text-decoration:none;white-space:nowrap">🚀 Jornada</a>
+      <a href="pioneiro?explorar=1"
+        style="font-size:0.78rem;font-weight:700;color:#a7f3d0;text-decoration:none;white-space:nowrap">🌐 Explorar</a>
     </nav>
 
     <div style="display:flex;align-items:center;gap:8px">
@@ -778,16 +968,21 @@
       <div style="display:flex;align-items:center;gap:6px" id="topbar-actions">
         <!-- Injetado dinamicamente: Modo Dono (Editar), Modo Simulador (Editar/Sair) ou Modo Visitante (Criar Vitrine) -->
       </div>
-      <button type="button" class="hk-burger-btn" data-drawer-toggle="1" aria-label="Abrir Menu" aria-expanded="false">☰</button>
+      <button type="button" class="hk-burger-btn" data-drawer-toggle="1" aria-label="Abrir Menu"
+        aria-expanded="false">☰</button>
     </div>
   </header>
 
   <!-- NAVBAR PADRÃO (VISÍVEL APENAS NA TELA INICIAL DE ONBOARDING) -->
-  <nav class="navbar" id="onboarding-navbar" style="background:rgba(9,9,11,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.1);padding:6px 0">
+  <nav class="navbar" id="onboarding-navbar"
+    style="background:rgba(9,9,11,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.1);padding:6px 0">
     <div class="container">
-      <div class="navbar__inner" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-        <a href="./" class="navbar__logo" aria-label="HOKAGE22B — Início" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:800">
-          <img src="assets/img/brand/hokage22b-logo.svg" alt="" width="24" height="24" aria-hidden="true" style="width:24px;height:24px;display:block;flex-shrink:0" />
+      <div class="navbar__inner"
+        style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <a href="./" class="navbar__logo" aria-label="HOKAGE22B — Início"
+          style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:800">
+          <img src="assets/img/brand/hokage22b-logo.svg" alt="" width="24" height="24" aria-hidden="true"
+            style="width:24px;height:24px;display:block;flex-shrink:0" />
           <div>
             <div>HOKAGE22B</div>
             <div class="brand-sub" style="font-size:0.7rem;color:var(--text-muted)">Passaporte do Pioneiro Web3</div>
@@ -796,7 +991,8 @@
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <div class="lang-mount-point"></div>
           <a href="mural" class="btn btn-outline btn-sm">🏘️ A Vila (P2P)</a>
-          <button type="button" class="hk-burger-btn" id="portal-burger-btn" aria-label="Abrir Menu" aria-expanded="false">☰</button>
+          <button type="button" class="hk-burger-btn" id="portal-burger-btn" aria-label="Abrir Menu"
+            aria-expanded="false">☰</button>
         </div>
       </div>
     </div>
@@ -805,17 +1001,20 @@
 
   <main style="padding:58px 16px 60px;position:relative;z-index:1;min-height:90vh">
     <div class="container" style="max-width:680px;margin:0 auto">
-      
+
       <!-- ========================================== -->
       <!-- ESTADO 1: TELA DE ONBOARDING / CRIAR VITRINE -->
       <!-- ========================================== -->
       <div id="onboarding-view" class="onboarding-hero" style="display:none">
         <span class="tag-free-badge">✨ 100% Grátis para Sempre</span>
-        <h1 style="font-size:clamp(1.35rem, 4.5vw, 1.85rem);font-weight:800;color:#fff;margin-bottom:10px;line-height:1.25">
+        <h1
+          style="font-size:clamp(1.35rem, 4.5vw, 1.85rem);font-weight:800;color:#fff;margin-bottom:10px;line-height:1.25">
           Seu Passaporte do Pioneiro na Pi Network
         </h1>
         <p style="color:var(--text-secondary);font-size:0.95rem;line-height:1.6;margin-bottom:26px">
-          Sua <strong>credencial Web3 descentralizada</strong>: receba pagamentos diretamente na sua <strong>Pi Wallet</strong>, reúna produtos, serviços e redes oficiais e evolua na jornada até o <strong>Monte Hokage</strong>.
+          Sua <strong>credencial Web3 descentralizada</strong>: receba pagamentos diretamente na sua <strong>Pi
+            Wallet</strong>, reúna produtos, serviços e redes oficiais e evolua na jornada até o <strong>Monte
+            Hokage</strong>.
         </p>
 
         <!-- Banner Persistente de Convite Oficial (?ref=usuario) -->
@@ -825,8 +1024,10 @@
         <div id="onboarding-logged-box" style="display:none"></div>
 
         <!-- Ação Principal: Pi Browser -->
-        <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.35);border-radius:18px;padding:18px 16px;margin-bottom:20px;box-shadow:0 8px 30px rgba(139,92,246,0.15)">
-          <button type="button" class="btn btn-primary" onclick="connectPiBrowserAndStart()" style="width:100%;padding:14px 12px;font-size:clamp(0.9rem, 3vw, 1.02rem);font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">
+        <div
+          style="background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.35);border-radius:18px;padding:18px 16px;margin-bottom:20px;box-shadow:0 8px 30px rgba(139,92,246,0.15)">
+          <button type="button" class="btn btn-primary" onclick="connectPiBrowserAndStart()"
+            style="width:100%;padding:14px 12px;font-size:clamp(0.9rem, 3vw, 1.02rem);font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">
             <span>⚡</span> Conectar Pi Browser &amp; Criar Meu Passaporte
           </button>
           <small style="color:var(--text-muted);font-size:0.75rem;display:block;margin-top:8px">
@@ -835,23 +1036,33 @@
         </div>
 
         <!-- Ação Complementar Web2 (Visível via JS APENAS fora do Pi Browser) -->
-        <div id="web2-onboarding-box" style="display:none;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);border-radius:18px;padding:16px;margin-bottom:20px;text-align:left">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+        <div id="web2-onboarding-box"
+          style="display:none;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);border-radius:18px;padding:16px;margin-bottom:20px;text-align:left">
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">
             <strong style="font-size:0.95rem;color:#bae6fd">🌐 Sem Pi Browser? Entre com seu E-mail</strong>
-            <span style="font-size:0.7rem;background:rgba(56,189,248,0.18);color:#7dd3fc;padding:2px 8px;border-radius:999px;font-weight:700">Membro Web</span>
+            <span
+              style="font-size:0.7rem;background:rgba(56,189,248,0.18);color:#7dd3fc;padding:2px 8px;border-radius:999px;font-weight:700">Membro
+              Web</span>
           </div>
           <p style="font-size:0.8rem;color:var(--text-secondary);margin:0 0 10px;line-height:1.45">
-            Entre com 1 clique pelo Google ou receba um link mágico no e-mail para criar seu Passaporte Web grátis. Vincule sua conta Pi depois quando quiser!
+            Entre com 1 clique pelo Google ou receba um link mágico no e-mail para criar seu Passaporte Web grátis.
+            Vincule sua conta Pi depois quando quiser!
           </p>
-          <div id="web2-onboarding-google-slot" style="margin-bottom:10px;display:flex;justify-content:center;min-height:42px">
-            <button type="button" id="web2-onboarding-google-btn" class="btn btn-outline" style="width:100%;padding:10px 14px;background:#fff;color:#111827;border-color:#e5e7eb;font-size:0.88rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">
-              <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f3f4f6;color:#2563eb;font-weight:900;font-size:0.8rem">G</span>
+          <div id="web2-onboarding-google-slot"
+            style="margin-bottom:10px;display:flex;justify-content:center;min-height:42px">
+            <button type="button" id="web2-onboarding-google-btn" class="btn btn-outline"
+              style="width:100%;padding:10px 14px;background:#fff;color:#111827;border-color:#e5e7eb;font-size:0.88rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">
+              <span
+                style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f3f4f6;color:#2563eb;font-weight:900;font-size:0.8rem">G</span>
               <span>Continuar com Google</span>
             </button>
           </div>
           <form id="web2-onboarding-form" style="display:flex;gap:8px;flex-wrap:wrap">
-            <input type="email" id="web2-onboarding-email" required placeholder="seu@email.com" style="flex:1;min-width:180px;padding:10px 12px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.2);border-radius:10px;color:#fff;font-size:0.86rem;box-sizing:border-box" />
-            <button type="submit" id="web2-onboarding-btn" class="btn btn-outline" style="padding:10px 16px;font-size:0.86rem;font-weight:700;border-color:rgba(56,189,248,0.5);color:#bae6fd;flex-shrink:0">
+            <input type="email" id="web2-onboarding-email" required placeholder="seu@email.com"
+              style="flex:1;min-width:180px;padding:10px 12px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.2);border-radius:10px;color:#fff;font-size:0.86rem;box-sizing:border-box" />
+            <button type="submit" id="web2-onboarding-btn" class="btn btn-outline"
+              style="padding:10px 16px;font-size:0.86rem;font-weight:700;border-color:rgba(56,189,248,0.5);color:#bae6fd;flex-shrink:0">
               ✉️ Receber Link de Acesso
             </button>
           </form>
@@ -859,47 +1070,62 @@
         </div>
 
         <!-- Opções de Experimentação: 2 Atalhos Claros Sem Concorrência -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr));gap:10px;margin-bottom:22px">
-          <button type="button" onclick="startSimulatorMode()" class="btn btn-outline" style="padding:12px;font-size:0.86rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px">
+        <div
+          style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 220px), 1fr));gap:10px;margin-bottom:22px">
+          <button type="button" onclick="startSimulatorMode()" class="btn btn-outline"
+            style="padding:12px;font-size:0.86rem;border-color:rgba(139,92,246,0.4);color:var(--accent-light);font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px">
             <span>🧪</span> Testar no Simulador
           </button>
-          <a href="?u=hokage22b" class="btn btn-outline" style="padding:12px;font-size:0.86rem;border-color:rgba(245,158,11,0.5);color:var(--amber-light);font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px">
+          <a href="?u=hokage22b" class="btn btn-outline"
+            style="padding:12px;font-size:0.86rem;border-color:rgba(245,158,11,0.5);color:var(--amber-light);font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px">
             <span>🪪</span> Ver Passaporte do Fundador
           </a>
         </div>
 
         <!-- Busca Rápida por @usuário -->
-        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;text-align:left;margin-bottom:24px">
+        <div
+          style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;text-align:left;margin-bottom:24px">
           <span style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:8px;font-weight:600">
             🔍 Acesso direto por @usuário:
           </span>
           <form onsubmit="handleOnboardingManualSubmit(event)" style="display:flex;gap:8px;flex-wrap:wrap">
-            <input type="text" id="onboarding-user-input" placeholder="Digite o @usuário (Ex: @hokage22b)" required maxlength="50" style="flex:1;min-width:160px;padding:9px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.18);border-radius:8px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
-            <button type="submit" class="btn btn-outline btn-sm" style="padding:9px 16px;font-weight:700;border-color:rgba(255,255,255,0.25);color:#fff;flex-shrink:0">
+            <input type="text" id="onboarding-user-input" placeholder="Digite o @usuário (Ex: @hokage22b)" required
+              maxlength="50"
+              style="flex:1;min-width:160px;padding:9px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.18);border-radius:8px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
+            <button type="submit" class="btn btn-outline btn-sm"
+              style="padding:9px 16px;font-weight:700;border-color:rgba(255,255,255,0.25);color:#fff;flex-shrink:0">
               Abrir ↗
             </button>
           </form>
         </div>
 
         <!-- Guia Rápido para quem ainda está na fila do KYC / Mainnet -->
-        <div style="margin:18px 0 22px;padding:16px 18px;border-radius:16px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.32);text-align:left">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <div
+          style="margin:18px 0 22px;padding:16px 18px;border-radius:16px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.32);text-align:left">
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">
             <strong style="font-size:0.9rem;color:#fbbf24">⏳ Ainda na fila do KYC ou Migração Mainnet?</strong>
-            <span style="font-size:0.7rem;color:#fde68a;background:rgba(245,158,11,0.18);padding:2px 8px;border-radius:999px;font-weight:700">Não precisa esperar!</span>
+            <span
+              style="font-size:0.7rem;color:#fde68a;background:rgba(245,158,11,0.18);padding:2px 8px;border-radius:999px;font-weight:700">Não
+              precisa esperar!</span>
           </div>
           <p style="font-size:0.8rem;color:#d4d4d8;margin:0 0 10px;line-height:1.45">
             Mesmo antes da sua migração para a Mainnet ser concluída, você já consegue usar o ecossistema hoje:
           </p>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;font-size:0.76rem;color:#e4e4e7">
-            <div style="background:rgba(0,0,0,0.28);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.07)">
+          <div
+            style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;font-size:0.76rem;color:#e4e4e7">
+            <div
+              style="background:rgba(0,0,0,0.28);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.07)">
               <strong style="color:#fff;display:block;margin-bottom:2px">1. Crie seu Passaporte Grátis</strong>
               Conecte no Pi Browser e publique seus links, WhatsApp e produtos em <code>/@voce</code>.
             </div>
-            <div style="background:rgba(0,0,0,0.28);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.07)">
+            <div
+              style="background:rgba(0,0,0,0.28);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.07)">
               <strong style="color:#fff;display:block;margin-bottom:2px">2. Teste no Simulador</strong>
               Experimente personalizar sua página sem compromisso antes mesmo de publicar.
             </div>
-            <div style="background:rgba(0,0,0,0.28);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.07)">
+            <div
+              style="background:rgba(0,0,0,0.28);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.07)">
               <strong style="color:#fff;display:block;margin-bottom:2px">3. Compartilhe &amp; Ganhe</strong>
               Indique outros pioneiros pelo seu link curto e acumule créditos Bronze + comissões.
             </div>
@@ -911,34 +1137,43 @@
       <!-- ESTADO 2: VITRINE DO PIONEIRO (LINKTREE PURO) -->
       <!-- ========================================== -->
       <div class="pioneer-hero-card" id="pioneer-card" style="display:none">
-        <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true" style="position:absolute;top:16px;right:-28px;width:210px;height:210px;opacity:0.08;pointer-events:none;z-index:0" />
-        
+        <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true"
+          style="position:absolute;top:16px;right:-28px;width:210px;height:210px;opacity:0.08;pointer-events:none;z-index:0" />
+
         <!-- BANNER DE SIMULADOR (APARECE APENAS QUANDO O SIMULADOR ESTÁ ATIVO) -->
         <div id="simulator-banner" class="simulator-alert-banner" style="display:none">
           <div>
-            <strong style="color:var(--amber-light);font-size:0.85rem;display:block">🧪 Simulador Interativo Ativo</strong>
-            <span style="color:var(--text-secondary);font-size:0.75rem">Você pode alterar fotos, bio e produtos para testar. Nada é gravado publicamente.</span>
+            <strong style="color:var(--amber-light);font-size:0.85rem;display:block">🧪 Simulador Interativo
+              Ativo</strong>
+            <span style="color:var(--text-secondary);font-size:0.75rem">Você pode alterar fotos, bio e produtos para
+              testar. Nada é gravado publicamente.</span>
           </div>
-          <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()" style="font-size:0.75rem;padding:6px 12px;font-weight:700">
+          <button type="button" class="btn btn-primary btn-sm" onclick="openProfileEditModal()"
+            style="font-size:0.75rem;padding:6px 12px;font-weight:700">
             ✏️ Personalizar no Teste
           </button>
         </div>
 
         <!-- Avatar do Pioneiro (com logo Hokage centralizada atrás e botão de câmera se for Dono ou Modo Teste) -->
-        <div style="position:relative;width:140px;height:140px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;overflow:visible">
-          <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:228px;height:228px;opacity:0.48;pointer-events:none;z-index:0;filter:drop-shadow(0 0 18px rgba(249,115,22,0.4))" />
+        <div
+          style="position:relative;width:140px;height:140px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;overflow:visible">
+          <img src="assets/img/brand/hokage22b-logo.svg" alt="" aria-hidden="true"
+            style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:228px;height:228px;opacity:0.48;pointer-events:none;z-index:0;filter:drop-shadow(0 0 18px rgba(249,115,22,0.4))" />
           <div style="position:relative;width:96px;height:96px;z-index:1">
             <div class="pioneer-avatar" id="pioneer-avatar" style="margin:0">π</div>
-            <button type="button" id="btn-avatar-camera" onclick="triggerAvatarUpload()" title="Alterar foto de perfil" style="position:absolute;bottom:0;right:0;width:34px;height:34px;border-radius:50%;background:var(--accent);border:2px solid #fff;color:#fff;display:none;align-items:center;justify-content:center;font-size:0.95rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.6);transition:transform 0.2s ease" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+            <button type="button" id="btn-avatar-camera" onclick="triggerAvatarUpload()" title="Alterar foto de perfil"
+              style="position:absolute;bottom:0;right:0;width:34px;height:34px;border-radius:50%;background:var(--accent);border:2px solid #fff;color:#fff;display:none;align-items:center;justify-content:center;font-size:0.95rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.6);transition:transform 0.2s ease"
+              onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
               📷
             </button>
           </div>
         </div>
-        
+
         <!-- Handle & Badges -->
         <h1 class="pioneer-handle notranslate" id="pioneer-handle" translate="no">@carregando...</h1>
         <div id="pioneer-account-status-bar" style="margin:4px auto 10px;display:none"></div>
-        <p style="color:var(--text-secondary);font-size:0.95rem;margin-top:8px;margin-bottom:14px;line-height:1.5" id="pioneer-bio">
+        <p style="color:var(--text-secondary);font-size:0.95rem;margin-top:8px;margin-bottom:14px;line-height:1.5"
+          id="pioneer-bio">
           Pioneiro na comunidade independente HOKAGE22B.
         </p>
         <div id="pioneer-titles-bar" style="margin:6px auto 14px"></div>
@@ -946,38 +1181,52 @@
         <!-- Link Curto Oficial da Vitrine (Estilo Linktree com Proteção Anti-Overflow) -->
         <div class="short-link-pill">
           <span style="color:var(--text-muted);flex-shrink:0">Link:</span>
-          <span id="pioneer-short-url" class="notranslate" translate="no" style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@...</span>
-          <button type="button" onclick="shareProfile()" style="background:transparent;border:none;color:var(--accent-light);cursor:pointer;font-size:0.75rem;padding:2px 6px;text-decoration:underline;flex-shrink:0">Copiar</button>
+          <span id="pioneer-short-url" class="notranslate" translate="no"
+            style="color:var(--amber-light);font-family:var(--font-mono);font-weight:700">hokage22b.com/@...</span>
+          <button type="button" onclick="shareProfile()"
+            style="background:transparent;border:none;color:var(--accent-light);cursor:pointer;font-size:0.75rem;padding:2px 6px;text-decoration:underline;flex-shrink:0">Copiar</button>
         </div>
 
         <!-- Barra Compacta de Ícones Pequenos (Redes Sociais) -->
         <div id="pioneer-social-bar" class="social-icons-bar" style="display:none"></div>
 
         <!-- Barra Compacta de Pagamento Direto com Pi Wallet (Mainnet P2P) -->
-        <div id="pioneer-wallet-container" style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.25);border-radius:14px;padding:12px 14px;margin-top:20px;text-align:left">
-          
-          <div id="pioneer-wallet-box" style="display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <div id="pioneer-wallet-container"
+          style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.25);border-radius:14px;padding:12px 14px;margin-top:20px;text-align:left">
+
+          <div id="pioneer-wallet-box"
+            style="display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
             <!-- Informação Resumida da Carteira (Anti-Clipper Nativamente Integrado) -->
             <div style="display:flex;align-items:center;gap:10px;min-width:170px;flex:1">
               <span style="font-size:1.2rem;color:var(--amber-light);flex-shrink:0">⚡</span>
               <div style="line-height:1.25">
                 <div style="display:flex;align-items:center;gap:6px">
-                  <span style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);font-weight:700">Carteira Pi (P2P)</span>
-                  <span id="wallet-verified-badge" style="font-size:0.68rem;color:#10b981;font-weight:700">✓ Válida</span>
+                  <span
+                    style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);font-weight:700">Carteira
+                    Pi (P2P)</span>
+                  <span id="wallet-verified-badge" style="font-size:0.68rem;color:#10b981;font-weight:700">✓
+                    Válida</span>
                 </div>
-                <div style="font-family:var(--font-mono);font-size:0.85rem;color:#fff;font-weight:700;display:flex;align-items:center;gap:4px">
-                  <span id="wallet-short-key" class="notranslate" translate="no" style="color:var(--amber-light)">GA5F...XPUR</span>
-                  <span id="wallet-shield-icon" title="Proteção Anti-Clipper Guard" style="font-size:0.75rem;cursor:help">🛡️</span>
+                <div
+                  style="font-family:var(--font-mono);font-size:0.85rem;color:#fff;font-weight:700;display:flex;align-items:center;gap:4px">
+                  <span id="wallet-short-key" class="notranslate" translate="no"
+                    style="color:var(--amber-light)">GA5F...XPUR</span>
+                  <span id="wallet-shield-icon" title="Proteção Anti-Clipper Guard"
+                    style="font-size:0.75rem;cursor:help">🛡️</span>
                 </div>
               </div>
             </div>
 
             <!-- Ações Rápidas em Linha Única -->
             <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
-              <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-copy-wallet" onclick="copyWalletKey()" title="Copiar Chave Pública Completa" style="padding:7px 11px;font-size:0.8rem;border-color:rgba(255,255,255,0.15)">
+              <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" id="btn-copy-wallet"
+                onclick="copyWalletKey()" title="Copiar Chave Pública Completa"
+                style="padding:7px 11px;font-size:0.8rem;border-color:rgba(255,255,255,0.15)">
                 📋 Copiar
               </button>
-              <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" id="btn-show-qr" onclick="openWalletQrModal()" title="Abrir QR Code e Cobrança" style="padding:7px 14px;font-size:0.82rem;font-weight:700">
+              <button type="button" class="portal-btn portal-btn--amber portal-btn--sm" id="btn-show-qr"
+                onclick="openWalletQrModal()" title="Abrir QR Code e Cobrança"
+                style="padding:7px 14px;font-size:0.82rem;font-weight:700">
                 ⚡ Pagar / QR
               </button>
             </div>
@@ -995,7 +1244,8 @@
 
         <!-- Seção: Links & Destaques da Comunidade -->
         <div id="pioneer-links-section" style="margin-top:24px;text-align:left">
-          <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700;margin-bottom:12px">
+          <div
+            style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:700;margin-bottom:12px">
             🔗 Links &amp; Destaques
           </div>
           <div id="pioneer-links-list">
@@ -1005,13 +1255,17 @@
 
         <!-- Seção: Mini-Loja / Produtos e Serviços (R$ ou Pi) -->
         <div id="pioneer-products-section" style="margin-top:26px;text-align:left;display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
-            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:700">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
+            <div
+              style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:700">
               🛍️ Produtos &amp; Serviços
             </div>
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span style="font-size:0.72rem;color:var(--text-muted)">Em Pi (π) e Moeda Local (USD / EUR / BRL)</span>
-              <a id="pioneer-products-vila-link" href="mural" class="btn btn-outline btn-sm" style="display:none;padding:4px 10px;font-size:0.74rem;font-weight:700;border-color:rgba(245,158,11,0.45);color:var(--amber-light);text-decoration:none;white-space:nowrap">🏪 Ver todos na Vila →</a>
+              <a id="pioneer-products-vila-link" href="mural" class="btn btn-outline btn-sm"
+                style="display:none;padding:4px 10px;font-size:0.74rem;font-weight:700;border-color:rgba(245,158,11,0.45);color:var(--amber-light);text-decoration:none;white-space:nowrap">🏪
+                Ver todos na Vila →</a>
             </div>
           </div>
           <div id="pioneer-products-list" style="display:flex;flex-direction:column;gap:12px">
@@ -1021,11 +1275,14 @@
 
         <!-- Seção: Anúncios no Mural dos Pioneiros -->
         <div id="pioneer-ads-section" style="margin-top:28px;text-align:left;display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
-            <div id="pioneer-ads-title" style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:700">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
+            <div id="pioneer-ads-title"
+              style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-light);font-weight:700">
               📢 Anúncios no Mural Pi
             </div>
-            <a href="mural" style="font-size:0.75rem;color:var(--accent-light);text-decoration:none">Ver todos no Mural →</a>
+            <a href="mural" style="font-size:0.75rem;color:var(--accent-light);text-decoration:none">Ver todos no Mural
+              →</a>
           </div>
           <div id="pioneer-ads-list" style="display:flex;flex-direction:column;gap:12px">
             <!-- Anúncios reais carregados -->
@@ -1034,76 +1291,100 @@
 
         <!-- Seção: Reputação & Avaliações Verificadas (Pi Browser) -->
         <div id="pioneer-reviews-section" style="margin-top:28px;text-align:left;display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
             <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:#34d399;font-weight:700">
               🛡️ Reputação &amp; Recomendações Pi
             </div>
-            <span id="pioneer-reviews-summary" style="font-size:0.75rem;color:var(--amber-light);font-weight:700"></span>
+            <span id="pioneer-reviews-summary"
+              style="font-size:0.75rem;color:var(--amber-light);font-weight:700"></span>
           </div>
           <div id="pioneer-reviews-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
           <div id="pioneer-review-form-box"></div>
         </div>
 
         <!-- Seção: Programa de Indicação, Comissões em Pi & Créditos (Exclusivo do Dono) -->
-        <div id="pioneer-referral-section" style="display:none;margin-top:26px;padding:18px;border-radius:16px;background:linear-gradient(145deg,rgba(16,185,129,0.08),rgba(139,92,246,0.08));border:1px solid rgba(16,185,129,0.28);text-align:left">
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div id="pioneer-referral-section"
+          style="display:none;margin-top:26px;padding:18px;border-radius:16px;background:linear-gradient(145deg,rgba(16,185,129,0.08),rgba(139,92,246,0.08));border:1px solid rgba(16,185,129,0.28);text-align:left">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
             <div style="font-size:0.84rem;font-weight:800;color:#34d399;letter-spacing:0.04em;text-transform:uppercase">
               🎁 Convidar Pioneiros: Ganhe Pi (π) &amp; Créditos
             </div>
-            <span id="ref-ambassador-status" style="font-size:0.74rem;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,0.06);color:#e4e4e7">
+            <span id="ref-ambassador-status"
+              style="font-size:0.74rem;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,0.06);color:#e4e4e7">
               0 / 5 para Selo Embaixador (25% π)
             </span>
           </div>
           <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;margin:0 0 12px">
             Compartilhe seu link de convite e gere <strong>benefício duplo (Ganha-Ganha)</strong>:<br>
-            • 🎁 <strong>Presente para seu Convidado:</strong> Quem ativa o Passaporte pelo seu link ganha na hora <strong>1 Publicação Bônus na Vila (Central P2P)</strong>!<br>
-            • 💰 <strong>Sua Comissão em Pi (<span id="ref-rate-label">20%</span>):</strong> Você ganha <strong>20% em Pi</strong> (ou <strong>25% como Embaixador</strong>) toda vez que um indicado seu anunciar no Mural ou adquirir um E-book em Pi!<br>
-            • 🎟️ <strong>Seus Créditos + Selo:</strong> Ganhe <strong>1 Crédito Bronze (0.314 π)</strong> no 1º indicado ativo, <strong>+1 a cada 2 novos indicados</strong> e o <strong>🏅 Selo Embaixador</strong> com 5 indicados!
+            • 🎁 <strong>Presente para seu Convidado:</strong> Quem ativa o Passaporte pelo seu link ganha na hora
+            <strong>1 Publicação Bônus na Vila (Central P2P)</strong>!<br>
+            • 💰 <strong>Sua Comissão em Pi (<span id="ref-rate-label">20%</span>):</strong> Você ganha <strong>20% em
+              Pi</strong> (ou <strong>25% como Embaixador</strong>) toda vez que um indicado seu anunciar no Mural ou
+            adquirir um E-book em Pi!<br>
+            • 🎟️ <strong>Seus Créditos + Selo:</strong> Ganhe <strong>1 Crédito Bronze (0.314 π)</strong> no 1º
+            indicado ativo, <strong>+1 a cada 2 novos indicados</strong> e o <strong>🏅 Selo Embaixador</strong> com 5
+            indicados!
           </p>
           <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px">
-            <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08)">
+            <div
+              style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08)">
               <div style="font-size:0.72rem;color:var(--text-muted)">Indicados Qualificados</div>
               <div id="ref-count-value" style="font-size:1.25rem;font-weight:800;color:#fff">0</div>
             </div>
-            <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(245,158,11,0.22)">
+            <div
+              style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(245,158,11,0.22)">
               <div style="font-size:0.72rem;color:var(--text-muted)">Créditos Bronze Grátis</div>
               <div id="ref-credits-value" style="font-size:1.25rem;font-weight:800;color:#fcd34d">0</div>
             </div>
-            <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.4);border:1px solid rgba(16,185,129,0.35)">
+            <div
+              style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.4);border:1px solid rgba(16,185,129,0.35)">
               <div style="font-size:0.72rem;color:var(--text-muted)">Saldo Pi Disponível</div>
               <div id="ref-pending-pi-value" style="font-size:1.25rem;font-weight:800;color:#34d399">0.00 π</div>
             </div>
-            <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.35)">
+            <div
+              style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.4);border:1px solid rgba(139,92,246,0.35)">
               <div style="font-size:0.72rem;color:var(--text-muted)">Total Ganho em Pi</div>
               <div id="ref-total-pi-value" style="font-size:1.25rem;font-weight:800;color:#c4b5fd">0.00 π</div>
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button type="button" id="btn-copy-ref-link" class="portal-btn portal-btn--primary portal-btn--sm" style="flex:1;min-width:150px;justify-content:center;font-weight:700" onclick="copyReferralInviteLink()">
+            <button type="button" id="btn-copy-ref-link" class="portal-btn portal-btn--primary portal-btn--sm"
+              style="flex:1;min-width:150px;justify-content:center;font-weight:700" onclick="copyReferralInviteLink()">
               📋 Copiar Link de Convite
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="flex:1;min-width:145px;justify-content:center;font-weight:700;border-color:rgba(16,185,129,0.45);color:#34d399" onclick="shareReferralWhatsapp()">
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+              style="flex:1;min-width:145px;justify-content:center;font-weight:700;border-color:rgba(16,185,129,0.45);color:#34d399"
+              onclick="shareReferralWhatsapp()">
               💬 Convidar no WhatsApp
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="flex:1;min-width:140px;justify-content:center;font-weight:700;border-color:rgba(139,92,246,0.45);color:#c4b5fd" onclick="openInviteQrModal()">
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+              style="flex:1;min-width:140px;justify-content:center;font-weight:700;border-color:rgba(139,92,246,0.45);color:#c4b5fd"
+              onclick="openInviteQrModal()">
               📱 QR Code do Convite
             </button>
-            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" style="width:100%;justify-content:center;font-weight:700;border-color:rgba(245,158,11,0.4);color:#fbbf24" onclick="previewReferralWelcomeScreen()">
+            <button type="button" class="portal-btn portal-btn--outline portal-btn--sm"
+              style="width:100%;justify-content:center;font-weight:700;border-color:rgba(245,158,11,0.4);color:#fbbf24"
+              onclick="previewReferralWelcomeScreen()">
               👁️ Ver Tela de Boas-Vindas do Meu Convite
             </button>
           </div>
           <div id="ref-use-credit-wrap" style="display:none;margin-top:10px">
-            <a href="mural?tier=bronze&amp;publish=1" class="portal-btn portal-btn--amber portal-btn--sm" style="width:100%;justify-content:center;font-weight:700;text-decoration:none">
+            <a href="mural?tier=bronze&amp;publish=1" class="portal-btn portal-btn--amber portal-btn--sm"
+              style="width:100%;justify-content:center;font-weight:700;text-decoration:none">
               🚀 Usar 1 Crédito Grátis no Mural Agora →
             </a>
           </div>
           <div id="ref-payout-box" style="display:none;margin-top:10px"></div>
-          <div id="ref-commissions-list-wrap" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08)"></div>
+          <div id="ref-commissions-list-wrap"
+            style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08)"></div>
         </div>
 
         <!-- Botão Único de Compartilhamento no Rodapé do Card -->
         <div style="margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08)">
-          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="shareProfile()" style="width:100%;padding:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">
+          <button type="button" class="portal-btn portal-btn--outline portal-btn--sm" onclick="shareProfile()"
+            style="width:100%;padding:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">
             <span>📢</span> Compartilhar este Passaporte
           </button>
         </div>
@@ -1113,29 +1394,49 @@
       <!-- ========================================== -->
       <!-- DIRETÓRIO GLOBAL DE PIONEIROS & NEGÓCIOS (SEMPRE ACESSÍVEL) -->
       <!-- ========================================== -->
-      <section id="pioneer-directory-section" aria-label="Diretório de Pioneiros e Negócios" style="text-align:left;background:linear-gradient(155deg,rgba(20,20,28,0.95),rgba(11,11,18,0.98));border:1px solid rgba(139,92,246,0.28);border-radius:22px;padding:24px 20px;margin-top:22px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <section id="pioneer-directory-section" aria-label="Diretório de Pioneiros e Negócios"
+        style="text-align:left;background:linear-gradient(155deg,rgba(20,20,28,0.95),rgba(11,11,18,0.98));border:1px solid rgba(139,92,246,0.28);border-radius:22px;padding:24px 20px;margin-top:22px">
+        <div
+          style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
           <div>
             <h2 style="font-size:1.25rem;font-weight:800;color:#fff;margin:0">🌐 Explorar Negócios &amp; Pioneiros</h2>
-            <span style="font-size:0.78rem;color:var(--text-muted)">Descubra humanos reais verificados aceitando Pi na Mainnet</span>
+            <span style="font-size:0.78rem;color:var(--text-muted)">Descubra humanos reais verificados aceitando Pi na
+              Mainnet</span>
           </div>
-          <span id="dir-live-count-badge" style="font-size:0.72rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:3px 10px;border-radius:12px;font-weight:700">
+          <span id="dir-live-count-badge"
+            style="font-size:0.72rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:3px 10px;border-radius:12px;font-weight:700">
             Diretório Mainnet
           </span>
         </div>
 
         <!-- Filtros de Busca em Tempo Real -->
         <div style="margin-bottom:12px">
-          <input type="text" id="dir-search-input" aria-label="Buscar pioneiro ou negócio no diretório" placeholder="🔍 Buscar por nome, serviço, produto, nicho..." oninput="filterDirectoryDebounced()" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.6);border:1px solid rgba(139,92,246,0.35);border-radius:10px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
+          <input type="text" id="dir-search-input" aria-label="Buscar pioneiro ou negócio no diretório"
+            placeholder="🔍 Buscar por nome, serviço, produto, nicho..." oninput="filterDirectoryDebounced()"
+            style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.6);border:1px solid rgba(139,92,246,0.35);border-radius:10px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
         </div>
 
         <!-- Category Pills -->
         <div style="display:flex;flex-wrap:wrap;gap:8px;padding-bottom:4px;margin-bottom:14px">
-          <button type="button" data-cat="todos" class="portal-btn portal-btn--sm dir-cat-pill active" onclick="filterDirectoryCategory('todos', this)" style="flex-shrink:0;background:var(--accent);color:#fff;font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap;font-weight:700">Todos</button>
-          <button type="button" data-cat="embaixadores" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('embaixadores', this)" style="flex-shrink:0;background:rgba(249,115,22,0.14);color:#fb923c;border:1px solid rgba(249,115,22,0.35);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap;font-weight:700">🔥 Monte Hokage</button>
-          <button type="button" data-cat="lojas" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('lojas', this)" style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">🛍️ Lojas &amp; Produtos</button>
-          <button type="button" data-cat="servicos" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('servicos', this)" style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">💼 Serviços &amp; Tech</button>
-          <button type="button" data-cat="criadores" class="portal-btn portal-btn--sm dir-cat-pill" onclick="filterDirectoryCategory('criadores', this)" style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">🎨 Criadores de Conteúdo</button>
+          <button type="button" data-cat="todos" class="portal-btn portal-btn--sm dir-cat-pill active"
+            onclick="filterDirectoryCategory('todos', this)"
+            style="flex-shrink:0;background:var(--accent);color:#fff;font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap;font-weight:700">Todos</button>
+          <button type="button" data-cat="embaixadores" class="portal-btn portal-btn--sm dir-cat-pill"
+            onclick="filterDirectoryCategory('embaixadores', this)"
+            style="flex-shrink:0;background:rgba(249,115,22,0.14);color:#fb923c;border:1px solid rgba(249,115,22,0.35);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap;font-weight:700">🔥
+            Monte Hokage</button>
+          <button type="button" data-cat="lojas" class="portal-btn portal-btn--sm dir-cat-pill"
+            onclick="filterDirectoryCategory('lojas', this)"
+            style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">🛍️
+            Lojas &amp; Produtos</button>
+          <button type="button" data-cat="servicos" class="portal-btn portal-btn--sm dir-cat-pill"
+            onclick="filterDirectoryCategory('servicos', this)"
+            style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">💼
+            Serviços &amp; Tech</button>
+          <button type="button" data-cat="criadores" class="portal-btn portal-btn--sm dir-cat-pill"
+            onclick="filterDirectoryCategory('criadores', this)"
+            style="flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:0.75rem;padding:6px 12px;border-radius:20px;white-space:nowrap">🎨
+            Criadores de Conteúdo</button>
         </div>
 
         <!-- Grid de Pioneiros -->
@@ -1146,13 +1447,17 @@
         </div>
 
         <!-- Card de Conversão no Final do Diretório -->
-        <div style="margin-top:18px;padding:16px;border-radius:16px;background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(139,92,246,0.12));border:1px dashed rgba(16,185,129,0.45);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div
+          style="margin-top:18px;padding:16px;border-radius:16px;background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(139,92,246,0.12));border:1px dashed rgba(16,185,129,0.45);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
           <div style="max-width:380px">
-            <strong style="color:#fff;font-size:0.9rem;display:block;margin-bottom:3px">+ Quer aparecer aqui quando alguém buscar negócios em Pi?</strong>
-            <span style="font-size:0.78rem;color:var(--text-secondary);line-height:1.4;display:block">Ative seu Passaporte gratuito em 1 minuto no Pi Browser ou experimente antes no simulador.</span>
+            <strong style="color:#fff;font-size:0.9rem;display:block;margin-bottom:3px">+ Quer aparecer aqui quando
+              alguém buscar negócios em Pi?</strong>
+            <span style="font-size:0.78rem;color:var(--text-secondary);line-height:1.4;display:block">Ative seu
+              Passaporte gratuito em 1 minuto no Pi Browser ou experimente antes no simulador.</span>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button type="button" onclick="connectPiBrowserAndStart()" class="portal-btn portal-btn--primary portal-btn--sm" style="font-weight:800">
+            <button type="button" onclick="connectPiBrowserAndStart()"
+              class="portal-btn portal-btn--primary portal-btn--sm" style="font-weight:800">
               ⚡ Ativar Meu Passaporte Grátis →
             </button>
             <button type="button" onclick="startSimulatorMode()" class="portal-btn portal-btn--outline portal-btn--sm">
@@ -1163,14 +1468,18 @@
       </section>
 
       <!-- Rodapé do Passaporte Oficial -->
-      <div id="pioneer-footer" style="text-align:center;color:var(--text-muted);font-size:0.82rem;margin-top:24px;display:none">
-        <p>✦ Passaporte Oficial do Pioneiro criado com a plataforma <a href="./" style="color:var(--accent-light);font-weight:600">HOKAGE22B</a>.</p>
+      <div id="pioneer-footer"
+        style="text-align:center;color:var(--text-muted);font-size:0.82rem;margin-top:24px;display:none">
+        <p>✦ Passaporte Oficial do Pioneiro criado com a plataforma <a href="./"
+            style="color:var(--accent-light);font-weight:600">HOKAGE22B</a>.</p>
         <p style="margin-top:8px">
-          <a href="pioneiro" id="pioneer-footer-create-link" style="color:var(--amber-light);font-weight:700;text-decoration:none">
+          <a href="pioneiro" id="pioneer-footer-create-link"
+            style="color:var(--amber-light);font-weight:700;text-decoration:none">
             🚀 Crie seu Passaporte grátis com seu @usuário Pi ↗
           </a>
         </p>
-        <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap">
+        <div
+          style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap">
           <span style="font-size:0.75rem;color:var(--text-muted)">🌐 Comunidade Global / Languages:</span>
           <div class="lang-mount-point"></div>
         </div>
@@ -1182,38 +1491,50 @@
   <!-- ======================================================= -->
   <!-- MODAL ÚNICO: PERSONALIZAR VITRINE (COM FOTOS)          -->
   <!-- ======================================================= -->
-  <div class="pi-modal-overlay" id="edit-profile-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-profile-title">
+  <div class="pi-modal-overlay" id="edit-profile-modal" role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="modal-profile-title">
     <div class="pi-modal ad-modal" style="max-width:580px;text-align:left">
-      <button type="button" class="pi-modal-close" onclick="closeProfileEditModal()" aria-label="Fechar modal">✕</button>
+      <button type="button" class="pi-modal-close" onclick="closeProfileEditModal()"
+        aria-label="Fechar modal">✕</button>
       <div class="pi-modal-logo">✏️</div>
       <h3 id="modal-profile-title" style="text-align:center;margin-bottom:4px">Personalizar Meu Passaporte Pi</h3>
-      <p style="font-size:0.85rem;color:var(--text-secondary);text-align:center;margin-bottom:16px" id="modal-profile-subtitle">
+      <p style="font-size:0.85rem;color:var(--text-secondary);text-align:center;margin-bottom:16px"
+        id="modal-profile-subtitle">
         Configure sua bio, carteira Pi, links de contato e produtos com fotos.
       </p>
 
       <!-- ANALYTICS PESSOAL DA VITRINE (HACKATHON GRADE) -->
-      <div id="prof-analytics-card" style="background:linear-gradient(135deg, rgba(139,92,246,0.12), rgba(245,158,11,0.08));border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:12px 14px;margin-bottom:18px;display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;text-align:center">
+      <div id="prof-analytics-card"
+        style="background:linear-gradient(135deg, rgba(139,92,246,0.12), rgba(245,158,11,0.08));border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:12px 14px;margin-bottom:18px;display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;text-align:center">
         <div>
-          <span style="font-size:0.68rem;text-transform:uppercase;color:var(--text-muted);display:block">👁️ Visitas</span>
+          <span style="font-size:0.68rem;text-transform:uppercase;color:var(--text-muted);display:block">👁️
+            Visitas</span>
           <strong id="analytics-views-val" style="font-size:1.25rem;color:#fff;font-family:var(--font-mono)">1</strong>
         </div>
         <div>
-          <span style="font-size:0.68rem;text-transform:uppercase;color:var(--text-muted);display:block">📋 Pi Copiada</span>
-          <strong id="analytics-copies-val" style="font-size:1.25rem;color:var(--amber-light);font-family:var(--font-mono)">0</strong>
+          <span style="font-size:0.68rem;text-transform:uppercase;color:var(--text-muted);display:block">📋 Pi
+            Copiada</span>
+          <strong id="analytics-copies-val"
+            style="font-size:1.25rem;color:var(--amber-light);font-family:var(--font-mono)">0</strong>
         </div>
         <div>
-          <span style="font-size:0.68rem;text-transform:uppercase;color:var(--text-muted);display:block">💬 Contatos</span>
-          <strong id="analytics-clicks-val" style="font-size:1.25rem;color:#34d399;font-family:var(--font-mono)">0</strong>
+          <span style="font-size:0.68rem;text-transform:uppercase;color:var(--text-muted);display:block">💬
+            Contatos</span>
+          <strong id="analytics-clicks-val"
+            style="font-size:1.25rem;color:#34d399;font-family:var(--font-mono)">0</strong>
         </div>
       </div>
 
       <form id="profile-edit-form" onsubmit="saveProfileForm(event)">
 
         <!-- Banner de Cadastro Rápido (30 segundos) para novos usuários Web2 -->
-        <div id="prof-quick-setup-banner" style="display:none;background:rgba(56,189,248,0.09);border:1px solid rgba(56,189,248,0.3);border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:0.78rem;color:#cbd5e1;line-height:1.45">
+        <div id="prof-quick-setup-banner"
+          style="display:none;background:rgba(56,189,248,0.09);border:1px solid rgba(56,189,248,0.3);border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:0.78rem;color:#cbd5e1;line-height:1.45">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
-            <span>⚡ <strong style="color:#bae6fd">Cadastro Rápido (30s):</strong> escolha seu @nome e o que você faz. Foto, carteira e catálogo ficam para depois!</span>
-            <button type="button" onclick="toggleFullEditMode()" style="background:none;border:none;color:#7dd3fc;font-size:0.74rem;font-weight:700;text-decoration:underline;cursor:pointer;padding:0">
+            <span>⚡ <strong style="color:#bae6fd">Cadastro Rápido (30s):</strong> escolha seu @nome e o que você faz.
+              Foto, carteira e catálogo ficam para depois!</span>
+            <button type="button" onclick="toggleFullEditMode()"
+              style="background:none;border:none;color:#7dd3fc;font-size:0.74rem;font-weight:700;text-decoration:underline;cursor:pointer;padding:0">
               Mostrar editor completo ▾
             </button>
           </div>
@@ -1221,13 +1542,16 @@
 
         <!-- Abas de Navegação Rápida no Editor (Organização Mobile-First) -->
         <div class="edit-tabs-bar" role="tablist" aria-label="Etapas de edição do passaporte">
-          <button type="button" class="edit-tab-btn active" data-edit-tab="perfil" onclick="switchEditTab('perfil')" role="tab" aria-selected="true">
+          <button type="button" class="edit-tab-btn active" data-edit-tab="perfil" onclick="switchEditTab('perfil')"
+            role="tab" aria-selected="true">
             👤 Perfil &amp; Pi
           </button>
-          <button type="button" class="edit-tab-btn" data-edit-tab="redes" onclick="switchEditTab('redes')" role="tab" aria-selected="false">
+          <button type="button" class="edit-tab-btn" data-edit-tab="redes" onclick="switchEditTab('redes')" role="tab"
+            aria-selected="false">
             🔗 Redes Sociais
           </button>
-          <button type="button" class="edit-tab-btn" data-edit-tab="produtos" onclick="switchEditTab('produtos')" role="tab" aria-selected="false">
+          <button type="button" class="edit-tab-btn" data-edit-tab="produtos" onclick="switchEditTab('produtos')"
+            role="tab" aria-selected="false">
             🛍️ Produtos
           </button>
         </div>
@@ -1235,18 +1559,25 @@
         <!-- ABA 1: PERFIL & CARTEIRA -->
         <div class="edit-tab-panel active" data-edit-panel="perfil">
           <!-- Foto de Perfil com Cortador Interativo -->
-          <div id="prof-avatar-group" class="form-group" style="margin-bottom:16px;text-align:center;background:rgba(255,255,255,0.03);padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08)">
-            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:8px;font-weight:700">Foto de Perfil</label>
+          <div id="prof-avatar-group" class="form-group"
+            style="margin-bottom:16px;text-align:center;background:rgba(255,255,255,0.03);padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08)">
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:8px;font-weight:700">Foto
+              de Perfil</label>
             <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap">
-              <div style="position:relative;width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--accent);box-shadow:0 0 16px rgba(139,92,246,0.4);background:#1a0533;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                <img id="modal-avatar-img" src="" alt="Avatar" style="width:100%;height:100%;object-fit:cover;display:none" />
-                <span id="modal-avatar-placeholder" style="font-size:1.6rem;font-weight:800;color:#fff;display:flex">π</span>
+              <div
+                style="position:relative;width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid var(--accent);box-shadow:0 0 16px rgba(139,92,246,0.4);background:#1a0533;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <img id="modal-avatar-img" src="" alt="Avatar"
+                  style="width:100%;height:100%;object-fit:cover;display:none" />
+                <span id="modal-avatar-placeholder"
+                  style="font-size:1.6rem;font-weight:800;color:#fff;display:flex">π</span>
               </div>
               <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
-                <label for="avatar-file-input" class="btn btn-outline btn-sm" style="font-size:0.8rem;padding:7px 14px;border-color:var(--accent);color:var(--accent-light);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:0">
+                <label for="avatar-file-input" class="btn btn-outline btn-sm"
+                  style="font-size:0.8rem;padding:7px 14px;border-color:var(--accent);color:var(--accent-light);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:0">
                   📷 Escolher Foto &amp; Cortar
                 </label>
-                <button type="button" id="btn-remove-avatar" class="btn btn-outline btn-sm" onclick="removeAvatar()" style="font-size:0.75rem;padding:3px 10px;border-color:rgba(239,68,68,0.4);color:#ef4444;display:none">
+                <button type="button" id="btn-remove-avatar" class="btn btn-outline btn-sm" onclick="removeAvatar()"
+                  style="font-size:0.75rem;padding:3px 10px;border-color:rgba(239,68,68,0.4);color:#ef4444;display:none">
                   ✕ Remover Foto
                 </button>
               </div>
@@ -1256,32 +1587,45 @@
 
           <!-- Identificação do Usuário -->
           <div class="form-group" style="margin-bottom:14px">
-            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Seu @usuário no Passaporte</label>
-            <input type="text" id="prof-input-user" required placeholder="@seunome" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:var(--accent-light);font-weight:700;box-sizing:border-box" />
-            <small id="prof-user-handle-hint" style="display:none;color:#7dd3fc;font-size:0.72rem;margin-top:4px"></small>
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Seu @usuário no
+              Passaporte</label>
+            <input type="text" id="prof-input-user" required placeholder="@seunome"
+              style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:var(--accent-light);font-weight:700;box-sizing:border-box" />
+            <small id="prof-user-handle-hint"
+              style="display:none;color:#7dd3fc;font-size:0.72rem;margin-top:4px"></small>
           </div>
 
           <!-- Bio / Apresentação Rápida -->
           <div class="form-group" style="margin-bottom:14px">
-            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Bio / Apresentação Rápida</label>
-            <input type="text" id="prof-input-bio" maxlength="140" placeholder="Ex: Criador Web3, aceitando Pi na Mainnet para produtos e mentorias." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;box-sizing:border-box" />
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Bio / Apresentação
+              Rápida</label>
+            <input type="text" id="prof-input-bio" maxlength="140"
+              placeholder="Ex: Criador Web3, aceitando Pi na Mainnet para produtos e mentorias."
+              style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;box-sizing:border-box" />
           </div>
 
           <!-- WhatsApp Rápido (visível apenas no Cadastro Rápido de 30s) -->
           <div id="prof-quick-whatsapp-wrap" class="form-group" style="display:none;margin-bottom:14px">
-            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">WhatsApp para Contato (Opcional)</label>
-            <input type="text" id="prof-quick-whatsapp" placeholder="Ex: 11999999999 ou https://wa.me/..." style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;box-sizing:border-box" />
+            <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">WhatsApp para
+              Contato (Opcional)</label>
+            <input type="text" id="prof-quick-whatsapp" placeholder="Ex: 11999999999 ou https://wa.me/..."
+              style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;box-sizing:border-box" />
           </div>
 
           <!-- Chave Pública Pi Wallet com Validador Criptográfico -->
           <div id="prof-wallet-group" class="form-group" style="margin-bottom:16px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:4px">
-              <label style="font-size:0.8rem;color:var(--gray-light);font-weight:700">Chave Pública da Pi Wallet (Mainnet P2P)</label>
+            <div
+              style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:4px">
+              <label style="font-size:0.8rem;color:var(--gray-light);font-weight:700">Chave Pública da Pi Wallet
+                (Mainnet P2P)</label>
               <span id="prof-wallet-badge" style="font-size:0.72rem;font-weight:700"></span>
             </div>
-            <input type="text" id="prof-input-wallet" placeholder="GA5F..." maxlength="56" oninput="validateWalletInputLive(this.value)" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-family:var(--font-mono);font-size:0.8rem;transition:border-color 0.2s ease;box-sizing:border-box" />
+            <input type="text" id="prof-input-wallet" placeholder="GA5F..." maxlength="56"
+              oninput="validateWalletInputLive(this.value)"
+              style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-family:var(--font-mono);font-size:0.8rem;transition:border-color 0.2s ease;box-sizing:border-box" />
             <small id="prof-wallet-hint" style="color:var(--text-muted);font-size:0.72rem;display:block;margin-top:4px">
-              🔒 Começa com 'G' e possui exatamente 56 caracteres Base32 com CRC16. Nunca informe sua Passphrase de 24 palavras.
+              🔒 Começa com 'G' e possui exatamente 56 caracteres Base32 com CRC16. Nunca informe sua Passphrase de 24
+              palavras.
             </small>
           </div>
         </div>
@@ -1289,43 +1633,60 @@
         <!-- ABA 2: REDES SOCIAIS & DESTAQUES -->
         <div class="edit-tab-panel" data-edit-panel="redes">
           <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 12px">
-            Cole o link completo ou apenas seu <strong>@usuário</strong> (ou número do WhatsApp) — o sistema converte automaticamente e exibe como ícones compactos no topo.
+            Cole o link completo ou apenas seu <strong>@usuário</strong> (ou número do WhatsApp) — o sistema converte
+            automaticamente e exibe como ícones compactos no topo.
           </p>
           <div class="edit-social-grid">
             <div>
-              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">WhatsApp (Link ou Número)</label>
-              <input type="text" id="prof-input-whatsapp" placeholder="https://wa.me/55... ou 11999999999" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
+              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">WhatsApp (Link ou
+                Número)</label>
+              <input type="text" id="prof-input-whatsapp" placeholder="https://wa.me/55... ou 11999999999"
+                style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
             </div>
             <div>
-              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">YouTube (Link ou @canal)</label>
-              <input type="text" id="prof-input-social" placeholder="https://youtube.com/@... ou @canal" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
+              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">YouTube (Link ou
+                @canal)</label>
+              <input type="text" id="prof-input-social" placeholder="https://youtube.com/@... ou @canal"
+                style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
             </div>
           </div>
 
           <div class="edit-social-grid" style="margin-bottom:14px">
             <div>
-              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Instagram (Link ou @usuário)</label>
-              <input type="text" id="prof-input-instagram" placeholder="https://instagram.com/... ou @usuario" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
+              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">Instagram (Link ou
+                @usuário)</label>
+              <input type="text" id="prof-input-instagram" placeholder="https://instagram.com/... ou @usuario"
+                style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
             </div>
             <div>
-              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">X / Twitter (Link ou @usuário)</label>
-              <input type="text" id="prof-input-twitter" placeholder="https://x.com/... ou @usuario" style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
+              <label style="font-size:0.8rem;color:var(--gray-light);display:block;margin-bottom:4px">X / Twitter (Link
+                ou @usuário)</label>
+              <input type="text" id="prof-input-twitter" placeholder="https://x.com/... ou @usuario"
+                style="width:100%;padding:10px 14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.85rem;box-sizing:border-box" />
             </div>
           </div>
 
-          <div style="margin-bottom:14px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.28);border-radius:10px;padding:10px 12px">
-            <label for="prof-input-map-of-pi" style="font-size:0.8rem;color:#6ee7b7;font-weight:700;display:block;margin-bottom:4px">📍 Loja no Map of Pi (opcional)</label>
-            <input type="url" id="prof-input-map-of-pi" placeholder="https://mapofpi.pinet.com/... (link da sua loja no Map of Pi)" style="width:100%;padding:9px 12px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.84rem;box-sizing:border-box" />
-            <small style="display:block;font-size:0.72rem;color:#a1a1aa;margin-top:4px">Exibe o botão destacado 📍 Map of Pi no seu Passaporte (Hokage ID) e na API pública.</small>
+          <div
+            style="margin-bottom:14px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.28);border-radius:10px;padding:10px 12px">
+            <label for="prof-input-map-of-pi"
+              style="font-size:0.8rem;color:#6ee7b7;font-weight:700;display:block;margin-bottom:4px">📍 Loja no Map of
+              Pi (opcional)</label>
+            <input type="url" id="prof-input-map-of-pi"
+              placeholder="https://mapofpi.pinet.com/... (link da sua loja no Map of Pi)"
+              style="width:100%;padding:9px 12px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:0.84rem;box-sizing:border-box" />
+            <small style="display:block;font-size:0.72rem;color:#a1a1aa;margin-top:4px">Exibe o botão destacado 📍 Map
+              of Pi no seu Passaporte (Hokage ID) e na API pública.</small>
           </div>
 
           <!-- Outras Redes Sociais Dinâmicas (Telegram, TikTok, LinkedIn, Discord, GitHub, Site) -->
           <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;margin-bottom:14px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+            <div
+              style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">
               <span style="font-size:0.78rem;font-weight:700;color:var(--accent-light)">
                 🌐 Outras Redes &amp; Links (Telegram, TikTok, LinkedIn...)
               </span>
-              <button type="button" class="btn btn-outline btn-sm" onclick="addExtraSocialRow('auto', '')" style="font-size:0.72rem;padding:4px 10px;border-color:var(--accent);color:var(--accent-light)">
+              <button type="button" class="btn btn-outline btn-sm" onclick="addExtraSocialRow('auto', '')"
+                style="font-size:0.72rem;padding:4px 10px;border-color:var(--accent);color:var(--accent-light)">
                 ➕ Adicionar Rede
               </button>
             </div>
@@ -1333,16 +1694,20 @@
           </div>
 
           <!-- Opções de Destaques Comunitários na Vitrine -->
-          <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left">
+          <div
+            style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left">
             <span style="font-size:0.78rem;font-weight:700;color:var(--amber-light);display:block;margin-bottom:8px">
               🌟 Ajudar a Comunidade (Destaques no seu Linktree):
             </span>
-            <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#fff;cursor:pointer;margin-bottom:8px">
-              <input type="checkbox" id="prof-check-zero" checked style="width:16px;height:16px;accent-color:var(--amber)" />
+            <label
+              style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#fff;cursor:pointer;margin-bottom:8px">
+              <input type="checkbox" id="prof-check-zero" checked
+                style="width:16px;height:16px;accent-color:var(--amber)" />
               <span>Exibir card educativo <strong>📘 Pi Network do Zero</strong></span>
             </label>
             <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#fff;cursor:pointer">
-              <input type="checkbox" id="prof-check-mural" checked style="width:16px;height:16px;accent-color:var(--amber)" />
+              <input type="checkbox" id="prof-check-mural" checked
+                style="width:16px;height:16px;accent-color:var(--amber)" />
               <span>Exibir link da <strong>🏘️ A Vila (P2P) dos Pioneiros (Mural)</strong></span>
             </label>
           </div>
@@ -1351,11 +1716,13 @@
         <!-- ABA 3: PRODUTOS & SERVIÇOS (EM R$ OU π) -->
         <div class="edit-tab-panel" data-edit-panel="produtos">
           <div style="margin-bottom:16px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+            <div
+              style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
               <span style="font-size:0.82rem;font-weight:700;color:var(--amber-light)">
                 🛍️ Produtos &amp; Serviços (R$ ou π)
               </span>
-              <button type="button" class="btn btn-outline btn-sm" onclick="addProductRow('', '', '', '')" style="font-size:0.75rem;padding:5px 10px;border-color:var(--amber)">
+              <button type="button" class="btn btn-outline btn-sm" onclick="addProductRow('', '', '', '')"
+                style="font-size:0.75rem;padding:5px 10px;border-color:var(--amber)">
                 ➕ Adicionar Produto / Serviço
               </button>
             </div>
@@ -1367,9 +1734,12 @@
         </div>
 
         <!-- Botões de Ação do Modal (Sempre visíveis) -->
-        <div id="prof-save-feedback" role="alert" style="display:none;margin-bottom:10px;padding:10px 12px;border-radius:10px;font-size:0.8rem"></div>
-        <div style="display:flex;gap:10px;flex-direction:column;border-top:1px solid rgba(255,255,255,0.1);padding-top:14px">
-          <button type="submit" id="btn-save-profile" class="btn btn-primary" style="width:100%;padding:12px;font-size:0.95rem;font-weight:700">
+        <div id="prof-save-feedback" role="alert"
+          style="display:none;margin-bottom:10px;padding:10px 12px;border-radius:10px;font-size:0.8rem"></div>
+        <div
+          style="display:flex;gap:10px;flex-direction:column;border-top:1px solid rgba(255,255,255,0.1);padding-top:14px">
+          <button type="submit" id="btn-save-profile" class="btn btn-primary"
+            style="width:100%;padding:12px;font-size:0.95rem;font-weight:700">
             💾 Salvar Oficialmente na Pi Network
           </button>
         </div>
@@ -1378,10 +1748,13 @@
   </div>
 
   <!-- Input de Arquivo para Foto de Perfil (Otimizado para Mobile e Pi Browser) -->
-  <input type="file" id="avatar-file-input" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;opacity:0;width:1px;height:1px;pointer-events:none" onchange="handleAvatarFileSelect(event)" />
+  <input type="file" id="avatar-file-input" accept="image/*"
+    style="position:fixed;top:-9999px;left:-9999px;opacity:0;width:1px;height:1px;pointer-events:none"
+    onchange="handleAvatarFileSelect(event)" />
 
   <!-- MODAL DO CORTADOR DE FOTO DE PERFIL (HTML5 CANVAS INTERATIVO) -->
-  <div class="pi-modal-overlay" id="avatar-crop-modal" role="dialog" aria-modal="true" aria-hidden="true" style="z-index:10000;display:none">
+  <div class="pi-modal-overlay" id="avatar-crop-modal" role="dialog" aria-modal="true" aria-hidden="true"
+    style="z-index:10000;display:none">
     <div class="pi-modal" style="max-width:380px;text-align:center;padding:24px 20px">
       <button type="button" class="pi-modal-close" onclick="closeAvatarCropModal()" aria-label="Fechar modal">✕</button>
       <div style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:4px">
@@ -1392,23 +1765,32 @@
       </p>
 
       <!-- Viewport Circular com Máscara e Sombra -->
-      <div style="position:relative;width:240px;height:240px;margin:0 auto 16px;border-radius:50%;overflow:hidden;border:3px solid var(--accent);box-shadow:0 0 30px rgba(139,92,246,0.45);background:#09090b;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none" id="crop-viewport">
+      <div
+        style="position:relative;width:240px;height:240px;margin:0 auto 16px;border-radius:50%;overflow:hidden;border:3px solid var(--accent);box-shadow:0 0 30px rgba(139,92,246,0.45);background:#09090b;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none"
+        id="crop-viewport">
         <canvas id="crop-canvas" width="240" height="240" style="display:block;width:100%;height:100%"></canvas>
       </div>
 
       <!-- Barra de Controle de Zoom -->
-      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px;background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.08)">
+      <div
+        style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px;background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.08)">
         <span style="font-size:0.75rem;color:var(--text-muted);font-weight:700">🔍 Zoom:</span>
-        <button type="button" class="btn btn-outline btn-sm" aria-label="Diminuir zoom" onclick="adjustCropZoom(-0.08)" style="padding:2px 10px;font-size:1rem;line-height:1">−</button>
-        <input type="range" id="crop-zoom-range" aria-label="Nível de zoom da foto" min="0.1" max="5" step="0.01" value="1" oninput="onCropZoomChange(this.value)" style="width:130px;accent-color:var(--accent);cursor:pointer" />
-        <button type="button" class="btn btn-outline btn-sm" aria-label="Aumentar zoom" onclick="adjustCropZoom(0.08)" style="padding:2px 10px;font-size:1rem;line-height:1">+</button>
+        <button type="button" class="btn btn-outline btn-sm" aria-label="Diminuir zoom" onclick="adjustCropZoom(-0.08)"
+          style="padding:2px 10px;font-size:1rem;line-height:1">−</button>
+        <input type="range" id="crop-zoom-range" aria-label="Nível de zoom da foto" min="0.1" max="5" step="0.01"
+          value="1" oninput="onCropZoomChange(this.value)"
+          style="width:130px;accent-color:var(--accent);cursor:pointer" />
+        <button type="button" class="btn btn-outline btn-sm" aria-label="Aumentar zoom" onclick="adjustCropZoom(0.08)"
+          style="padding:2px 10px;font-size:1rem;line-height:1">+</button>
       </div>
 
       <div style="display:flex;gap:10px">
-        <button type="button" class="btn btn-outline" onclick="closeAvatarCropModal()" style="flex:1;padding:11px;font-size:0.9rem">
+        <button type="button" class="btn btn-outline" onclick="closeAvatarCropModal()"
+          style="flex:1;padding:11px;font-size:0.9rem">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" onclick="confirmAvatarCrop()" style="flex:1;padding:11px;font-size:0.9rem;font-weight:700">
+        <button type="button" class="btn btn-primary" onclick="confirmAvatarCrop()"
+          style="flex:1;padding:11px;font-size:0.9rem;font-weight:700">
           ✓ Aplicar Foto
         </button>
       </div>
@@ -1416,28 +1798,35 @@
   </div>
 
   <!-- MODAL DE CRIAÇÃO DE CONTA WEB2 / ACESSO VIA PI BROWSER -->
-  <div class="pi-modal-overlay" id="external-browser-modal" role="dialog" aria-modal="true" aria-hidden="true" style="z-index:10000;display:none">
+  <div class="pi-modal-overlay" id="external-browser-modal" role="dialog" aria-modal="true" aria-hidden="true"
+    style="z-index:10000;display:none">
     <div class="pi-modal" style="max-width:440px;text-align:center;padding:26px 20px">
       <button type="button" class="pi-modal-close" onclick="closeExternalBrowserModal()" aria-label="Fechar">✕</button>
       <div style="font-size:2.2rem;margin-bottom:8px">🪪</div>
       <h3 style="margin-bottom:8px">Criar Conta ou Entrar no Passaporte</h3>
       <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.45;margin-bottom:16px">
-        Crie seu Passaporte Web grátis agora usando seu <strong>e-mail</strong> (sem senha) — ou abra no app <strong>Pi Browser</strong> para autenticar com sua carteira Pi.
+        Crie seu Passaporte Web grátis agora usando seu <strong>e-mail</strong> (sem senha) — ou abra no app <strong>Pi
+          Browser</strong> para autenticar com sua carteira Pi.
       </p>
 
-      <div style="background:rgba(56,189,248,0.09);border:1px solid rgba(56,189,248,0.32);border-radius:14px;padding:14px;margin-bottom:14px;text-align:left">
+      <div
+        style="background:rgba(56,189,248,0.09);border:1px solid rgba(56,189,248,0.32);border-radius:14px;padding:14px;margin-bottom:14px;text-align:left">
         <div style="font-size:0.84rem;font-weight:800;color:#bae6fd;margin-bottom:8px">
           🌐 Criar Conta ou Entrar Agora (Grátis)
         </div>
         <div id="ext-modal-google-slot" style="margin-bottom:10px;display:flex;justify-content:center;min-height:42px">
-          <button type="button" id="ext-modal-google-btn" class="btn btn-outline" style="width:100%;padding:10px 12px;background:#fff;color:#111827;border-color:#e5e7eb;font-size:0.88rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">
-            <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f3f4f6;color:#2563eb;font-weight:900;font-size:0.8rem">G</span>
+          <button type="button" id="ext-modal-google-btn" class="btn btn-outline"
+            style="width:100%;padding:10px 12px;background:#fff;color:#111827;border-color:#e5e7eb;font-size:0.88rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">
+            <span
+              style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#f3f4f6;color:#2563eb;font-weight:900;font-size:0.8rem">G</span>
             <span>Continuar com Google</span>
           </button>
         </div>
         <form id="ext-modal-web2-form" style="display:flex;flex-direction:column;gap:8px">
-          <input type="email" id="ext-modal-web2-email" required placeholder="seu@email.com" style="width:100%;padding:10px 12px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.22);border-radius:10px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
-          <button type="submit" id="ext-modal-web2-btn" class="btn btn-primary" style="width:100%;padding:11px;font-size:0.9rem;font-weight:800">
+          <input type="email" id="ext-modal-web2-email" required placeholder="seu@email.com"
+            style="width:100%;padding:10px 12px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.22);border-radius:10px;color:#fff;font-size:0.88rem;box-sizing:border-box" />
+          <button type="submit" id="ext-modal-web2-btn" class="btn btn-primary"
+            style="width:100%;padding:11px;font-size:0.9rem;font-weight:800">
             ✉️ Enviar Link Mágico para Criar Conta
           </button>
         </form>
@@ -1445,15 +1834,18 @@
       </div>
 
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-        <button type="button" class="btn btn-outline" onclick="closeExternalBrowserModal(); startSimulatorMode();" style="width:100%;padding:11px;font-size:0.88rem;border-color:rgba(139,92,246,0.45);color:var(--accent-light);font-weight:700">
+        <button type="button" class="btn btn-outline" onclick="closeExternalBrowserModal(); startSimulatorMode();"
+          style="width:100%;padding:11px;font-size:0.88rem;border-color:rgba(139,92,246,0.45);color:var(--accent-light);font-weight:700">
           🧪 Testar no Simulador Agora
         </button>
 
-        <button type="button" class="btn btn-outline" id="btn-copy-pi-link" onclick="copyPiBrowserLink()" style="width:100%;padding:11px;font-size:0.86rem;border-color:rgba(245,158,11,0.45);color:#fde68a;font-weight:700">
+        <button type="button" class="btn btn-outline" id="btn-copy-pi-link" onclick="copyPiBrowserLink()"
+          style="width:100%;padding:11px;font-size:0.86rem;border-color:rgba(245,158,11,0.45);color:#fde68a;font-weight:700">
           📋 Copiar Link para o Pi Browser
         </button>
 
-        <a href="?u=hokage22b" class="btn btn-outline" style="width:100%;padding:10px;font-size:0.84rem;border-color:rgba(255,255,255,0.2);color:#fff;text-decoration:none">
+        <a href="?u=hokage22b" class="btn btn-outline"
+          style="width:100%;padding:10px;font-size:0.84rem;border-color:rgba(255,255,255,0.2);color:#fff;text-decoration:none">
           🌟 Ver Passaporte do Fundador (@hokage22b)
         </a>
       </div>
@@ -1465,79 +1857,116 @@
   </div>
 
   <!-- MODAL DE PAGAMENTO & TERMINAL POS INTELIGENTE (ADAPTATIVO POR PERFIL) -->
-  <div class="pi-modal-overlay" id="wallet-qr-modal" role="dialog" aria-modal="true" aria-hidden="true" style="z-index:10000;display:none">
+  <div class="pi-modal-overlay" id="wallet-qr-modal" role="dialog" aria-modal="true" aria-hidden="true"
+    style="z-index:10000;display:none">
     <div class="pi-modal" style="max-width:420px;text-align:center;padding:24px 20px">
-      
+
       <!-- Cabeçalho do Modal com Título Adaptativo -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div id="wallet-qr-modal-title" style="font-size:1.15rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px">
+        <div id="wallet-qr-modal-title"
+          style="font-size:1.15rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px">
           <span>⚡</span> Pagar com Pi Network
         </div>
-        <button type="button" onclick="closeWalletQrModal()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.3rem;cursor:pointer;padding:4px" aria-label="Fechar modal">✕</button>
+        <button type="button" onclick="closeWalletQrModal()"
+          style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.3rem;cursor:pointer;padding:4px"
+          aria-label="Fechar modal">✕</button>
       </div>
 
       <!-- SEÇÃO EXCLUSIVA DO DONO (CONTROLE DE COBRANÇA / PDV / POS) -->
       <div id="pos-owner-controls" style="display:none;margin-bottom:14px">
-        <div style="display:flex;background:rgba(255,255,255,0.06);padding:3px;border-radius:10px;margin-bottom:12px;gap:4px">
-          <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-dynamic" onclick="switchPosMode('dynamic')" style="flex:1;background:var(--accent);color:#fff;font-weight:700;font-size:0.8rem">
+        <div
+          style="display:flex;background:rgba(255,255,255,0.06);padding:3px;border-radius:10px;margin-bottom:12px;gap:4px">
+          <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-dynamic"
+            onclick="switchPosMode('dynamic')"
+            style="flex:1;background:var(--accent);color:#fff;font-weight:700;font-size:0.8rem">
             ⚡ Cobrar com Valor (POS)
           </button>
-          <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-static" onclick="switchPosMode('static')" style="flex:1;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem">
+          <button type="button" class="portal-btn portal-btn--sm" id="pos-tab-static" onclick="switchPosMode('static')"
+            style="flex:1;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem">
             📷 Chave Simples
           </button>
         </div>
 
-        <div id="pos-amount-group" style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:12px;text-align:left">
-          <label for="pos-input-amount" style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:4px">VALOR A COBRAR DO CLIENTE (π):</label>
+        <div id="pos-amount-group"
+          style="background:rgba(0,0,0,0.5);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:12px;text-align:left">
+          <label for="pos-input-amount"
+            style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:4px">VALOR A COBRAR DO CLIENTE
+            (π):</label>
           <div style="display:flex;align-items:center;gap:8px">
-            <input type="number" step="any" min="0.01" id="pos-input-amount" placeholder="Ex: 3.14" oninput="updateDynamicQrPayload()" style="flex:1;background:#09090b;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px 12px;color:var(--amber-light);font-size:1.2rem;font-weight:800;font-family:var(--font-mono)" />
+            <input type="number" step="any" min="0.01" id="pos-input-amount" placeholder="Ex: 3.14"
+              oninput="updateDynamicQrPayload()"
+              style="flex:1;background:#09090b;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px 12px;color:var(--amber-light);font-size:1.2rem;font-weight:800;font-family:var(--font-mono)" />
             <span style="font-size:1.1rem;font-weight:800;color:var(--amber-light)">π</span>
           </div>
           <!-- Pílulas rápidas -->
           <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-            <button type="button" onclick="setPosQuickAmount(1)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">1 π</button>
-            <button type="button" onclick="setPosQuickAmount(3.14)" style="font-size:0.72rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 8px;border-radius:6px;font-weight:700;cursor:pointer">3.14 π</button>
-            <button type="button" onclick="setPosQuickAmount(5)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">5 π</button>
-            <button type="button" onclick="setPosQuickAmount(10)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">10 π</button>
-            <button type="button" onclick="setPosQuickAmount(50)" style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">50 π</button>
+            <button type="button" onclick="setPosQuickAmount(1)"
+              style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">1
+              π</button>
+            <button type="button" onclick="setPosQuickAmount(3.14)"
+              style="font-size:0.72rem;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:var(--amber-light);padding:3px 8px;border-radius:6px;font-weight:700;cursor:pointer">3.14
+              π</button>
+            <button type="button" onclick="setPosQuickAmount(5)"
+              style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">5
+              π</button>
+            <button type="button" onclick="setPosQuickAmount(10)"
+              style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">10
+              π</button>
+            <button type="button" onclick="setPosQuickAmount(50)"
+              style="font-size:0.72rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer">50
+              π</button>
           </div>
           <div style="margin-top:8px">
-            <input type="text" id="pos-input-memo" placeholder="Descrição / Memo (Ex: Café, Consultoria)" oninput="updateDynamicQrPayload()" maxlength="40" style="width:100%;background:#09090b;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;color:#fff;font-size:0.8rem" />
+            <input type="text" id="pos-input-memo" placeholder="Descrição / Memo (Ex: Café, Consultoria)"
+              oninput="updateDynamicQrPayload()" maxlength="40"
+              style="width:100%;background:#09090b;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;color:#fff;font-size:0.8rem" />
           </div>
         </div>
       </div>
 
       <!-- SEÇÃO DE VALOR SOLICITADO PARA VISITANTE (SE VEIO VIA LINK COM PREÇO FIXADO) -->
-      <div id="pos-visitor-preset-badge" style="display:none;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:12px;padding:10px 14px;margin-bottom:14px;text-align:left">
+      <div id="pos-visitor-preset-badge"
+        style="display:none;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:12px;padding:10px 14px;margin-bottom:14px;text-align:left">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);font-weight:700">Valor Solicitado:</span>
-          <span id="pos-visitor-preset-amount" style="font-size:1.2rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono)">-- π</span>
+          <span style="font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);font-weight:700">Valor
+            Solicitado:</span>
+          <span id="pos-visitor-preset-amount"
+            style="font-size:1.2rem;font-weight:800;color:var(--amber-light);font-family:var(--font-mono)">-- π</span>
         </div>
-        <div id="pos-visitor-preset-memo-wrap" style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;display:none">
+        <div id="pos-visitor-preset-memo-wrap"
+          style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;display:none">
           Ref: <strong id="pos-visitor-preset-memo" style="color:#fff"></strong>
         </div>
       </div>
 
       <!-- QR CODE EM DESTAQUE -->
-      <div style="background:#fff;padding:12px;border-radius:18px;display:inline-block;margin-bottom:12px;box-shadow:0 0 25px rgba(245,158,11,0.3)">
-        <img id="wallet-qr-img" src="" alt="QR Code da Carteira Pi" style="width:185px;height:185px;display:block;margin:0 auto;image-rendering:pixelated" />
+      <div
+        style="background:#fff;padding:12px;border-radius:18px;display:inline-block;margin-bottom:12px;box-shadow:0 0 25px rgba(245,158,11,0.3)">
+        <img id="wallet-qr-img" src="" alt="QR Code da Carteira Pi"
+          style="width:185px;height:185px;display:block;margin:0 auto;image-rendering:pixelated" />
       </div>
 
       <!-- Informações de Destino e Chave Pública -->
-      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;margin-bottom:12px;text-align:left">
+      <div
+        style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;margin-bottom:12px;text-align:left">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
-          <span style="font-size:0.72rem;color:var(--text-muted)">Destinatário: <strong id="wallet-qr-user" class="notranslate" style="color:var(--amber-light)">@...</strong></span>
-          <span id="pos-badge-status" style="font-size:0.7rem;color:#10b981;font-weight:700">✓ Pronto para Escanear</span>
+          <span style="font-size:0.72rem;color:var(--text-muted)">Destinatário: <strong id="wallet-qr-user"
+              class="notranslate" style="color:var(--amber-light)">@...</strong></span>
+          <span id="pos-badge-status" style="font-size:0.7rem;color:#10b981;font-weight:700">✓ Pronto para
+            Escanear</span>
         </div>
-        <code id="wallet-qr-preview" class="notranslate" translate="no" style="display:block;font-size:0.65rem;color:var(--accent-light);word-break:break-all;margin-top:4px;background:#09090b;padding:6px;border-radius:6px;user-select:all"></code>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:0.7rem;color:var(--text-muted)">
+        <code id="wallet-qr-preview" class="notranslate" translate="no"
+          style="display:block;font-size:0.65rem;color:var(--accent-light);word-break:break-all;margin-top:4px;background:#09090b;padding:6px;border-radius:6px;user-select:all"></code>
+        <div
+          style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:0.7rem;color:var(--text-muted)">
           <span style="color:#10b981">🛡️ Anti-Clipper Guard Ativo</span>
           <span style="color:var(--text-muted);font-size:0.7rem">Mainnet P2P</span>
         </div>
       </div>
 
       <!-- DICA AMIGÁVEL DEPENDENDO DO NAVEGADOR -->
-      <div id="pos-browser-tip" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:8px 12px;margin-bottom:14px;font-size:0.76rem;color:var(--text-secondary);text-align:left;line-height:1.4">
+      <div id="pos-browser-tip"
+        style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:8px 12px;margin-bottom:14px;font-size:0.76rem;color:var(--text-secondary);text-align:left;line-height:1.4">
         <!-- Injetado dinamicamente -->
       </div>
 
@@ -1557,7 +1986,8 @@
           <a href="./" style="color:var(--text-secondary);text-decoration:none">Início</a>
           <a href="mural" style="color:var(--text-secondary);text-decoration:none">A Vila</a>
           <a href="explorar" style="color:var(--text-secondary);text-decoration:none">Explorar</a>
-          <a href="legal/politica-de-privacidade" style="color:var(--text-secondary);text-decoration:none">Privacidade</a>
+          <a href="legal/politica-de-privacidade"
+            style="color:var(--text-secondary);text-decoration:none">Privacidade</a>
           <a href="legal/termos-de-uso" style="color:var(--text-secondary);text-decoration:none">Termos</a>
         </div>
       </div>
@@ -1569,13 +1999,16 @@
   <script src="assets/js/modules/referral.js?v=2.7"></script>
   <script src="assets/js/modules/analytics-tg.js?v=2.2"></script>
   <script src="assets/js/modules/scroll-motion.js?v=1.0"></script>
-  <script src="assets/js/modules/site-header.js?v=1.8"></script>
+  <script src="assets/js/modules/site-header.js?v=1.9"></script>
   <script src="assets/js/modules/i18n.js?v=4.7"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"
+    integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil"
+    crossorigin="anonymous"></script>
   <script src="assets/js/modules/db.js?v=6.2"></script>
   <script src="assets/js/modules/web2-auth.js?v=1.5"></script>
 
   <script src="assets/js/modules/vitrine.js?v=4.3"></script>
   <script src="assets/js/modules/monte-progression.js?v=1.5"></script>
 </body>
+
 </html>

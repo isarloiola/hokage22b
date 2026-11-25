@@ -28,7 +28,7 @@
       items: [
         { href: 'jornada', match: ['jornada'], label: '🧭 Jornada Guiada (30s)', desktopLabel: null },
         { href: 'um', match: ['um', 'alem-do-clique'], label: '🚀 Passo 1: Além do Clique', desktopLabel: null, color: 'var(--amber-light)' },
-        { href: 'ebooks', match: ['ebooks'], label: '📚 E-books Oficiais', desktopLabel: null, color: '#fde68a' }
+        { href: 'ebooks', match: ['ebooks'], label: '📚 E-books Oficiais', desktopLabel: 'E-books', color: '#fde68a' }
       ]
     },
     {
@@ -288,7 +288,6 @@
     const moreLinks = [
       { href: 'explorar', match: ['explorar', 'diretorio'], label: '🌐 Explorar Pioneiros' },
       { href: 'jornada', match: ['jornada'], label: '🧭 Jornada Guiada (30s)' },
-      { href: 'ebooks', match: ['ebooks'], label: '📚 E-books Oficiais' },
       { href: 'um', match: ['um', 'alem-do-clique'], label: '🚀 Passo 1: Além do Clique' },
       { href: 'monte', match: ['monte'], label: '🏔️ Monte Hokage' },
       { href: 'ferramentas', match: ['ferramentas'], label: '🛠️ Ferramentas Web3' },
