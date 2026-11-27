@@ -1808,7 +1808,7 @@ function openProfileEditModal() {
     if (saveBtn) saveBtn.textContent = isPickingWeb2Handle ? '🚀 Publicar Meu Passaporte Agora' : '💾 Publicar Passaporte Web';
     if (subTitle) {
       subTitle.textContent = isPickingWeb2Handle
-        ? 'Seu e-mail está confirmado! Em 30 segundos sua vitrine entra no ar.'
+        ? 'Seu e-mail está confirmado! Em 30 segundos seu Hokage ID entra no ar.'
         : 'Configure sua bio, links e catálogo. Vincule sua conta Pi depois no Pi Browser!';
     }
   } else {
@@ -2496,11 +2496,11 @@ async function saveProfileForm(e) {
       window.history.replaceState(null, '', `?u=${encodeURIComponent(savedHandle.replace(/^@+/, ''))}`);
 
       if (savedResp && savedResp._referralResult && savedResp._referralResult.awarded) {
-        showVitrineToast('🎉 Vitrine salva! Você ganhou +1 Crédito de Anúncio Bronze Grátis (0.314 π) no Mural!', 'success');
+        showVitrineToast('🎉 Hokage ID salvo! Você ganhou +1 Crédito de Anúncio Bronze Grátis (0.314 π) na Vila!', 'success');
       } else if (!savedIsPiVerified) {
         showVitrineToast('✓ Passaporte Web publicado! Vincule no Pi Browser quando quiser ativar o selo ✓ Pi Verificado.', 'success');
       } else {
-        showVitrineToast('✓ Vitrine oficial salva e verificada com sucesso na rede Pi!', 'success');
+        showVitrineToast('✓ Hokage ID oficial salvo e verificado com sucesso na rede Pi!', 'success');
       }
       closeProfileEditModal();
       loadPioneerProfile();

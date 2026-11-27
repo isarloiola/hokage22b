@@ -365,8 +365,8 @@
     let priceHtml = priceHtmlDefault;
 
     if (isVitrineProduct) {
-      tierLabel = '🪪 Vitrine do Passaporte';
-      overlayLabel = '🪪 VITRINE DO PASSAPORTE';
+      tierLabel = '🪪 Catálogo Hokage ID';
+      overlayLabel = '🪪 CATÁLOGO HOKAGE ID';
     } else if (isFounderDemo) {
       tierLabel = '👑 Ouro Fundador · Demonstração';
       overlayLabel = '👑 OURO FUNDADOR · EXEMPLAR';
@@ -424,7 +424,7 @@
     if (isVitrineProduct) {
       linkHtml = `
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <a href="pioneiro?u=${encodeURIComponent(cleanAuthorSlug)}#pioneer-products-section" data-mural-action="track-profile" data-ad-id="${cardId}" class="pioneer-card__link" style="background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(139,92,246,0.22));border:1px solid rgba(16,185,129,0.45);color:#ecfdf5;padding:7px 12px;border-radius:8px;font-weight:800;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px">🪪 Ver na Vitrine / Negociar →</a>
+          <a href="pioneiro?u=${encodeURIComponent(cleanAuthorSlug)}#pioneer-products-section" data-mural-action="track-profile" data-ad-id="${cardId}" class="pioneer-card__link" style="background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(139,92,246,0.22));border:1px solid rgba(16,185,129,0.45);color:#ecfdf5;padding:7px 12px;border-radius:8px;font-weight:800;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px">🪪 Ver no Hokage ID / Negociar →</a>
           ${cleanUrl ? `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer nofollow" class="btn btn-outline btn-sm" style="padding:6px 10px;font-size:0.75rem;text-decoration:none;border-color:rgba(255,255,255,0.2);color:#e4e4e7">🔗 Abrir Oferta ↗</a>` : ''}
           ${isVitrineOwner ? `<button type="button" data-mural-action="promote-vitrine" data-ad-id="${cardId}" class="btn btn-outline btn-sm" style="padding:6px 10px;font-size:0.75rem;border-color:rgba(245,158,11,0.5);color:var(--amber-light);font-weight:700">⚡ Impulsionar na Vila</button>` : ''}
         </div>
@@ -1056,7 +1056,7 @@
       active.push({ key: 'payment', label: payLabels[currentPaymentFilter] || currentPaymentFilter });
     }
     if (currentTierFilter !== 'todos') {
-      const tierLabels = { ouro: '🥇 Ouro', prata: '🥈 Prata', bronze: '🥉 Bronze', vitrine: '🪪 Vitrine', gratis: '🌱 Grátis' };
+      const tierLabels = { ouro: '🥇 Ouro', prata: '🥈 Prata', bronze: '🥉 Bronze', vitrine: '🪪 Catálogo ID', gratis: '🌱 Grátis' };
       active.push({ key: 'tier', label: tierLabels[currentTierFilter] || currentTierFilter });
     }
     if (currentCountryFilter !== 'todos') {
@@ -1488,7 +1488,7 @@
         const paymentModes = (hasPi && hasFiat) ? 'pi_fiat' : (hasFiat ? 'fiat' : 'pi');
         const combinedPrice = (price && priceFiat) ? (price + ' + ' + priceFiat) : (price || priceFiat || '');
         const desc = String((prod && prod.description) || '').trim() ||
-          ((badge ? badge + ' · ' : '') + 'Produto/serviço oficial da vitrine de @' + cleanSeller + '.');
+          ((badge ? badge + ' · ' : '') + 'Produto/serviço oficial do catálogo de @' + cleanSeller + '.');
         const cardId = 'vitrine_' + cleanSeller + '_' + idx;
         const link = String((prod && prod.link) || '').trim();
         const img = String((prod && prod.image_url) || '').trim();
@@ -1511,7 +1511,7 @@
           link_url: link,
           image_url: img,
           category: cat,
-          location: 'Vitrine @' + cleanSeller,
+          location: 'Hokage ID @' + cleanSeller,
           country_code: 'GLOBAL',
           payment_modes: paymentModes,
           item_price: combinedPrice || null,

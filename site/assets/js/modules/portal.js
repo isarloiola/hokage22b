@@ -572,7 +572,7 @@
             plan_tier: 'vitrine',
             author: handle,
             title: title,
-            description: (prod && prod.description) || ((prod && prod.badge ? prod.badge + ' · ' : '') + 'Disponível na vitrine de @' + handle),
+            description: (prod && prod.description) || ((prod && prod.badge ? prod.badge + ' · ' : '') + 'Disponível no catálogo de @' + handle),
             payment_modes: payMode,
             item_price: combinedPrice,
             image_url: (prod && prod.image_url) || ''
@@ -603,7 +603,7 @@
           ? (ad.author.handle || ad.author.username || '@pioneiro')
           : (ad.author || ad.author_username || '@pioneiro');
         const authorRaw = String(rawAuthorObj).replace(/^@+/, '') || 'pioneiro';
-        const badgeLabel = isVitrine ? '🪪 Vitrine do Passaporte'
+        const badgeLabel = isVitrine ? '🪪 Catálogo Hokage ID'
           : (tier === 'ouro' ? '👑 Destaque Ouro VIP'
             : tier === 'prata' ? '🥈 Destaque Prata'
             : tier === 'gratis' ? '🌱 Comunidade' : '🥉 Classificado Bronze');
@@ -800,7 +800,7 @@
         '<article style="background:linear-gradient(155deg,rgba(16,185,129,0.12),rgba(139,92,246,0.14));border:1px dashed rgba(16,185,129,0.48);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px">' +
           '<div>' +
             '<strong style="color:#34d399;font-size:0.95rem;display:block;margin-bottom:4px">+ Quer vender ou aparecer com confiança?</strong>' +
-            '<p style="font-size:0.8rem;color:var(--text-secondary);margin:0;line-height:1.45">Ative seu Passaporte (futuro Hokage ID), monte sua vitrine e conecte suas ofertas da Vila sem taxas abusivas.</p>' +
+            '<p style="font-size:0.8rem;color:var(--text-secondary);margin:0;line-height:1.45">Ative seu Hokage ID, monte seu catálogo de produtos e conecte suas ofertas na Vila sem taxas abusivas.</p>' +
           '</div>' +
           '<a href="pioneiro?criar=1" class="portal-btn portal-btn--primary portal-btn--sm" style="justify-content:center;text-decoration:none">⚡ Ativar Meu Hokage ID Grátis →</a>' +
         '</article>';

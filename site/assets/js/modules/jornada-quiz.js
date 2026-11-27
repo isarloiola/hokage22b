@@ -35,7 +35,7 @@
           value: 'sell',
           icon: '🏷️',
           label: 'Vender ou divulgar meu trabalho',
-          desc: 'Publicar anúncios na Vila e montar minha vitrine profissional.'
+          desc: 'Publicar anúncios na Vila e montar meu catálogo profissional no Hokage ID.'
         },
         {
           value: 'both',
@@ -86,11 +86,11 @@
 
     let highlight = 'Em menos de 1 minuto você ativa seu acesso e entra pronto para negociar com pessoas reais.';
     if (intent === 'sell') {
-      highlight = 'Para vender: seu Passaporte (futuro Hokage ID) funciona como vitrine confiável e publica suas ofertas direto na Vila.';
+      highlight = 'Para vender: seu Hokage ID funciona como catálogo confiável e publica suas ofertas direto na Vila.';
     } else if (intent === 'buy') {
-      highlight = 'Para comprar: na Vila você encontra ofertas reais e confere pelo Passaporte (futuro Hokage ID) quem está por trás de cada anúncio.';
+      highlight = 'Para comprar: na Vila você encontra ofertas reais e confere pelo Hokage ID quem está por trás de cada anúncio.';
     } else if (intent === 'both') {
-      highlight = 'Para comprar e vender: uma única conta conecta sua reputação no Passaporte (futuro Hokage ID) aos anúncios da Vila.';
+      highlight = 'Para comprar e vender: uma única conta conecta sua reputação no Hokage ID aos anúncios da Vila.';
     }
 
     if (experience === 'pi_user') {
@@ -112,9 +112,9 @@
         },
         {
           icon: '🪪',
-          badge: 'Em breve: Hokage ID',
-          title: 'Passaporte (futuro Hokage ID)',
-          desc: 'Sua identidade única e vitrine verificada. Ele liga seus anúncios ao seu perfil, mostra sua reputação e gera confiança imediata para fechar negócios.'
+          badge: 'Identidade & Catálogo',
+          title: 'Hokage ID (Passaporte)',
+          desc: 'Sua identidade única e catálogo verificado. Ele liga seus anúncios ao seu perfil, mostra sua reputação e gera confiança imediata para fechar negócios.'
         }
       ],
       highlight: highlight,
@@ -151,15 +151,15 @@
         profileLabel: profileLabel,
         headline: 'Tudo pronto para você vender e divulgar na Vila!',
         subheadline: hasHandle
-          ? 'Seu Passaporte (futuro Hokage ID) já está ativo como @' + rawSlug + '. Agora publique sua primeira oferta ou ajuste sua vitrine.'
-          : 'Entre na Vila para publicar anúncios ou configure a vitrine do seu Passaporte (futuro Hokage ID).',
+          ? 'Seu Hokage ID já está ativo como @' + rawSlug + '. Agora publique sua primeira oferta ou ajuste seu catálogo.'
+          : 'Entre na Vila para publicar anúncios ou configure seu Hokage ID e catálogo.',
         primary: {
           label: '🏷️ Abrir A Vila e Publicar Anúncio →',
           href: 'mural',
           style: 'amber'
         },
         secondary: {
-          label: hasHandle ? '🪪 Editar meu Passaporte (@' + rawSlug + ')' : '🪪 Configurar meu Passaporte (Hokage ID)',
+          label: hasHandle ? '🪪 Editar meu Hokage ID (@' + rawSlug + ')' : '🪪 Configurar meu Hokage ID',
           href: passportEditHref
         },
         tertiary: {
@@ -180,7 +180,7 @@
           style: 'amber'
         },
         secondary: {
-          label: hasHandle ? '🪪 Ver meu Passaporte (@' + rawSlug + ')' : '🪪 Ver meu Passaporte (Hokage ID)',
+          label: hasHandle ? '🪪 Ver meu Hokage ID (@' + rawSlug + ')' : '🪪 Ver meu Hokage ID',
           href: passportViewHref
         },
         tertiary: {
@@ -194,14 +194,14 @@
       return {
         profileLabel: profileLabel,
         headline: 'Acesso pronto para comprar e vender na comunidade!',
-        subheadline: 'Use A Vila para descobrir negócios e anunciar suas ofertas com a confiança do seu Passaporte (futuro Hokage ID).',
+        subheadline: 'Use A Vila para descobrir negócios e anunciar suas ofertas com a confiança do seu Hokage ID.',
         primary: {
           label: '🛒 Entrar na Vila (Comprar & Anunciar) →',
           href: 'mural',
           style: 'amber'
         },
         secondary: {
-          label: hasHandle ? '🪪 Abrir meu Passaporte (@' + rawSlug + ')' : '🪪 Ativar Vitrine do Passaporte (Hokage ID)',
+          label: hasHandle ? '🪪 Abrir meu Hokage ID (@' + rawSlug + ')' : '🪪 Ativar Hokage ID e Catálogo',
           href: passportEditHref
         },
         tertiary: {
@@ -214,7 +214,7 @@
     return {
       profileLabel: profileLabel,
       headline: 'Bem-vindo à comunidade! Escolha por onde começar:',
-      subheadline: 'Você já entendeu como A Vila e o Passaporte (futuro Hokage ID) funcionam. Veja a praça de negócios ao vivo ou aprenda a base sem hype.',
+      subheadline: 'Você já entendeu como A Vila e o Hokage ID funcionam. Veja a praça de negócios ao vivo ou aprenda a base sem hype.',
       primary: {
         label: '🏘️ Conhecer A Vila agora →',
         href: 'mural',
@@ -225,7 +225,7 @@
         href: 'zero'
       },
       tertiary: {
-        label: hasHandle ? '🪪 Ver meu Passaporte (@' + rawSlug + ') →' : '🪪 Ver meu Passaporte (Hokage ID) →',
+        label: hasHandle ? '🪪 Ver meu Hokage ID (@' + rawSlug + ') →' : '🪪 Ver meu Hokage ID →',
         href: passportViewHref
       }
     };
